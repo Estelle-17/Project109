@@ -15,6 +15,12 @@ public class Tile : MonoBehaviour
     public TileState tileState;
     public GameObject canMoveAreaColor;
 
+    private void Start()
+    {
+        canMoveAreaColor = transform.GetChild(0).gameObject;
+        canMoveAreaColor.SetActive(false);
+    }
+
     public void SetCoord(int column, int row)
     {
         coord = new Coord(column, row);
@@ -23,6 +29,11 @@ public class Tile : MonoBehaviour
     public Coord GetCoord()
     {
         return coord;
+    }
+
+    public string GetCoordToString()
+    {
+        return coord.column + ", " + coord.row;
     }
 
     /// <summary>

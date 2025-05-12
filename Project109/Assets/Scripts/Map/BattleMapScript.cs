@@ -7,7 +7,7 @@ public class BattleMapScript : MonoBehaviour
     [SerializeField]
     public Tile[,] map;
 
-    public Tile prefabTile;
+    public GameObject prefabTile;
     public int column;
     public int row;
     public int tilePadding;
@@ -25,18 +25,23 @@ public class BattleMapScript : MonoBehaviour
         {
             for(int rowIndex = 0; rowIndex < row; rowIndex++)
             {
-                Tile tile = GameObject.Instantiate(prefabTile);
-                tile.transform.localPosition = new Vector3(startX + columnIndex * tilePadding, 0, startZ + rowIndex * tilePadding);
+                Tile tile = GameObject.Instantiate(prefabTile).transform.GetComponent<Tile>();
+                tile.transform.localPosition = new Vector3(startX + columnIndex * tilePadding, 0.01f, startZ + rowIndex * tilePadding);
+                tile.transform.parent = transform;
                 tile.SetCoord(columnIndex, rowIndex);
                 map[columnIndex, rowIndex] = tile;
             }
         }
+
+        map[5, 2].tileState = TileState.Obstacle;
+        map[4, 2].tileState = TileState.Obstacle;
+        map[6, 2].tileState = TileState.Obstacle;
     }
 
     /// <summary>
     /// 선택된 플레이어가 이동할 수 있는 타일들을 찾아주는 함수
     /// </summary>
-    public void CheckPlayerMoveTile(Tile moveStart, int canMoveDistance)
+    public List<Tile> CheckPlayerMoveTiles(Tile moveStart, int canMoveDistance)
     {
         List<Tile> checkList = new List<Tile>();
         
@@ -44,28 +49,43 @@ public class BattleMapScript : MonoBehaviour
         Queue<Tile> checkCurrentTiles = new Queue<Tile>();
         checkCurrentTiles.Enqueue(moveStart);
 
-        int currentDistance = 1;
-
-        while(checkCurrentTiles.Count != 0)
+        for (int currentDistance = 0; currentDistance < canMoveDistance; currentDistance++)
         {
-            Tile t = checkCurrentTiles.Dequeue();
-
-            int[] x = { 0, 0, 1, -1 };
-            int[] y = { 1, -1, 0, 0 };
-
-            for (int i = 0; i < 4; i++)
+            while (checkCurrentTiles.Count != 0)
             {
-                if (t.GetCoord().column + x[i] >= column || t.GetCoord().row + y[i] >= row || t.GetCoord().column + x[i] < 0 || t.GetCoord().row + y[i] < 0 ||
-                    t.tileState != TileState.Empty)
-                    continue;
+                Tile t = checkCurrentTiles.Dequeue();
 
-                checkList.Add(t);
-                checkNextTiles.Enqueue(t);
+                int[] dirX = { 0, 0, 1, -1 };
+                int[] dirY = { 1, -1, 0, 0 };
+
+                for (int i = 0; i < 4; i++)
+                {
+                    int x = t.GetCoord().column + dirX[i];
+                    int y = t.GetCoord().row + dirY[i];
+
+                    //맵을 넘어가거나 비어있지 않을 경우 제외
+                    if (x >= column || y >= row || x < 0 || y < 0 || map[x, y].tileState != TileState.Empty)
+                        continue;
+
+                    //플레이어 위치일 경우 제외
+                    if (map[x, y].GetCoord().column == moveStart.GetCoord().column && map[x, y].GetCoord().row == moveStart.GetCoord().row)
+                        continue;
+
+                    Debug.Log(map[x, y].GetCoordToString() + " OK");
+                    map[x, y].tileState = TileState.CanMove;
+                    map[x, y].ChangeEffect();
+
+                    checkList.Add(map[x, y]);
+                    checkNextTiles.Enqueue(map[x, y]);
+                }
             }
 
-            currentDistance++;
+            checkCurrentTiles = new Queue<Tile>(checkNextTiles);
+            Debug.Log("현재 계산해야 할 타일 갯수 : " + checkCurrentTiles.Count);
+            checkNextTiles.Clear();
         }
 
+        return checkList;
     }
 
     public bool mapCreateTest;

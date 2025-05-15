@@ -15,7 +15,7 @@ public class ExploreUI : MonoBehaviour
     [SerializeField] private GameObject NodePrefab;
     [SerializeField] private GameObject ArrowLinePrefab;
     [SerializeField] private GameObject ArrowHeadPrefab;
-
+    
     void Start()
     {
         ExploreMap = new List<List<IncountNode>>();
@@ -105,7 +105,7 @@ public class ExploreUI : MonoBehaviour
     {
         Vector2 offset = (endPos - startPos).normalized * 50;
         Vector2 dir = endPos - startPos;
-        float dist = dir.magnitude - 100;
+        float dist = dir.magnitude - 120;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
         Debug.Log("StartPos : " + startPos + ", EndPos : " + endPos + ", Position : " + ((startPos + endPos) / 2f).ToString());
@@ -122,7 +122,7 @@ public class ExploreUI : MonoBehaviour
         if (ArrowHeadPrefab != null)
         {
             RectTransform arrowHead = GameObject.Instantiate(ArrowHeadPrefab, transform.GetChild(1).transform).GetComponent<RectTransform>();
-            arrowHead.anchoredPosition = endPos - (offset * 1.2f);
+            arrowHead.anchoredPosition = endPos - (offset * 1.4f);
             arrowHead.rotation = Quaternion.Euler(0, 0, angle);
         }
     }

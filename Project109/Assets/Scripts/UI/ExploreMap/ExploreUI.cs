@@ -1,30 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ExploreUI : MonoBehaviour
 {
     public List<List<IncountNode>> ExploreMap;
-    public VerticalLayoutGroup[] ExploreVerticalObjects;
 
-    int mapLength = 8;
+    public GameObject ViewLayout;
+    public GameObject ArrowObjects;
+    public List<VerticalLayoutGroup> ExploreVerticalObjects;
+
+    int mapLength;
+
     [SerializeField] private int VerticalLayoutSpacing = 30;
+
+    [Header ("Map Setting")]
+    [SerializeField] private int StoreNumber = 1;  //맵에 등장하는 상점 갯수
+    [SerializeField] private int RestoreNumber = 1;  //맵에 등장하는 휴식 갯수
+    [SerializeField] private int SecretNumber = 6;  //맵에 등장하는 시크릿 갯수
+    [SerializeField] private int BoxNumber = 4;  //맵에 등장하는 상자 갯수
+    [SerializeField] private int EliteNumber = 3;  //맵에 등장하는 엘리트 갯수
 
     [Header ("Prefab")]
     [SerializeField] private GameObject NodePrefab;
     [SerializeField] private GameObject ArrowLinePrefab;
     [SerializeField] private GameObject ArrowHeadPrefab;
+    [SerializeField] private GameObject ExploreMapVerticalLayoutPrefab;
     
     void Start()
     {
         ExploreMap = new List<List<IncountNode>>();
 
+        mapLength = 15;
+
         //노드들을 담아두는 Vertical Leyout들을 미리 담아두기
-        ExploreVerticalObjects = new VerticalLayoutGroup[9];
+        ExploreVerticalObjects = new List<VerticalLayoutGroup>();
         for(int i = 0; i < mapLength; i++)
         {
-            ExploreVerticalObjects[i] = transform.GetChild(0).GetChild(i).GetComponent<VerticalLayoutGroup>();
+            ExploreVerticalObjects.Add(GameObject.Instantiate(ExploreMapVerticalLayoutPrefab, ViewLayout.transform).GetComponent<VerticalLayoutGroup>());
             ExploreVerticalObjects[i].spacing = VerticalLayoutSpacing;
         }
     }
@@ -34,13 +49,18 @@ public class ExploreUI : MonoBehaviour
     /// </summary>
     public void CreateExploreMap()
     {
+        List<List<IncountNode>> incountNodeListInSection = new List<List<IncountNode>>();
+
         int createNodeCount = 0;
+        int sectionIndex = 0;
+
+        incountNodeListInSection.Add(new List<IncountNode>());
 
         for(int index = 0; index < mapLength; index++)
         {
             ExploreMap.Add(new List<IncountNode>());
 
-            if(index == 0)
+            if(index == 0)  //처음 노드는 무조건 None으로 생성
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.SetIncountNode(IncountType.None);
@@ -49,7 +69,7 @@ public class ExploreUI : MonoBehaviour
 
                 //Debug.Log("0 : 1 ");
             }
-            else if(index == mapLength - 1)
+            else if(index == mapLength - 1) //마지막 노드는 무조건 Boss로 생성
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.SetIncountNode(IncountType.Boss);
@@ -58,19 +78,124 @@ public class ExploreUI : MonoBehaviour
 
                 //Debug.Log("8 : 1");
             }
-            else
+            else if(index == mapLength / 2) //맵 중간에 회복 및 상점 위치 생성
+            {
+                IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
+                node.SetIncountNode(IncountType.Restore);
+                ExploreMap[index].Add(node);
+                ExploreVerticalObjects[index].padding.top = 260;
+
+                IncountNode node1 = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
+                node1.SetIncountNode(IncountType.Store);
+                ExploreMap[index].Add(node1);
+                ExploreVerticalObjects[index].padding.top = 260;
+
+                //다음 섹션의 노드 저장을 위해 List추가
+                incountNodeListInSection.Add(new List<IncountNode>());
+                sectionIndex++;
+            }
+            else    //나머지 노드는 랜덤 갯수에 인카운트 노드 생성
             {
                 createNodeCount = Random.Range(3, 7);
                 //정해진 수 만큼 랜덤한 인카운터 생성
                 for (int mapIndex = 0; mapIndex < createNodeCount; mapIndex++)
                 {
                     IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
-                    node.SetRandomIncountNode();
+                    node.SetIncountNode(IncountType.Battle);
                     ExploreMap[index].Add(node);
                     ExploreVerticalObjects[index].padding.top = 390 - (createNodeCount * 65);
+
+                    //섹션 내의 노드들 저장
+                    incountNodeListInSection[sectionIndex].Add(node);
                 }
 
                 //Debug.Log(index + " : " + createNodeCount);
+            }
+        }
+
+        //보스 전에는 무조견 휴식 존재
+        foreach (IncountNode node in ExploreMap[mapLength - 2])
+        {
+            node.SetIncountNode(IncountType.Restore);
+            node.DisableExtraType();
+        }
+
+        /// <summary>
+        /// 섹션 내의 노드들 중에서 특정 노드들로 변경
+        /// 추가되는 노드 종류는 엘리트, 시크릿, 박스, 휴식, 상점으로 총 5가지
+        /// </summary>
+        for (int sectionIdx = 0; sectionIdx < incountNodeListInSection.Count; sectionIdx++)
+        {
+            IncountNode currentNode;
+
+            //엘리트 적 생성
+            for (int index = 0; index < EliteNumber; index++)
+            {
+                //일반 전투인 노드들 중 랜덤으로 한 개 선택
+                do
+                {
+                    currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
+                }
+                while (currentNode.incountType != IncountType.Battle);
+
+                currentNode.SetIncountNode(IncountType.Elite);
+                currentNode.DisableExtraType();
+            }
+
+            //시크릿 생성
+            for (int index = 0; index < SecretNumber; index++)
+            {
+                //일반 전투인 노드들 중 랜덤으로 한 개 선택
+                do
+                {
+                    currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
+                }
+                while (currentNode.incountType != IncountType.Battle);
+
+                currentNode.SetIncountNode(IncountType.Secret);
+                currentNode.DisableExtraType();
+            }
+
+            //상자 생성
+            for (int index = 0; index < BoxNumber; index++)
+            {
+                //일반 전투인 노드들 중 랜덤으로 한 개 선택
+                do
+                {
+                    currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
+                }
+                while (currentNode.incountType != IncountType.Battle);
+
+                currentNode.SetIncountNode(IncountType.SecretBox);
+                currentNode.DisableExtraType();
+            }
+
+            //휴식 생성
+            for (int index = 0; index < RestoreNumber; index++)
+            {
+                //일반 전투인 노드들 중 랜덤으로 한 개 선택
+                do
+                {
+                    currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
+                }
+                while (currentNode.incountType != IncountType.Battle);
+
+                currentNode.SetIncountNode(IncountType.Restore);
+                currentNode.DisableExtraType();
+            }
+
+            //상점 생성
+            for (int index = 0; index < StoreNumber; index++)
+            {
+                //일반 전투인 노드들 중 랜덤으로 한 개 선택
+                do
+                {
+                    currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
+                }
+                while (currentNode.incountType != IncountType.Battle);
+
+                currentNode.SetIncountNode(IncountType.Store);
+                currentNode.DisableExtraType();
             }
         }
 
@@ -108,11 +233,11 @@ public class ExploreUI : MonoBehaviour
         float dist = dir.magnitude - 120;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-        Debug.Log("StartPos : " + startPos + ", EndPos : " + endPos + ", Position : " + ((startPos + endPos) / 2f).ToString());
+       // Debug.Log("StartPos : " + startPos + ", EndPos : " + endPos + ", Position : " + ((startPos + endPos) / 2f).ToString());
 
         if (ArrowLinePrefab != null)
         {
-            RectTransform arrowLine = GameObject.Instantiate(ArrowLinePrefab, transform.GetChild(1).transform).GetComponent<RectTransform>();
+            RectTransform arrowLine = GameObject.Instantiate(ArrowLinePrefab, ArrowObjects.transform).GetComponent<RectTransform>();
 
             arrowLine.anchoredPosition = ((startPos + endPos) / 2f);
             arrowLine.sizeDelta = new Vector2(dist, 5); //선 두께 5
@@ -121,7 +246,7 @@ public class ExploreUI : MonoBehaviour
 
         if (ArrowHeadPrefab != null)
         {
-            RectTransform arrowHead = GameObject.Instantiate(ArrowHeadPrefab, transform.GetChild(1).transform).GetComponent<RectTransform>();
+            RectTransform arrowHead = GameObject.Instantiate(ArrowHeadPrefab, ArrowObjects.transform).GetComponent<RectTransform>();
             arrowHead.anchoredPosition = endPos - (offset * 1.4f);
             arrowHead.rotation = Quaternion.Euler(0, 0, angle);
         }
@@ -130,7 +255,7 @@ public class ExploreUI : MonoBehaviour
 
     void SetNodePosition()
     {
-        RectTransform parentRect = transform.GetChild(1).GetComponent<RectTransform>();
+        RectTransform parentRect = ArrowObjects.GetComponent<RectTransform>();
 
         for (int i = 0; i < ExploreMap.Count; i++)
         {

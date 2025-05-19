@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public enum IncountType
@@ -14,18 +15,26 @@ public enum IncountType
     Secret
 }
 
-public class IncountNode : MonoBehaviour
+public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public IncountType incountType;
-    public List<IncountNode> nextIncountNode;
+    public List<GameObject> nextIncountNode;
+    public ExploreUI exploreUI;
 
+    //화살표 기준 노드의 위치
     public Vector2 arrowRelativePos;
-    public GameObject ExtraMoney;
-    public GameObject ExtraCard;
+
+    //가리기, 선택 등 노드의 추가적인 생김새 변경을 위한 오브젝트들
+    public GameObject ExtraMoneyObject;
+    public GameObject ExtraCardObject;
+    public GameObject IncountNodeCoverObject;
+    public GameObject IncountNodeHighlightCircleObject;
+    public GameObject IncountNodeCurrentHighlightCircleObject;
 
     public bool isExtraMoney;
     public bool isExtraCard;
 
+    //텍스처
     [Header("NodeTexture")]
     [SerializeField] private Sprite NoneTexture;
     [SerializeField] private Sprite BattleTexture;
@@ -41,17 +50,17 @@ public class IncountNode : MonoBehaviour
         incountType = newIncountType;
         SetNodeTexture();
 
-        if (incountType == IncountType.Battle && ExtraCard && ExtraMoney)
+        if (incountType == IncountType.Battle && ExtraCardObject && ExtraMoneyObject)
         {
             if (Random.Range(0, 2) == 0)
             {
                 isExtraCard = true;
-                ExtraCard.SetActive(true);
+                ExtraCardObject.SetActive(true);
             }
             else
             {
                 isExtraMoney = true;
-                ExtraMoney.SetActive(true);
+                ExtraMoneyObject.SetActive(true);
             }
         }
     }
@@ -65,17 +74,17 @@ public class IncountNode : MonoBehaviour
         incountType = (IncountType)enumValue.GetValue(Random.Range(1, enumValue.Length));
         SetNodeTexture();
 
-        if(incountType == IncountType.Battle && ExtraCard && ExtraMoney)
+        if(incountType == IncountType.Battle && ExtraCardObject && ExtraMoneyObject)
         {
             if(Random.Range(0, 2) == 0)
             {
                 isExtraCard = true;
-                ExtraCard.SetActive(true);
+                ExtraCardObject.SetActive(true);
             }
             else
             {
                 isExtraMoney = true;
-                ExtraMoney.SetActive(true);
+                ExtraMoneyObject.SetActive(true);
             }
         }
     }
@@ -95,7 +104,7 @@ public class IncountNode : MonoBehaviour
                 image.sprite = BattleTexture;
                 break;
             case IncountType.Elite:
-                    image.sprite = EliteTexture;
+                image.sprite = EliteTexture;
                 break;
             case IncountType.Boss:
                 image.sprite = BossTexture;
@@ -120,7 +129,36 @@ public class IncountNode : MonoBehaviour
 
     public void DisableExtraType()
     {
-        ExtraCard.SetActive(false);
-        ExtraMoney.SetActive(false);
+        ExtraCardObject.SetActive(false);
+        ExtraMoneyObject.SetActive(false);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if(GameManager.instance.currentIncountNode.nextIncountNode.Contains(this.gameObject))
+        {
+            GameManager.instance.currentIncountNode.transform.GetComponent<IncountNode>().IncountNodeCurrentHighlightCircleObject.SetActive(false);
+            GameManager.instance.currentIncountNode = this;
+            GameManager.instance.currentExploreMapFloor += 1;
+            if(exploreUI != null)
+            {
+                IncountNodeCurrentHighlightCircleObject.SetActive(true);
+                exploreUI.OpenExploreMapNodes();
+            }
+        }
+        else
+        {
+            Debug.Log("This node is nextIncountNode");
+        }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        IncountNodeHighlightCircleObject.SetActive(true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        IncountNodeHighlightCircleObject.SetActive(false);
     }
 }

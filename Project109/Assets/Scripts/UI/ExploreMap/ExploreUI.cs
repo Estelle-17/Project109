@@ -14,6 +14,8 @@ public class ExploreUI : MonoBehaviour
 
     int mapLength;
 
+    public int currentMapFloor;
+
     [SerializeField] private int VerticalLayoutSpacing = 30;
 
     [Header ("Map Setting")]
@@ -34,6 +36,7 @@ public class ExploreUI : MonoBehaviour
         ExploreMap = new List<List<IncountNode>>();
 
         mapLength = 15;
+        currentMapFloor = 0;
 
         //노드들을 담아두는 Vertical Leyout들을 미리 담아두기
         ExploreVerticalObjects = new List<VerticalLayoutGroup>();
@@ -63,29 +66,29 @@ public class ExploreUI : MonoBehaviour
             if(index == 0)  //처음 노드는 무조건 None으로 생성
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
+                node.exploreUI = this;
                 node.SetIncountNode(IncountType.None);
                 ExploreMap[index].Add(node);
                 ExploreVerticalObjects[index].padding.top = 325;
-
-                //Debug.Log("0 : 1 ");
             }
             else if(index == mapLength - 1) //마지막 노드는 무조건 Boss로 생성
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
+                node.exploreUI = this;
                 node.SetIncountNode(IncountType.Boss);
                 ExploreMap[index].Add(node);
                 ExploreVerticalObjects[index].padding.top = 325;
-
-                //Debug.Log("8 : 1");
             }
             else if(index == mapLength / 2) //맵 중간에 회복 및 상점 위치 생성
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
+                node.exploreUI = this;
                 node.SetIncountNode(IncountType.Restore);
                 ExploreMap[index].Add(node);
                 ExploreVerticalObjects[index].padding.top = 260;
 
                 IncountNode node1 = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
+                node1.exploreUI = this;
                 node1.SetIncountNode(IncountType.Store);
                 ExploreMap[index].Add(node1);
                 ExploreVerticalObjects[index].padding.top = 260;
@@ -101,6 +104,7 @@ public class ExploreUI : MonoBehaviour
                 for (int mapIndex = 0; mapIndex < createNodeCount; mapIndex++)
                 {
                     IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
+                    node.exploreUI = this;
                     node.SetIncountNode(IncountType.Battle);
                     ExploreMap[index].Add(node);
                     ExploreVerticalObjects[index].padding.top = 390 - (createNodeCount * 65);
@@ -108,8 +112,6 @@ public class ExploreUI : MonoBehaviour
                     //섹션 내의 노드들 저장
                     incountNodeListInSection[sectionIndex].Add(node);
                 }
-
-                //Debug.Log(index + " : " + createNodeCount);
             }
         }
 
@@ -199,10 +201,38 @@ public class ExploreUI : MonoBehaviour
             }
         }
 
+        //생성 시 필요한 만큼 노드 가리기
+        for (int i = GameManager.instance.checkMapNodeFloorLength; i < ExploreMap.Count; i++)
+        {
+            for (int j = 0; j < ExploreMap[i].Count; j++)
+            {
+                ExploreMap[i][j].IncountNodeCoverObject.SetActive(true);
+            }
+        }
+
+        //시작 지점 저장
+        GameManager.instance.currentIncountNode = ExploreMap[0][0];
+        ExploreMap[0][0].IncountNodeCurrentHighlightCircleObject.SetActive(true);
+
         //각 노드끼리 연결하는 Arrow생성
         StartCoroutine(CreateArrowUI());
     }
    
+    public void OpenExploreMapNodes()
+    {
+        int currentFloor = GameManager.instance.currentExploreMapFloor;
+        int openNodeLength = currentFloor + GameManager.instance.checkMapNodeFloorLength;
+        openNodeLength = openNodeLength > ExploreMap.Count ? ExploreMap.Count : openNodeLength;
+
+        for (int i = currentFloor; i < openNodeLength; i++)
+        {
+            for (int j = 0; j < ExploreMap[i].Count; j++)
+            {
+                ExploreMap[i][j].IncountNodeCoverObject.SetActive(false);
+            }
+        }
+    }
+
     IEnumerator CreateArrowUI()
     {
         yield return new WaitForEndOfFrame();
@@ -218,9 +248,9 @@ public class ExploreUI : MonoBehaviour
         {
             for (int j = 0; j < ExploreMap[i].Count; j++)
             {
-                foreach (IncountNode nextNode in ExploreMap[i][j].nextIncountNode)
+                foreach (GameObject nextNode in ExploreMap[i][j].nextIncountNode)
                 {
-                    MakeArrowUI(ExploreMap[i][j].arrowRelativePos, nextNode.arrowRelativePos);
+                    MakeArrowUI(ExploreMap[i][j].arrowRelativePos, nextNode.transform.GetComponent<IncountNode>().arrowRelativePos);
                 }
             }
         }
@@ -280,7 +310,7 @@ public class ExploreUI : MonoBehaviour
                 int nextNodeCount = 0;
                 while (nextNodeCount < ExploreMap[i + 1].Count)
                 {
-                    ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount]);
+                    ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
                     nextNodeCount++;
                 }
             }
@@ -290,7 +320,7 @@ public class ExploreUI : MonoBehaviour
                 int nextNodeCount = 0;
                 while (currentNodeCount < ExploreMap[i].Count)
                 {
-                    ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount]);
+                    ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
                     currentNodeCount++;
                 }
             }
@@ -309,19 +339,19 @@ public class ExploreUI : MonoBehaviour
                         //왼쪽 노드의 남은 수 + 1 = 오른쪽 노드의 남은 수가 될 때 까지 왼쪽 노드를 내려가며 등록
                         while (ExploreMap[i].Count - currentNodeCount + 1 < ExploreMap[i + 1].Count - nextNodeCount)
                         {
-                            ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount]);
+                            ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
                             nextNodeCount++;
                         }
                     }
 
-                    ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount]);
+                    ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
                     //맨 처음 노드와 마지막 노드가 아닐 경우 50%의 확률로 아래 노드와 연결됨
                     //이전에 아래 노드와 연결이 안됬을 경우는 무조건 연결됨
                     if (nextNodeCount + 1 < ExploreMap[i + 1].Count)
                     {
                         if (Random.Range(0, 11) % 2 == 0 || recentlyIgnoreNode || currentNodeCount == 0 || currentNodeCount == ExploreMap[i].Count - 1)
                         {
-                            ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount + 1]);
+                            ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount + 1].gameObject);
                             nextNodeCount++;
                             recentlyIgnoreNode = false;
                         }
@@ -337,7 +367,7 @@ public class ExploreUI : MonoBehaviour
                     {
                         while (nextNodeCount < ExploreMap[i + 1].Count)
                         {
-                            ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount]);
+                            ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
                             nextNodeCount++;
                         }
                     }
@@ -356,7 +386,7 @@ public class ExploreUI : MonoBehaviour
                 while (currentNodeCount < ExploreMap[i].Count && nextNodeCount < ExploreMap[i + 1].Count)
                 {
                     //일단 현재 선택된 왼쪽 노드에 선택된 오른쪽 노드를 등록
-                    ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount]);
+                    ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
                     //만약 오른쪽 노드가 선택된 노드일 시
                     if (nextNodeCount == randomNodeNumber)
                     {
@@ -366,7 +396,7 @@ public class ExploreUI : MonoBehaviour
                             if (currentNodeCount + 1 < ExploreMap[i].Count)
                             {
                                 currentNodeCount++;
-                                ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount]);
+                                ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
                             }
                             else
                             {
@@ -376,7 +406,7 @@ public class ExploreUI : MonoBehaviour
                         if (currentNodeCount + 1 < ExploreMap[i].Count)
                         {
                             currentNodeCount++;
-                            ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount]);
+                            ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
                         }
                     }
 
@@ -386,7 +416,7 @@ public class ExploreUI : MonoBehaviour
                     {
                         if (Random.Range(0, 11) % 2 == 0 || recentlyIgnoreNode || currentNodeCount == 0 || currentNodeCount == ExploreMap[i].Count - 1)
                         {
-                            ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount + 1]);
+                            ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount + 1].gameObject);
                             nextNodeCount++;
                             recentlyIgnoreNode = false;
                         }
@@ -401,7 +431,7 @@ public class ExploreUI : MonoBehaviour
                     {
                         while (nextNodeCount < ExploreMap[i + 1].Count)
                         {
-                            ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount]);
+                            ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
                             nextNodeCount++;
                         }
                     }

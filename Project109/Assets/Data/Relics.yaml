@@ -1,0 +1,23 @@
+# string이 아닌 int, float, bool형식은 !!int와 같이 변수의 타입을 강제 지정해주어야 문제가 안생김
+relicCollection:
+  - classType: All
+    relicName: 재생성 철판
+    level: !!int 1
+    conditions:
+      - conditionType: ""
+        value: 4
+        description: "매 턴마다 임시 방어막을 4 획득합니다."
+    effects:
+      - effectType: Buff
+        value: 4
+
+  - classType: All
+    relicName: 낡은 검
+    level: !!int 1
+    conditions:
+      - conditionType: ""
+        value: 5
+        description: "1칸 이내의 적을 공격할 때 주는 데미지가 5 증가한다."
+    effects:
+      - effectType: Damage
+        value: 5

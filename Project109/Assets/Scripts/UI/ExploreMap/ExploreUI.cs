@@ -97,7 +97,7 @@ public class ExploreUI : MonoBehaviour
                 incountNodeListInSection.Add(new List<IncountNode>());
                 sectionIndex++;
             }
-            else    //나머지 노드는 랜덤 갯수에 인카운트 노드 생성
+            else //나머지 노드는 랜덤 갯수에 인카운트 노드 생성
             {
                 createNodeCount = Random.Range(3, 7);
                 //정해진 수 만큼 랜덤한 인카운터 생성
@@ -206,7 +206,7 @@ public class ExploreUI : MonoBehaviour
         {
             for (int j = 0; j < ExploreMap[i].Count; j++)
             {
-                ExploreMap[i][j].IncountNodeCoverObject.SetActive(true);
+                ExploreMap[i][j].CloseNodeCoverTexture();
             }
         }
 
@@ -218,7 +218,7 @@ public class ExploreUI : MonoBehaviour
         StartCoroutine(CreateArrowUI());
     }
    
-    public void OpenExploreMapNodes()
+    public void OpenExploreMapNodesBasedOnFloorLength()
     {
         int currentFloor = GameManager.instance.currentExploreMapFloor;
         int openNodeLength = currentFloor + GameManager.instance.checkMapNodeFloorLength;
@@ -228,9 +228,17 @@ public class ExploreUI : MonoBehaviour
         {
             for (int j = 0; j < ExploreMap[i].Count; j++)
             {
-                ExploreMap[i][j].IncountNodeCoverObject.SetActive(false);
+                ExploreMap[i][j].OpenNodeCoverTexture();
             }
         }
+    }
+
+    public void OpenRandomExploreMapNode()
+    {
+        int x = Random.Range(0, ExploreMap.Count);
+        int y = Random.Range(0, ExploreMap[x].Count);
+
+        ExploreMap[x][y].OpenNodeCoverTexture();
     }
 
     IEnumerator CreateArrowUI()

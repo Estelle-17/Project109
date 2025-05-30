@@ -1,0 +1,93 @@
+# string이 아닌 int, float, bool형식은 !!int와 같이 변수의 타입을 강제 지정해주어야 문제가 안생김
+cardCollection:
+  - className: Warrior
+    cardName: 슬래시
+    level: !!int 1
+    effectArea:
+      - centerX: 1
+        centerY: 1
+        area:
+          - "111"
+          - "010"
+          - "000"
+    useStamina: !!int 40
+    cardEffects:
+      - cardEffectType: None
+        chainEffect:
+        - effectType: None
+          value: 0
+        chainCondition:
+        - conditionType: None
+          value: 0
+          description: ""
+    effects:
+      - effectType: Damage
+        value: 8
+    upgradeEffects:
+      - effectType: Damage
+        value: 12
+    conditions:
+      - conditionType: None
+        value: 0
+        description: ""
+
+  - className: Warrior
+    cardName: 퀵 슬래시
+    level: !!int 1
+    effectArea:
+      - centerX: 1
+        centerY: 1
+        area:
+          - "010"
+          - "010"
+    useStamina: !!int 0
+    cardEffects:
+      - cardEffectType: None
+        chainEffect:
+        - effectType: None
+          value: 0
+        chainCondition:
+        - conditionType: None
+          value: 0
+          description: ""
+    effects:
+      - effectType: Damage
+        value: 4
+    upgradeEffects:
+      - effectType: Damage
+        value: 6
+    conditions:
+      - conditionType: None
+        value: 0
+        description: ""
+
+  - className: Warrior
+    cardName: 땅 가르기
+    level: !!int 1
+    effectArea:
+      - centerX: 2
+        centerY: 2
+        area:
+          - "11111"
+          - "01110"
+          - "00100"
+    useStamina: !!int 40
+    cardEffects:
+      - cardEffectType: Chain
+        chainEffect:
+        - effectType: Damage
+          value: 10
+        chainCondition:
+        - conditionType: PowerMultiple
+          value: 2
+          description: "힘의 효과가 2배가 됩니다."
+    effects:
+      - effectType: Damage
+        value: 8
+    upgradeEffects:
+      - effectType: Damage
+        value: 12
+    conditions:
+      - conditionType: None
+        value: 0
+        description: ""

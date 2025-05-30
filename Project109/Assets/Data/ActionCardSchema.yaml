@@ -1,0 +1,117 @@
+# string이 아닌 int, float, bool형식은 !!int와 같이 변수의 타입을 강제 지정해주어야 문제가 안생김
+$schema:  "https://json-schema.org/draft/2020-12/schema"
+effect: &skill_effect
+  type: object
+  effectType:
+      type: string
+      enum:
+      - None
+      - Damage
+      - Heal
+      - Buff
+      - Debuff
+      - Move
+  value:
+    type: integer
+    minimum: 0
+
+condition: &skill_condition
+  type: object
+  conditionType:
+    type: string
+  value:
+    type: integer
+  description:
+    type: string
+
+cardEffect: &card_effect
+  type: object
+  cardEffectType:
+    type: string
+    enum:
+      - None
+      - Begin_War
+      - Vanguard
+      - End_War
+      - Echo
+      - Single_use
+      - Destroy
+      - Divide
+      - Chain
+  chainEffect:
+    type: array
+    items:
+      <<: *skill_effect
+  chainCondition:
+    type: array
+    items:
+      <<: *skill_condition
+
+area: &effect_area
+  type: object
+  centerX:
+    type: integer
+    minimum: !!int 0
+  centerY:
+    type: integer
+    minimum: !!int 0
+  area:
+      type: array
+      items:
+        type: string
+
+
+type: object
+properties:
+  cardCollection:
+    type: array
+    items:
+      type: object
+      properties:
+        className:
+          type: string
+          enum:
+          - Warrior
+          - Hunter
+        cardName:
+          type: string
+        level:  # 카드 희귀도
+          type: integer
+          minimum: !!int 1
+          maximum: !!int 3
+          exclusiveMaximum: !!bool true
+        useStamina:
+          type: integer
+          minimum: !!int 0
+        effectArea:
+          type: array
+          items:
+            <<: *effect_area
+        cardEffects:
+          type: array
+          items:
+            <<: *card_effect
+        effects:
+          type: array
+          items:
+            <<: *skill_effect
+        upgradeEffects:
+          type: array
+          items:
+            <<: *skill_effect
+        conditions:
+          type: array
+          item:
+            <<: *skill_condition
+      required:
+        - className
+        - cardName
+        - level
+        - useStamina
+        - effectArea
+        - cardEffects
+        - effects
+        - upgradeEffects
+        - conditions
+required:
+  - cardCollection    

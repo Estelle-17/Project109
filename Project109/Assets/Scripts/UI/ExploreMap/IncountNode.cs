@@ -133,6 +133,16 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         ExtraMoneyObject.SetActive(false);
     }
 
+    public void OpenNodeCoverTexture()
+    {
+        IncountNodeCoverObject.SetActive(false);
+    }
+
+    public void CloseNodeCoverTexture()
+    {
+        IncountNodeCoverObject.SetActive(true);
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if(GameManager.instance.currentIncountNode.nextIncountNode.Contains(this.gameObject))
@@ -143,7 +153,7 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
             if(exploreUI != null)
             {
                 IncountNodeCurrentHighlightCircleObject.SetActive(true);
-                exploreUI.OpenExploreMapNodes();
+                exploreUI.OpenExploreMapNodesBasedOnFloorLength();
             }
         }
         else

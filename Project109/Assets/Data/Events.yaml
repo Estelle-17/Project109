@@ -1,0 +1,17 @@
+# string이 아닌 int, float, bool형식은 !!int와 같이 변수의 타입을 강제 지정해주어야 문제가 안생김
+eventCollection:
+  - eventAppearLevel: !!int 1
+    eventAppearCondition: 
+      - conditionType: None
+        value: 0
+    eventName: 예시 이벤트
+    eventDescription: 이것은 예시 이벤트 데이터 정보입니다.
+    choices:
+      - choiceDescription: 1번 선택지
+        effectType: None
+        value: 0
+        getRelicName: None
+      - choiceDescription: 2번 선택지
+        effectType: Damage
+        value: 5
+        getRelicName: 낡은 검

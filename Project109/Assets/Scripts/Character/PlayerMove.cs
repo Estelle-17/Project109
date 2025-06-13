@@ -40,7 +40,7 @@ public class PlayerMove : MonoBehaviour
             playerInputController.playerInputController.Player.Touch.performed += CheckToTargetTile_performed;
             playerInputController.playerInputController.Player.Touch.canceled += CheckToTargetTile_canceled;
 
-            playerInputController.OnEnable();
+            playerInputController.OnDisable();
         }
         else
         {
@@ -49,15 +49,16 @@ public class PlayerMove : MonoBehaviour
     }
 
     /// <summary>
-    /// ÇöÀç ÇÃ·¹ÀÌ¾î°¡ ÀÖ´Â Å¸ÀÏ, ¿òÁ÷ÀÏ ¼ö ÀÖ´Â °Å¸®¸¦ °¡Áö°í ¸ÊÀÇ ¾î´À ºÎºĞ±îÁö ÀÌµ¿ÀÌ °¡´ÉÇÑÁö È®ÀÎ
+    /// í˜„ì¬ í”Œë ˆì´ì–´ê°€ ìˆëŠ” íƒ€ì¼, ì›€ì§ì¼ ìˆ˜ ìˆëŠ” ê±°ë¦¬ë¥¼ ê°€ì§€ê³  ë§µì˜ ì–´ëŠ ë¶€ë¶„ê¹Œì§€ ì´ë™ì´ ê°€ëŠ¥í•œì§€ í™•ì¸
     /// </summary>
     public void CheckCanMoveTiles()
     {
         canMoveTiles = battleMap.CheckPlayerMoveTiles(currentTile, 5);
+        playerInputController.OnEnable();
     }
 
     /// <summary>
-    /// ÀÌÀü¿¡ °Ë»öÇÏ¿© ¾òÀº ÇÃ·¹ÀÌ¾î°¡ ¿òÁ÷ÀÏ ¼ö ÀÖ´Â Å¸ÀÏ Á¤º¸µéÀ» ÃÊ±âÈ­
+    /// ì´ì „ì— ê²€ìƒ‰í•˜ì—¬ ì–»ì€ í”Œë ˆì´ì–´ê°€ ì›€ì§ì¼ ìˆ˜ ìˆëŠ” íƒ€ì¼ ì •ë³´ë“¤ì„ ì´ˆê¸°í™”
     /// </summary>
     public void ClearCanMoveTiles()
     {
@@ -96,17 +97,17 @@ public class PlayerMove : MonoBehaviour
 
     public void CheckToTargetTile_canceled(InputAction.CallbackContext context)
     {
-        //Å¸ÀÏÀ» ¼±ÅÃÇÏÁö ¾Ê¾ÒÀ» °æ¿ì return
+        //íƒ€ì¼ì„ ì„ íƒí•˜ì§€ ì•Šì•˜ì„ ê²½ìš° return
         if (currentTagetTile == null)
             return;
 
-        //ÀÌµ¿ °¡´ÉÇÑ Å¸ÀÏÀÏ °æ¿ì ÇÃ·¹ÀÌ¾î ÀÌµ¿
+        //ì´ë™ ê°€ëŠ¥í•œ íƒ€ì¼ì¼ ê²½ìš° í”Œë ˆì´ì–´ ì´ë™
         Debug.Log("LastTileCoord is : " + currentTagetTile.GetCoordToString());
         if(currentTagetTile.tileState == TileState.CanMove)
         {
             //transform.position = currentTagetTile.transform.position;
 
-            //pathÃÊ±âÈ­ ÈÄ ´Ù½Ã Å½»ö
+            //pathì´ˆê¸°í™” í›„ ë‹¤ì‹œ íƒìƒ‰
             movePath.Clear();
             movePath = routePathfinding.TilePathfinding(currentTile, currentTagetTile, battleMap.map);
             StartCoroutine(StartMove());
@@ -115,7 +116,8 @@ public class PlayerMove : MonoBehaviour
 
             CanMoveTileClear();
         }
-        Debug.Log("CheckToTargetTile is Canceled");
+        playerInputController.OnDisable();
+        //Debug.Log("CheckToTargetTile is Canceled");
     }
 
     public void CanMoveTileClear()

@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public int currentExploreMapFloor = 0;
     public int checkMapNodeFloorLength = 3;
     public IncountNode currentIncountNode;
+    public GameObject currentMapObject;
 
     void Start()
     {

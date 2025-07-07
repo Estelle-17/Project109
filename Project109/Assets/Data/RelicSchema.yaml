@@ -21,8 +21,6 @@ condition: &relic_condition
     type: string
   value:
     type: integer
-  description:
-    type: string
 
 type: object
 properties:
@@ -39,11 +37,14 @@ properties:
           - Hunter
         relicName:
           type: string
+        texturePath:
+          type: string
         level:  # 유물 희귀도
           type: integer
           minimum: !!int 1
           maximum: !!int 4
-          exclusiveMaximum: !!bool true
+        description:
+          type: string
         conditions:
           type: array
           item:
@@ -56,6 +57,7 @@ properties:
         - classType
         - relicName
         - level 
+        - description
         - conditions
         - effects
 required:

@@ -109,7 +109,7 @@ public class PlayerMove : MonoBehaviour
 
             //path초기화 후 다시 탐색
             movePath.Clear();
-            movePath = routePathfinding.TilePathfinding(currentTile, currentTagetTile, battleMap.map);
+            movePath = routePathfinding.TilePathfinding(currentTile, currentTagetTile, battleMap.GetTileMap());
             StartCoroutine(StartMove());
 
             currentTile = currentTagetTile;

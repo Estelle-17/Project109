@@ -12,14 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 609ddac34a28bdd428085a1f83731880, type: 3}
   m_Name: "\uC7AC\uC0DD\uC131 \uCCA0\uD310"
   m_EditorClassIdentifier: 
+  relicTexture: {fileID: 2800000, guid: c644a8a5536714246bd5cc674cb8b206, type: 3}
   classType: All
   relicName: "\uC7AC\uC0DD\uC131 \uCCA0\uD310"
+  texturePath: Assets/Texture/Items/Relic/RecoveryPlateTexture.png
   level: 1
+  description: "\uB9E4 \uD134\uB9C8\uB2E4 \uC784\uC2DC \uBC29\uC5B4\uB9C9\uC744 4
+    \uD68D\uB4DD\uD569\uB2C8\uB2E4."
   conditions:
   - conditionType: 
     value: 4
-    description: "\uB9E4 \uD134\uB9C8\uB2E4 \uC784\uC2DC \uBC29\uC5B4\uB9C9\uC744
-      4 \uD68D\uB4DD\uD569\uB2C8\uB2E4."
   effects:
   - effectType: Buff
     value: 4

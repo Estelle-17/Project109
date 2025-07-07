@@ -12,16 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa819df5be163b346ba6d2587629c308, type: 3}
   m_Name: "\uB545 \uAC00\uB974\uAE30"
   m_EditorClassIdentifier: 
+  cardTexture: {fileID: 2800000, guid: 4bb94b99c4e49bd4bbf7dac3a87e57ff, type: 3}
   className: Warrior
   cardName: "\uB545 \uAC00\uB974\uAE30"
+  texturePath: Assets/Texture/Items/Card/CardTexture.png
   level: 1
   effectArea:
-  - centerX: 2
-    centerY: 2
-    area:
+  - area:
     - 11111
     - 01110
     - 00100
+    - 00000
+    - 00000
   useStamina: 40
   cardEffects:
   - cardEffectType: Chain

@@ -14,6 +14,7 @@ public class Tile : MonoBehaviour
     private Coord coord;
     public TileState tileState;
     public GameObject canMoveAreaColor;
+    public GameObject centerTileColor;
 
     private void Start()
     {
@@ -37,7 +38,7 @@ public class Tile : MonoBehaviour
     }
 
     /// <summary>
-    /// ÇöÀç Å¸ÀÏ »óÅÂ¿¡ µû¸¥ »ö ¼³Á¤
+    /// í˜„ì¬ íƒ€ì¼ ìƒíƒœì— ë”°ë¥¸ ìƒ‰ ì„¤ì •
     /// </summary>
     public void ChangeEffect()
     {

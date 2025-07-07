@@ -84,7 +84,12 @@ public class TouchSystem : MonoBehaviour
 
                 break;
             case "ShopNPC":
-                
+                CameraFocusToTarget(newObject.transform.position);
+                ShopUIManager ShopUIManager = newObject.GetComponent<ShopUIManager>();
+                if (ShopUIManager != null)
+                {
+                    ShopUIManager.EnableShopUI();
+                }
                 break;
             case "EventNPC":
                 CameraFocusToTarget(newObject.transform.position);

@@ -49,12 +49,6 @@ cardEffect: &card_effect
 
 area: &effect_area
   type: object
-  centerX:
-    type: integer
-    minimum: !!int 0
-  centerY:
-    type: integer
-    minimum: !!int 0
   area:
       type: array
       items:
@@ -75,11 +69,12 @@ properties:
           - Hunter
         cardName:
           type: string
+        texturePath:
+          type: string
         level:  # 카드 희귀도
           type: integer
           minimum: !!int 1
           maximum: !!int 3
-          exclusiveMaximum: !!bool true
         useStamina:
           type: integer
           minimum: !!int 0
@@ -106,6 +101,7 @@ properties:
       required:
         - className
         - cardName
+        - texturePath
         - level
         - useStamina
         - effectArea

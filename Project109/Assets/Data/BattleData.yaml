@@ -1,0 +1,20 @@
+# string이 아닌 int, float, bool형식은 !!int와 같이 변수의 타입을 강제 지정해주어야 문제가 안생김
+battleMonsterCollection:
+  - battleNodeName: 예제 전투
+    battleAppearLevel: !!int 1
+    monsterAppearInformation:
+      - monsterName: 몬스터
+        spawnPointX: 6
+        spawnPointY: 10
+  - battleNodeName: 예제 전투 1
+    battleAppearLevel: !!int 2
+    monsterAppearInformation:
+      - monsterName: 몬스터
+        spawnPointX: 4
+        spawnPointY: 12
+  - battleNodeName: 예제 전투 2
+    battleAppearLevel: !!int 3
+    monsterAppearInformation:
+      - monsterName: 몬스터
+        spawnPointX: 8
+        spawnPointY: 12

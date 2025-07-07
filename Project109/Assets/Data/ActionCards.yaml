@@ -2,11 +2,10 @@
 cardCollection:
   - className: Warrior
     cardName: 슬래시
+    texturePath: Assets/Texture/Items/Card/CardTexture.png
     level: !!int 1
     effectArea:
-      - centerX: 1
-        centerY: 1
-        area:
+      - area:
           - "111"
           - "010"
           - "000"
@@ -33,13 +32,13 @@ cardCollection:
 
   - className: Warrior
     cardName: 퀵 슬래시
+    texturePath: Assets/Texture/Items/Card/CardTexture.png
     level: !!int 1
     effectArea:
-      - centerX: 1
-        centerY: 1
-        area:
+      - area:
           - "010"
           - "010"
+          - "000"
     useStamina: !!int 0
     cardEffects:
       - cardEffectType: None
@@ -63,14 +62,15 @@ cardCollection:
 
   - className: Warrior
     cardName: 땅 가르기
+    texturePath: Assets/Texture/Items/Card/CardTexture.png
     level: !!int 1
     effectArea:
-      - centerX: 2
-        centerY: 2
-        area:
+      - area:
           - "11111"
           - "01110"
           - "00100"
+          - "00000"
+          - "00000"
     useStamina: !!int 40
     cardEffects:
       - cardEffectType: Chain

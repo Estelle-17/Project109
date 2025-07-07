@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -34,11 +36,17 @@ public class GameManager : MonoBehaviour
     public int currentExploreMapFloor = 0;
     public int checkMapNodeFloorLength = 3;
     public IncountNode currentIncountNode;
-    public GameObject currentMapObject;
+    public BattleMapScript currentMap;
+    public BattleMapScript EffectAreaMap;
+    public ExploreUI currentExploreUI;
+
+    public LoadMapHandler loadMapHandler;
+
+    public List<GameObject> currentSpawnEnemyOrNPCList;
+    public List<GameObject> currentSpawnUIList;
 
     void Start()
     {
-
+        loadMapHandler = GetComponent<LoadMapHandler>();
     }
-
 }

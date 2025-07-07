@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: BattleNodes
+  m_EditorClassIdentifier: 
+  m_GroupName: BattleNodes
+  m_GUID: 538d85d0847c6de49ad1a42eaa8de9e4
+  m_SerializeEntries:
+  - m_GUID: 7a747f3461245a94080f39f871179c0c
+    m_Address: "\uC608\uC81C \uC804\uD22C 1"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BattleNode
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 95ba721dd898be747b90edcef13a21d4
+    m_Address: "\uC608\uC81C \uC804\uD22C 2"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BattleNode
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c272de5b8101e954ba8a09fe9c552688
+    m_Address: "\uC608\uC81C \uC804\uD22C"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BattleNode
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 68adc54c3b2506b4792e9cf9b8aaa501, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: db94f77159ae3ce4a9d866a6fe3f86d2, type: 2}

@@ -42,7 +42,6 @@ properties:
           type: integer
           minimum: !!int 1
           maximum: !!int 3
-          exclusiveMaximum: !!bool true
         eventAppearCondition:
           type: array
           item:

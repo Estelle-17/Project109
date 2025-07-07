@@ -5,20 +5,34 @@ using UnityEngine;
 public class BattleMapScript : MonoBehaviour
 {
     [SerializeField]
-    public Tile[,] map;
+    private Tile[,] map;
 
     public GameObject prefabTile;
     public int column;
     public int row;
+    public int centerColumn;
+    public int centerRow;
     public int tilePadding;
 
+    public Vector3 CheckTileMapLocationByRowAndColumn(int newColumn, int newRow)
+    {
+        return map[newColumn, newRow].transform.position;
+    }
+
+    public Vector3 CheckTileMapCenterLocation()
+    {
+        return map[centerColumn, centerRow].transform.position;
+    }
+
+    public Tile[,] GetTileMap() { return map; }
+
     /// <summary>
-    /// ¿øÇÏ´Â ¸Ê Å©±â¿¡ ¸Â°Ô Å¸ÀÏÀ» »ı¼ºÇØÁÖ´Â ÇÔ¼ö
+    /// ì›í•˜ëŠ” ë§µ í¬ê¸°ì— ë§ê²Œ íƒ€ì¼ì„ ìƒì„±í•´ì£¼ëŠ” í•¨ìˆ˜
     /// </summary>
     public void TileCreate()
     {
-        int startX = -(column / 2 * tilePadding) + (tilePadding / 2);
-        int startZ = -(row / 2 * tilePadding) + (tilePadding / 2);
+        int startX = -(column / 2 * tilePadding);
+        int startZ = -(row / 2 * tilePadding);
 
         map = new Tile[column, row];
         for (int columnIndex = 0; columnIndex < column; columnIndex++)
@@ -26,12 +40,15 @@ public class BattleMapScript : MonoBehaviour
             for(int rowIndex = 0; rowIndex < row; rowIndex++)
             {
                 Tile tile = GameObject.Instantiate(prefabTile).transform.GetComponent<Tile>();
-                tile.transform.localPosition = new Vector3(startX + columnIndex * tilePadding, 0.01f, startZ + rowIndex * tilePadding);
+                tile.transform.localPosition = transform.position + new Vector3(startX + columnIndex * tilePadding, 0.01f, startZ + rowIndex * tilePadding);
                 tile.transform.parent = transform;
                 tile.SetCoord(columnIndex, rowIndex);
                 map[columnIndex, rowIndex] = tile;
             }
         }
+
+        centerColumn = column / 2;
+        centerRow = row / 2;
 
         map[5, 2].tileState = TileState.Obstacle;
         map[4, 2].tileState = TileState.Obstacle;
@@ -39,7 +56,7 @@ public class BattleMapScript : MonoBehaviour
     }
 
     /// <summary>
-    /// ¼±ÅÃµÈ ÇÃ·¹ÀÌ¾î°¡ ÀÌµ¿ÇÒ ¼ö ÀÖ´Â Å¸ÀÏµéÀ» Ã£¾ÆÁÖ´Â ÇÔ¼ö
+    /// ì„ íƒëœ í”Œë ˆì´ì–´ê°€ ì´ë™í•  ìˆ˜ ìˆëŠ” íƒ€ì¼ë“¤ì„ ì°¾ì•„ì£¼ëŠ” í•¨ìˆ˜
     /// </summary>
     public List<Tile> CheckPlayerMoveTiles(Tile moveStart, int canMoveDistance)
     {
@@ -63,11 +80,11 @@ public class BattleMapScript : MonoBehaviour
                     int x = t.GetCoord().column + dirX[i];
                     int y = t.GetCoord().row + dirY[i];
 
-                    //¸ÊÀ» ³Ñ¾î°¡°Å³ª ºñ¾îÀÖÁö ¾ÊÀ» °æ¿ì Á¦¿Ü
+                    //ë§µì„ ë„˜ì–´ê°€ê±°ë‚˜ ë¹„ì–´ìˆì§€ ì•Šì„ ê²½ìš° ì œì™¸
                     if (x >= column || y >= row || x < 0 || y < 0 || map[x, y].tileState != TileState.Empty)
                         continue;
 
-                    //ÇÃ·¹ÀÌ¾î À§Ä¡ÀÏ °æ¿ì Á¦¿Ü
+                    //í”Œë ˆì´ì–´ ìœ„ì¹˜ì¼ ê²½ìš° ì œì™¸
                     if (map[x, y].GetCoord().column == moveStart.GetCoord().column && map[x, y].GetCoord().row == moveStart.GetCoord().row)
                         continue;
 
@@ -81,7 +98,7 @@ public class BattleMapScript : MonoBehaviour
             }
 
             checkCurrentTiles = new Queue<Tile>(checkNextTiles);
-            Debug.Log("ÇöÀç °è»êÇØ¾ß ÇÒ Å¸ÀÏ °¹¼ö : " + checkCurrentTiles.Count);
+            Debug.Log("í˜„ì¬ ê³„ì‚°í•´ì•¼ í•  íƒ€ì¼ ê°¯ìˆ˜ : " + checkCurrentTiles.Count);
             checkNextTiles.Clear();
         }
 

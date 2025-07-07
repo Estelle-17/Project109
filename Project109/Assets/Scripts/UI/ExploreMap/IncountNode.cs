@@ -21,10 +21,13 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     public List<GameObject> nextIncountNode;
     public ExploreUI exploreUI;
 
-    //È­»ìÇ¥ ±âÁØ ³ëµåÀÇ À§Ä¡
+    public BattleNodeData battleNodeData;
+    public EventData eventNodeData;
+
+    //í™”ì‚´í‘œ ê¸°ì¤€ ë…¸ë“œì˜ ìœ„ì¹˜
     public Vector2 arrowRelativePos;
 
-    //°¡¸®±â, ¼±ÅÃ µî ³ëµåÀÇ Ãß°¡ÀûÀÎ »ı±è»õ º¯°æÀ» À§ÇÑ ¿ÀºêÁ§Æ®µé
+    //ê°€ë¦¬ê¸°, ì„ íƒ ë“± ë…¸ë“œì˜ ì¶”ê°€ì ì¸ ìƒê¹€ìƒˆ ë³€ê²½ì„ ìœ„í•œ ì˜¤ë¸Œì íŠ¸ë“¤
     public GameObject ExtraMoneyObject;
     public GameObject ExtraCardObject;
     public GameObject IncountNodeCoverObject;
@@ -34,7 +37,7 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     public bool isExtraMoney;
     public bool isExtraCard;
 
-    //ÅØ½ºÃ³
+    //í…ìŠ¤ì²˜
     [Header("NodeTexture")]
     [SerializeField] private Sprite NoneTexture;
     [SerializeField] private Sprite BattleTexture;
@@ -66,7 +69,7 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     }
 
     /// <summary>
-    /// ¾Æ¹«°Íµµ ¾ø´Â »óÅÂ¸¦ Á¦¿ÜÇÑ ¸ğµç ³ëµå Á¾·ùµé Áß ·£´ıÀ¸·Î ³ëµå º¯°æ
+    /// ì•„ë¬´ê²ƒë„ ì—†ëŠ” ìƒíƒœë¥¼ ì œì™¸í•œ ëª¨ë“  ë…¸ë“œ ì¢…ë¥˜ë“¤ ì¤‘ ëœë¤ìœ¼ë¡œ ë…¸ë“œ ë³€ê²½
     /// </summary>
     public void SetRandomIncountNode()
     {
@@ -90,7 +93,7 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     }
 
     /// <summary>
-    /// ³ëµå Å¸ÀÔ¿¡ ¸Â´Â sprite µî·Ï
+    /// ë…¸ë“œ íƒ€ì…ì— ë§ëŠ” sprite ë“±ë¡
     /// </summary>
     void SetNodeTexture()
     {
@@ -148,12 +151,13 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         if(GameManager.instance.currentIncountNode.nextIncountNode.Contains(this.gameObject))
         {
             GameManager.instance.currentIncountNode.transform.GetComponent<IncountNode>().IncountNodeCurrentHighlightCircleObject.SetActive(false);
-            GameManager.instance.currentIncountNode = this;
+            GameManager.instance.currentIncountNode = this; //ë‹¤ìŒ ë§µ ë¡œë”©ì„ ìœ„í•´ ì´ë™í•  ë…¸ë“œ ì •ë³´ë¥¼ ì €ì¥
             GameManager.instance.currentExploreMapFloor += 1;
             if(exploreUI != null)
             {
                 IncountNodeCurrentHighlightCircleObject.SetActive(true);
-                exploreUI.OpenExploreMapNodesBasedOnFloorLength();
+
+                GameManager.instance.loadMapHandler.StartFadeInOut(true);
             }
         }
         else

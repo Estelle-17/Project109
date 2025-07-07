@@ -59,7 +59,10 @@ MonoBehaviour:
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
+  - {fileID: 11400000, guid: b0a8927a2fdb6d3479c669998262f162, type: 2}
+  - {fileID: 11400000, guid: 6364233bca1867046b22a99f61f2f8c5, type: 2}
   - {fileID: 11400000, guid: c294facdb703c9148a8ce24c7dd4259c, type: 2}
+  - {fileID: 11400000, guid: 1ad38a19d92df5841b1e41b72454c2a0, type: 2}
   - {fileID: 11400000, guid: 0cb9dd9cc9e7c4b429c59e3500a735e0, type: 2}
   - {fileID: 11400000, guid: 1ba45fe17924ffe40b5dc9d950d7c7e8, type: 2}
   - {fileID: 11400000, guid: 6ad8efd929e00534098156a8fc6864ab, type: 2}
@@ -105,6 +108,8 @@ MonoBehaviour:
     - Event
     - Relic
     - Card
+    - Monster
+    - BattleNode
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 9edc6ad1741e30e408ac61ec1c6e2997, type: 2}

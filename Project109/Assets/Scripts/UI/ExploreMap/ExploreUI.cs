@@ -8,6 +8,11 @@ public class ExploreUI : MonoBehaviour
 {
     public List<List<IncountNode>> ExploreMap;
 
+    //SOë°ì´í„° ë° ëœë¤ìœ¼ë¡œ ì„ íƒëœ ë°ì´í„°ë“¤
+    AddressableDataLoader dataLoader;
+    RandomItemPicker<BattleNodeData> battleItemPicker;
+    RandomItemPicker<EventData> eventItemPicker;
+
     public GameObject ViewLayout;
     public GameObject ArrowObjects;
     public List<VerticalLayoutGroup> ExploreVerticalObjects;
@@ -19,11 +24,11 @@ public class ExploreUI : MonoBehaviour
     [SerializeField] private int VerticalLayoutSpacing = 30;
 
     [Header ("Map Setting")]
-    [SerializeField] private int StoreNumber = 1;  //¸Ê¿¡ µîÀåÇÏ´Â »óÁ¡ °¹¼ö
-    [SerializeField] private int RestoreNumber = 1;  //¸Ê¿¡ µîÀåÇÏ´Â ÈŞ½Ä °¹¼ö
-    [SerializeField] private int SecretNumber = 6;  //¸Ê¿¡ µîÀåÇÏ´Â ½ÃÅ©¸´ °¹¼ö
-    [SerializeField] private int BoxNumber = 4;  //¸Ê¿¡ µîÀåÇÏ´Â »óÀÚ °¹¼ö
-    [SerializeField] private int EliteNumber = 3;  //¸Ê¿¡ µîÀåÇÏ´Â ¿¤¸®Æ® °¹¼ö
+    [SerializeField] private int StoreNumber = 1;  //ë§µì— ë“±ì¥í•˜ëŠ” ìƒì  ê°¯ìˆ˜
+    [SerializeField] private int RestoreNumber = 1;  //ë§µì— ë“±ì¥í•˜ëŠ” íœ´ì‹ ê°¯ìˆ˜
+    [SerializeField] private int SecretNumber = 4;  //ë§µì— ë“±ì¥í•˜ëŠ” ì‹œí¬ë¦¿ ê°¯ìˆ˜
+    [SerializeField] private int BoxNumber = 4;  //ë§µì— ë“±ì¥í•˜ëŠ” ìƒì ê°¯ìˆ˜
+    [SerializeField] private int EliteNumber = 3;  //ë§µì— ë“±ì¥í•˜ëŠ” ì—˜ë¦¬íŠ¸ ê°¯ìˆ˜
 
     [Header ("Prefab")]
     [SerializeField] private GameObject NodePrefab;
@@ -35,10 +40,19 @@ public class ExploreUI : MonoBehaviour
     {
         ExploreMap = new List<List<IncountNode>>();
 
+        dataLoader = AddressableDataLoader.Instance;
+        battleItemPicker = new RandomItemPicker<BattleNodeData>(dataLoader.battleNodeList);
+        eventItemPicker = new RandomItemPicker<EventData>(dataLoader.eventList);
+
+        if (dataLoader == null)
+        {
+            Debug.LogWarning("AddressablesData Loader is Null!");
+        }
+
         mapLength = 15;
         currentMapFloor = 0;
 
-        //³ëµåµéÀ» ´ã¾ÆµÎ´Â Vertical LeyoutµéÀ» ¹Ì¸® ´ã¾ÆµÎ±â
+        //ë…¸ë“œë“¤ì„ ë‹´ì•„ë‘ëŠ” Vertical Leyoutë“¤ì„ ë¯¸ë¦¬ ë‹´ì•„ë‘ê¸°
         ExploreVerticalObjects = new List<VerticalLayoutGroup>();
         for(int i = 0; i < mapLength; i++)
         {
@@ -47,8 +61,8 @@ public class ExploreUI : MonoBehaviour
         }
     }
     /// <summary>
-    /// Vertical LayoutÀÇ padding½Ã ³ëµå°¡ 2°³ ÀÌ»óÀÏ °æ¿ì 390 - (³ëµåÀÇ °¹¼ö * 65)¸¸Å­ top¿¡ ´õÇØÁÖ¸é Áß½ÉÀÌ ¸Â°Ô Á¤·ÄµÊ
-    /// 1°³ÀÏ °æ¿ì´Â 325·Î °íÁ¤
+    /// Vertical Layoutì˜ paddingì‹œ ë…¸ë“œê°€ 2ê°œ ì´ìƒì¼ ê²½ìš° 390 - (ë…¸ë“œì˜ ê°¯ìˆ˜ * 65)ë§Œí¼ topì— ë”í•´ì£¼ë©´ ì¤‘ì‹¬ì´ ë§ê²Œ ì •ë ¬ë¨
+    /// 1ê°œì¼ ê²½ìš°ëŠ” 325ë¡œ ê³ ì •
     /// </summary>
     public void CreateExploreMap()
     {
@@ -63,7 +77,7 @@ public class ExploreUI : MonoBehaviour
         {
             ExploreMap.Add(new List<IncountNode>());
 
-            if(index == 0)  //Ã³À½ ³ëµå´Â ¹«Á¶°Ç NoneÀ¸·Î »ı¼º
+            if(index == 0)  //ì²˜ìŒ ë…¸ë“œëŠ” ë¬´ì¡°ê±´ Noneìœ¼ë¡œ ìƒì„±
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.exploreUI = this;
@@ -71,7 +85,7 @@ public class ExploreUI : MonoBehaviour
                 ExploreMap[index].Add(node);
                 ExploreVerticalObjects[index].padding.top = 325;
             }
-            else if(index == mapLength - 1) //¸¶Áö¸· ³ëµå´Â ¹«Á¶°Ç Boss·Î »ı¼º
+            else if(index == mapLength - 1) //ë§ˆì§€ë§‰ ë…¸ë“œëŠ” ë¬´ì¡°ê±´ Bossë¡œ ìƒì„±
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.exploreUI = this;
@@ -79,7 +93,7 @@ public class ExploreUI : MonoBehaviour
                 ExploreMap[index].Add(node);
                 ExploreVerticalObjects[index].padding.top = 325;
             }
-            else if(index == mapLength / 2) //¸Ê Áß°£¿¡ È¸º¹ ¹× »óÁ¡ À§Ä¡ »ı¼º
+            else if(index == mapLength / 2) //ë§µ ì¤‘ê°„ì— íšŒë³µ ë° ìƒì  ìœ„ì¹˜ ìƒì„±
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.exploreUI = this;
@@ -93,14 +107,14 @@ public class ExploreUI : MonoBehaviour
                 ExploreMap[index].Add(node1);
                 ExploreVerticalObjects[index].padding.top = 260;
 
-                //´ÙÀ½ ¼½¼ÇÀÇ ³ëµå ÀúÀåÀ» À§ÇØ ListÃß°¡
+                //ë‹¤ìŒ ì„¹ì…˜ì˜ ë…¸ë“œ ì €ì¥ì„ ìœ„í•´ Listì¶”ê°€
                 incountNodeListInSection.Add(new List<IncountNode>());
                 sectionIndex++;
             }
-            else //³ª¸ÓÁö ³ëµå´Â ·£´ı °¹¼ö¿¡ ÀÎÄ«¿îÆ® ³ëµå »ı¼º
+            else //ë‚˜ë¨¸ì§€ ë…¸ë“œëŠ” ëœë¤ ê°¯ìˆ˜ì— ì¸ì¹´ìš´íŠ¸ ë…¸ë“œ ìƒì„±
             {
                 createNodeCount = Random.Range(3, 7);
-                //Á¤ÇØÁø ¼ö ¸¸Å­ ·£´ıÇÑ ÀÎÄ«¿îÅÍ »ı¼º
+                //ì •í•´ì§„ ìˆ˜ ë§Œí¼ ëœë¤í•œ ì¸ì¹´ìš´í„° ìƒì„±
                 for (int mapIndex = 0; mapIndex < createNodeCount; mapIndex++)
                 {
                     IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
@@ -109,13 +123,13 @@ public class ExploreUI : MonoBehaviour
                     ExploreMap[index].Add(node);
                     ExploreVerticalObjects[index].padding.top = 390 - (createNodeCount * 65);
 
-                    //¼½¼Ç ³»ÀÇ ³ëµåµé ÀúÀå
+                    //ì„¹ì…˜ ë‚´ì˜ ë…¸ë“œë“¤ ì €ì¥
                     incountNodeListInSection[sectionIndex].Add(node);
                 }
             }
         }
 
-        //º¸½º Àü¿¡´Â ¹«Á¶°ß ÈŞ½Ä Á¸Àç
+        //ë³´ìŠ¤ ì „ì—ëŠ” ë¬´ì¡°ê²¬ íœ´ì‹ ì¡´ì¬
         foreach (IncountNode node in ExploreMap[mapLength - 2])
         {
             node.SetIncountNode(IncountType.Restore);
@@ -123,17 +137,17 @@ public class ExploreUI : MonoBehaviour
         }
 
         /// <summary>
-        /// ¼½¼Ç ³»ÀÇ ³ëµåµé Áß¿¡¼­ Æ¯Á¤ ³ëµåµé·Î º¯°æ
-        /// Ãß°¡µÇ´Â ³ëµå Á¾·ù´Â ¿¤¸®Æ®, ½ÃÅ©¸´, ¹Ú½º, ÈŞ½Ä, »óÁ¡À¸·Î ÃÑ 5°¡Áö
+        /// ì„¹ì…˜ ë‚´ì˜ ë…¸ë“œë“¤ ì¤‘ì—ì„œ íŠ¹ì • ë…¸ë“œë“¤ë¡œ ë³€ê²½
+        /// ì¶”ê°€ë˜ëŠ” ë…¸ë“œ ì¢…ë¥˜ëŠ” ì—˜ë¦¬íŠ¸, ì‹œí¬ë¦¿, ë°•ìŠ¤, íœ´ì‹, ìƒì ìœ¼ë¡œ ì´ 5ê°€ì§€
         /// </summary>
         for (int sectionIdx = 0; sectionIdx < incountNodeListInSection.Count; sectionIdx++)
         {
             IncountNode currentNode;
 
-            //¿¤¸®Æ® Àû »ı¼º
+            //ì—˜ë¦¬íŠ¸ ì  ìƒì„±
             for (int index = 0; index < EliteNumber; index++)
             {
-                //ÀÏ¹İ ÀüÅõÀÎ ³ëµåµé Áß ·£´ıÀ¸·Î ÇÑ °³ ¼±ÅÃ
+                //ì¼ë°˜ ì „íˆ¬ì¸ ë…¸ë“œë“¤ ì¤‘ ëœë¤ìœ¼ë¡œ í•œ ê°œ ì„ íƒ
                 do
                 {
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
@@ -144,10 +158,10 @@ public class ExploreUI : MonoBehaviour
                 currentNode.DisableExtraType();
             }
 
-            //½ÃÅ©¸´ »ı¼º
+            //ì‹œí¬ë¦¿ ìƒì„±
             for (int index = 0; index < SecretNumber; index++)
             {
-                //ÀÏ¹İ ÀüÅõÀÎ ³ëµåµé Áß ·£´ıÀ¸·Î ÇÑ °³ ¼±ÅÃ
+                //ì¼ë°˜ ì „íˆ¬ì¸ ë…¸ë“œë“¤ ì¤‘ ëœë¤ìœ¼ë¡œ í•œ ê°œ ì„ íƒ
                 do
                 {
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
@@ -156,12 +170,26 @@ public class ExploreUI : MonoBehaviour
 
                 currentNode.SetIncountNode(IncountType.Secret);
                 currentNode.DisableExtraType();
+
+                //ëœë¤í•˜ê²Œ ì„ì¸ ë°ì´í„°ë“¤ ì¤‘ í•œ ê°€ì§€ë¥¼ ì €ì¥
+                if (eventItemPicker.TryGetNext(out EventData data))
+                {
+                    currentNode.eventNodeData = data;
+                }
+                else
+                {
+                    eventItemPicker.Reset();
+                    if (eventItemPicker.TryGetNext(out EventData newData))
+                    {
+                        currentNode.eventNodeData = newData;
+                    }
+                }
             }
 
-            //»óÀÚ »ı¼º
+            //ìƒì ìƒì„±
             for (int index = 0; index < BoxNumber; index++)
             {
-                //ÀÏ¹İ ÀüÅõÀÎ ³ëµåµé Áß ·£´ıÀ¸·Î ÇÑ °³ ¼±ÅÃ
+                //ì¼ë°˜ ì „íˆ¬ì¸ ë…¸ë“œë“¤ ì¤‘ ëœë¤ìœ¼ë¡œ í•œ ê°œ ì„ íƒ
                 do
                 {
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
@@ -172,10 +200,10 @@ public class ExploreUI : MonoBehaviour
                 currentNode.DisableExtraType();
             }
 
-            //ÈŞ½Ä »ı¼º
+            //íœ´ì‹ ìƒì„±
             for (int index = 0; index < RestoreNumber; index++)
             {
-                //ÀÏ¹İ ÀüÅõÀÎ ³ëµåµé Áß ·£´ıÀ¸·Î ÇÑ °³ ¼±ÅÃ
+                //ì¼ë°˜ ì „íˆ¬ì¸ ë…¸ë“œë“¤ ì¤‘ ëœë¤ìœ¼ë¡œ í•œ ê°œ ì„ íƒ
                 do
                 {
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
@@ -186,10 +214,10 @@ public class ExploreUI : MonoBehaviour
                 currentNode.DisableExtraType();
             }
 
-            //»óÁ¡ »ı¼º
+            //ìƒì  ìƒì„±
             for (int index = 0; index < StoreNumber; index++)
             {
-                //ÀÏ¹İ ÀüÅõÀÎ ³ëµåµé Áß ·£´ıÀ¸·Î ÇÑ °³ ¼±ÅÃ
+                //ì¼ë°˜ ì „íˆ¬ì¸ ë…¸ë“œë“¤ ì¤‘ ëœë¤ìœ¼ë¡œ í•œ ê°œ ì„ íƒ
                 do
                 {
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
@@ -201,7 +229,7 @@ public class ExploreUI : MonoBehaviour
             }
         }
 
-        //»ı¼º ½Ã ÇÊ¿äÇÑ ¸¸Å­ ³ëµå °¡¸®±â
+        //ìƒì„± ì‹œ í•„ìš”í•œ ë§Œí¼ ë…¸ë“œ ê°€ë¦¬ê¸°
         for (int i = GameManager.instance.checkMapNodeFloorLength; i < ExploreMap.Count; i++)
         {
             for (int j = 0; j < ExploreMap[i].Count; j++)
@@ -210,12 +238,45 @@ public class ExploreUI : MonoBehaviour
             }
         }
 
-        //½ÃÀÛ ÁöÁ¡ ÀúÀå
+        SetBattleNodeData();
+
+        //ì‹œì‘ ì§€ì  ì €ì¥
         GameManager.instance.currentIncountNode = ExploreMap[0][0];
         ExploreMap[0][0].IncountNodeCurrentHighlightCircleObject.SetActive(true);
 
-        //°¢ ³ëµå³¢¸® ¿¬°áÇÏ´Â Arrow»ı¼º
+        //GameManagerì— í˜„ì¬ ExploreMap ì €ì¥
+        GameManager.instance.currentExploreUI = this;
+
+        //ê° ë…¸ë“œë¼ë¦¬ ì—°ê²°í•˜ëŠ” Arrowìƒì„±
         StartCoroutine(CreateArrowUI());
+    }
+
+    //ëª¬ìŠ¤í„° ì¢…ë¥˜, ìœ„ì¹˜ ë“± ì—¬ëŸ¬ ì „íˆ¬ ë§µì˜ ë°ì´í„°ë¥¼ ì „íˆ¬ ë…¸ë“œì— ëœë¤ìœ¼ë¡œ ì €ì¥
+    void SetBattleNodeData()
+    {
+        for (int i = 0; i < ExploreMap.Count; i++)
+        {
+            for (int j = 0; j < ExploreMap[i].Count; j++)
+            {
+                if (ExploreMap[i][j].incountType == IncountType.Battle)
+                {
+                    //ë‚˜ì¤‘ì— ìŠ¤í…Œì´ì§€ ë³„ë¡œ ë‹¤ì–‘í•œ ë°ì´í„°ê°€ ìƒê¸°ë©´ ì´ì— ë§ê²Œ ë³€ê²½ ì˜ˆì •
+                    //ëœë¤í•˜ê²Œ ì„ì¸ ë°ì´í„°ë“¤ ì¤‘ í•œ ê°€ì§€ë¥¼ ì €ì¥
+                    if (battleItemPicker.TryGetNext(out BattleNodeData data))
+                    {
+                        ExploreMap[i][j].battleNodeData = data;
+                    }
+                    else
+                    {
+                        battleItemPicker.Reset();
+                        if (battleItemPicker.TryGetNext(out BattleNodeData newData))
+                        {
+                            ExploreMap[i][j].battleNodeData = newData;
+                        }
+                    }
+                }
+            }
+        }
     }
    
     public void OpenExploreMapNodesBasedOnFloorLength()
@@ -245,13 +306,13 @@ public class ExploreUI : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
 
-        //·¹ÀÌ¾Æ¿ôÀÇ Á¤·ÄÀÌ ³¡³­ ÈÄÀÎ ´ÙÀ½ ÇÁ·¹ÀÓ¿¡ À§Ä¡ °è»ê ½ÇÇà
+        //ë ˆì´ì•„ì›ƒì˜ ì •ë ¬ì´ ëë‚œ í›„ì¸ ë‹¤ìŒ í”„ë ˆì„ì— ìœ„ì¹˜ ê³„ì‚° ì‹¤í–‰
         SetNodePosition();
 
-        //°¢ ³ëµå °£ÀÇ ¿¬°á °è»ê
+        //ê° ë…¸ë“œ ê°„ì˜ ì—°ê²° ê³„ì‚°
         SetNextIncountNode();
 
-        //¿¬°á¿¡ ¸Â°Ô È­»ìÇ¥ »ı¼º
+        //ì—°ê²°ì— ë§ê²Œ í™”ì‚´í‘œ ìƒì„±
         for (int i = 0; i < ExploreMap.Count; i++)
         {
             for (int j = 0; j < ExploreMap[i].Count; j++)
@@ -278,7 +339,7 @@ public class ExploreUI : MonoBehaviour
             RectTransform arrowLine = GameObject.Instantiate(ArrowLinePrefab, ArrowObjects.transform).GetComponent<RectTransform>();
 
             arrowLine.anchoredPosition = ((startPos + endPos) / 2f);
-            arrowLine.sizeDelta = new Vector2(dist, 5); //¼± µÎ²² 5
+            arrowLine.sizeDelta = new Vector2(dist, 5); //ì„  ë‘ê»˜ 5
             arrowLine.rotation = Quaternion.Euler(0, 0, angle);
         }
 
@@ -306,7 +367,7 @@ public class ExploreUI : MonoBehaviour
     }
 
     /// <summary>
-    /// IncountNodeÀÇ nextIncountNode¿¡ ´ÙÀ½ ³ëµåµé µî·Ï
+    /// IncountNodeì˜ nextIncountNodeì— ë‹¤ìŒ ë…¸ë“œë“¤ ë“±ë¡
     /// </summary>
     void SetNextIncountNode()
     {
@@ -332,19 +393,19 @@ public class ExploreUI : MonoBehaviour
                     currentNodeCount++;
                 }
             }
-            else if(ExploreMap[i].Count < ExploreMap[i + 1].Count)  //¿ŞÂÊ ³ëµå°¡ ¿À¸¥ÂÊ ³ëµåº¸´Ù ÀÛÀ» °æ¿ì
+            else if(ExploreMap[i].Count < ExploreMap[i + 1].Count)  //ì™¼ìª½ ë…¸ë“œê°€ ì˜¤ë¥¸ìª½ ë…¸ë“œë³´ë‹¤ ì‘ì„ ê²½ìš°
             {
                 int currentNodeCount = 0;
                 int nextNodeCount = 0;
                 bool recentlyIgnoreNode = false;
-                //´Ù¼öÀÇ ³ëµå¿¡°Ô ¼±ÅÃµÉ ³ëµå ÇÑ °³¸¦ ·£´ıÀ¸·Î ¼±ÅÃ
+                //ë‹¤ìˆ˜ì˜ ë…¸ë“œì—ê²Œ ì„ íƒë  ë…¸ë“œ í•œ ê°œë¥¼ ëœë¤ìœ¼ë¡œ ì„ íƒ
                 int randomNodeNumber = Random.Range(0, ExploreMap[i].Count);
 
                 while (currentNodeCount < ExploreMap[i].Count && nextNodeCount < ExploreMap[i + 1].Count)
                 {
                     if(currentNodeCount == randomNodeNumber)
                     {
-                        //¿ŞÂÊ ³ëµåÀÇ ³²Àº ¼ö + 1 = ¿À¸¥ÂÊ ³ëµåÀÇ ³²Àº ¼ö°¡ µÉ ¶§ ±îÁö ¿ŞÂÊ ³ëµå¸¦ ³»·Á°¡¸ç µî·Ï
+                        //ì™¼ìª½ ë…¸ë“œì˜ ë‚¨ì€ ìˆ˜ + 1 = ì˜¤ë¥¸ìª½ ë…¸ë“œì˜ ë‚¨ì€ ìˆ˜ê°€ ë  ë•Œ ê¹Œì§€ ì™¼ìª½ ë…¸ë“œë¥¼ ë‚´ë ¤ê°€ë©° ë“±ë¡
                         while (ExploreMap[i].Count - currentNodeCount + 1 < ExploreMap[i + 1].Count - nextNodeCount)
                         {
                             ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
@@ -353,8 +414,8 @@ public class ExploreUI : MonoBehaviour
                     }
 
                     ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
-                    //¸Ç Ã³À½ ³ëµå¿Í ¸¶Áö¸· ³ëµå°¡ ¾Æ´Ò °æ¿ì 50%ÀÇ È®·ü·Î ¾Æ·¡ ³ëµå¿Í ¿¬°áµÊ
-                    //ÀÌÀü¿¡ ¾Æ·¡ ³ëµå¿Í ¿¬°áÀÌ ¾È‰çÀ» °æ¿ì´Â ¹«Á¶°Ç ¿¬°áµÊ
+                    //ë§¨ ì²˜ìŒ ë…¸ë“œì™€ ë§ˆì§€ë§‰ ë…¸ë“œê°€ ì•„ë‹ ê²½ìš° 50%ì˜ í™•ë¥ ë¡œ ì•„ë˜ ë…¸ë“œì™€ ì—°ê²°ë¨
+                    //ì´ì „ì— ì•„ë˜ ë…¸ë“œì™€ ì—°ê²°ì´ ì•ˆë¬ì„ ê²½ìš°ëŠ” ë¬´ì¡°ê±´ ì—°ê²°ë¨
                     if (nextNodeCount + 1 < ExploreMap[i + 1].Count)
                     {
                         if (Random.Range(0, 11) % 2 == 0 || recentlyIgnoreNode || currentNodeCount == 0 || currentNodeCount == ExploreMap[i].Count - 1)
@@ -370,7 +431,7 @@ public class ExploreUI : MonoBehaviour
                         }
                     }
 
-                    //¸¸¾à ¸¶Áö¸·±îÁö ¿¬°áÀÌ ¾ÈµÈ ³ëµå°¡ Á¸Àç ½Ã ¸¶Áö¸· ³ëµå¿¡ °­Á¦·Î ¿¬°áÇØÁÜ
+                    //ë§Œì•½ ë§ˆì§€ë§‰ê¹Œì§€ ì—°ê²°ì´ ì•ˆëœ ë…¸ë“œê°€ ì¡´ì¬ ì‹œ ë§ˆì§€ë§‰ ë…¸ë“œì— ê°•ì œë¡œ ì—°ê²°í•´ì¤Œ
                     if (currentNodeCount == ExploreMap[i].Count - 1 && nextNodeCount < ExploreMap[i + 1].Count - 1)
                     {
                         while (nextNodeCount < ExploreMap[i + 1].Count)
@@ -383,22 +444,22 @@ public class ExploreUI : MonoBehaviour
                     currentNodeCount++;
                 }
             }
-            else  //¿ŞÂÊ ³ëµå°¡ ¿À¸¥ÂÊ ³ëµåº¸´Ù Å¬ °æ¿ì
+            else  //ì™¼ìª½ ë…¸ë“œê°€ ì˜¤ë¥¸ìª½ ë…¸ë“œë³´ë‹¤ í´ ê²½ìš°
             {
                 int currentNodeCount = 0;
                 int nextNodeCount = 0;
                 bool recentlyIgnoreNode = false;
-                //´Ù¼öÀÇ ³ëµå¿¡°Ô ¼±ÅÃµÉ ³ëµå ÇÑ °³¸¦ ·£´ıÀ¸·Î ¼±ÅÃ
+                //ë‹¤ìˆ˜ì˜ ë…¸ë“œì—ê²Œ ì„ íƒë  ë…¸ë“œ í•œ ê°œë¥¼ ëœë¤ìœ¼ë¡œ ì„ íƒ
                 int randomNodeNumber = Random.Range(0, ExploreMap[i+1].Count);
 
                 while (currentNodeCount < ExploreMap[i].Count && nextNodeCount < ExploreMap[i + 1].Count)
                 {
-                    //ÀÏ´Ü ÇöÀç ¼±ÅÃµÈ ¿ŞÂÊ ³ëµå¿¡ ¼±ÅÃµÈ ¿À¸¥ÂÊ ³ëµå¸¦ µî·Ï
+                    //ì¼ë‹¨ í˜„ì¬ ì„ íƒëœ ì™¼ìª½ ë…¸ë“œì— ì„ íƒëœ ì˜¤ë¥¸ìª½ ë…¸ë“œë¥¼ ë“±ë¡
                     ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
-                    //¸¸¾à ¿À¸¥ÂÊ ³ëµå°¡ ¼±ÅÃµÈ ³ëµåÀÏ ½Ã
+                    //ë§Œì•½ ì˜¤ë¥¸ìª½ ë…¸ë“œê°€ ì„ íƒëœ ë…¸ë“œì¼ ì‹œ
                     if (nextNodeCount == randomNodeNumber)
                     {
-                        //¿ŞÂÊ ³ëµåÀÇ ³²Àº ¼ö = ¿À¸¥ÂÊ ³ëµåÀÇ ³²Àº ¼ö - 1ÀÌ µÉ ¶§ ±îÁö ¿ŞÂÊ ³ëµå¸¦ ³»·Á°¡¸ç µî·Ï
+                        //ì™¼ìª½ ë…¸ë“œì˜ ë‚¨ì€ ìˆ˜ = ì˜¤ë¥¸ìª½ ë…¸ë“œì˜ ë‚¨ì€ ìˆ˜ - 1ì´ ë  ë•Œ ê¹Œì§€ ì™¼ìª½ ë…¸ë“œë¥¼ ë‚´ë ¤ê°€ë©° ë“±ë¡
                         while (ExploreMap[i].Count - currentNodeCount > ExploreMap[i + 1].Count - nextNodeCount)
                         {
                             if (currentNodeCount + 1 < ExploreMap[i].Count)
@@ -418,8 +479,8 @@ public class ExploreUI : MonoBehaviour
                         }
                     }
 
-                    //¸Ç Ã³À½ ³ëµå¿Í ¸¶Áö¸· ³ëµå°¡ ¾Æ´Ò °æ¿ì 50%ÀÇ È®·ü·Î ¾Æ·¡ ³ëµå¿Í ¿¬°áµÊ
-                    //ÀÌÀü¿¡ ¾Æ·¡ ³ëµå¿Í ¿¬°áÀÌ ¾È‰çÀ» °æ¿ì´Â ¹«Á¶°Ç ¿¬°áµÊ
+                    //ë§¨ ì²˜ìŒ ë…¸ë“œì™€ ë§ˆì§€ë§‰ ë…¸ë“œê°€ ì•„ë‹ ê²½ìš° 50%ì˜ í™•ë¥ ë¡œ ì•„ë˜ ë…¸ë“œì™€ ì—°ê²°ë¨
+                    //ì´ì „ì— ì•„ë˜ ë…¸ë“œì™€ ì—°ê²°ì´ ì•ˆë¬ì„ ê²½ìš°ëŠ” ë¬´ì¡°ê±´ ì—°ê²°ë¨
                     if (nextNodeCount + 1 < ExploreMap[i + 1].Count)
                     {
                         if (Random.Range(0, 11) % 2 == 0 || recentlyIgnoreNode || currentNodeCount == 0 || currentNodeCount == ExploreMap[i].Count - 1)
@@ -434,7 +495,7 @@ public class ExploreUI : MonoBehaviour
                         }
                     }
 
-                    //¸¸¾à ¸¶Áö¸·±îÁö ¿¬°áÀÌ ¾ÈµÈ ³ëµå°¡ Á¸Àç ½Ã ¸¶Áö¸· ³ëµå¿¡ °­Á¦·Î ¿¬°áÇØÁÜ
+                    //ë§Œì•½ ë§ˆì§€ë§‰ê¹Œì§€ ì—°ê²°ì´ ì•ˆëœ ë…¸ë“œê°€ ì¡´ì¬ ì‹œ ë§ˆì§€ë§‰ ë…¸ë“œì— ê°•ì œë¡œ ì—°ê²°í•´ì¤Œ
                     if (currentNodeCount == ExploreMap[i].Count - 1 && nextNodeCount < ExploreMap[i + 1].Count - 1)
                     {
                         while (nextNodeCount < ExploreMap[i + 1].Count)
@@ -448,5 +509,10 @@ public class ExploreUI : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void CloseUI()
+    {
+        gameObject.SetActive(false);
     }
 }

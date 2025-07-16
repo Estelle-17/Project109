@@ -10,6 +10,7 @@ public class LoadMapHandler : MonoBehaviour
     //프리팹은 나중에 모딩을 생각해서 addressable로 변경 예정
     public GameObject eventObjectPrefab;
     public GameObject shopObjectPrefab;
+    public GameObject restoreObjectPrefab;
 
     void Start()
     {
@@ -100,6 +101,7 @@ public class LoadMapHandler : MonoBehaviour
         newEventNPC.UpdateEventDescription();   //선택지 생성
         newEventNPC.transform.position = GameManager.instance.currentMap.CheckTileMapCenterLocation();
 
+        //맵 이동 시 지워질 오브젝트 목록으로 등록
         GameManager.instance.currentSpawnEnemyOrNPCList.Add(newEventNPC.gameObject);
         GameManager.instance.currentSpawnUIList.Add(newEventNPC.eventDescription.gameObject);
     }
@@ -114,8 +116,23 @@ public class LoadMapHandler : MonoBehaviour
             newShopNPC.transform.position = GameManager.instance.currentMap.CheckTileMapCenterLocation();
         }
 
+        //맵 이동 시 지워질 오브젝트 목록으로 등록
         GameManager.instance.currentSpawnEnemyOrNPCList.Add(newShopNPC.gameObject);
         GameManager.instance.currentSpawnUIList.Add(newShopNPC.GetShopUI().gameObject);
+    }
+
+    void SpawnRestoreNPC()
+    {
+        RestoreUIManager newRestoreNPC = Instantiate(restoreObjectPrefab).GetComponent<RestoreUIManager>();
+        if(newRestoreNPC != null)
+        {
+            newRestoreNPC.CreateRestoreUI();
+            newRestoreNPC.transform.position = GameManager.instance.currentMap.CheckTileMapCenterLocation();
+        }
+
+        //맵 이동 시 지워질 오브젝트 목록으로 등록
+        GameManager.instance.currentSpawnEnemyOrNPCList.Add(newRestoreNPC.gameObject);
+        GameManager.instance.currentSpawnUIList.Add(newRestoreNPC.GetRestoreUI().gameObject);
     }
 
     public IEnumerator FadeIn(bool isLoadingNode)

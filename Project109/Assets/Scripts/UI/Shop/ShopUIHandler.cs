@@ -54,23 +54,23 @@ public class ShopUIHandler : MonoBehaviour
         }
 
         //상점 아이템과 상호작용이 가능하도록 미리 만들어진 오브젝트를 리스트에 추가
-        for (int i = 0; i < cardCollectionTriggers.transform.childCount; i++)
-        {
-            cardTriggerList.Add(cardCollectionTriggers.transform.GetChild(i).GetComponent<ShopItemTrigger>());
-            cardTriggerList[i].ShopItemType = ShopItems.Card;
-        }
+        //for (int i = 0; i < cardCollectionTriggers.transform.childCount; i++)
+        //{
+        //    cardTriggerList.Add(cardCollectionTriggers.transform.GetChild(i).GetComponent<ShopItemTrigger>());
+        //    cardTriggerList[i].ShopItemType = ShopItems.Card;
+        //}
 
-        for (int i = 0; i < relicCollectionTriggers.transform.childCount; i++)
-        {
-            relicTriggerList.Add(relicCollectionTriggers.transform.GetChild(i).GetComponent<ShopItemTrigger>());
-            relicTriggerList[i].ShopItemType = ShopItems.Relic;
-        }
+        //for (int i = 0; i < relicCollectionTriggers.transform.childCount; i++)
+        //{
+        //    relicTriggerList.Add(relicCollectionTriggers.transform.GetChild(i).GetComponent<ShopItemTrigger>());
+        //    relicTriggerList[i].ShopItemType = ShopItems.Relic;
+        //}
 
-        for (int i = 0; i < potionCollectionTriggers.transform.childCount; i++)
-        {
-            potionTriggerList.Add(potionCollectionTriggers.transform.GetChild(i).GetComponent<ShopItemTrigger>());
-            potionTriggerList[i].ShopItemType = ShopItems.Potion;
-        }
+        //for (int i = 0; i < potionCollectionTriggers.transform.childCount; i++)
+        //{
+        //    potionTriggerList.Add(potionCollectionTriggers.transform.GetChild(i).GetComponent<ShopItemTrigger>());
+        //    potionTriggerList[i].ShopItemType = ShopItems.Potion;
+        //}
     }
 
     public void UpdateCardList(List<ActionCardData> cardData)
@@ -79,10 +79,12 @@ public class ShopUIHandler : MonoBehaviour
 
         for(int i = 0; i < cardCount; i++)
         {
-            cardList[i].cardData = cardData[i];
+            ActionCardData currentCardData = cardData[i];
+            cardList[i].cardData = currentCardData;
             cardList[i].UpdateActionCardData();
+            cardList[i].OnCardClick.AddListener(() => PurchaseCard(currentCardData));
 
-            cardTriggerList[i].cardHandler = cardList[i];
+            //cardTriggerList[i].cardHandler = cardList[i];
         }
     }
 
@@ -95,7 +97,13 @@ public class ShopUIHandler : MonoBehaviour
             relicList[i].relicData = relicData[i];
             relicList[i].UpdateRelicData();
 
-            relicTriggerList[i].relicHandler = relicList[i];
+            //relicTriggerList[i].relicHandler = relicList[i];
         }
+    }
+
+    void PurchaseCard(ActionCardData cardData)
+    {
+        Debug.Log($"{cardData.cardName} 행동 카드를 구매합니다.");
+        //덱에 카드 추가하는 로직 구현
     }
 }

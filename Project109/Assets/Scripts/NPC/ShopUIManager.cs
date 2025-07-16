@@ -46,7 +46,7 @@ public class ShopUIManager : MonoBehaviour
                 cardItemPicker.Reset();
                 if (cardItemPicker.TryGetNext(out ActionCardData newData))
                 {
-                    actionCards.Add(data);
+                    actionCards.Add(newData);
                 }
             }
         }
@@ -62,7 +62,7 @@ public class ShopUIManager : MonoBehaviour
                 relicItemPicker.Reset();
                 if (relicItemPicker.TryGetNext(out RelicData newData))
                 {
-                    relics.Add(data);
+                    relics.Add(newData);
                 }
             }
         }

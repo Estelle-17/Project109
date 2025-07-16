@@ -60,7 +60,7 @@ public class TouchSystem : MonoBehaviour
 
         Debug.DrawRay(Camera.main.transform.localPosition, ray.direction * 100.0f, Color.blue);
 
-        int layerMask = LayerMask.GetMask("Player", "Enemy", "ShopNPC","EventNPC");
+        int layerMask = LayerMask.GetMask("Player", "Enemy", "ShopNPC","EventNPC", "RestoreNPC");
 
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 10000.0f, layerMask))
@@ -85,16 +85,24 @@ public class TouchSystem : MonoBehaviour
                 break;
             case "ShopNPC":
                 CameraFocusToTarget(newObject.transform.position);
-                ShopUIManager ShopUIManager = newObject.GetComponent<ShopUIManager>();
-                if (ShopUIManager != null)
+                ShopUIManager shopUIManager = newObject.GetComponent<ShopUIManager>();
+                if (shopUIManager != null)
                 {
-                    ShopUIManager.EnableShopUI();
+                    shopUIManager.EnableShopUI();
+                }
+                break;
+            case "RestoreNPC":
+                CameraFocusToTarget(newObject.transform.position);
+                RestoreUIManager restoreUIManager = newObject.GetComponent<RestoreUIManager>();
+                if(restoreUIManager != null)
+                {
+                    restoreUIManager.EnableRestoreUI();
                 }
                 break;
             case "EventNPC":
                 CameraFocusToTarget(newObject.transform.position);
                 EventHandler eventHandler = newObject.GetComponent<EventHandler>();
-                if(eventHandler != null)
+                if (eventHandler != null)
                 {
                     eventHandler.EnableEventDescriptionUI();
                 }

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.Events;
 
-public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public ActionCardData cardData;
 
@@ -19,6 +20,8 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public EffectAreaCheckButton effectAreaCheckButton; //공격 범위 확인용 버튼
 
     public List<GameObject> checkActiveTiles;
+
+    public UnityEvent OnCardClick;  //클릭 시 호출될 이벤트
 
     void Start()
     {
@@ -75,6 +78,11 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public void OffSelectHighlight()
     {
         selectHighlightObject.SetActive(false);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        OnCardClick?.Invoke();
     }
 
     public void OnPointerEnter(PointerEventData eventData)

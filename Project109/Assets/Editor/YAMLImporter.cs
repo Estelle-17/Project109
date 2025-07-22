@@ -71,6 +71,7 @@ public class YAMLImporter
             asset.conditions = card.conditions;
 
             asset.cardTexture = (Texture2D)AssetDatabase.LoadAssetAtPath(asset.texturePath, typeof(Texture2D));
+            asset.upgradeCount = 0;
 
             var path = $"Assets/SO/Cards/{card.cardName}.asset";
             Directory.CreateDirectory("Assets/SO/Cards");

@@ -4,6 +4,34 @@ using UnityEngine.InputSystem;
 
 public class TouchSystem : MonoBehaviour
 {
+    public static TouchSystem instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
+    public static TouchSystem Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                return null;
+            }
+            return instance;
+        }
+    }
+
     public PlayerInputController playerInputController;
 
     Camera mainCamera;
@@ -24,12 +52,22 @@ public class TouchSystem : MonoBehaviour
             playerInputController.playerInputController.Player.Touch.performed += DragToCameraMove;
             playerInputController.playerInputController.Player.Touch.canceled += CheckToTargetObject;
 
-            playerInputController.OnEnable();
+            EnableObjectInteractionInput();
         }
         else
         {
             Debug.LogWarning("InputController is null!");
         }
+    }
+
+    public void EnableObjectInteractionInput()
+    {
+        playerInputController?.OnEnable();
+    }
+
+    public void DisableObjectInteractionInput()
+    {
+        playerInputController?.OnDisable();
     }
 
     public void CheckToTouchPos(InputAction.CallbackContext context)

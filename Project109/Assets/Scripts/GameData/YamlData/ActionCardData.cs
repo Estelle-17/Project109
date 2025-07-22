@@ -15,6 +15,7 @@ public class ActionCardData : ScriptableObject, IIdentifiable
     public List<SkillEffect> effects;
     public List<SkillEffect> upgradeEffects;
     public List<SkillCondition> conditions;
+    public int upgradeCount;
 
     public string ID => cardName;
 }

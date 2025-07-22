@@ -23,16 +23,21 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public UnityEvent OnCardClick;  //클릭 시 호출될 이벤트
 
+    public bool bIsCardHighlight;
+
     void Start()
     {
         selectHighlightObject.SetActive(false);
-        UpdateActionCardData();
+
+        if(cardData != null)
+        {
+            UpdateActionCardData(cardData);
+        }
     }
 
-    public void UpdateActionCardData()
+    public void UpdateActionCardData(ActionCardData newCardData)
     {
-        if (cardData == null)
-            return;
+        cardData = newCardData;
 
         cardName.text = cardData.cardName;
         useStamina.text = cardData.useStamina.ToString();
@@ -87,7 +92,8 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        OnSelectHighlight();       //카드 하이라이트on
+        if(bIsCardHighlight)
+            OnSelectHighlight();       //카드 하이라이트on
 
         if (cardData == null)
             return;
@@ -129,7 +135,8 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        OffSelectHighlight();   //카드 하이라이트off
+        if (bIsCardHighlight)
+            OffSelectHighlight();       //카드 하이라이트on
 
         //현재 선택된 카드와 맞는 효과 범위 초기화
         foreach (GameObject obj in checkActiveTiles)

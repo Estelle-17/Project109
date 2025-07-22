@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class UpgradeUIHandler : MonoBehaviour
+public class UpgradeUIHandler : UIPanelBase
 { 
     public List<ActionCardHandler> upgradeCardList;
     public GameObject viewLayout;

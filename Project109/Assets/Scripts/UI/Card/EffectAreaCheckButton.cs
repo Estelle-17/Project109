@@ -3,11 +3,9 @@ using UnityEngine.EventSystems;
 
 public class EffectAreaCheckButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public GameObject effectAreaCheckObject;
-
     void Start()
     {
-        effectAreaCheckObject.SetActive(false);
+
     }
 
     void Update()
@@ -17,11 +15,18 @@ public class EffectAreaCheckButton : MonoBehaviour, IPointerEnterHandler, IPoint
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        effectAreaCheckObject.SetActive(true);
+        if (UIManager.instance == null)
+            return;
+
+        //카드의 중앙 위치값을 줌으로써 적용범위UI의 위치 설정
+        UIManager.instance.OnCardEffectAreaBackground(transform.position);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        effectAreaCheckObject.SetActive(false);
+        if (UIManager.instance == null)
+            return;
+
+        UIManager.instance.OffCardEffectAreaBackground();
     }
 }

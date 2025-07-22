@@ -10,7 +10,7 @@ public enum RestoreUICategory
     Upgrade
 }
 
-public class RestoreUIHandler : MonoBehaviour
+public class RestoreUIHandler : UIPanelBase
 {
     public GameObject upgradeCardUI;
 

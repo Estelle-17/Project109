@@ -4,7 +4,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ExploreUI : MonoBehaviour
+public class ExploreUI : UIPanelBase
 {
     public List<List<IncountNode>> ExploreMap;
 

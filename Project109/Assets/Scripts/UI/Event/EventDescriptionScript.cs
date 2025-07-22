@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EventDescriptionScript : MonoBehaviour
+public class EventDescriptionScript : UIPanelBase
 {
     public TextMeshProUGUI description;
 

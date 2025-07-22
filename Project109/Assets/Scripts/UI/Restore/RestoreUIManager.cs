@@ -12,8 +12,8 @@ public class RestoreUIManager : MonoBehaviour
 
     public void CreateRestoreUI()
     {
-        restoreUI = GameObject.Instantiate(restoreUIPrefab).GetComponent<RestoreUIHandler>();
-        if(restoreUI != null )
+        restoreUI = GameObject.Instantiate(restoreUIPrefab).transform.GetChild(0).GetComponent<RestoreUIHandler>();
+        if(restoreUI != null)
         {
             restoreUI.gameObject.SetActive(false);
         }

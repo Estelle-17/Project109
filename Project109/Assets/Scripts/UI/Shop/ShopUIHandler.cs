@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class ShopUIHandler : MonoBehaviour
+public class ShopUIHandler : UIPanelBase
 {
     public GameObject cardCollection;
     public GameObject relicCollection;
@@ -80,8 +80,7 @@ public class ShopUIHandler : MonoBehaviour
         for(int i = 0; i < cardCount; i++)
         {
             ActionCardData currentCardData = cardData[i];
-            cardList[i].cardData = currentCardData;
-            cardList[i].UpdateActionCardData();
+            cardList[i].UpdateActionCardData(currentCardData);
             cardList[i].OnCardClick.AddListener(() => PurchaseCard(currentCardData));
 
             //cardTriggerList[i].cardHandler = cardList[i];

@@ -58,7 +58,7 @@ public class LoadMapHandler : MonoBehaviour
 
                     break;
                 case IncountType.Restore:
-
+                    SpawnRestoreNPC();
                     break;
                 case IncountType.Store:
                     SpawnShopNPC();

@@ -4,66 +4,148 @@ cardCollection:
     cardName: 슬래시
     texturePath: Assets/Texture/Items/Card/CardTexture.png
     level: !!int 1
+    useStamina: !!int 40
     effectArea:
       - area:
           - "111"
           - "010"
           - "000"
-    useStamina: !!int 40
-    cardEffects:
-      - cardEffectType: None
-        chainEffect:
-        - effectType: None
-          value: 0
-        chainCondition:
+    defaultEffects:
+      effects:
+        - effectType: Damage
+          value: 8
+          times: 1
+      conditions:
         - conditionType: None
           value: 0
           description: ""
-    effects:
-      - effectType: Damage
-        value: 8
+      features:
+        - cardFeatureType: None
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: None
+              value: 0
+              description: ""
     upgradeEffects:
-      - effectType: Damage
-        value: 12
-    conditions:
-      - conditionType: None
-        value: 0
-        description: ""
+      effects:
+        - effectType: Damage
+          value: 12
+          times: 1
+      conditions:
+        - conditionType: None
+          value: 0
+          description: ""
+      features:
+        - cardFeatureType: None
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: None
+              value: 0
+              description: ""
 
   - className: Warrior
     cardName: 퀵 슬래시
     texturePath: Assets/Texture/Items/Card/CardTexture.png
     level: !!int 1
+    useStamina: !!int 0
     effectArea:
       - area:
           - "010"
           - "010"
           - "000"
-    useStamina: !!int 0
-    cardEffects:
-      - cardEffectType: None
-        chainEffect:
-        - effectType: None
-          value: 0
-        chainCondition:
+    defaultEffects:
+      effects:
+        - effectType: Damage
+          value: 4
+          times: 1
+      conditions:
         - conditionType: None
           value: 0
           description: ""
-    effects:
-      - effectType: Damage
-        value: 4
+      features:
+        - cardFeatureType: None
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: None
+              value: 0
+              description: ""
     upgradeEffects:
-      - effectType: Damage
-        value: 6
-    conditions:
-      - conditionType: None
-        value: 0
-        description: ""
+      effects:
+        - effectType: Damage
+          value: 6
+          times: 1
+      conditions:
+        - conditionType: None
+          value: 0
+          description: ""
+      features:
+        - cardFeatureType: None
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: None
+              value: 0
+              description: ""
+
+  - className: Warrior
+    cardName: 콤보 슬래시
+    texturePath: Assets/Texture/Items/Card/CardTexture.png
+    level: !!int 1
+    useStamina: !!int 40
+    effectArea:
+      - area:
+          - "111"
+          - "010"
+          - "000"
+    defaultEffects:
+      effects:
+        - effectType: Damage
+          value: 4
+          times: 4
+      conditions:
+        - conditionType: RandomTarget
+          value: 0
+          description: "무작위 적을 공격합니다."
+      features:
+        - cardFeatureType: None
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: None
+              value: 0
+              description: ""
+    upgradeEffects:
+      effects:
+        - effectType: Damage
+          value: 4
+          times: 6
+      conditions:
+        - conditionType: RandomTarget
+          value: 0
+          description: "무작위 적을 공격합니다."
+      features:
+        - cardFeatureType: None
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: None
+              value: 0
+              description: ""
 
   - className: Warrior
     cardName: 땅 가르기
     texturePath: Assets/Texture/Items/Card/CardTexture.png
     level: !!int 1
+    useStamina: !!int 40
     effectArea:
       - area:
           - "11111"
@@ -71,23 +153,182 @@ cardCollection:
           - "00100"
           - "00000"
           - "00000"
-    useStamina: !!int 40
-    cardEffects:
-      - cardEffectType: Chain
-        chainEffect:
+    defaultEffects:
+      effects:
         - effectType: Damage
-          value: 10
-        chainCondition:
-        - conditionType: PowerMultiple
-          value: 2
-          description: "힘의 효과가 2배가 됩니다."
-    effects:
-      - effectType: Damage
-        value: 8
+          value: 8
+          times: 1
+      conditions:
+        - conditionType: None
+          value: 0
+          description: ""
+      features:
+        - cardFeatureType: None
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: PowerMultiple
+              value: 2
+              description: "힘의 효과가 크게 증가됩니다."
     upgradeEffects:
-      - effectType: Damage
-        value: 12
-    conditions:
-      - conditionType: None
-        value: 0
-        description: ""
+      effects:
+        - effectType: Damage
+          value: 12
+          times: 1
+      conditions:
+        - conditionType: None
+          value: 0
+          description: ""
+      features:
+        - cardFeatureType: None
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: PowerMultiple
+              value: 3
+              description: "힘의 효과가 크게 증가됩니다."
+
+  - className: Warrior
+    cardName: 회전베기
+    texturePath: Assets/Texture/Items/Card/CardTexture.png
+    level: !!int 1
+    useStamina: !!int 40
+    effectArea:
+      - area:
+          - "111"
+          - "111"
+          - "111"
+    defaultEffects:
+      effects:
+        - effectType: Damage
+          value: 8
+          times: 1
+      conditions:
+        - conditionType: None
+          value: 0
+          description: ""
+      features:
+        - cardFeatureType: Finale
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: None
+              value: 0
+              description: ""
+    upgradeEffects:
+      effects:
+        - effectType: Damage
+          value: 12
+          times: 1
+      conditions:
+        - conditionType: None
+          value: 0
+          description: ""
+      features:
+        - cardFeatureType: Finale
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: None
+              value: 0
+              description: ""
+
+  - className: Warrior
+    cardName: 칼등 밀기
+    texturePath: Assets/Texture/Items/Card/CardTexture.png
+    level: !!int 1
+    useStamina: !!int 40
+    effectArea:
+      - area:
+          - "00100"
+          - "00100"
+          - "00100"
+          - "00000"
+          - "00000"
+    defaultEffects:
+      effects:
+        - effectType: Damage
+          value: 6
+          times: 1
+      conditions:
+        - conditionType: TemporaryShield
+          value: 5
+          description: ""
+      features:
+        - cardFeatureType: None
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: None
+              value: 0
+              description: ""
+    upgradeEffects:
+      effects:
+        - effectType: Damage
+          value: 9
+          times: 1
+      conditions:
+        - conditionType: TemporaryShield
+          value: 8
+          description: ""
+      features:
+        - cardFeatureType: None
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: None
+              value: 0
+              description: ""
+
+  - className: Warrior
+    cardName: 선수필승
+    texturePath: Assets/Texture/Items/Card/CardTexture.png
+    level: !!int 1
+    useStamina: !!int 40
+    effectArea:
+      - area:
+          - "111"
+          - "010"
+          - "000"
+    defaultEffects:
+      effects:
+        - effectType: Damage
+          value: 8
+          times: 1
+      conditions:
+        - conditionType: None
+          value: 0
+          description: ""
+      features:
+        - cardFeatureType: Vanguard
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: None
+              value: 0
+              description: ""
+    upgradeEffects:
+      effects:
+        - effectType: Damage
+          value: 12
+          times: 1
+      conditions:
+        - conditionType: None
+          value: 0
+          description: ""
+      features:
+        - cardFeatureType: Vanguard
+          chainEffect:
+            - effectType: None
+              value: 0
+          chainCondition:
+            - conditionType: None
+              value: 0
+              description: ""

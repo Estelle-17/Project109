@@ -8,11 +8,15 @@ effect: &skill_effect
       - None
       - Damage
       - Heal
+      - Shield
       - Buff
       - Debuff
       - Move
   value:
-    type: integer
+    type: number
+    minimum: 0
+  times:
+    type: number
     minimum: 0
 
 condition: &skill_condition
@@ -24,20 +28,20 @@ condition: &skill_condition
   description:
     type: string
 
-cardEffect: &card_effect
+cardFeatures: &card_features
   type: object
-  cardEffectType:
+  cardFeatureType:
     type: string
     enum:
       - None
-      - Begin_War
-      - Vanguard
-      - End_War
-      - Echo
-      - Single_use
-      - Destroy
-      - Divide
-      - Chain
+      - Start_Action    #패에 들어왔을 시 바로 사용
+      - Vanguard        #턴의 가장 처음으로 사용되면 보너스 효과
+      - Finale          #턴이 종료되었을 때 손에 있을 경우 남은 스태미너를 전부 소모하여 스태미너 X당 한 번 씩 사용됨
+      - Echo            #이번 턴에 카드 사용 시 연속으로 사용 가능하지만 사용 할 때마다 비용 증가
+      - Single_use      #이번 전투에서 한 번만 사용 가능
+      - Destroy         #카드를 사용한 후 덱에서 없어짐
+      - Divide          #카드를 사용하면 두 장으로 늘어난 후 카드 무덤으로 이동
+      - Chain           #스태미너를 N만큼 더 소모한다면 강화된 효과로 발동
   chainEffect:
     type: array
     items:
@@ -46,6 +50,21 @@ cardEffect: &card_effect
     type: array
     items:
       <<: *skill_condition
+
+cardEffect: &card_effect
+  type: object
+  effects:
+    type: array
+    items:
+      <<: *skill_effect
+  conditions:
+    type: array
+    items:
+      <<: *skill_condition
+  features:
+    type: array
+    items:
+      <<: *card_features
 
 area: &effect_area
   type: object
@@ -82,22 +101,15 @@ properties:
           type: array
           items:
             <<: *effect_area
-        cardEffects:
-          type: array
+        defaultEffects:
+          type: object
           items:
             <<: *card_effect
-        effects:
-          type: array
-          items:
-            <<: *skill_effect
         upgradeEffects:
-          type: array
+          type: object
           items:
-            <<: *skill_effect
-        conditions:
-          type: array
-          item:
-            <<: *skill_condition
+            <<: *card_effect
+        
       required:
         - className
         - cardName
@@ -105,9 +117,7 @@ properties:
         - level
         - useStamina
         - effectArea
-        - cardEffects
-        - effects
+        - defaultEffects
         - upgradeEffects
-        - conditions
 required:
   - cardCollection    

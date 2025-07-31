@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    public ActionCardData cardData;
+    private ActionCardData cardData;
 
     public TextMeshProUGUI cardName;
     public TextMeshProUGUI cardDescription;
@@ -73,6 +73,11 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
                 resultBuffer[i] = input[i] - '0';
             }
         }
+    }
+
+    public ActionCardData GetCardData()
+    {
+        return cardData;
     }
 
     public void OnSelectHighlight()

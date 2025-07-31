@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -64,7 +65,8 @@ public class EventHandler : MonoBehaviour
     {
         if(eventDescription != null)
         {
-            eventDescription.gameObject.SetActive(true);
+            eventDescription.UIActive();
+            //eventDescription.gameObject.SetActive(true);
         }
     }
 
@@ -72,7 +74,8 @@ public class EventHandler : MonoBehaviour
     {
         if (eventDescription != null)
         {
-            eventDescription.gameObject.SetActive(false);
+            eventDescription.UIDeactive();
+            //eventDescription.gameObject.SetActive(false);
         }
     }
 

@@ -52,7 +52,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b329e4534f3a8a4f833c39e9e06100b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardData: {fileID: 0}
   cardName: {fileID: 6541454250587398306}
   cardDescription: {fileID: 5390516900839122266}
   useStamina: {fileID: 627217548329928733}
@@ -63,6 +62,7 @@ MonoBehaviour:
   OnCardClick:
     m_PersistentCalls:
       m_Calls: []
+  bIsCardHighlight: 1
 --- !u!1 &2097206914840721677
 GameObject:
   m_ObjectHideFlags: 0

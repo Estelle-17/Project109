@@ -17,28 +17,48 @@ MonoBehaviour:
   cardName: "\uD035 \uC2AC\uB798\uC2DC"
   texturePath: Assets/Texture/Items/Card/CardTexture.png
   level: 1
+  useStamina: 0
   effectArea:
   - area:
     - 010
     - 010
     - 000
-  useStamina: 0
-  cardEffects:
-  - cardEffectType: None
-    chainEffect:
-    - effectType: None
-      value: 0
-    chainCondition:
+  defaultEffects:
+    effects:
+    - effectType: Damage
+      value: 4
+      times: 1
+    conditions:
     - conditionType: None
       value: 0
       description: 
-  effects:
-  - effectType: Damage
-    value: 4
+    features:
+    - cardFeatureType: None
+      chainEffect:
+      - effectType: None
+        value: 0
+        times: 0
+      chainCondition:
+      - conditionType: None
+        value: 0
+        description: 
   upgradeEffects:
-  - effectType: Damage
-    value: 6
-  conditions:
-  - conditionType: None
-    value: 0
-    description: 
+    effects:
+    - effectType: Damage
+      value: 6
+      times: 1
+    conditions:
+    - conditionType: None
+      value: 0
+      description: 
+    features:
+    - cardFeatureType: None
+      chainEffect:
+      - effectType: None
+        value: 0
+        times: 0
+      chainCondition:
+      - conditionType: None
+        value: 0
+        description: 
+  upgradeCount: 0

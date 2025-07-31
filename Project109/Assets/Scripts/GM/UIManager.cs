@@ -153,6 +153,8 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
+    #region 유물 설명UI
+
     public void UpdateRelicDescription(string newDescription)
     {
         relicDescriptionText.text = newDescription;
@@ -175,6 +177,10 @@ public class UIManager : MonoBehaviour
         relicDescription.SetActive(false);
     }
 
+    #endregion
+
+    #region 카드 범위확인 UI
+
     public void OnCardEffectAreaBackground(Vector3 newItemPos)
     {
         if (cardEffectAreaBackground == null)
@@ -191,4 +197,6 @@ public class UIManager : MonoBehaviour
 
         cardEffectAreaBackground.SetActive(false);
     }
+
+    #endregion
 }

@@ -1,43 +1,108 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+using System.Linq;
 
-public class CardDeckManager : UIPanelBase
+public class CardDeckManager : MonoBehaviour
 {
-    public List<ActionCardHandler> cardDeck;
-    public Transform cardListTransform;
+    public static CardDeckManager instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
+    public static CardDeckManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                return null;
+            }
+            return instance;
+        }
+    }
+
+    [SerializeField]
+    private List<ActionCardData> cardDeck;
+
+    //각 카드의 고유 ID를 부여할 카운터
+    private int nextRuntimeID = 0;
+
+    //카드 데이터 변경 이벤트
+    public event Action<ActionCardData> OnCardAdded;
+    public event Action<int> OnCardRemoved;
+    public event Action OnCardsRefreshed;
 
     void Start()
     {
-        AddCardDeck();
+        
     }
 
-    void AddCardDeck()
+    public List<ActionCardData> GetCardDeckList()
     {
-        if (cardListTransform == null)
-            return;
+        return new List<ActionCardData>(cardDeck);
+    }
 
-        //자식으로 들어가 있는 카드들 추가
-        for (int i = 0; i < cardListTransform.childCount; i++)
+    public ActionCardData AddCard(ActionCardData newCardData)
+    {
+        ActionCardData newCard = CreateNewCard(newCardData);
+
+        cardDeck.Add(newCard);
+        OnCardAdded?.Invoke(newCard);
+        Debug.Log($"Card Added : {newCard.cardName}");
+
+        return newCard;
+    }
+
+    public void RemoveCard(int runtimeID)
+    {
+        ActionCardData cardToRemove = cardDeck.FirstOrDefault(c => c.runtimeID == runtimeID);
+        if (cardToRemove != null) //카드가 지워졌을 경우
         {
-            cardDeck.Add(cardListTransform.GetChild(i).GetComponent<ActionCardHandler>());
+            if(cardDeck.Remove(cardToRemove))
+            {            
+                OnCardRemoved?.Invoke(runtimeID);
+                Debug.Log($"Card Removed : {cardToRemove.cardName} (RuntimeID {runtimeID})");
+            }
         }
-
-        //이후 카드들한테 클릭 이벤트 등록
-        AddCardClickEvent();
+    }
+    
+    //초기설정, 로딩 등 다수의 카드가 변경되었을때 사용
+    public void RequestAllCardRefresh()
+    {
+        OnCardsRefreshed?.Invoke();
     }
 
-    void AddCardClickEvent()
+    //SO데이터를 기반으로 고유ID를 가진 새로운 카드 데이터 생성
+    private ActionCardData CreateNewCard(ActionCardData newCardData) 
     {
-        //카드가 눌리면 카드 데이터를 전달과 동시에 함수 실행
-        foreach (ActionCardHandler card in cardDeck)
+        ActionCardData newCard = new ActionCardData
         {
-            ActionCardData cardData = card.cardData;
-            card.OnCardClick.AddListener(() => CardCheck(cardData));
-        }
-    }
+            cardTexture = newCardData.cardTexture,
+            className = newCardData.className,
+            cardName = newCardData.cardName,
+            texturePath = newCardData.texturePath,
+            level = newCardData.level,
+            useStamina = newCardData.useStamina,
+            effectArea = newCardData.effectArea,
+            defaultEffects = newCardData.defaultEffects,
+            upgradeEffects = newCardData.upgradeEffects,
+            upgradeCount = newCardData.upgradeCount,
 
-    void CardCheck(ActionCardData newData)
-    {
-        UIManager.instance.cardCheckHandler.OnCardCheckUI(newData);
+            runtimeID = nextRuntimeID++
+        };
+
+        return newCard;
     }
 }

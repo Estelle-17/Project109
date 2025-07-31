@@ -15,7 +15,7 @@ public class UpgradeUIHandler : UIPanelBase
     {
         foreach (ActionCardHandler card in upgradeCardList)
         {
-            card.OnCardClick.AddListener(() => UpgradeCard(card.cardData));
+            card.OnCardClick.AddListener(() => UpgradeCard(card.GetCardData()));
         }
     }
 

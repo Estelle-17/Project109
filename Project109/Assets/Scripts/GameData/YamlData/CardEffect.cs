@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class CardEffect
 {
-    public string cardEffectType;
-    public List<SkillEffect> chainEffect;
-    public List<SkillCondition> chainCondition;
+    public List<SkillEffect> effects;
+    public List<SkillCondition> conditions;
+    public List<CardFeature> features;
 }

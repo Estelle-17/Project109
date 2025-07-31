@@ -9,13 +9,12 @@ public class ActionCardData : ScriptableObject, IIdentifiable
     public string cardName;
     public string texturePath;
     public int level;
-    public List<EffectArea> effectArea;
     public int useStamina;
-    public List<CardEffect> cardEffects;
-    public List<SkillEffect> effects;
-    public List<SkillEffect> upgradeEffects;
-    public List<SkillCondition> conditions;
+    public List<EffectArea> effectArea;
+    public CardEffect defaultEffects;
+    public CardEffect upgradeEffects;
     public int upgradeCount;
 
     public string ID => cardName;
+    public int runtimeID;
 }

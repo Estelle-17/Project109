@@ -40,6 +40,7 @@ public class AddressableDataLoader : MonoBehaviour
     public string eventKey = "Event";
     public string battleNodeKey = "BattleNode";
     public string monsterKey = "Monster";
+    public string characterKey = "Character";
 
     public IList<ActionCardData> cardList;
     private Dictionary<string, ActionCardData> cardDict = new Dictionary<string, ActionCardData>();
@@ -55,6 +56,9 @@ public class AddressableDataLoader : MonoBehaviour
 
     public IList<MonsterData> monsterList;
     private Dictionary<string, MonsterData> monsterDict = new Dictionary<string, MonsterData>();
+
+    public IList<CharacterData> characterList;
+    private Dictionary<string, CharacterData> characterDict = new Dictionary<string, CharacterData>();
 
     void Start()
     {
@@ -87,6 +91,11 @@ public class AddressableDataLoader : MonoBehaviour
         {
             monsterList = list;
             monsterDict = dict;
+        });
+        LoadAndCache<CharacterData>(characterKey, (list, dict) =>
+        {
+            characterList = list;
+            characterDict = dict;
         });
     }
 
@@ -126,4 +135,5 @@ public class AddressableDataLoader : MonoBehaviour
     public bool TryGetRelic(string name, out RelicData relic) => relicDict.TryGetValue(name, out relic);
     public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);
     public bool TryGetBattleNode(string name, out BattleNodeData battleNode) => battleNodeDict.TryGetValue(name, out battleNode);
+    public bool TryGetCharacter(string name, out CharacterData character) => characterDict.TryGetValue(name, out character);
 }

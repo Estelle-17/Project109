@@ -19,6 +19,7 @@ public class CardCheckHandler : UIPanelBase
         cardHandler.UpdateActionCardData(newCardData);
         cardHandler.bIsCardHighlight = false;
 
-        UIManager.instance.PushActiveUIPanel(gameObject);
+        UIActive();
+        //UIManager.instance.PushActiveUIPanel(gameObject);
     }
 }

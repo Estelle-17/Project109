@@ -63,12 +63,10 @@ public class YAMLImporter
             asset.cardName = card.cardName;
             asset.texturePath = card.texturePath;
             asset.level = card.level;
-            asset.effectArea = card.effectArea;
             asset.useStamina = card.useStamina;
-            asset.cardEffects = card.cardEffects;
-            asset.effects = card.effects;
+            asset.effectArea = card.effectArea;
+            asset.defaultEffects = card.defaultEffects;
             asset.upgradeEffects = card.upgradeEffects;
-            asset.conditions = card.conditions;
 
             asset.cardTexture = (Texture2D)AssetDatabase.LoadAssetAtPath(asset.texturePath, typeof(Texture2D));
             asset.upgradeCount = 0;
@@ -411,6 +409,91 @@ public class YAMLImporter
         Debug.Log("YAML import complete.");
     }
 
+    [MenuItem("Tools/Import Character YAML")]
+    //[System.Obsolete]
+    public static void ImportCharacterYAML()
+    {
+        string yamlPath = "Assets/Data/Character.yaml";
+        string schemaPath = "Assets/Data/CharacterSchema.yaml";
+
+        string yamlText = File.ReadAllText(yamlPath);
+        string schemaYamlText = File.ReadAllText(schemaPath);
+
+        //YAML -> Json으로 변환
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+        var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
+
+        var jsonSerializer = new SerializerBuilder()
+            .JsonCompatible()
+            .Build();
+        string jsonText = jsonSerializer.Serialize(yamlObject);
+
+        //YAML Schema -> Json Schema로 변환
+        var schemaYamlObject = deserializer.Deserialize(new StringReader(schemaYamlText));
+        string schemaJsonText = jsonSerializer.Serialize(schemaYamlObject);
+
+        JSchema schema = JSchema.Parse(schemaJsonText);
+
+        JObject jsonObj = JObject.Parse(jsonText);
+        if (!jsonObj.IsValid(schema, out IList<string> errorMessages))
+        {
+            Debug.LogError("❌ YAML validation failed:");
+            foreach (var error in errorMessages)
+                Debug.LogError(error);
+            return;
+        }
+
+        Debug.Log("YAML validation Success:");
+
+        //검증에 성공하면 ScriptableObject 생성
+        var rawData = deserializer.Deserialize<RootCharacterData>(yamlText);
+
+        foreach (var characterData in rawData.characterCollection)
+        {
+            var asset = ScriptableObject.CreateInstance<CharacterData>();
+            asset.classType = characterData.classType;
+            asset.characterName = characterData.characterName;
+            asset.modelingPath = characterData.modelingPath;
+            asset.level = characterData.level;
+            asset.description = characterData.description;
+            asset.hp = characterData.hp;
+            asset.stamina = characterData.stamina;
+            asset.staminaRegen = characterData.staminaRegen;
+            asset.strength = characterData.strength;
+            asset.armor = characterData.armor;
+            asset.startRelic = characterData.startRelic;
+            asset.startCards = characterData.startCards;
+
+            //asset.characterObject = (GameObject)AssetDatabase.LoadAssetAtPath(CharacterData.modelingPath, typeof(GameObject));
+
+            var path = $"Assets/SO/Characters/{characterData.characterName}.asset";
+            Directory.CreateDirectory("Assets/SO/Characters");
+            AssetDatabase.CreateAsset(asset, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            //Addressable에 등록
+            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+            if (settings == null)
+            {
+                Debug.LogError("Addressables 설정이 존재하지 않습니다.");
+                return;
+            }
+
+            AddressableAssetEntry entry = settings.CreateOrMoveEntry(
+                AssetDatabase.AssetPathToGUID(path),
+                CreateOrFindAddressablesGroup(settings, "Characters")
+            );
+            entry.address = characterData.characterName;
+            entry.SetLabel("Character", true);
+            Debug.Log("Addressables에 등록 완료: " + entry.address);
+        }
+
+        Debug.Log("YAML import complete.");
+    }
+
     public static AddressableAssetGroup CreateOrFindAddressablesGroup(AddressableAssetSettings settings, string groupName)
     {
         AddressableAssetGroup group = settings.FindGroup(groupName);
@@ -434,13 +517,11 @@ public class YAMLImporter
         public string cardName { get; set; }
         public string texturePath { get; set; }
         public int level { get; set; }
-        public List<EffectArea> effectArea { get; set; }
         public int useStamina { get; set; }
-        public List<CardEffect> cardEffects { get; set; }
-        public List<SkillEffect> effects { get; set; }
-        public List<SkillEffect> upgradeEffects { get; set; }
-        public List<SkillCondition> conditions { get; set; }
-    }
+        public List<EffectArea> effectArea { get; set; }
+        public CardEffect defaultEffects { get; set; }
+        public CardEffect upgradeEffects { get; set; }
+}
 
     public class RootRelicData
     {
@@ -501,6 +582,27 @@ public class YAMLImporter
         public float staminaRegen { get; set; }
         public int strength { get; set; }
         public int armor { get; set; }
+    }
+
+    public class RootCharacterData
+    {
+        public List<CharacterEntry> characterCollection { get; set; }
+    }
+
+    public class CharacterEntry
+    {
+        public string classType { get; set; }
+        public string characterName { get; set; }
+        public string modelingPath { get; set; }
+        public int level { get; set; }
+        public string description { get; set; }
+        public float hp { get; set; }
+        public float stamina { get; set; }
+        public float staminaRegen { get; set; }
+        public int strength { get; set; }
+        public int armor { get; set; }
+        public List<string> startRelic { get; set; }
+        public List<StartCard> startCards { get; set; }
     }
 }
 #endif

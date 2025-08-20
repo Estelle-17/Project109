@@ -4,21 +4,29 @@ using UnityEngine;
 using UnityEngine.InputSystem.XInput;
 using UnityEngine.InputSystem;
 using System.Collections;
+using System;
 
 public class PlayerMove : MonoBehaviour
 {
-    [SerializeField]
-    protected Tile currentTile;
+    [SerializeField] protected Tile currentTile;
     public List<Tile> canMoveTiles;
-    [SerializeField]
-    private Tile currentTagetTile;
+    [SerializeField] private Tile currentTagetTile;
 
     public BattleMapScript battleMap;
     public RoutePathfinding routePathfinding;
-    [SerializeField]
-    public List<Tile> movePath;
+
+    [SerializeField] public List<Tile> movePath;
+
+    private int touchPerformedCount;
+    private bool isCameraMove;
+
+    [SerializeField] float playerSpeed = 50f;
+    [SerializeField] float turnSpeed = 600f;
 
     public PlayerInputController playerInputController;
+
+    public event Action OnPlayerStartMove;
+    public event Action OnPlayerStopMove;
 
     private void Start()
     {
@@ -53,7 +61,7 @@ public class PlayerMove : MonoBehaviour
     /// </summary>
     public void CheckCanMoveTiles()
     {
-        canMoveTiles = battleMap.CheckPlayerMoveTiles(currentTile, 5);
+        canMoveTiles = battleMap.CheckPlayerMoveTiles(currentTile, 10);
         playerInputController.OnEnable();
     }
 
@@ -73,12 +81,22 @@ public class PlayerMove : MonoBehaviour
     {
         Vector2 pos = context.ReadValue<Vector2>();
 
+        touchPerformedCount = 0;
+        isCameraMove = false;
+
         Debug.Log(pos.ToString());
     }
 
     public void CheckToTargetTile_performed(InputAction.CallbackContext context)
     {
         Vector2 pos = context.ReadValue<Vector2>();
+
+        //마우스를 통해 일정 이상 카메라 이동이 되었다면 이동 금지
+        touchPerformedCount++;
+        if (touchPerformedCount >= 10)
+        {
+            isCameraMove = true;
+        }
 
         Ray ray = Camera.main.ScreenPointToRay(pos);
 
@@ -97,8 +115,8 @@ public class PlayerMove : MonoBehaviour
 
     public void CheckToTargetTile_canceled(InputAction.CallbackContext context)
     {
-        //타일을 선택하지 않았을 경우 return
-        if (currentTagetTile == null)
+        //타일을 선택하지 않았거나 카메라 이동이 이루어졌을 경우 return
+        if (currentTagetTile == null || isCameraMove)
             return;
 
         //이동 가능한 타일일 경우 플레이어 이동
@@ -111,6 +129,9 @@ public class PlayerMove : MonoBehaviour
             movePath.Clear();
             movePath = routePathfinding.TilePathfinding(currentTile, currentTagetTile, battleMap.GetTileMap());
             StartCoroutine(StartMove());
+
+            //플레이어가 이동을 시작했을 경우 함수 실행
+            OnPlayerStartMove?.Invoke();
 
             currentTile = currentTagetTile;
 
@@ -135,11 +156,20 @@ public class PlayerMove : MonoBehaviour
     IEnumerator StartMove()
     {
         int currentIndex = 0;
-        float playerSpeed = 1.0f;
 
         while(currentIndex < movePath.Count)
         {
-            transform.position = Vector3.MoveTowards(transform.position, movePath[currentIndex].gameObject.transform.position, playerSpeed);
+            //목표로 이동
+            transform.position = Vector3.MoveTowards(transform.position, movePath[currentIndex].transform.position, playerSpeed * Time.deltaTime);
+
+            //갈 위치를 기반으로 Quaternion계산 후 회전
+            //LookRotation에 0,0,0값이 들어가지 않도록 if문 추가
+            if (movePath[currentIndex].transform.position - transform.position != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(movePath[currentIndex].transform.position - transform.position);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+                Debug.Log("Player Rotation: " + transform.rotation.ToString());
+            }
 
             if(Vector3.Distance(transform.position, movePath[currentIndex].gameObject.transform.position) < 0.1f)
             {
@@ -148,6 +178,10 @@ public class PlayerMove : MonoBehaviour
 
             yield return new WaitForFixedUpdate();
         }
+
+        //플레이어가 목적지에 도착했을 경우 함수 실행
+        OnPlayerStopMove?.Invoke();
+
         yield return null;
     }
 }

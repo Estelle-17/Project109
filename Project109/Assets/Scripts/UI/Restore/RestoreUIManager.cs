@@ -28,7 +28,7 @@ public class RestoreUIManager : MonoBehaviour
     {
         if (restoreUI != null)
         {
-            restoreUI.gameObject.SetActive(true);
+            restoreUI.UIActive();
         }
     }
 
@@ -36,7 +36,7 @@ public class RestoreUIManager : MonoBehaviour
     {
         if (restoreUI != null)
         {
-            restoreUI.gameObject.SetActive(false);
+            restoreUI.UIDeactive();
         }
     }
 }

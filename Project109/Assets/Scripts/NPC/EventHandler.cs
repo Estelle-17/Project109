@@ -12,6 +12,8 @@ public class EventHandler : MonoBehaviour
     public GameObject eventUICanvasPrefab;
     public EventDescriptionScript eventDescription;
 
+    MakeEventDescription makeEventDescription;
+
     public void SetEventData(EventData newEventData)
     {
         eventData = newEventData;
@@ -25,8 +27,10 @@ public class EventHandler : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Prefab이 존재하지 않습니다.");
+            Debug.LogWarning("EventUICanvasPrefab이 존재하지 않습니다.");
         }
+
+        makeEventDescription = GetComponent<MakeEventDescription>();
     }
 
     public void UpdateEventDescription()
@@ -41,9 +45,9 @@ public class EventHandler : MonoBehaviour
 
         //이벤트에 맞는 선택지 추가
         int buttonIndex = 0;
-        foreach (Choice_RelicAndCard choice in eventData.choices)
+        foreach (Choice_Data choice in eventData.choices)
         {
-            Button button = eventDescription.CreateChoiceButton(choice.choiceDescription);
+            Button button = eventDescription.CreateChoiceButton(choice.description + "\n" + makeEventDescription.MakeChoiceDescription(choice));
 
             int capturedIndex = buttonIndex;    //버튼 순서 캡쳐
             if (button != null)
@@ -66,7 +70,6 @@ public class EventHandler : MonoBehaviour
         if(eventDescription != null)
         {
             eventDescription.UIActive();
-            //eventDescription.gameObject.SetActive(true);
         }
     }
 
@@ -75,13 +78,14 @@ public class EventHandler : MonoBehaviour
         if (eventDescription != null)
         {
             eventDescription.UIDeactive();
-            //eventDescription.gameObject.SetActive(false);
         }
     }
 
     void CheckChoiceResult(int index)
     {
         Debug.Log($"Button Index {index} clicked");
-        Debug.Log($"EffectType : {eventData.choices[index].effectType}, RelicName : {eventData.choices[index].getRelicName}");
+        Debug.Log($"UseItems : {eventData.choices[index].useItems.Count}, GetItems : {eventData.choices[index].getItems.Count}");
+
+        eventDescription.gameObject.SetActive(false);
     }
 }

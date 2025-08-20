@@ -16,15 +16,23 @@ MonoBehaviour:
   eventAppearCondition:
   - conditionType: None
     value: 0
+  eventObjectPath: Assets/Texture/Items/Relic/RecoveryPlateTexture.png
   eventName: "\uC608\uC2DC \uC774\uBCA4\uD2B8"
   eventDescription: "\uC774\uAC83\uC740 \uC608\uC2DC \uC774\uBCA4\uD2B8 \uB370\uC774\uD130
     \uC815\uBCF4\uC785\uB2C8\uB2E4."
   choices:
-  - choiceDescription: "1\uBC88 \uC120\uD0DD\uC9C0"
-    effectType: None
-    value: 0
-    getRelicName: None
-  - choiceDescription: "2\uBC88 \uC120\uD0DD\uC9C0"
-    effectType: Damage
-    value: 5
-    getRelicName: "\uB0A1\uC740 \uAC80"
+  - description: "\uB3C8 \uD68D\uB4DD"
+    useItems: []
+    getItems:
+    - itemType: Money
+      value: 50
+      name: 
+  - description: "\uC7AC\uD654\uB97C \uC0AC\uC6A9\uD558\uC5EC \uCE74\uB4DC \uD68D\uB4DD"
+    useItems:
+    - itemType: Money
+      value: 50
+      name: 
+    getItems:
+    - itemType: Card
+      value: 1
+      name: "\uC2AC\uB798\uC2DC"

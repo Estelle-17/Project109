@@ -92,8 +92,7 @@ public class ShopUIManager : MonoBehaviour
     {
         if (shopUI != null)
         {
-            //shopUI.gameObject.SetActive(true);
-            shopUI.UIActive();
+            shopUI.gameObject.SetActive(true);
         }
     }
 
@@ -101,8 +100,7 @@ public class ShopUIManager : MonoBehaviour
     {
         if (shopUI != null)
         {
-            //shopUI.gameObject.SetActive(false);
-            shopUI.UIDeactive();
+            shopUI.gameObject.SetActive(false);
         }
     }
 }

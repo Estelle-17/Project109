@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class ShopUIHandler : UIPanelBase
 {
@@ -7,25 +8,20 @@ public class ShopUIHandler : UIPanelBase
     public GameObject relicCollection;
     public GameObject potionCollection;
 
-    public GameObject cardCollectionTriggers;
-    public GameObject relicCollectionTriggers;
-    public GameObject potionCollectionTriggers;
-
     public GameObject cardPrefab;
     public GameObject relicPrefab;
     public GameObject potionPrefab;
+    public GameObject eraseCardUIPrefab;
 
     public List<ActionCardHandler> cardList;
     public List<RelicHandler> relicList;
     public List<GameObject> potionList;
 
-    public List<ShopItemTrigger> cardTriggerList;
-    public List<ShopItemTrigger> relicTriggerList;
-    public List<ShopItemTrigger> potionTriggerList;
+    public Button eraseCardButton;
 
     void Start()
     {
-        
+        eraseCardButton.onClick.AddListener(OpenEraseCardUI);   //버튼 등록
     }
 
     /// <summary>
@@ -52,25 +48,6 @@ public class ShopUIHandler : UIPanelBase
         {
             potionList.Add(GameObject.Instantiate(potionPrefab, potionCollection.transform));
         }
-
-        //상점 아이템과 상호작용이 가능하도록 미리 만들어진 오브젝트를 리스트에 추가
-        //for (int i = 0; i < cardCollectionTriggers.transform.childCount; i++)
-        //{
-        //    cardTriggerList.Add(cardCollectionTriggers.transform.GetChild(i).GetComponent<ShopItemTrigger>());
-        //    cardTriggerList[i].ShopItemType = ShopItems.Card;
-        //}
-
-        //for (int i = 0; i < relicCollectionTriggers.transform.childCount; i++)
-        //{
-        //    relicTriggerList.Add(relicCollectionTriggers.transform.GetChild(i).GetComponent<ShopItemTrigger>());
-        //    relicTriggerList[i].ShopItemType = ShopItems.Relic;
-        //}
-
-        //for (int i = 0; i < potionCollectionTriggers.transform.childCount; i++)
-        //{
-        //    potionTriggerList.Add(potionCollectionTriggers.transform.GetChild(i).GetComponent<ShopItemTrigger>());
-        //    potionTriggerList[i].ShopItemType = ShopItems.Potion;
-        //}
     }
 
     public void UpdateCardList(List<ActionCardData> cardData)
@@ -82,8 +59,6 @@ public class ShopUIHandler : UIPanelBase
             ActionCardData currentCardData = cardData[i];
             cardList[i].UpdateActionCardData(currentCardData);
             cardList[i].OnCardClick.AddListener(() => PurchaseCard(currentCardData));
-
-            //cardTriggerList[i].cardHandler = cardList[i];
         }
     }
 
@@ -95,14 +70,20 @@ public class ShopUIHandler : UIPanelBase
         {
             relicList[i].relicData = relicData[i];
             relicList[i].UpdateRelicData();
-
-            //relicTriggerList[i].relicHandler = relicList[i];
         }
     }
 
     void PurchaseCard(ActionCardData cardData)
     {
         Debug.Log($"{cardData.cardName} 행동 카드를 구매합니다.");
+
         //덱에 카드 추가하는 로직 구현
+        CardDeckManager.instance.AddCard(cardData);
+    }
+
+    public void OpenEraseCardUI()
+    {
+        EraseCardDeckManager eraseCardDeckManager = Instantiate(eraseCardUIPrefab).GetComponent<EraseCardDeckManager>();
+        eraseCardDeckManager.SetEraseCardCount(1);    //카드를 지우는 갯수 입력
     }
 }

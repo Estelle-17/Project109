@@ -4,7 +4,7 @@ public class UIPanelBase : MonoBehaviour
 {
     protected virtual void OnDisable()
     {
-        if (UIManager.Instance == null)
+        if (UIManager.instance == null)
         {
             Debug.LogWarning("UIManager is null. Check UIManager setting in hierarchy.");
             return;
@@ -15,7 +15,7 @@ public class UIPanelBase : MonoBehaviour
 
     public void UIActive()
     {
-        if (UIManager.Instance == null)
+        if (UIManager.instance == null)
         {
             Debug.LogWarning("UIManager is null. Check UIManager setting in hierarchy.");
             return;
@@ -26,7 +26,7 @@ public class UIPanelBase : MonoBehaviour
 
     public void UIDeactive()
     {
-        if (UIManager.Instance == null)
+        if (UIManager.instance == null)
         {
             Debug.LogWarning("UIManager is null. Check UIManager setting in hierarchy.");
             return;

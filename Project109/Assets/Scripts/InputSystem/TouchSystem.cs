@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class TouchSystem : MonoBehaviour
 {
-    public static TouchSystem instance;
+    public static TouchSystem instance { get; private set; }
 
     private void Awake()
     {
@@ -17,18 +17,6 @@ public class TouchSystem : MonoBehaviour
         else
         {
             Destroy(this.gameObject);
-        }
-    }
-
-    public static TouchSystem Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                return null;
-            }
-            return instance;
         }
     }
 

@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 706309089273740916}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.21, z: 0}
   m_LocalScale: {x: 0.95, y: 1, z: 0.95}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -271,6 +271,8 @@ MonoBehaviour:
   tileState: 0
   canMoveAreaColor: {fileID: 706309089273740916}
   centerTileColor: {fileID: 5876824751103677942}
+  tileObjectPrefab: {fileID: 3814301597127161750, guid: 5f50a2989c00f834880ee66529a80f6e, type: 3}
+  crackTileObjectPrefab: {fileID: 5600220611332961023, guid: 81a86bf29e2d37547bece81e45ad5549, type: 3}
 --- !u!65 &2618950749125746048
 BoxCollider:
   m_ObjectHideFlags: 0

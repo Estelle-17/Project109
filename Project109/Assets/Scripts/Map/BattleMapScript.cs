@@ -43,6 +43,7 @@ public class BattleMapScript : MonoBehaviour
                 tile.transform.localPosition = transform.position + new Vector3(startX + columnIndex * tilePadding, 0.01f, startZ + rowIndex * tilePadding);
                 tile.transform.parent = transform;
                 tile.SetCoord(columnIndex, rowIndex);
+                tile.CreateRandomTileObject();  //랜덤한 모양의 타일 오브젝트 생성
                 map[columnIndex, rowIndex] = tile;
             }
         }

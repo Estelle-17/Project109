@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    private ActionCardData cardData;
+    [SerializeField] private ActionCardData cardData;
 
     public TextMeshProUGUI cardName;
     public TextMeshProUGUI cardDescription;

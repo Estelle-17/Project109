@@ -32,7 +32,7 @@ public class RestoreUIHandler : UIPanelBase
         if (upgradeCardUI == null)
             return;
 
-        upgradeCardUI.SetActive(true);
+        upgradeCardUI.GetComponent<UpgradeUIHandler>().UIActive();
         Debug.Log("Card Upgrade is Process!");
     }
 
@@ -40,6 +40,8 @@ public class RestoreUIHandler : UIPanelBase
     {
         //플레이어의 체력 회복
         Debug.Log("Player Hp is Healed!");
+
+        gameObject.SetActive(false);
     }
 
 

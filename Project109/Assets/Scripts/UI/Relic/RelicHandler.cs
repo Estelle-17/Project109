@@ -32,7 +32,7 @@ public class RelicHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             return;
 
         UIManager.instance.UpdateRelicDescription(relicData.description);
-        UIManager.instance.OnRelicDescription(GetComponent<RectTransform>().position);
+        UIManager.instance.OnRelicDescription();
     }
 
     public void OnPointerExit(PointerEventData eventData)

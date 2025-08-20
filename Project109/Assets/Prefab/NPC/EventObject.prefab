@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6164774177180672415}
   - component: {fileID: 8784678512556567384}
   - component: {fileID: 7362879340893728899}
+  - component: {fileID: 5137893220854919285}
   m_Layer: 9
   m_Name: EventObject
   m_TagString: Untagged
@@ -124,3 +125,15 @@ MonoBehaviour:
   eventData: {fileID: 11400000, guid: 892f949c27472e14fbe9553ff737f37d, type: 2}
   eventUICanvasPrefab: {fileID: 2656024023156312088, guid: 9c24271421ea96449b5a03b54618cac8, type: 3}
   eventDescription: {fileID: 0}
+--- !u!114 &5137893220854919285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4545089466341251758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 941464fa0b8facd46a8844ceef063ad2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -6,9 +6,7 @@ using System.Collections.Generic;
 /// </summary>
 public class CardDeckViewManager : UIPanelBase
 {
-    public Transform cardListTransform;
-
-    public GameObject cardUIPrefab;
+    public Transform contentTransform;
 
     private Dictionary<int, GameObject> activeCardUIs = new Dictionary<int, GameObject>();
 
@@ -27,22 +25,45 @@ public class CardDeckViewManager : UIPanelBase
             CardDeckManager.instance.OnCardAdded += HandleCardAdded;
             CardDeckManager.instance.OnCardRemoved += HandleCardRemoved;
             CardDeckManager.instance.OnCardsRefreshed += RefreshAllCardUIs;
+
+            gameObject.SetActive(false);
+
+            Debug.LogWarning("Awake is Done!");
         }
         else
         {
             Debug.LogWarning("CardDeckManager.instance is null!");
         }
+    }
 
-        gameObject.SetActive(false);
-
-        Debug.LogWarning("Awake is Done!");
+    private void OnDestroy()
+    {
+        foreach(GameObject uiObject in activeCardUIs.Values)
+        {
+            if(ObjectPoolManager.instance != null)
+            {
+                ObjectPoolManager.instance.ReturnCardUI(uiObject);
+            }
+            else
+            {
+                Destroy(uiObject);
+            }
+        }
+        activeCardUIs.Clear();
     }
 
     private void HandleCardAdded(ActionCardData card)
     {
-        ActionCardHandler cardUI = Instantiate(cardUIPrefab, cardListTransform).GetComponent<ActionCardHandler>();
+
+        if(ObjectPoolManager.instance == null)
+        {
+            Debug.LogError("ObjectPoolManager is not initialized. Check ObjewctPoolManager In Hierarchy");
+            return;
+        }
+
+        ActionCardHandler cardUI = ObjectPoolManager.instance.GetCardUI(contentTransform).GetComponent<ActionCardHandler>();
         
-        if(cardUI != null && cardListTransform != null)
+        if(cardUI != null && contentTransform != null)
         {
             cardUI.UpdateActionCardData(card);
             AddCardClickEvent(cardUI);
@@ -50,6 +71,10 @@ public class CardDeckViewManager : UIPanelBase
             activeCardUIs.Add(card.runtimeID, cardUI.gameObject);
 
             Debug.Log("Add card is success!");
+        }
+        else
+        {
+            ObjectPoolManager.instance.ReturnCardUI(cardUI.gameObject);
         }
 
         Debug.Log("HandleCardAdded is end");
@@ -59,8 +84,16 @@ public class CardDeckViewManager : UIPanelBase
     {
         if(activeCardUIs.TryGetValue(runtimeID, out GameObject cardUIObject))
         {
-            Destroy(cardUIObject);
-            activeCardUIs.Remove(runtimeID);
+            if (ObjectPoolManager.instance != null)
+            {
+                ObjectPoolManager.instance.ReturnCardUI(cardUIObject);
+            }
+            else
+            {
+                Destroy(cardUIObject);
+
+            }
+            activeCardUIs.Remove(runtimeID);      
         }
     }
 
@@ -68,7 +101,15 @@ public class CardDeckViewManager : UIPanelBase
     {
         foreach(GameObject cardUIObject in activeCardUIs.Values)
         {
-            Destroy(cardUIObject);
+            if(ObjectPoolManager.instance != null)
+            {
+                ObjectPoolManager.instance.ReturnCardUI(cardUIObject);
+            }
+            else
+            {
+                Destroy(cardUIObject);
+            }
+
         }
         activeCardUIs.Clear();
 

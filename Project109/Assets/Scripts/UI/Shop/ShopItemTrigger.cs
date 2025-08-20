@@ -39,7 +39,7 @@ public class ShopItemTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExit
                 if(relicHandler != null)
                 {
                     UIManager.instance.UpdateRelicDescription(relicHandler.relicData.description);
-                    UIManager.instance.OnRelicDescription(GetComponent<RectTransform>().position);
+                    UIManager.instance.OnRelicDescription();
                 }
                 break;
             case ShopItems.Potion:

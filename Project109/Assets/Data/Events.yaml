@@ -4,14 +4,22 @@ eventCollection:
     eventAppearCondition: 
       - conditionType: None
         value: 0
+    eventObjectPath: Assets/Texture/Items/Relic/RecoveryPlateTexture.png
     eventName: 예시 이벤트
     eventDescription: 이것은 예시 이벤트 데이터 정보입니다.
     choices:
-      - choiceDescription: 1번 선택지
-        effectType: None
-        value: 0
-        getRelicName: None
-      - choiceDescription: 2번 선택지
-        effectType: Damage
-        value: 5
-        getRelicName: 낡은 검
+      - description: 돈 획득
+        useItems:
+        getItems:
+          - itemType: Money
+            value: !!int 50
+            name:
+      - description: 재화를 사용하여 카드 획득
+        useItems:
+          - itemType: Money
+            value: !!int 50
+            name:
+        getItems:
+          - itemType: Card
+            value: 1
+            name: 슬래시

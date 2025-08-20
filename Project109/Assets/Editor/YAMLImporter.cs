@@ -223,6 +223,7 @@ public class YAMLImporter
             var asset = ScriptableObject.CreateInstance<EventData>();
             asset.eventAppearLevel = eventData.eventAppearLevel;
             asset.eventAppearCondition = eventData.eventAppearCondition;
+            asset.eventObjectPath = eventData.eventObjectPath;
             asset.eventName = eventData.eventName;
             asset.eventDescription = eventData.eventDescription;
             asset.choices = eventData.choices;
@@ -548,9 +549,10 @@ public class YAMLImporter
     {
         public int eventAppearLevel { get; set; }
         public List<AppearCondition> eventAppearCondition { get; set; }
+        public string eventObjectPath { get; set; }
         public string eventName { get; set; }
         public string eventDescription { get; set; }
-        public List<Choice_RelicAndCard> choices { get; set; }
+        public List<Choice_Data> choices { get; set; }
     }
 
     public class RootBattleNodeData

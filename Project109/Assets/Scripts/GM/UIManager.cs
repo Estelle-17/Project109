@@ -5,7 +5,7 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager instance;
+    public static UIManager instance { get; private set; }
 
     private void Awake()
     {
@@ -21,18 +21,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public static UIManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                return null;
-            }
-            return instance;
-        }
-    }
-
     public RectTransform canvasRect;
 
     //현재 활성화된 UI정보 리스트
@@ -40,6 +28,7 @@ public class UIManager : MonoBehaviour
 
     //유물 관련 변수
     public GameObject relicDescription;
+    RectTransform relicDescriptionTransform;
     public TextMeshProUGUI relicDescriptionText;
 
     //카드 효과 범위 관련 변수
@@ -55,6 +44,17 @@ public class UIManager : MonoBehaviour
         if(relicDescription != null)
         {
             OffRelicDescription();
+            relicDescriptionTransform = relicDescription.transform.GetComponent<RectTransform>();
+        }
+    }
+
+    private void Update()
+    {
+        if(relicDescription.activeSelf && relicDescriptionTransform)
+        {
+            Vector2 mousePos = Input.mousePosition;
+            mousePos += new Vector2(100, 35);    //offset
+            relicDescriptionTransform.position = mousePos;
         }
     }
 
@@ -160,12 +160,12 @@ public class UIManager : MonoBehaviour
         relicDescriptionText.text = newDescription;
     }
 
-    public void OnRelicDescription(Vector3 newItemPos)
+    public void OnRelicDescription()
     {
         if (relicDescription == null)
             return;
 
-        relicDescription.transform.GetComponent<RectTransform>().position = newItemPos + new Vector3(75, -50, 0);
+        //relicDescription.transform.GetComponent<RectTransform>().position = newItemPos + new Vector3(75, -50, 0);
         relicDescription.SetActive(true);
     }
 

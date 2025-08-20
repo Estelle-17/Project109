@@ -1,23 +1,47 @@
 # string이 아닌 int, float, bool형식은 !!int와 같이 변수의 타입을 강제 지정해주어야 문제가 안생김
 $schema:  "https://json-schema.org/draft/2020-12/schema"
-choice: &choice_relicAndCard
+useItem: &use_items
   type: object
-  choiceDescription:
-    type: string
-  effectType:
+  itemType:
     type: string
     enum:
-    - None
-    - Damage
-    - Heal
-    - Buff
-    - Debuff
-    - Move
-  value:
-    type: integer
-    minimum: 0
-  getRelicName:
+    - Money
+    - Hp
+    - Card
+    - Relic
+    value:
+      type: integer
+    name:
+      type: string
+
+getItem: &get_items
+  type: object
+  itemType:
     type: string
+    enum:
+    - Money
+    - Hp
+    - Card
+    - Relic
+    - Battle
+    - Event
+    value:
+      type: integer
+    name:
+      type: string
+
+choice: &choice_data
+  type: object
+  description:
+    type: string
+  useItems:
+    type: array
+    item:
+      <<: *use_items
+  getItems:
+    type: array
+    item:
+      <<: *get_items
 
 condition: &appear_condition
   type: object
@@ -46,6 +70,8 @@ properties:
           type: array
           item:
             <<: *appear_condition
+        eventObjectPath:
+          type: string
         eventName:
           type: string
         eventDescription:
@@ -53,10 +79,11 @@ properties:
         choices:
           type: array
           item:
-            <<: *choice_relicAndCard
+            <<: *choice_data
       required:
         - eventAppearLevel
         - eventAppearCondition
+        - eventObjectPath
         - eventName
         - eventDescription 
         - choices

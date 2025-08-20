@@ -6,9 +6,10 @@ public class EventData : ScriptableObject, IIdentifiable
 {
     public int eventAppearLevel;
     public List<AppearCondition> eventAppearCondition;
+    public string eventObjectPath;
     public string eventName;
     public string eventDescription;
-    public List<Choice_RelicAndCard> choices;
+    public List<Choice_Data> choices;
 
     public string ID => eventName;
 }

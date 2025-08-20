@@ -5,7 +5,7 @@ using System.Linq;
 
 public class CardDeckManager : MonoBehaviour
 {
-    public static CardDeckManager instance;
+    public static CardDeckManager instance { get; private set; }
 
     private void Awake()
     {
@@ -18,18 +18,6 @@ public class CardDeckManager : MonoBehaviour
         else
         {
             Destroy(this.gameObject);
-        }
-    }
-
-    public static CardDeckManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                return null;
-            }
-            return instance;
         }
     }
 
@@ -87,22 +75,24 @@ public class CardDeckManager : MonoBehaviour
     //SO데이터를 기반으로 고유ID를 가진 새로운 카드 데이터 생성
     private ActionCardData CreateNewCard(ActionCardData newCardData) 
     {
-        ActionCardData newCard = new ActionCardData
-        {
-            cardTexture = newCardData.cardTexture,
-            className = newCardData.className,
-            cardName = newCardData.cardName,
-            texturePath = newCardData.texturePath,
-            level = newCardData.level,
-            useStamina = newCardData.useStamina,
-            effectArea = newCardData.effectArea,
-            defaultEffects = newCardData.defaultEffects,
-            upgradeEffects = newCardData.upgradeEffects,
-            upgradeCount = newCardData.upgradeCount,
-
-            runtimeID = nextRuntimeID++
-        };
+        ActionCardData newCard = Instantiate(newCardData);
+        newCard.runtimeID = nextRuntimeID++;
 
         return newCard;
+        //ActionCardData newCard = new ActionCardData
+        //{
+        //    cardTexture = newCardData.cardTexture,
+        //    className = newCardData.className,
+        //    cardName = newCardData.cardName,
+        //    texturePath = newCardData.texturePath,
+        //    level = newCardData.level,
+        //    useStamina = newCardData.useStamina,
+        //    effectArea = newCardData.effectArea,
+        //    defaultEffects = newCardData.defaultEffects,
+        //    upgradeEffects = newCardData.upgradeEffects,
+        //    upgradeCount = newCardData.upgradeCount,
+
+        //    runtimeID = nextRuntimeID++
+        //};
     }
 }

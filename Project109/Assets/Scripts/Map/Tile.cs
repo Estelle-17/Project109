@@ -16,6 +16,9 @@ public class Tile : MonoBehaviour
     public GameObject canMoveAreaColor;
     public GameObject centerTileColor;
 
+    public GameObject tileObjectPrefab;
+    public GameObject crackTileObjectPrefab;
+
     private void Start()
     {
         canMoveAreaColor = transform.GetChild(0).gameObject;
@@ -49,6 +52,21 @@ public class Tile : MonoBehaviour
         else
         {
             canMoveAreaColor.SetActive(false);
+        }
+    }
+
+    public void CreateRandomTileObject()
+    {
+        if (tileObjectPrefab == null || crackTileObjectPrefab == null)
+            return;
+
+        if (Random.Range(0, 100) % 2 == 0)
+        {
+            Instantiate(tileObjectPrefab, transform);
+        }
+        else
+        {
+            Instantiate(crackTileObjectPrefab, transform);
         }
     }
 }

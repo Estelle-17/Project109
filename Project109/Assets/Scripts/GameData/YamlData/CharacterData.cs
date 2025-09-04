@@ -7,7 +7,7 @@ public class CharacterData : ScriptableObject, IIdentifiable
     public GameObject characterObject;
     public string classType;
     public string characterName;
-    public string modelingPath;
+    public string assetPath;
     public int level;
     public string description;
     public float hp;

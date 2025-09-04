@@ -2077,32 +2077,16 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 807622583}
-  - component: {fileID: 807622582}
+  - component: {fileID: 807622586}
+  - component: {fileID: 807622585}
+  - component: {fileID: 807622584}
   m_Layer: 0
-  m_Name: AddressablesData Loader
+  m_Name: AssetData Loader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &807622582
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807622581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aaba9a6b87c9f6f47ae179cd002f64ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardKey: Card
-  relicKey: Relic
-  eventKey: Event
-  battleNodeKey: BattleNode
-  monsterKey: Monster
-  characterKey: Character
 --- !u!4 &807622583
 Transform:
   m_ObjectHideFlags: 0
@@ -2118,6 +2102,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &807622584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807622581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509e1ce323a468744b8dc44b73d8e1f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &807622585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807622581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d943d7d1b875834cbbbae77f934167a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bundleFinder: {fileID: 0}
+--- !u!114 &807622586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807622581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faf3822a154beff4383a4ec66a0c5582, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardKey: Card
+  relicKey: Relic
+  eventKey: Event
+  battleNodeKey: BattleNode
+  monsterKey: Monster
+  characterKey: Character
+  modelKey: Model
 --- !u!1 &840009955
 GameObject:
   m_ObjectHideFlags: 0
@@ -4052,7 +4080,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeImage: {fileID: 235991326}
-  dataLoader: {fileID: 807622582}
+  dataLoader: {fileID: 0}
   eventObjectPrefab: {fileID: 4545089466341251758, guid: 200fabb5e5b172b4e86a4d26d0de9ffc, type: 3}
   shopObjectPrefab: {fileID: 7780705817486354265, guid: 4e38a3d73e95a8a4892238876921134d, type: 3}
   restoreObjectPrefab: {fileID: 3887527566411581826, guid: f72f9f993e0e4c548a7e371ca6f08dc2, type: 3}

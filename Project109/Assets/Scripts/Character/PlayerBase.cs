@@ -11,12 +11,12 @@ public class PlayerBase : MonoBehaviour
     void AddStartCardsInDeck()
     {
         CharacterData characterData;
-        AddressableDataLoader.instance.TryGetCharacter("전투광", out characterData);
+        AssetCacheManager.instance.TryGetCharacter("전투광", out characterData);
         if(characterData != null && CardDeckManager.instance != null)
         {
             foreach (StartCard cards in characterData.startCards)
             {
-                AddressableDataLoader.instance.TryGetCard(cards.cardName, out ActionCardData cardData);
+                AssetCacheManager.instance.TryGetCard(cards.cardName, out ActionCardData cardData);
 
                 for (int i = 0; i < cards.number; i++)
                 {

@@ -20,9 +20,9 @@ public class ShopUIManager : MonoBehaviour
 
     private void Awake()
     {
-        AddressableDataLoader dataLoader = AddressableDataLoader.instance;
-        cardItemPicker = new RandomItemPicker<ActionCardData>(dataLoader.cardList);
-        relicItemPicker = new RandomItemPicker<RelicData>(dataLoader.relicList);
+        AssetCacheManager cacheData = AssetCacheManager.instance;
+        cardItemPicker = new RandomItemPicker<ActionCardData>(cacheData.cardList);
+        relicItemPicker = new RandomItemPicker<RelicData>(cacheData.relicList);
 
         cardCount = 6;
         relicCount = 3;

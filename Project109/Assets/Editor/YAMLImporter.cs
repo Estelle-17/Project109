@@ -87,7 +87,7 @@ public class YAMLImporter
 
             AddressableAssetEntry entry = settings.CreateOrMoveEntry(
                 AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "Cards")
+                CreateOrFindAddressablesGroup(settings, "GameData")
             );
             entry.address = card.cardName;
             entry.SetLabel("Card", true);
@@ -167,7 +167,7 @@ public class YAMLImporter
 
             AddressableAssetEntry entry = settings.CreateOrMoveEntry(
                 AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "Relics")
+                CreateOrFindAddressablesGroup(settings, "GameData")
             );
             entry.address = relic.relicName;
             entry.SetLabel("Relic", true);
@@ -244,7 +244,7 @@ public class YAMLImporter
 
             AddressableAssetEntry entry = settings.CreateOrMoveEntry(
                 AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "Events")
+                CreateOrFindAddressablesGroup(settings, "GameData")
             );
             entry.address = eventData.eventName;
             entry.SetLabel("Event", true);
@@ -318,7 +318,7 @@ public class YAMLImporter
 
             AddressableAssetEntry entry = settings.CreateOrMoveEntry(
                 AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "BattleNodes")
+                CreateOrFindAddressablesGroup(settings, "GameData")
             );
             entry.address = battleNodeData.battleNodeName;
             entry.SetLabel("BattleNode", true);
@@ -400,7 +400,7 @@ public class YAMLImporter
 
             AddressableAssetEntry entry = settings.CreateOrMoveEntry(
                 AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "Monsters")
+                CreateOrFindAddressablesGroup(settings, "GameData")
             );
             entry.address = monsterData.monsterName;
             entry.SetLabel("Monster", true);
@@ -456,7 +456,7 @@ public class YAMLImporter
             var asset = ScriptableObject.CreateInstance<CharacterData>();
             asset.classType = characterData.classType;
             asset.characterName = characterData.characterName;
-            asset.modelingPath = characterData.modelingPath;
+            asset.assetPath = characterData.assetPath;
             asset.level = characterData.level;
             asset.description = characterData.description;
             asset.hp = characterData.hp;
@@ -469,7 +469,7 @@ public class YAMLImporter
 
             //asset.characterObject = (GameObject)AssetDatabase.LoadAssetAtPath(CharacterData.modelingPath, typeof(GameObject));
 
-            var path = $"Assets/SO/Characters/{characterData.characterName}.asset";
+            var path = $"Assets/SO/Characters/{characterData.assetPath}.asset";
             Directory.CreateDirectory("Assets/SO/Characters");
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
@@ -485,9 +485,9 @@ public class YAMLImporter
 
             AddressableAssetEntry entry = settings.CreateOrMoveEntry(
                 AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "Characters")
+                CreateOrFindAddressablesGroup(settings, "GameData")
             );
-            entry.address = characterData.characterName;
+            entry.address = characterData.assetPath;
             entry.SetLabel("Character", true);
             Debug.Log("Addressables에 등록 완료: " + entry.address);
         }
@@ -595,7 +595,7 @@ public class YAMLImporter
     {
         public string classType { get; set; }
         public string characterName { get; set; }
-        public string modelingPath { get; set; }
+        public string assetPath { get; set; }
         public int level { get; set; }
         public string description { get; set; }
         public float hp { get; set; }

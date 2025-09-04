@@ -2,7 +2,7 @@
 characterCollection:
   - classType: Warrior
     characterName: 전투광
-    modelingPath: Assets/Texture/Items/Relic/RecoveryPlateTexture.png
+    assetPath: Character_Warrior_01
     level: !!int 1
     description: "기본적인 전사 클래스입니다."
     hp: !!float 300.0

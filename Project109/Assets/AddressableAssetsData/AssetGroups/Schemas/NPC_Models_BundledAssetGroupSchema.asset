@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5d17a21594effb4e9591490b009e7aa, type: 3}
-  m_Name: BattleNodes_BundledAssetGroupSchema
+  m_Name: NPC_Models_BundledAssetGroupSchema
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 11400000, guid: 6364233bca1867046b22a99f61f2f8c5, type: 2}
+  m_Group: {fileID: 11400000, guid: 3c62c1a869fb2e5448c37a153704600c, type: 2}
   m_InternalBundleIdMode: 1
   m_Compression: 1
   m_IncludeAddressInCatalog: 1

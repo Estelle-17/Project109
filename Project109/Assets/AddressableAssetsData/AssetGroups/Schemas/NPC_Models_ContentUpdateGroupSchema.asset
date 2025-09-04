@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5834b5087d578d24c926ce20cd31e6d6, type: 3}
-  m_Name: Moddable_Character_ContentUpdateGroupSchema
+  m_Name: NPC_Models_ContentUpdateGroupSchema
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 11400000, guid: 1ad38a19d92df5841b1e41b72454c2a0, type: 2}
+  m_Group: {fileID: 11400000, guid: 3c62c1a869fb2e5448c37a153704600c, type: 2}
   m_StaticContent: 0

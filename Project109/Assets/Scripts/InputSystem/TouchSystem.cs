@@ -127,7 +127,8 @@ public class TouchSystem : MonoBehaviour
                 break;
             case "EventNPC":
                 CameraFocusToTarget(newObject.transform.position);
-                EventHandler eventHandler = newObject.GetComponent<EventHandler>();
+                //root에 존재하는 EventHandler 탐색
+                EventHandler eventHandler = newObject.transform.root.GetComponent<EventHandler>();
                 if (eventHandler != null)
                 {
                     eventHandler.EnableEventDescriptionUI();

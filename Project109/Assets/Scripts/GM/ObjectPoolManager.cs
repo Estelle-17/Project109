@@ -78,7 +78,6 @@ public class ObjectPoolManager : MonoBehaviour
     private void OnDestroyCardUIPoolObject(GameObject ui)
     {
         Destroy(ui);
-        //Debug.LogError($"ObjectPoolManager: Destroy a CardUI from Pool (maxSize exceed).");
     }
 
     #endregion

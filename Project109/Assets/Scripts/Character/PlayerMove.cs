@@ -168,7 +168,6 @@ public class PlayerMove : MonoBehaviour
             {
                 Quaternion targetRotation = Quaternion.LookRotation(movePath[currentIndex].transform.position - transform.position);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
-                Debug.Log("Player Rotation: " + transform.rotation.ToString());
             }
 
             if(Vector3.Distance(transform.position, movePath[currentIndex].gameObject.transform.position) < 0.1f)

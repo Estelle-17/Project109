@@ -42,6 +42,7 @@ public class CardDeckManager : MonoBehaviour
         return new List<ActionCardData>(cardDeck);
     }
 
+    //플레이어 덱에 카드 추가
     public ActionCardData AddCard(ActionCardData newCardData)
     {
         ActionCardData newCard = CreateNewCard(newCardData);
@@ -53,6 +54,7 @@ public class CardDeckManager : MonoBehaviour
         return newCard;
     }
 
+    //플레이어 덱의 카드 제거(카드 ID기반)
     public void RemoveCard(int runtimeID)
     {
         ActionCardData cardToRemove = cardDeck.FirstOrDefault(c => c.runtimeID == runtimeID);

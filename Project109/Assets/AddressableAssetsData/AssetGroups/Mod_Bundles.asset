@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Moddable_Character
+  m_Name: Mod_Bundles
   m_EditorClassIdentifier: 
-  m_GroupName: Moddable_Character
-  m_GUID: 87a72cc3c2a750648bf6a562294b03f9
+  m_GroupName: Mod_Bundles
+  m_GUID: aadca966814e2e94496eb81983af558b
   m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 68adc54c3b2506b4792e9cf9b8aaa501, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: a3f867b25047ed243b1be26c8b5bec0c, type: 2}
-    - {fileID: 11400000, guid: f6233cfe3fe7d7f43be8849a0f8d3812, type: 2}
+    - {fileID: 11400000, guid: 447555e97280d9546afe1573dc8bbe14, type: 2}
+    - {fileID: 11400000, guid: cd789d003128ab144b13a186de061eae, type: 2}

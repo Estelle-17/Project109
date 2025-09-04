@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +8,7 @@ public class ExploreUI : UIPanelBase
     public List<List<IncountNode>> ExploreMap;
 
     //SO데이터 및 랜덤으로 선택된 데이터들
-    AddressableDataLoader dataLoader;
+    AssetCacheManager dataLoader;
     RandomItemPicker<BattleNodeData> battleItemPicker;
     RandomItemPicker<EventData> eventItemPicker;
 
@@ -40,7 +39,7 @@ public class ExploreUI : UIPanelBase
     {
         ExploreMap = new List<List<IncountNode>>();
 
-        dataLoader = AddressableDataLoader.Instance;
+        dataLoader = AssetCacheManager.instance;
         battleItemPicker = new RandomItemPicker<BattleNodeData>(dataLoader.battleNodeList);
         eventItemPicker = new RandomItemPicker<EventData>(dataLoader.eventList);
 

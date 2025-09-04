@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class LoadMapHandler : MonoBehaviour
 {
     public Image fadeImage;
-    public AddressableDataLoader dataLoader;
+    public AssetCacheManager dataLoader;
 
     //프리팹은 나중에 모딩을 생각해서 addressable로 변경 예정
     public GameObject eventObjectPrefab;
@@ -14,7 +14,7 @@ public class LoadMapHandler : MonoBehaviour
 
     void Start()
     {
-        dataLoader = GameObject.Find("AddressablesData Loader").GetComponent<AddressableDataLoader>();
+        dataLoader = GameObject.Find("AssetData Loader").GetComponent<AssetCacheManager>();
         fadeImage.gameObject.SetActive(false);
     }
 

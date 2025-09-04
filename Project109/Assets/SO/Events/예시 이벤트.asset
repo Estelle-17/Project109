@@ -16,7 +16,7 @@ MonoBehaviour:
   eventAppearCondition:
   - conditionType: None
     value: 0
-  eventObjectPath: Assets/Texture/Items/Relic/RecoveryPlateTexture.png
+  eventObjectPath: NPC_Event_Tombstone_Model
   eventName: "\uC608\uC2DC \uC774\uBCA4\uD2B8"
   eventDescription: "\uC774\uAC83\uC740 \uC608\uC2DC \uC774\uBCA4\uD2B8 \uB370\uC774\uD130
     \uC815\uBCF4\uC785\uB2C8\uB2E4."

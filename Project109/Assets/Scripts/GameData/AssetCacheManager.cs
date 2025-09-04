@@ -1,0 +1,246 @@
+using UnityEngine;
+using System.IO;
+using System.Collections;
+using System.Collections.Generic;
+using YamlDotNet.Serialization;
+using System;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
+public class AssetCacheManager : MonoBehaviour
+{
+    public static AssetCacheManager instance { get; private set; }
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
+    public string cardKey = "Card";
+    public string relicKey = "Relic";
+    public string eventKey = "Event";
+    public string battleNodeKey = "BattleNode";
+    public string monsterKey = "Monster";
+    public string characterKey = "Character";
+    public string modelKey = "Model";
+
+    public IList<ActionCardData> cardList;
+    private Dictionary<string, ActionCardData> cardDict = new Dictionary<string, ActionCardData>();
+
+    public IList<RelicData> relicList;
+    private Dictionary<string, RelicData> relicDict = new Dictionary<string, RelicData>();
+
+    public IList<EventData> eventList;
+    private Dictionary<string, EventData> eventDict = new Dictionary<string, EventData>();
+
+    public IList<BattleNodeData> battleNodeList;
+    private Dictionary<string, BattleNodeData> battleNodeDict = new Dictionary<string, BattleNodeData>();
+
+    public IList<MonsterData> monsterList;
+    private Dictionary<string, MonsterData> monsterDict = new Dictionary<string, MonsterData>();
+
+    public IList<CharacterData> characterList;
+    private Dictionary<string, CharacterData> characterDict = new Dictionary<string, CharacterData>();
+
+    public IList<GameObject> modelList;
+    private Dictionary<string, GameObject> modelDict = new Dictionary<string, GameObject>();
+
+    private IEnumerator Start()
+    {
+        //카드 데이터 할당 시작
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<ActionCardData>(cardKey, (list, dict) =>
+        {
+            cardList = list;
+            cardDict = dict;
+        }));
+
+        //유물 데이터 할당 시작
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<RelicData>(relicKey, (list, dict) =>
+        {
+            relicList = list;
+            relicDict = dict;
+        }));
+
+        //이벤트 데이터 할당 시작
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<EventData>(eventKey, (list, dict) =>
+        {
+            eventList = list;
+            eventDict = dict;
+        }));
+
+        //전투 데이터 할당 시작
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<BattleNodeData>(battleNodeKey, (list, dict) =>
+        {
+            battleNodeList = list;
+            battleNodeDict = dict;
+        }));
+
+        //몬스터 데이터 할당 시작
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<MonsterData>(monsterKey, (list, dict) =>
+        {
+            monsterList = list;
+            monsterDict = dict;
+        }));
+
+        //캐릭터 데이터 할당 시작
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<CharacterData>(characterKey, (list, dict) =>
+        {
+            characterList = list;
+            characterDict = dict;
+        }));
+
+        //모델링 및 오브젝트 데이터 할당 시작
+        yield return StartCoroutine(LoadAndCacheGameObjectFromAddressableData(modelKey, (list, dict) =>
+        {
+            modelList = list;
+            modelDict = dict;
+        }));
+
+
+        ModManager modManager = GetComponent<ModManager>();
+        if (modManager != null)
+        {
+            yield return StartCoroutine(modManager.StartModLoading());
+        }
+
+        Debug.Log("All Data Load is Complete.");
+    }
+
+    public IEnumerator LoadAllAssetsFromBundle(string key, string bundlePath)
+    {
+        if(!File.Exists(bundlePath))
+        {
+            Debug.Log($"번들 파일을 찾을 수 없습니다. {bundlePath}");
+            yield break;
+        }
+
+        //에셋 번들 로드
+        AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(bundlePath);
+        yield return request;
+
+        AssetBundle loadedAssetBundle = request.assetBundle;
+        if (loadedAssetBundle == null)
+        {
+            Debug.LogError("에셋 번들 로드에 실패하였습니다.");
+            yield break;
+        }
+
+        //번들 내에 저장된 모든 에셋 이름 가져오기
+        string[] allAssetNames = loadedAssetBundle.GetAllAssetNames();
+
+        Debug.Log($"Find {allAssetNames.Length} Assets");
+
+        //각 에셋을 반복문으로 로드
+        foreach (string assetName in allAssetNames)
+        {
+            Debug.Log($"Load: {assetName}");
+
+            GameObject asset = loadedAssetBundle.LoadAsset<GameObject>(assetName);
+            if (asset != null)
+            {
+                //새로운 오브젝트를 캐시에 등록
+                SetNewAssetInCache(key, asset);
+            }
+            else
+            {
+                Debug.Log($"Load falied: {assetName}");
+            }
+        }
+
+        loadedAssetBundle.Unload(false);
+    }
+
+    private void SetNewAssetInCache(string key, GameObject newObject)
+    {
+        switch (key)
+        {
+            case "Model":
+                Debug.Log($"Cache new Data {modelDict[newObject.name].name} -> {newObject.name}");
+                modelDict[newObject.name] = newObject;
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Addressable 키를 통해 데이터를 비동기로 불러오고 후처리 실행
+    /// </summary>
+    IEnumerator LoadAndCacheFromAddressableData<T>(string key, Action<IList<T>, Dictionary<string, T>> onLoaded) where T : ScriptableObject, IIdentifiable
+    {
+        AsyncOperationHandle<IList<T>> handle = Addressables.LoadAssetsAsync<T>(key, null);
+
+        yield return handle;
+
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            //불러온 데이터 저장
+            var list = handle.Result;
+            var dict = new Dictionary<string, T>();
+
+            //Dictionary에 데이터 저장
+            foreach (var item in list)
+            {
+                if (!dict.ContainsKey(item.ID))
+                    dict[item.ID] = item;
+            }
+
+            Debug.Log($"{key}, {dict.Count} item Load Complete");
+            //저장된 데이터 반환
+            onLoaded?.Invoke(list, dict);
+        }
+        else
+        {
+            Debug.LogError($"{typeof(T).Name} Addressables 로드 실패");
+            onLoaded?.Invoke(null, null);
+        }
+    }
+
+    /// <summary>
+    /// Addressable 키를 통해 오브젝트를 비동기로 불러오고 후처리 실행
+    /// </summary>
+    IEnumerator LoadAndCacheGameObjectFromAddressableData(string key, Action<IList<GameObject>, Dictionary<string, GameObject>> onLoaded)
+    {
+        AsyncOperationHandle<IList<GameObject>> handle = Addressables.LoadAssetsAsync<GameObject>(key, null);
+
+        yield return handle;
+
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            //불러온 데이터 저장
+            var list = handle.Result;
+            var dict = new Dictionary<string, GameObject>();
+
+            //Dictionary에 데이터 저장
+            foreach (var item in list)
+            {
+                if (!dict.ContainsKey(item.name))
+                    dict[item.name] = item;
+            }
+
+            Debug.Log($"{key}, {dict.Count} item Load Complete");
+            //저장된 데이터 반환
+            onLoaded?.Invoke(list, dict);
+        }
+        else
+        {
+            Debug.LogError($"{key} Addressables 로드 실패");
+            onLoaded?.Invoke(null, null);
+        }
+    }
+
+    public bool TryGetCard(string name, out ActionCardData card) => cardDict.TryGetValue(name, out card);
+    public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
+    public bool TryGetRelic(string name, out RelicData relic) => relicDict.TryGetValue(name, out relic);
+    public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);
+    public bool TryGetBattleNode(string name, out BattleNodeData battleNode) => battleNodeDict.TryGetValue(name, out battleNode);
+    public bool TryGetCharacter(string name, out CharacterData character) => characterDict.TryGetValue(name, out character);
+    public bool TryGetModel(string name, out GameObject model) => modelDict.TryGetValue(name, out model);
+}

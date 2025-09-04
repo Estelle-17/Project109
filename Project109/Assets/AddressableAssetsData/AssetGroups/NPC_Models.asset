@@ -10,25 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Monsters
+  m_Name: NPC_Models
   m_EditorClassIdentifier: 
-  m_GroupName: Monsters
-  m_GUID: 0c7f6459796e4ab4bb6f9cc6fe132bce
+  m_GroupName: NPC_Models
+  m_GUID: db378e65d7549b046b7725a81bbddecc
   m_SerializeEntries:
-  - m_GUID: 4954c22522afb8342b1861fb8aa4ce8d
-    m_Address: "\uB2E4\uB978 \uBAAC\uC2A4\uD130"
+  - m_GUID: 2634d004684c91a459f0103c7ecc59dc
+    m_Address: NPC_Event_Tombstone_Model
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Monster
+    - Model
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f01cb23b7c86a70478f47e31e3c72ada
-    m_Address: "\uBAAC\uC2A4\uD130"
+  - m_GUID: 483804fe5a31926439b888af42e9f475
+    m_Address: NPC_Restore_Bonfire_Model
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Monster
+    - Model
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 68adc54c3b2506b4792e9cf9b8aaa501, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 380fd582b32d5d64e9d33cbf8873d285, type: 2}
+    - {fileID: 11400000, guid: 20693a29f65f99d49975eb08cf3c8789, type: 2}
+    - {fileID: 11400000, guid: 1a4b339c60dade54aae5425756ec4e74, type: 2}

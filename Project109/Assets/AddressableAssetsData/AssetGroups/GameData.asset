@@ -10,11 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Cards
+  m_Name: GameData
   m_EditorClassIdentifier: 
-  m_GroupName: Cards
-  m_GUID: f2b801b9a0c342c4aac9ecbf32547f08
+  m_GroupName: GameData
+  m_GUID: f43c8a2f9323d8b4c8518938a52d05a4
   m_SerializeEntries:
+  - m_GUID: 0e875bb541a243046a43ea730f394629
+    m_Address: "\uC7AC\uC0DD\uC131 \uCCA0\uD310"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Relic
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2180a94816c264f4d9c00302e3a7d133
+    m_Address: "\uB0A1\uC740 \uAC80"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Relic
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 356c507a3255c4e47a0ef2613cc61f69
     m_Address: "\uD035 \uC2AC\uB798\uC2DC"
     m_ReadOnly: 0
@@ -27,11 +39,29 @@ MonoBehaviour:
     m_SerializedLabels:
     - Card
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4954c22522afb8342b1861fb8aa4ce8d
+    m_Address: "\uB2E4\uB978 \uBAAC\uC2A4\uD130"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Monster
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a747f3461245a94080f39f871179c0c
+    m_Address: "\uC608\uC81C \uC804\uD22C 1"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BattleNode
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7e4ab261dd48d0948b19991f5f6cf4b2
     m_Address: "\uC120\uC218\uD544\uC2B9"
     m_ReadOnly: 0
     m_SerializedLabels:
     - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 892f949c27472e14fbe9553ff737f37d
+    m_Address: "\uC608\uC2DC \uC774\uBCA4\uD2B8"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Event
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 90f1243a696545245810693bc8b15f8c
     m_Address: "\uC2AC\uB798\uC2DC"
@@ -39,11 +69,23 @@ MonoBehaviour:
     m_SerializedLabels:
     - Card
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 95ba721dd898be747b90edcef13a21d4
+    m_Address: "\uC608\uC81C \uC804\uD22C 2"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BattleNode
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a88f2f1b884e51345b0c93309f495a70
     m_Address: "\uB545 \uAC00\uB974\uAE30"
     m_ReadOnly: 0
     m_SerializedLabels:
     - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c272de5b8101e954ba8a09fe9c552688
+    m_Address: "\uC608\uC81C \uC804\uD22C"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BattleNode
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: df7341ee467e1fb4683162b5a83617fc
     m_Address: "\uD68C\uC804\uBCA0\uAE30"
@@ -57,8 +99,15 @@ MonoBehaviour:
     m_SerializedLabels:
     - Card
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f01cb23b7c86a70478f47e31e3c72ada
+    m_Address: "\uBAAC\uC2A4\uD130"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Monster
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 68adc54c3b2506b4792e9cf9b8aaa501, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: bb2becbc4f448c545aec141c54c48b0d, type: 2}
+    - {fileID: 11400000, guid: 70061542bb7647a469d5cd822d650d54, type: 2}
+    - {fileID: 11400000, guid: 1e1db7dc898a67e47b410153ffa8d91d, type: 2}

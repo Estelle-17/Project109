@@ -7,7 +7,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class AddressableDataLoader : MonoBehaviour
 {
-    public static AddressableDataLoader instance;
+    public static AddressableDataLoader instance { get; private set; }
 
     private void Awake()
     {
@@ -23,24 +23,13 @@ public class AddressableDataLoader : MonoBehaviour
         }
     }
 
-    public static AddressableDataLoader Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                return null;
-            }
-            return instance;
-        }
-    }
-
     public string cardKey = "Card";
     public string relicKey = "Relic";
     public string eventKey = "Event";
     public string battleNodeKey = "BattleNode";
     public string monsterKey = "Monster";
     public string characterKey = "Character";
+    public string modelKey = "Model";
 
     public IList<ActionCardData> cardList;
     private Dictionary<string, ActionCardData> cardDict = new Dictionary<string, ActionCardData>();
@@ -59,6 +48,9 @@ public class AddressableDataLoader : MonoBehaviour
 
     public IList<CharacterData> characterList;
     private Dictionary<string, CharacterData> characterDict = new Dictionary<string, CharacterData>();
+
+    public IList<GameObject> modelList;
+    private Dictionary<string, GameObject> modelDict = new Dictionary<string, GameObject>();
 
     void Start()
     {
@@ -97,6 +89,11 @@ public class AddressableDataLoader : MonoBehaviour
             characterList = list;
             characterDict = dict;
         });
+        LoadAndCacheGameObject(modelKey, (list, dict) =>
+        {
+            modelList = list;
+            modelDict = dict;
+        });
     }
 
     /// <summary>
@@ -119,6 +116,7 @@ public class AddressableDataLoader : MonoBehaviour
                         dict[item.ID] = item;
                 }
 
+                Debug.Log($"{key}, {dict.Count} item Load Complete");
                 //저장된 데이터 반환
                 onLoaded?.Invoke(list, dict);
             }
@@ -130,10 +128,40 @@ public class AddressableDataLoader : MonoBehaviour
         };
     }
 
+    void LoadAndCacheGameObject(string key, Action<IList<GameObject>, Dictionary<string, GameObject>> onLoaded)
+    {
+        Addressables.LoadAssetsAsync<GameObject>(key, null).Completed += handle =>
+        {
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                //불러온 데이터 저장
+                var list = handle.Result;
+                var dict = new Dictionary<string, GameObject>();
+
+                //Dictionary에 데이터 저장
+                foreach (var item in list)
+                {
+                    if (!dict.ContainsKey(item.name))
+                        dict[item.name] = item;
+                }
+
+                Debug.Log($"{key}, {dict.Count} item Load Complete");
+                //저장된 데이터 반환
+                onLoaded?.Invoke(list, dict);
+            }
+            else
+            {
+                Debug.LogError($"{key} Addressables 로드 실패");
+                onLoaded?.Invoke(null, null);
+            }
+        };
+    }
+
     public bool TryGetCard(string name, out ActionCardData card) => cardDict.TryGetValue(name, out card);
     public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
     public bool TryGetRelic(string name, out RelicData relic) => relicDict.TryGetValue(name, out relic);
     public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);
     public bool TryGetBattleNode(string name, out BattleNodeData battleNode) => battleNodeDict.TryGetValue(name, out battleNode);
     public bool TryGetCharacter(string name, out CharacterData character) => characterDict.TryGetValue(name, out character);
+    public bool TryGetModel(string name, out GameObject model) => modelDict.TryGetValue(name, out model);
 }

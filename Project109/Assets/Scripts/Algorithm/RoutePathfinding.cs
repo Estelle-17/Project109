@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 public class TileNode : IComparable<TileNode>
 {
@@ -43,7 +41,7 @@ public class RoutePathfinding : MonoBehaviour
         HashSet<TileNode> openList = new HashSet<TileNode>();
         HashSet<TileNode> closeList = new HashSet<TileNode>();
 
-        //³ëµå ¸Ê »ý¼º
+        //ë…¸ë“œ ë§µ ìƒì„±
         MakeTileNodeMap(map);
 
         TileNode startNode = tileNodeMap[start.GetCoord().column, start.GetCoord().row];
@@ -62,13 +60,13 @@ public class RoutePathfinding : MonoBehaviour
 
             if (currentTile == targetNode)
             {
-                //ÇöÀç±îÁö Å½»öÇÑ ¹æÇâ ¹Ý´ë·Î Æ®·¡Å· ½ÃÀÛ
+                //í˜„ìž¬ê¹Œì§€ íƒìƒ‰í•œ ë°©í–¥ ë°˜ëŒ€ë¡œ íŠ¸ëž˜í‚¹ ì‹œìž‘
                 resultPath = RetracePath(startNode, targetNode, map);
 
                 return resultPath;
             }
 
-            //ÇöÀç Å¸ÀÏÀÇ »ó,ÇÏ,ÁÂ,¿ì Å½»ö(´ë°¢¼±Àº Å½»öÇÏÁö ¾ÊÀ½)
+            //í˜„ìž¬ íƒ€ì¼ì˜ ìƒ,í•˜,ì¢Œ,ìš° íƒìƒ‰(ëŒ€ê°ì„ ì€ íƒìƒ‰í•˜ì§€ ì•ŠìŒ)
             int[] dirX = { 0, 0, 1, -1 };
             int[] dirY = { 1, -1, 0, 0 };
 
@@ -77,12 +75,12 @@ public class RoutePathfinding : MonoBehaviour
                 int x = currentTile.gridX + dirX[i];
                 int y = currentTile.gridY + dirY[i];
 
-                //¸ÊÀ» ³Ñ¾î°¡°Å³ª ºñ¾îÀÖÁö ¾ÊÀ» °æ¿ì Á¦¿Ü
+                //ë§µì„ ë„˜ì–´ê°€ê±°ë‚˜ ë¹„ì–´ìžˆì§€ ì•Šì„ ê²½ìš° ì œì™¸
                 if (x >= map.GetLength(0) || y >= map.GetLength(1) || x < 0 || y < 0 || !tileNodeMap[x, y].isWalkable || closeList.Contains(tileNodeMap[x, y]))
                     continue;
 
-                //ÇöÀç Å½»öÁßÀÎ Å¸ÀÏÀÌ ÀÌÀü¿¡ °è»êµÈ ÄÚ½ºÆ®º¸´Ù ´õ ÀûÀ» °æ¿ì ±³È¯
-                //¶Ç´Â Å½»öµÈ ÀûÀÌ ¾ø´Â °æ¿ì ÄÚ½ºÆ® °è»ê
+                //í˜„ìž¬ íƒìƒ‰ì¤‘ì¸ íƒ€ì¼ì´ ì´ì „ì— ê³„ì‚°ëœ ì½”ìŠ¤íŠ¸ë³´ë‹¤ ë” ì ì„ ê²½ìš° êµí™˜
+                //ë˜ëŠ” íƒìƒ‰ëœ ì ì´ ì—†ëŠ” ê²½ìš° ì½”ìŠ¤íŠ¸ ê³„ì‚°
                 int newCurrentTileCost = currentTile.gCost + GetDistanceToTileNode(currentTile, tileNodeMap[x, y]);
                 if(newCurrentTileCost < tileNodeMap[x, y].gCost || !openList.Contains(tileNodeMap[x, y]))
                 {
@@ -121,11 +119,12 @@ public class RoutePathfinding : MonoBehaviour
         int distX = Mathf.Abs(startNode.gridX - endNode.gridX);
         int distY = Mathf.Abs(startNode.gridY - endNode.gridY);
 
-        //°¡Àå ºü¸¥ °æ·ÎÀÏ °æ¿ìÀÇ µÎ ³ëµå°£ÀÇ °Å¸® °è»ê
-        //°¢ Ä­ÀÇ °¡ÁßÄ¡´Â 10À¸·Î °è»êÇÔ
+        //ê°€ìž¥ ë¹ ë¥¸ ê²½ë¡œì¼ ê²½ìš°ì˜ ë‘ ë…¸ë“œê°„ì˜ ê±°ë¦¬ ê³„ì‚°
+        //ê° ì¹¸ì˜ ê°€ì¤‘ì¹˜ëŠ” 10ìœ¼ë¡œ ê³„ì‚°í•¨
         return 10 * (distX + distY);
     }
 
+    //íƒìƒ‰ì„ ìœ„í•œ íƒ€ì¼ ë§µ ìƒì„±
     void MakeTileNodeMap(Tile[, ] map)
     {
         int column = map.GetLength(0);

@@ -22,7 +22,7 @@ properties:
           - Hunter
         characterName:
           type: string
-        modelingPath:
+        assetPath:
           type: string
         description:
           type: string
@@ -48,7 +48,7 @@ properties:
       required:
         - classType
         - characterName
-        - modelingPath
+        - assetPath
         - description
         - hp
         - stamina

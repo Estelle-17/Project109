@@ -4,7 +4,7 @@ eventCollection:
     eventAppearCondition: 
       - conditionType: None
         value: 0
-    eventObjectPath: Assets/Texture/Items/Relic/RecoveryPlateTexture.png
+    eventObjectPath: NPC_Event_Tombstone_Model
     eventName: 예시 이벤트
     eventDescription: 이것은 예시 이벤트 데이터 정보입니다.
     choices:

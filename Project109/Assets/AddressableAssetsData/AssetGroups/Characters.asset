@@ -15,8 +15,8 @@ MonoBehaviour:
   m_GroupName: Characters
   m_GUID: 61573e28c4d188543b43ec8fefcb7dfd
   m_SerializeEntries:
-  - m_GUID: 6bff433c66eb5774eb03dd19814961e8
-    m_Address: "\uC804\uD22C\uAD11"
+  - m_GUID: 68d016037e4c96740a156272cdc26328
+    m_Address: Character_Warrior_01
     m_ReadOnly: 0
     m_SerializedLabels:
     - Character

@@ -14,10 +14,7 @@ public class EventHandler : MonoBehaviour
 
     MakeEventDescription makeEventDescription;
 
-    public void SetEventData(EventData newEventData)
-    {
-        eventData = newEventData;
-    }
+
 
     private void Awake()
     {
@@ -31,6 +28,13 @@ public class EventHandler : MonoBehaviour
         }
 
         makeEventDescription = GetComponent<MakeEventDescription>();
+    }
+    public void SetEventData(EventData newEventData)
+    {
+        eventData = newEventData;
+
+        //새로운 이벤트 데이터 등록 시 알맞은 Npc오브젝트 생성
+        InstantiateEventNpc();
     }
 
     public void UpdateEventDescription()
@@ -63,6 +67,31 @@ public class EventHandler : MonoBehaviour
 
         //UI 설정 후 오브젝트 비활성화
         eventDescription.gameObject.SetActive(false);
+    }
+
+    public void InstantiateEventNpc()
+    {
+        if(AssetCacheManager.instance.TryGetModel(eventData.eventObjectPath, out GameObject npcPrefab))
+        {
+            Debug.Log($"Found Model from Addressable: {eventData.eventObjectPath}");
+            GameObject model = Instantiate(npcPrefab, this.transform);
+            ChangeAllLayer(model, LayerMask.NameToLayer("EventNPC"));
+        }
+        else
+        {
+            Debug.Log($"Found Failed from Addressable: {eventData.eventObjectPath}");
+        }
+    }
+    
+    //특정 오브젝트의 모든 layer 변경
+    void ChangeAllLayer(GameObject model, int layer)
+    {
+        model.layer = layer;
+
+        foreach(Transform child in model.transform)
+        {
+            ChangeAllLayer(child.gameObject, layer);
+        }
     }
 
     public void EnableEventDescriptionUI()

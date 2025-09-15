@@ -8,6 +8,7 @@ public class RelicData : ScriptableObject, IIdentifiable
     public string classType;
     public string relicName;
     public string texturePath;
+    public string dataPath;
     public int level;
     public string description;
     public List<RelicCondition> conditions;

@@ -8,6 +8,7 @@ public class ActionCardData : ScriptableObject, IIdentifiable
     public string className;
     public string cardName;
     public string texturePath;
+    public string dataPath;
     public int level;
     public int useStamina;
     public List<EffectArea> effectArea;

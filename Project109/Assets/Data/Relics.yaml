@@ -2,7 +2,8 @@
 relicCollection:
   - classType: All
     relicName: 재생성 철판
-    texturePath: Assets/Texture/Items/Relic/RecoveryPlateTexture.png
+    texturePath: Relic_RecoveryPlate_Texture
+    dataPath: Relic_RecoveryPlate_Data
     level: !!int 1
     description: "매 턴마다 임시 방어막을 4 획득합니다."
     conditions:
@@ -14,7 +15,8 @@ relicCollection:
 
   - classType: All
     relicName: 낡은 검
-    texturePath: Assets/Texture/Items/Relic/RecoveryPlateTexture.png
+    texturePath: Relic_RecoveryPlate_Texture
+    dataPath: Relic_OldSword_Data
     level: !!int 1
     description: "1칸 이내의 적을 공격할 때 주는 데미지가 5 증가한다."
     conditions:

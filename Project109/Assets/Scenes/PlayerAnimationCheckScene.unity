@@ -2146,6 +2146,7 @@ MonoBehaviour:
   monsterKey: Monster
   characterKey: Character
   modelKey: Model
+  textureKey: Texture
 --- !u!1 &840009955
 GameObject:
   m_ObjectHideFlags: 0

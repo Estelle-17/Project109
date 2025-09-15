@@ -18,6 +18,8 @@ properties:
           type: string
         objectPath:
           type: string
+        dataPath:
+          type: string
         appearLevel:  # 등장 스테이지
           type: integer
           minimum: !!int 1

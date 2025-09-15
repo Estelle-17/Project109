@@ -8,6 +8,7 @@ public class MonsterData : ScriptableObject, IIdentifiable
     public string monsterType;
     public string monsterName;
     public string objectPath;
+    public string dataPath;
     public int appearLevel;
     public float hp;
     public float stamina;
@@ -15,5 +16,5 @@ public class MonsterData : ScriptableObject, IIdentifiable
     public int strength;
     public int armor;
 
-    public string ID => monsterName;
+    public string ID => dataPath;
 }

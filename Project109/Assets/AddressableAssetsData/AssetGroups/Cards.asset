@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Cards
+  m_EditorClassIdentifier: 
+  m_GroupName: Cards
+  m_GUID: f2211c72e4dca57498ceed44a02f4890
+  m_SerializeEntries:
+  - m_GUID: 4bb94b99c4e49bd4bbf7dac3a87e57ff
+    m_Address: Card_test_texture
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Texture
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5d7ba1d400dac284a82409b949f8aa7d
+    m_Address: Card_Slash_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8f347491e22a89846957f89fd6fbdb11
+    m_Address: Card_SpinningSlash_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b2c816eef745a8341b5e43d70074fa30
+    m_Address: Card_Initiative_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bdb533cb88176844e9421e36a5c2b300
+    m_Address: Card_QuickSlash_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cbf9616c9d6720b408de8db62234e9c8
+    m_Address: Card_FalseSwipe_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d7c78de1ab3b90a40a5b72a5092d3f75
+    m_Address: Card_Earthquake_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d8c5e7e3dfad7a04ab3a3a7584d8c96a
+    m_Address: Card_ComboSlash_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 68adc54c3b2506b4792e9cf9b8aaa501, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: b37c95b19eae26b4fa1a80ce5f0ceb22, type: 2}
+    - {fileID: 11400000, guid: 0036929f89adbbb4ca76f013879d690d, type: 2}

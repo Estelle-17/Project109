@@ -32,6 +32,7 @@ public class AssetCacheManager : MonoBehaviour
     public string monsterKey = "Monster";
     public string characterKey = "Character";
     public string modelKey = "Model";
+    public string textureKey = "Texture";
 
     public IList<ActionCardData> cardList;
     private Dictionary<string, ActionCardData> cardDict = new Dictionary<string, ActionCardData>();
@@ -53,6 +54,9 @@ public class AssetCacheManager : MonoBehaviour
 
     public IList<GameObject> modelList;
     private Dictionary<string, GameObject> modelDict = new Dictionary<string, GameObject>();
+
+    public IList<Texture2D> textureList;
+    private Dictionary<string, Texture2D> textureDict = new Dictionary<string, Texture2D>();
 
     private IEnumerator Start()
     {
@@ -105,11 +109,21 @@ public class AssetCacheManager : MonoBehaviour
             modelDict = dict;
         }));
 
+        //텍스처 데이터 할당 시작
+        yield return StartCoroutine(LoadAndCacheTextureFromAddressableData(textureKey, (list, dict) =>
+        {
+            textureList = list;
+            textureDict = dict;
+        }));
 
         ModManager modManager = GetComponent<ModManager>();
         if (modManager != null)
         {
             yield return StartCoroutine(modManager.StartModLoading());
+        }
+        else
+        {
+            Debug.LogWarning("Cannot find ModManager.");
         }
 
         Debug.Log("All Data Load is Complete.");
@@ -189,7 +203,10 @@ public class AssetCacheManager : MonoBehaviour
             foreach (var item in list)
             {
                 if (!dict.ContainsKey(item.ID))
+                {
                     dict[item.ID] = item;
+                    //Debug.Log($"{item.ID} Load");
+                }
             }
 
             Debug.Log($"{key}, {dict.Count} item Load Complete");
@@ -222,6 +239,42 @@ public class AssetCacheManager : MonoBehaviour
             foreach (var item in list)
             {
                 if (!dict.ContainsKey(item.name))
+                {
+                    dict[item.name] = item;
+                    Debug.Log($"{item.name} Load");
+                }
+            }
+
+            Debug.Log($"{key}, {dict.Count} item Load Complete");
+            //저장된 데이터 반환
+            onLoaded?.Invoke(list, dict);
+        }
+        else
+        {
+            Debug.LogError($"{key} Addressables 로드 실패");
+            onLoaded?.Invoke(null, null);
+        }
+    }
+
+    /// <summary>
+    /// Addressable 키를 통해 텍스처를 비동기로 불러오고 후처리 실행
+    /// </summary>
+    IEnumerator LoadAndCacheTextureFromAddressableData(string key, Action<IList<Texture2D>, Dictionary<string, Texture2D>> onLoaded)
+    {
+        AsyncOperationHandle<IList<Texture2D>> handle = Addressables.LoadAssetsAsync<Texture2D>(key, null);
+
+        yield return handle;
+
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            //불러온 데이터 저장
+            var list = handle.Result;
+            var dict = new Dictionary<string, Texture2D>();
+
+            //Dictionary에 데이터 저장
+            foreach (var item in list)
+            {
+                if (!dict.ContainsKey(item.name))
                     dict[item.name] = item;
             }
 
@@ -243,4 +296,5 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetBattleNode(string name, out BattleNodeData battleNode) => battleNodeDict.TryGetValue(name, out battleNode);
     public bool TryGetCharacter(string name, out CharacterData character) => characterDict.TryGetValue(name, out character);
     public bool TryGetModel(string name, out GameObject model) => modelDict.TryGetValue(name, out model);
+    public bool TryGetTexture(string name, out Texture2D texture) => textureDict.TryGetValue(name, out texture);
 }

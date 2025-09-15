@@ -2,7 +2,8 @@
 monsterCollection:
   - monsterType: Normal
     monsterName: 몬스터
-    objectPath: Assets/Prefab/Enemy/Monster.prefab
+    objectPath: Monster_testMonster_Prefab
+    dataPath: Monster_testMonster_Data
     appearLevel: !!int 1
     hp: !!float 100.0
     stamina: !!float 120.0
@@ -11,7 +12,8 @@ monsterCollection:
     armor: !!int 0
   - monsterType: Normal
     monsterName: 다른 몬스터
-    objectPath: Assets/Prefab/Enemy/Monster.prefab
+    objectPath: Monster_test1Monster_Prefab
+    dataPath: Monster_test1Monster_Data
     appearLevel: !!int 1
     hp: !!float 120.0
     stamina: !!float 120.0

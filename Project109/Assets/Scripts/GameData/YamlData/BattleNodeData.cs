@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class BattleNodeData : ScriptableObject, IIdentifiable
 {
     public string battleNodeName;
+    public string dataPath;
     public int battleAppearLevel;
     public List<MonsterSpawnInfo> monsterAppearInformation;
 

@@ -84,12 +84,20 @@ public class LoadMapHandler : MonoBehaviour
     {
         foreach(MonsterSpawnInfo info in nodeData.monsterAppearInformation)
         {
-            if(dataLoader.TryGetMonster(info.monsterName, out var newMonsterData))
+            Debug.Log($"Check {info.monsterName}...");
+            //캐싱된 데이터에서 몬스터 데이터 탐색
+            if (dataLoader.TryGetMonster(info.monsterName, out var newMonsterData))
             {
-                GameObject newMonster = Instantiate(newMonsterData.monsterPrefab);
-                newMonster.transform.position = GameManager.instance.currentMap.CheckTileMapLocationByRowAndColumn(info.spawnPointX, info.spawnPointY);
+                Debug.Log($"MonsterData {newMonsterData.name} Load Success.");
+                //몬스터 데이터에 맞는 프리팹 탐색
+                if (dataLoader.TryGetModel(newMonsterData.objectPath, out var monsterObject))
+                {
+                    Debug.Log("Monsterprefab Load Success.");
+                    GameObject newMonster = Instantiate(monsterObject);
+                    newMonster.transform.position = GameManager.instance.currentMap.CheckTileMapLocationByRowAndColumn(info.spawnPointX, info.spawnPointY);
 
-                GameManager.instance.currentSpawnEnemyOrNPCList.Add(newMonster);
+                    GameManager.instance.currentSpawnEnemyOrNPCList.Add(newMonster);
+                }
             }
         }
     }

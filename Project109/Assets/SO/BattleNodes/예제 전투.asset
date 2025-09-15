@@ -15,6 +15,6 @@ MonoBehaviour:
   battleNodeName: "\uC608\uC81C \uC804\uD22C"
   battleAppearLevel: 1
   monsterAppearInformation:
-  - monsterName: "\uBAAC\uC2A4\uD130"
+  - monsterName: Monster_testMonster_Data
     spawnPointX: 6
     spawnPointY: 10

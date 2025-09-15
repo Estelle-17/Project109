@@ -62,16 +62,16 @@ public class YAMLImporter
             asset.className = card.className;
             asset.cardName = card.cardName;
             asset.texturePath = card.texturePath;
+            card.dataPath = card.dataPath;
             asset.level = card.level;
             asset.useStamina = card.useStamina;
             asset.effectArea = card.effectArea;
             asset.defaultEffects = card.defaultEffects;
             asset.upgradeEffects = card.upgradeEffects;
 
-            asset.cardTexture = (Texture2D)AssetDatabase.LoadAssetAtPath(asset.texturePath, typeof(Texture2D));
             asset.upgradeCount = 0;
 
-            var path = $"Assets/SO/Cards/{card.cardName}.asset";
+            var path = $"Assets/SO/Cards/{card.dataPath}.asset";
             Directory.CreateDirectory("Assets/SO/Cards");
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
@@ -89,7 +89,7 @@ public class YAMLImporter
                 AssetDatabase.AssetPathToGUID(path),
                 CreateOrFindAddressablesGroup(settings, "GameData")
             );
-            entry.address = card.cardName;
+            entry.address = card.dataPath;
             entry.SetLabel("Card", true);
             Debug.Log("Addressables에 등록 완료: " + entry.address);
         }
@@ -144,14 +144,13 @@ public class YAMLImporter
             asset.classType = relic.classType;
             asset.relicName = relic.relicName;
             asset.texturePath = relic.texturePath;
+            asset.dataPath = relic.dataPath;
             asset.level = relic.level;
             asset.description = relic.description;
             asset.effects = relic.effects;
             asset.conditions = relic.conditions;
 
-            asset.relicTexture = (Texture2D)AssetDatabase.LoadAssetAtPath(asset.texturePath, typeof(Texture2D));
-
-            var path = $"Assets/SO/Relics/{relic.relicName}.asset";
+            var path = $"Assets/SO/Relics/{relic.dataPath}.asset";
             Directory.CreateDirectory("Assets/SO/Relics");
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
@@ -167,9 +166,9 @@ public class YAMLImporter
 
             AddressableAssetEntry entry = settings.CreateOrMoveEntry(
                 AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "GameData")
+                CreateOrFindAddressablesGroup(settings, "Relics")
             );
-            entry.address = relic.relicName;
+            entry.address = relic.dataPath;
             entry.SetLabel("Relic", true);
             Debug.Log("Addressables에 등록 완료: " + entry.address);
         }
@@ -244,7 +243,7 @@ public class YAMLImporter
 
             AddressableAssetEntry entry = settings.CreateOrMoveEntry(
                 AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "GameData")
+                CreateOrFindAddressablesGroup(settings, "Events")
             );
             entry.address = eventData.eventName;
             entry.SetLabel("Event", true);
@@ -299,10 +298,11 @@ public class YAMLImporter
         {
             var asset = ScriptableObject.CreateInstance<BattleNodeData>();
             asset.battleNodeName = battleNodeData.battleNodeName;
+            asset.dataPath = battleNodeData.dataPath;
             asset.battleAppearLevel = battleNodeData.battleAppearLevel;
             asset.monsterAppearInformation = battleNodeData.monsterAppearInformation;
 
-            var path = $"Assets/SO/BattleNodes/{battleNodeData.battleNodeName}.asset";
+            var path = $"Assets/SO/BattleNodes/{battleNodeData.dataPath}.asset";
             Directory.CreateDirectory("Assets/SO/BattleNodes");
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
@@ -320,7 +320,7 @@ public class YAMLImporter
                 AssetDatabase.AssetPathToGUID(path),
                 CreateOrFindAddressablesGroup(settings, "GameData")
             );
-            entry.address = battleNodeData.battleNodeName;
+            entry.address = battleNodeData.dataPath;
             entry.SetLabel("BattleNode", true);
             Debug.Log("Addressables에 등록 완료: " + entry.address);
         }
@@ -375,6 +375,7 @@ public class YAMLImporter
             asset.monsterType = monsterData.monsterType;
             asset.monsterName = monsterData.monsterName;
             asset.objectPath = monsterData.objectPath;
+            asset.dataPath = monsterData.dataPath;
             asset.appearLevel = monsterData.appearLevel;
             asset.hp = monsterData.hp;
             asset.stamina = monsterData.stamina;
@@ -382,9 +383,9 @@ public class YAMLImporter
             asset.strength = monsterData.strength;
             asset.armor = monsterData.armor;
 
-            asset.monsterPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(monsterData.objectPath, typeof(GameObject));
+            //asset.monsterPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(monsterData.objectPath, typeof(GameObject));
 
-            var path = $"Assets/SO/Monsters/{monsterData.monsterName}.asset";
+            var path = $"Assets/SO/Monsters/{monsterData.dataPath}.asset";
             Directory.CreateDirectory("Assets/SO/Monsters");
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
@@ -400,9 +401,9 @@ public class YAMLImporter
 
             AddressableAssetEntry entry = settings.CreateOrMoveEntry(
                 AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "GameData")
+                CreateOrFindAddressablesGroup(settings, "Enemys")
             );
-            entry.address = monsterData.monsterName;
+            entry.address = monsterData.dataPath;
             entry.SetLabel("Monster", true);
             Debug.Log("Addressables에 등록 완료: " + entry.address);
         }
@@ -517,6 +518,7 @@ public class YAMLImporter
         public string className { get; set; }
         public string cardName { get; set; }
         public string texturePath { get; set; }
+        public string dataPath { get; set; }
         public int level { get; set; }
         public int useStamina { get; set; }
         public List<EffectArea> effectArea { get; set; }
@@ -534,6 +536,7 @@ public class YAMLImporter
         public string classType { get; set; }
         public string relicName { get; set; }
         public string texturePath { get; set; }
+        public string dataPath { get; set; }
         public int level { get; set; }
         public string description { get; set; }
         public List<RelicCondition> conditions { get; set; }
@@ -563,6 +566,7 @@ public class YAMLImporter
     public class BattleNodeEntry
     {
         public string battleNodeName { get; set; }
+        public string dataPath { get; set; }
         public int battleAppearLevel { get; set; }
         public List<MonsterSpawnInfo> monsterAppearInformation { get; set; }
     }
@@ -578,6 +582,7 @@ public class YAMLImporter
         public string monsterType { get; set; }
         public string monsterName { get; set; }
         public string objectPath { get; set; }
+        public string dataPath { get; set; }
         public int appearLevel { get; set; }
         public float hp { get; set; }
         public float stamina { get; set; }

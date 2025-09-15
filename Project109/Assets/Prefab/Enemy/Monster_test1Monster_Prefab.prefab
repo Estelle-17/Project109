@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4266596084694226382}
   - component: {fileID: 6105330256909832546}
   m_Layer: 7
-  m_Name: Monster
+  m_Name: Monster_test1Monster_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

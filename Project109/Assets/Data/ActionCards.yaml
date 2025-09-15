@@ -2,7 +2,8 @@
 cardCollection:
   - className: Warrior
     cardName: 슬래시
-    texturePath: Assets/Texture/Items/Card/CardTexture.png
+    texturePath: Card_test_texture
+    dataPath: Card_Slash_Data
     level: !!int 1
     useStamina: !!int 40
     effectArea:
@@ -49,7 +50,8 @@ cardCollection:
 
   - className: Warrior
     cardName: 퀵 슬래시
-    texturePath: Assets/Texture/Items/Card/CardTexture.png
+    texturePath: Card_test_texture
+    dataPath: Card_QuickSlash_Data
     level: !!int 1
     useStamina: !!int 0
     effectArea:
@@ -96,7 +98,8 @@ cardCollection:
 
   - className: Warrior
     cardName: 콤보 슬래시
-    texturePath: Assets/Texture/Items/Card/CardTexture.png
+    texturePath: Card_test_texture
+    dataPath: Card_ComboSlash_Data
     level: !!int 1
     useStamina: !!int 40
     effectArea:
@@ -143,7 +146,8 @@ cardCollection:
 
   - className: Warrior
     cardName: 땅 가르기
-    texturePath: Assets/Texture/Items/Card/CardTexture.png
+    texturePath: Card_test_texture
+    dataPath: Card_Earthquake_Data
     level: !!int 1
     useStamina: !!int 40
     effectArea:
@@ -192,7 +196,8 @@ cardCollection:
 
   - className: Warrior
     cardName: 회전베기
-    texturePath: Assets/Texture/Items/Card/CardTexture.png
+    texturePath: Card_test_texture
+    dataPath: Card_SpinningSlash_Data
     level: !!int 1
     useStamina: !!int 40
     effectArea:
@@ -238,8 +243,9 @@ cardCollection:
               description: ""
 
   - className: Warrior
-    cardName: 칼등 밀기
-    texturePath: Assets/Texture/Items/Card/CardTexture.png
+    cardName: 칼등 치기
+    texturePath: Card_test_texture
+    dataPath: Card_FalseSwipe_Data
     level: !!int 1
     useStamina: !!int 40
     effectArea:
@@ -288,7 +294,8 @@ cardCollection:
 
   - className: Warrior
     cardName: 선수필승
-    texturePath: Assets/Texture/Items/Card/CardTexture.png
+    texturePath: Card_test_texture
+    dataPath: Card_Initiative_Data
     level: !!int 1
     useStamina: !!int 40
     effectArea:

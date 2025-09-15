@@ -23,7 +23,10 @@ public class RelicHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (relicData == null)
             return;
 
-        relicImage.texture = relicData.relicTexture;
+        if (AssetCacheManager.instance.TryGetTexture(relicData.texturePath, out Texture2D texture))
+        {
+            relicImage.texture = texture;
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)

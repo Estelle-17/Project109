@@ -41,7 +41,10 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
         cardName.text = cardData.cardName;
         useStamina.text = cardData.useStamina.ToString();
-        cardImage.texture = cardData.cardTexture;
+        if(AssetCacheManager.instance.TryGetTexture(cardData.texturePath, out Texture2D texture))
+        {
+            cardImage.texture = texture;
+        }
 
         cardDescription.text = SetCardDescription();
     }

@@ -20,6 +20,8 @@ properties:
       properties:
         battleNodeName:
           type: string
+        dataPath:
+          type: string
         battleAppearLevel:
           type: integer
           minimum: !!int 1

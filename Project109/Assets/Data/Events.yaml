@@ -5,7 +5,7 @@ eventCollection:
       - conditionType: None
         value: 0
     eventObjectPath: NPC_Event_Tombstone_Model
-    eventName: 예시 이벤트
+    eventName: Event_Tombstone_Data
     eventDescription: 이것은 예시 이벤트 데이터 정보입니다.
     choices:
       - description: 돈 획득

@@ -33,6 +33,6 @@ MonoBehaviour:
       value: 50
       name: 
     getItems:
-    - itemType: Card
+    - itemType: SpecificCard
       value: 1
       name: "\uC2AC\uB798\uC2DC"

@@ -1,6 +1,5 @@
-using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -31,22 +30,36 @@ public class GameManager : MonoBehaviour
             return instance;
         }
     }
+    
+    //플레이어 관련 스탯
+    public PlayerStat playerStat;
 
+    //맵 관련 변수
     public int currentStageLevel = 0;
     public int currentExploreMapFloor = 0;
     public int checkMapNodeFloorLength = 3;
     public IncountNode currentIncountNode;
     public BattleMapScript currentMap;
-    public BattleMapScript EffectAreaMap;
+    public BattleMapScript ActionCard_EffectArea;
     public ExploreUI currentExploreUI;
 
     public LoadMapHandler loadMapHandler;
 
+    //맵 이동 시 제거할 오브젝트 모음
     public List<GameObject> currentSpawnEnemyOrNPCList;
     public List<GameObject> currentSpawnUIList;
 
     void Start()
     {
         loadMapHandler = GetComponent<LoadMapHandler>();
+        playerStat = new PlayerStat();
+        playerStat.inGame_Currency = 0;
+        AddInGame_Currency(0);
+    }
+
+    public void AddInGame_Currency(int amount)
+    {
+        playerStat.inGame_Currency += amount;
+        GameUIManager.instance.UpdateInGameCurrencyText(playerStat.inGame_Currency.ToString());
     }
 }

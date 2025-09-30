@@ -54,7 +54,6 @@ public class CardDeckViewManager : UIPanelBase
 
     private void HandleCardAdded(ActionCardData card)
     {
-
         if(ObjectPoolManager.instance == null)
         {
             Debug.LogError("ObjectPoolManager is not initialized. Check ObjewctPoolManager In Hierarchy");

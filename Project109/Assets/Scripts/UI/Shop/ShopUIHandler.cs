@@ -68,8 +68,9 @@ public class ShopUIHandler : UIPanelBase
 
         for (int i = 0; i < relicCount; i++)
         {
-            relicList[i].relicData = relicData[i];
-            relicList[i].UpdateRelicData();
+            RelicData currentRelicData = relicData[i];
+            relicList[i].UpdateRelicData(currentRelicData);
+            relicList[i].OnRelicClick.AddListener(() => PurchaseRelic(currentRelicData));
         }
     }
 
@@ -79,6 +80,13 @@ public class ShopUIHandler : UIPanelBase
 
         //덱에 카드 추가하는 로직 구현
         CardDeckManager.instance.AddCard(cardData);
+    }
+
+    void PurchaseRelic(RelicData relicData)
+    {
+        Debug.Log($"{relicData.relicName} 유물을 구매합니다.");
+
+        RelicManager.instance.AddRelic(relicData);
     }
 
     public void OpenEraseCardUI()

@@ -6,9 +6,12 @@ useItem: &use_items
     type: string
     enum:
     - Money
+    - MaxHp
     - Hp
-    - Card
-    - Relic
+    - SpecificCard
+    - RandomCard
+    - SpecificRelic
+    - RandomRelic
     value:
       type: integer
     name:
@@ -20,9 +23,12 @@ getItem: &get_items
     type: string
     enum:
     - Money
+    - MaxHp
     - Hp
-    - Card
-    - Relic
+    - SpecificCard
+    - CardReward
+    - SpecificRelic
+    - RelicReward
     - Battle
     - Event
     value:
@@ -32,16 +38,17 @@ getItem: &get_items
 
 choice: &choice_data
   type: object
-  description:
-    type: string
-  useItems:
-    type: array
-    item:
-      <<: *use_items
-  getItems:
-    type: array
-    item:
-      <<: *get_items
+  properties:
+    description:
+      type: string
+    useItems:
+      type: array
+      item:
+        <<: *use_items
+    getItems:
+      type: array
+      item:
+        <<: *get_items
 
 condition: &appear_condition
   type: object

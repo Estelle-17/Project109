@@ -52,6 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b329e4534f3a8a4f833c39e9e06100b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardData: {fileID: 0}
   cardName: {fileID: 6541454250587398306}
   cardDescription: {fileID: 5390516900839122266}
   useStamina: {fileID: 627217548329928733}
@@ -349,8 +350,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC124\uBA85\uC2A4\uD06C\uB9BD\uD2B8\n\uC124\uBA85\uC2A4\uD06C\uB9BD\uD2B8\n\uC124\uBA85\uC2A4\uD06C\uB9BD\uD2B8"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 98275428364c09444b0db637bbca0884, type: 2}
-  m_sharedMaterial: {fileID: 330105162385329556, guid: 98275428364c09444b0db637bbca0884, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a331125123a8feb4284c93178698674f, type: 2}
+  m_sharedMaterial: {fileID: 1616524372058717833, guid: a331125123a8feb4284c93178698674f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -485,8 +486,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC774\uB984"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 98275428364c09444b0db637bbca0884, type: 2}
-  m_sharedMaterial: {fileID: 330105162385329556, guid: 98275428364c09444b0db637bbca0884, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a331125123a8feb4284c93178698674f, type: 2}
+  m_sharedMaterial: {fileID: 1616524372058717833, guid: a331125123a8feb4284c93178698674f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -994,8 +995,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 98275428364c09444b0db637bbca0884, type: 2}
-  m_sharedMaterial: {fileID: 330105162385329556, guid: 98275428364c09444b0db637bbca0884, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a331125123a8feb4284c93178698674f, type: 2}
+  m_sharedMaterial: {fileID: 1616524372058717833, guid: a331125123a8feb4284c93178698674f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1025,7 +1026,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535

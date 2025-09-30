@@ -20,6 +20,6 @@ eventCollection:
             value: !!int 50
             name:
         getItems:
-          - itemType: Card
+          - itemType: SpecificCard
             value: 1
             name: 슬래시

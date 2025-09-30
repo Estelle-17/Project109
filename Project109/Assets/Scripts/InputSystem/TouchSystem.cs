@@ -168,7 +168,6 @@ public class TouchSystem : MonoBehaviour
         {
             return targetPos;
         }
-
         
         return originalPos; 
     }

@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 703472337311011646}
   - component: {fileID: 7362879340893728899}
-  - component: {fileID: 5137893220854919285}
+  - component: {fileID: 2983661355794063805}
+  - component: {fileID: 5583112290836347417}
   - component: {fileID: 9189884312542547556}
   m_Layer: 9
   m_Name: EventObject
@@ -49,7 +50,7 @@ MonoBehaviour:
   eventData: {fileID: 11400000, guid: 892f949c27472e14fbe9553ff737f37d, type: 2}
   eventUICanvasPrefab: {fileID: 2656024023156312088, guid: 9c24271421ea96449b5a03b54618cac8, type: 3}
   eventDescription: {fileID: 0}
---- !u!114 &5137893220854919285
+--- !u!114 &2983661355794063805
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,7 +59,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 4545089466341251758}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 941464fa0b8facd46a8844ceef063ad2, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b63a495f0efe204e9d50bd15952a71b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5583112290836347417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4545089466341251758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbbdb74267dffe246a117ff2505b942e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &9189884312542547556

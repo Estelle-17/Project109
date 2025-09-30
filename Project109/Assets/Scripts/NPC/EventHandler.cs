@@ -12,9 +12,8 @@ public class EventHandler : MonoBehaviour
     public GameObject eventUICanvasPrefab;
     public EventDescriptionScript eventDescription;
 
-    MakeEventDescription makeEventDescription;
-
-
+    ChoiceDescriptionHandler makeEventDescription;
+    ChoiceHandler choiceHandler;
 
     private void Awake()
     {
@@ -27,7 +26,8 @@ public class EventHandler : MonoBehaviour
             Debug.LogWarning("EventUICanvasPrefab이 존재하지 않습니다.");
         }
 
-        makeEventDescription = GetComponent<MakeEventDescription>();
+        makeEventDescription = GetComponent<ChoiceDescriptionHandler>();
+        choiceHandler = GetComponent<ChoiceHandler>();
     }
     public void SetEventData(EventData newEventData)
     {
@@ -59,7 +59,7 @@ public class EventHandler : MonoBehaviour
                 button.onClick.AddListener(() =>    //선택지 클릭 시 특정 결과 진행
                 {
                     Debug.Log($"Button Index {capturedIndex} clicked");
-                    CheckChoiceResult(capturedIndex);
+                    CheckChoiceResult(capturedIndex, choice);
                 });
             }
             buttonIndex++;
@@ -110,10 +110,12 @@ public class EventHandler : MonoBehaviour
         }
     }
 
-    void CheckChoiceResult(int index)
+    void CheckChoiceResult(int index, Choice_Data choice_Data)
     {
         Debug.Log($"Button Index {index} clicked");
         Debug.Log($"UseItems : {eventData.choices[index].useItems.Count}, GetItems : {eventData.choices[index].getItems.Count}");
+
+        choiceHandler.CheckChoiceData(choice_Data);
 
         eventDescription.gameObject.SetActive(false);
     }

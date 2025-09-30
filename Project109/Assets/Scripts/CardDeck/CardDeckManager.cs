@@ -67,6 +67,20 @@ public class CardDeckManager : MonoBehaviour
             }
         }
     }
+
+    public ActionCardData GetRandomCard()
+    {
+        ActionCardData randomCard = cardDeck[UnityEngine.Random.Range(0, cardDeck.Count)];
+
+        return randomCard;
+    }
+
+    public ActionCardData GetSpecificCard(string name)
+    {
+        ActionCardData specificCard = cardDeck.FirstOrDefault(c => c.cardName == name);
+
+        return specificCard;
+    }
     
     //초기설정, 로딩 등 다수의 카드가 변경되었을때 사용
     public void RequestAllCardRefresh()

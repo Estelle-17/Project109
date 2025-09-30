@@ -27,11 +27,23 @@ MonoBehaviour:
     m_SerializedLabels:
     - Relic
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6f7b110153876f34fa999e01de2a70b7
+    m_Address: Relic_OldSword_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Relic
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c644a8a5536714246bd5cc674cb8b206
     m_Address: Relic_RecoveryPlate_Texture
     m_ReadOnly: 0
     m_SerializedLabels:
     - Texture
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cc48b625b62e5364a86a7da3aa6e35f8
+    m_Address: Relic_RecoveryPlate_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Relic
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 68adc54c3b2506b4792e9cf9b8aaa501, type: 2}

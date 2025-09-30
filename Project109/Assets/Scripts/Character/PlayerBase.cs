@@ -5,7 +5,7 @@ public class PlayerBase : MonoBehaviour
 {
     void Start()
     {
-
+        
     }
 
     void AddStartCardsInDeck()

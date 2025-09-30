@@ -19,11 +19,17 @@ public class CharacterAnimation : MonoBehaviour
 
     private void StartPlayerMove()
     {
+        if (animator == null)
+            return;
+
         animator.SetBool("IsMove", true);
     }
 
     private void StopPlayerMove()
     {
+        if (animator == null)
+            return;
+
         animator.SetBool("IsMove", false);
     }
 }

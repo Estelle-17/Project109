@@ -4,8 +4,9 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Unity.VisualScripting;
+using UnityEngine.Events;
 
-public class RelicHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class RelicHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public RelicData relicData;
 
@@ -13,15 +14,16 @@ public class RelicHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public RawImage relicImage;
 
+    public UnityEvent OnRelicClick; //클릭 시 호출될 이벤트
+
     void Start()
     {
-        UpdateRelicData();
+        
     }
 
-    public void UpdateRelicData()
+    public void UpdateRelicData(RelicData newRelicData)
     {
-        if (relicData == null)
-            return;
+        relicData = newRelicData;
 
         if (AssetCacheManager.instance.TryGetTexture(relicData.texturePath, out Texture2D texture))
         {
@@ -29,9 +31,14 @@ public class RelicHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
     }
 
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        OnRelicClick?.Invoke();
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (UIManager.instance.relicDescription == null)
+        if (UIManager.instance.relicDescription == null || relicData == null)
             return;
 
         UIManager.instance.UpdateRelicDescription(relicData.description);
@@ -40,7 +47,7 @@ public class RelicHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerExit(PointerEventData eventData)
     {
-       if (UIManager.instance.relicDescription == null)
+       if (UIManager.instance.relicDescription == null || relicData == null)
             return;
 
         UIManager.instance.OffRelicDescription();

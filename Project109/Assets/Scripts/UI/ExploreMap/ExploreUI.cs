@@ -67,7 +67,6 @@ public class ExploreUI : UIPanelBase
     {
         List<List<IncountNode>> incountNodeListInSection = new List<List<IncountNode>>();
 
-        int createNodeCount = 0;
         int sectionIndex = 0;
 
         incountNodeListInSection.Add(new List<IncountNode>());
@@ -112,7 +111,7 @@ public class ExploreUI : UIPanelBase
             }
             else //나머지 노드는 랜덤 갯수에 인카운트 노드 생성
             {
-                createNodeCount = Random.Range(3, 7);
+                int createNodeCount = Random.Range(3, 5);
                 //정해진 수 만큼 랜덤한 인카운터 생성
                 for (int mapIndex = 0; mapIndex < createNodeCount; mapIndex++)
                 {

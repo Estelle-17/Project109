@@ -107,7 +107,7 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
             return;
 
         //현재 선택된 카드와 맞는 효과 범위 변경
-        Tile[,] map = GameManager.instance.EffectAreaMap.GetTileMap();
+        Tile[,] map = GameManager.instance.ActionCard_EffectArea.GetTileMap();
 
         int[] convertBuffer;
 
@@ -115,8 +115,8 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         {
             int areaLength = cardData.effectArea[index].area[0].Length; //공격 범위의 최대 길이
             convertBuffer = new int[areaLength];
-            int startColumn = GameManager.instance.EffectAreaMap.centerColumn - (areaLength / 2);   //변경할 타일의 시작 column
-            int startRow = GameManager.instance.EffectAreaMap.centerRow - (areaLength / 2); //변경할 타일의 시작 row
+            int startColumn = GameManager.instance.ActionCard_EffectArea.centerColumn - (areaLength / 2);   //변경할 타일의 시작 column
+            int startRow = GameManager.instance.ActionCard_EffectArea.centerRow - (areaLength / 2); //변경할 타일의 시작 row
 
             for (int i = 0; i < areaLength; i++)
             {

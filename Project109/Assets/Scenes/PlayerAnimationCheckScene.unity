@@ -482,7 +482,7 @@ GameObject:
   - component: {fileID: 180402677}
   - component: {fileID: 180402676}
   m_Layer: 5
-  m_Name: OpenExlporeMapButton
+  m_Name: ExploreMapButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -495,18 +495,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 180402673}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 483087335}
-  m_Father: {fileID: 417770251}
+  m_Father: {fileID: 1017441126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 200, y: 100}
-  m_SizeDelta: {x: 250, y: 50}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -175, y: -50}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &180402676
 MonoBehaviour:
@@ -1300,8 +1300,6 @@ RectTransform:
   m_Children:
   - {fileID: 1017441126}
   - {fileID: 688939147}
-  - {fileID: 180402674}
-  - {fileID: 1034865844}
   - {fileID: 235991325}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1474,7 +1472,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Open ExploreMap
+  m_text: 'Map
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1958,7 +1958,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 200, y: 175}
+  m_AnchoredPosition: {x: 200, y: 100}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &688939148
@@ -2671,6 +2671,8 @@ RectTransform:
   - {fileID: 1055431459}
   - {fileID: 1933673465}
   - {fileID: 1378214199}
+  - {fileID: 180402674}
+  - {fileID: 1034865844}
   m_Father: {fileID: 417770251}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -2709,7 +2711,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 417770251}
+  m_Father: {fileID: 1017441126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -4493,10 +4495,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff88fc520a8ea274f969cfcc1091e74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerStat:
-    inGame_Currency: 0
-    mapFloorCheck_Start_Length: 0
-    mapReveal_Random_Count: 0
+  currentCharacter: {fileID: 0}
   currentStageLevel: 0
   currentExploreMapFloor: 0
   checkMapNodeFloorLength: 3
@@ -4551,10 +4550,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfe53124c183aef42b3224f9f6d094e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerStat:
-    inGame_Currency: 0
-    mapFloorCheck_Start_Length: 0
-    mapReveal_Random_Count: 0
 --- !u!114 &2077144581
 MonoBehaviour:
   m_ObjectHideFlags: 0

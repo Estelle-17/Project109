@@ -1,7 +1,7 @@
 # string이 아닌 int, float, bool형식은 !!int와 같이 변수의 타입을 강제 지정해주어야 문제가 안생김
 eventCollection:
   - eventAppearLevel: !!int 1
-    eventAppearCondition: 
+    eventAppearCondition:
       - conditionType: None
         value: 0
     eventObjectPath: NPC_Event_Tombstone_Model
@@ -23,3 +23,62 @@ eventCollection:
           - itemType: SpecificCard
             value: 1
             name: 슬래시
+  - eventAppearLevel: !!int 1
+    eventAppearCondition:
+      - conditionType: None
+        value: 0
+    eventObjectPath: NPC_Event_Tombstone_Model
+    eventName: Event_Test_Data
+    eventDescription: 이벤트 테스트 진행중
+    choices:
+      - description: 돈 획득
+        useItems:
+        getItems:
+          - itemType: Money
+            value: !!int 50
+            name:
+      - description: 재화를 사용하여 카드 획득
+        useItems:
+          - itemType: Money
+            value: !!int 50
+            name:
+        getItems:
+          - itemType: SpecificCard
+            value: 1
+            name: 슬래시
+      - description: 랜덤한 카드를 소모하여 골드 획득
+        useItems:
+          - itemType: RandomCard
+            value: 1
+            name:
+        getItems:
+          - itemType: Money
+            value: !!int 100
+            name:
+      - description: 랜덤한 유물를 소모하여 골드 획득
+        useItems:
+          - itemType: RandomRelic
+            value: 1
+            name:
+        getItems:
+          - itemType: Money
+            value: !!int 100
+            name:
+      - description: 전투 진행
+        useItems:
+          - itemType: 
+            value: 
+            name:
+        getItems:
+          - itemType: Battle
+            value: 
+            name: 
+      - description: 무시한다
+        useItems:
+          - itemType: 
+            value: 
+            name:
+        getItems:
+          - itemType: Event
+            value: 
+            name:

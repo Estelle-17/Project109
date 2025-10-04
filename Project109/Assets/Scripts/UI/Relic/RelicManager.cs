@@ -33,6 +33,11 @@ public class RelicManager : MonoBehaviour
         
     }
 
+    public List<RelicData> GetRelicList()
+    {
+        return new List<RelicData>(relics);
+    }
+
     //플레이어 덱에 카드 추가
     public RelicData AddRelic(RelicData newCardData)
     {

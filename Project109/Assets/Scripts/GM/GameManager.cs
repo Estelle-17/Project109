@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     
     //플레이어 관련 스탯
     public PlayerStat playerStat;
+    public CharacterBase currentCharacter;
 
     //맵 관련 변수
     public int currentStageLevel = 0;

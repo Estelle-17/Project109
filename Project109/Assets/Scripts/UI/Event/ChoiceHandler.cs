@@ -6,7 +6,7 @@ public class ChoiceHandler : MonoBehaviour
     {
         foreach(Choice_UseItem item in choiceData.useItems)
         {
-            LoseItem(item);
+            LoseItem(item, choiceData);
         }
 
         foreach (Choice_GetItem item in choiceData.getItems)
@@ -15,7 +15,7 @@ public class ChoiceHandler : MonoBehaviour
         }
     }
 
-    void LoseItem(Choice_UseItem item)
+    void LoseItem(Choice_UseItem item, Choice_Data choiceData)
     {
         switch (item.itemType)
         {
@@ -37,11 +37,7 @@ public class ChoiceHandler : MonoBehaviour
                 break;
             case "RandomCard":
                 //랜덤한 카드 선택 후 제거
-                ActionCardData randomCard = CardDeckManager.instance.GetRandomCard();
-                if(randomCard != null)
-                {
-                    CardDeckManager.instance.RemoveCard(randomCard.runtimeID);
-                }
+                CardDeckManager.instance.RemoveCard(choiceData.randomLoseCard.runtimeID);
                 break;
             case "SpecificRelic":
                 RelicData specificRelic = RelicManager.instance.GetSpecificRelic(item.name);
@@ -51,11 +47,7 @@ public class ChoiceHandler : MonoBehaviour
                 }
                 break;
             case "RandomRelic":
-                RelicData randomRelic = RelicManager.instance.GetRandomRelic();
-                if (randomRelic != null)
-                {
-                    RelicManager.instance.RemoveRelic(randomRelic.relicName);
-                }
+                RelicManager.instance.RemoveRelic(choiceData.randomLoseRelic.relicName);
                 break;
         }
     }

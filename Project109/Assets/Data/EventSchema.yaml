@@ -8,6 +8,7 @@ useItem: &use_items
     - Money
     - MaxHp
     - Hp
+    - MaxStamina
     - SpecificCard
     - RandomCard
     - SpecificRelic

@@ -26,7 +26,7 @@ public class ExploreUI : UIPanelBase
     [SerializeField] private int StoreNumber = 1;  //맵에 등장하는 상점 갯수
     [SerializeField] private int RestoreNumber = 1;  //맵에 등장하는 휴식 갯수
     [SerializeField] private int SecretNumber = 4;  //맵에 등장하는 시크릿 갯수
-    [SerializeField] private int BoxNumber = 4;  //맵에 등장하는 상자 갯수
+    [SerializeField] private int BoxNumber = 3;  //맵에 등장하는 상자 갯수
     [SerializeField] private int EliteNumber = 3;  //맵에 등장하는 엘리트 갯수
 
     [Header ("Prefab")]
@@ -341,12 +341,12 @@ public class ExploreUI : UIPanelBase
             arrowLine.rotation = Quaternion.Euler(0, 0, angle);
         }
 
-        if (ArrowHeadPrefab != null)
+        /*if (ArrowHeadPrefab != null)
         {
             RectTransform arrowHead = GameObject.Instantiate(ArrowHeadPrefab, ArrowObjects.transform).GetComponent<RectTransform>();
             arrowHead.anchoredPosition = endPos - (offset * 1.4f);
             arrowHead.rotation = Quaternion.Euler(0, 0, angle);
-        }
+        }*/
     }
 
 

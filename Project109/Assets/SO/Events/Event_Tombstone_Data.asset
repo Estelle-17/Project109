@@ -36,3 +36,4 @@ MonoBehaviour:
     - itemType: SpecificCard
       value: 1
       name: "\uC2AC\uB798\uC2DC"
+  randomCardData: {fileID: 0}

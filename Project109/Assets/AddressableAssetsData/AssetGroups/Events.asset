@@ -15,14 +15,14 @@ MonoBehaviour:
   m_GroupName: Events
   m_GUID: e314322540a947248be9162ff69887c2
   m_SerializeEntries:
-  - m_GUID: e226a33ebe9fa28479c803255b7cb888
-    m_Address: Event_Test_Data
+  - m_GUID: 50326b35375db894c90dfc75fcb3b3fc
+    m_Address: Mystery_Tombstone_Data
     m_ReadOnly: 0
     m_SerializedLabels:
     - Event
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: faaa8bdabc8d9f34ebe9a45e876bd920
-    m_Address: Event_Tombstone_Data
+  - m_GUID: e226a33ebe9fa28479c803255b7cb888
+    m_Address: Event_Test_Data
     m_ReadOnly: 0
     m_SerializedLabels:
     - Event

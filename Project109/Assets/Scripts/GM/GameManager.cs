@@ -47,7 +47,8 @@ public class GameManager : MonoBehaviour
     public LoadMapHandler loadMapHandler;
 
     //맵 이동 시 제거할 오브젝트 모음
-    public List<GameObject> currentSpawnEnemyOrNPCList;
+    public List<GameObject> currentSpawnEnemyList;
+    public List<GameObject> currentSpawnNPCList;
     public List<GameObject> currentSpawnUIList;
 
     void Start()

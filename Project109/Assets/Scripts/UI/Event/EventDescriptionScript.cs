@@ -6,7 +6,7 @@ public class EventDescriptionScript : UIPanelBase
 {
     public TextMeshProUGUI description;
 
-    public GameObject eventButtonSpawnPoint;
+    public Transform eventButtonSpawnPoint;
     public GameObject eventButtonPrefab;
 
     void Start()
@@ -21,7 +21,7 @@ public class EventDescriptionScript : UIPanelBase
 
     public Button CreateChoiceButton(string buttonDescription)
     {
-        GameObject button = GameObject.Instantiate(eventButtonPrefab, eventButtonSpawnPoint.transform);
+        GameObject button = GameObject.Instantiate(eventButtonPrefab, eventButtonSpawnPoint);
 
         if(button != null)
         {
@@ -29,5 +29,16 @@ public class EventDescriptionScript : UIPanelBase
         }
 
         return button.GetComponent<Button>();
+    }
+
+    public void ClearChoiceButton()
+    {
+        if (eventButtonSpawnPoint.childCount > 0)
+        {
+            foreach (Transform t in eventButtonSpawnPoint)
+            {
+                Destroy(t.gameObject);
+            }
+        }
     }
 }

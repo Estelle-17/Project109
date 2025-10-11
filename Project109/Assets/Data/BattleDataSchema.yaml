@@ -18,7 +18,7 @@ properties:
     items:
       type: object
       properties:
-        battleNodeName:
+        battleDataName:
           type: string
         dataPath:
           type: string
@@ -31,7 +31,7 @@ properties:
           item:
             <<: *monster_info
       required:
-        - battleNodeName
+        - battleDataName
         - battleAppearLevel
         - monsterAppearInformation
 required:

@@ -28,14 +28,9 @@ public class LoadMapHandler : MonoBehaviour
     void LoadCurrentNodeDataInMap(bool isLoadingNode)
     {
         //맵에 남아있는 적들과 NPC, UI들 제거
-        foreach(GameObject obj in GameManager.instance.currentSpawnEnemyOrNPCList)
-        {
-            Destroy(obj);
-        }
-        foreach (GameObject obj in GameManager.instance.currentSpawnUIList)
-        {
-            Destroy(obj);
-        }
+        DestroyCurrentSpawnEnemy();
+        DestroyCurrentSpawnNpc();
+        DestroyCurrentSpawnUI();
 
         //다음 노드로 이동하였으니 다음 노드들의 가려진 부분들 중 일부가 보이도록 ExploreMap 업데이트
         GameManager.instance.currentExploreUI.OpenExploreMapNodesBasedOnFloorLength();
@@ -80,7 +75,7 @@ public class LoadMapHandler : MonoBehaviour
         StartCoroutine(FadeOut(isLoadingNode));
     }
 
-    void SpawnMonsterInBattleNodeData(BattleNodeData nodeData)
+    public void SpawnMonsterInBattleNodeData(BattleData nodeData)
     {
         foreach(MonsterSpawnInfo info in nodeData.monsterAppearInformation)
         {
@@ -96,7 +91,7 @@ public class LoadMapHandler : MonoBehaviour
                     GameObject newMonster = Instantiate(monsterObject);
                     newMonster.transform.position = GameManager.instance.currentMap.CheckTileMapLocationByRowAndColumn(info.spawnPointX, info.spawnPointY);
 
-                    GameManager.instance.currentSpawnEnemyOrNPCList.Add(newMonster);
+                    GameManager.instance.currentSpawnEnemyList.Add(newMonster);
                 }
             }
         }
@@ -106,11 +101,11 @@ public class LoadMapHandler : MonoBehaviour
     {
         EventHandler newEventNPC = Instantiate(eventObjectPrefab).GetComponent<EventHandler>();
         newEventNPC.SetEventData(eventData);    //이벤트 데이터 전달
-        newEventNPC.UpdateEventDescription();   //선택지 생성
+        newEventNPC.UpdateEventDescription("START");   //선택지 생성. 이벤트의 시작은 특수한 상황을 제외하고 언제나 START로 시작됨
         newEventNPC.transform.position = GameManager.instance.currentMap.CheckTileMapCenterLocation();
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnEnemyOrNPCList.Add(newEventNPC.gameObject);
+        GameManager.instance.currentSpawnNPCList.Add(newEventNPC.gameObject);
         GameManager.instance.currentSpawnUIList.Add(newEventNPC.eventDescription.gameObject);
     }
 
@@ -125,7 +120,7 @@ public class LoadMapHandler : MonoBehaviour
         }
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnEnemyOrNPCList.Add(newShopNPC.gameObject);
+        GameManager.instance.currentSpawnNPCList.Add(newShopNPC.gameObject);
         GameManager.instance.currentSpawnUIList.Add(newShopNPC.GetShopUI().gameObject);
     }
 
@@ -139,8 +134,30 @@ public class LoadMapHandler : MonoBehaviour
         }
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnEnemyOrNPCList.Add(newRestoreNPC.gameObject);
+        GameManager.instance.currentSpawnNPCList.Add(newRestoreNPC.gameObject);
         GameManager.instance.currentSpawnUIList.Add(newRestoreNPC.GetRestoreUI().gameObject);
+    }
+
+    public void DestroyCurrentSpawnEnemy()
+    {
+        foreach (GameObject obj in GameManager.instance.currentSpawnEnemyList)
+        {
+            Destroy(obj);
+        }
+    }
+    public void DestroyCurrentSpawnNpc()
+    {
+        foreach (GameObject obj in GameManager.instance.currentSpawnNPCList)
+        {
+            Destroy(obj);
+        }
+    }
+    public void DestroyCurrentSpawnUI()
+    {
+        foreach (GameObject obj in GameManager.instance.currentSpawnUIList)
+        {
+            Destroy(obj);
+        }
     }
 
     public IEnumerator FadeIn(bool isLoadingNode)

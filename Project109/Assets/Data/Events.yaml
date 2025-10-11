@@ -1,84 +1,125 @@
 # string이 아닌 int, float, bool형식은 !!int와 같이 변수의 타입을 강제 지정해주어야 문제가 안생김
+# 처음으로 보여줄 스테이지의 stageID는 "START"로 통일
 eventCollection:
-  - eventAppearLevel: !!int 1
+  - eventID: Mystery_Tombstone_Data
+    eventAppearLevel: !!int 1
     eventAppearCondition:
       - conditionType: None
         value: 0
     eventObjectPath: NPC_Event_Tombstone_Model
-    eventName: Event_Tombstone_Data
-    eventDescription: 이것은 예시 이벤트 데이터 정보입니다.
-    choices:
-      - description: 돈 획득
-        useItems:
-        getItems:
-          - itemType: Money
-            value: !!int 50
-            name:
-      - description: 재화를 사용하여 카드 획득
-        useItems:
-          - itemType: Money
-            value: !!int 50
-            name:
-        getItems:
-          - itemType: SpecificCard
-            value: 1
-            name: 슬래시
-  - eventAppearLevel: !!int 1
+    stages:
+      - stageID: "START"
+        stageDescription: 수상하게 생긴 비석이 눈앞에 보입니다...
+        choices:
+          - description: 주변을 살펴본다
+            nextStageID: END_GETMONEY
+            useItems:
+            getItems:
+              - itemType: Money
+                value: !!int 50
+                name:
+          - description: 기도한다
+            nextStageID: END_GETCARD
+            useItems:
+              - itemType: Money
+                value: !!int 50
+                name:
+            getItems:
+              - itemType: SpecificCard
+                value: 1
+                name: 슬래시
+
+      - stageID: "END_GETMONEY"
+        stageDescription: 수상한 비석을 무시한 채 주변의 반짝이는 것들을 주워서 지나갔습니다...
+        choices:
+          - description: 확인
+            nextStageID: null
+            useItems:
+            getItems:
+      
+      - stageID: "END_GETCARD"
+        stageDescription: "수상한 비석에 돈을 던진 후 기도하였습니다.\n그러자 비석은 만족한듯이 카드를 한장 보여줍니다."
+        choices:
+          - description: 확인
+            nextStageID: null
+            useItems:
+            getItems:
+
+  
+  - eventID: Event_Test_Data
+    eventAppearLevel: !!int 1
     eventAppearCondition:
       - conditionType: None
         value: 0
     eventObjectPath: NPC_Event_Tombstone_Model
-    eventName: Event_Test_Data
-    eventDescription: 이벤트 테스트 진행중
-    choices:
-      - description: 돈 획득
-        useItems:
-        getItems:
-          - itemType: Money
-            value: !!int 50
-            name:
-      - description: 재화를 사용하여 카드 획득
-        useItems:
-          - itemType: Money
-            value: !!int 50
-            name:
-        getItems:
-          - itemType: SpecificCard
-            value: 1
-            name: 슬래시
-      - description: 랜덤한 카드를 소모하여 골드 획득
-        useItems:
-          - itemType: RandomCard
-            value: 1
-            name:
-        getItems:
-          - itemType: Money
-            value: !!int 100
-            name:
-      - description: 랜덤한 유물를 소모하여 골드 획득
-        useItems:
-          - itemType: RandomRelic
-            value: 1
-            name:
-        getItems:
-          - itemType: Money
-            value: !!int 100
-            name:
-      - description: 전투 진행
-        useItems:
-          - itemType: 
-            value: 
-            name:
-        getItems:
+    stages:
+    - stageID: "START"
+      stageDescription: 이벤트 테스트 진행중
+      choices:
+        - description: 돈 획득
+          nextStageID: END_TEST
+          useItems:
+          getItems:
+            - itemType: Money
+              value: !!int 50
+              name:
+        - description: 재화를 사용하여 카드 획득
+          nextStageID: END_TEST
+          useItems:
+            - itemType: Money
+              value: !!int 50
+              name:
+          getItems:
+            - itemType: SpecificCard
+              value: 1
+              name: 슬래시
+        - description: 랜덤한 카드를 소모하여 골드 획득
+          nextStageID: END_TEST
+          useItems:
+            - itemType: RandomCard
+              value: 1
+              name:
+          getItems:
+            - itemType: Money
+              value: !!int 100
+              name:
+        - description: 랜덤한 유물를 소모하여 골드 획득
+          nextStageID: END_TEST
+          useItems:
+            - itemType: RandomRelic
+              value: 1
+              name:
+          getItems:
+            - itemType: Money
+              value: !!int 100
+              name:
+        - description: 전투 진행
+          nextStageID: BATTLE
+          useItems:
+          getItems:
+            - itemType: Battle
+              value: 
+              name: 
+        - description: 무시한다
+          nextStageID: END_TEST
+          useItems:
+          getItems:
+
+    - stageID: "END_TEST"
+      stageDescription: 선택지 선택 완료. 테스트 종료
+      choices:
+        - description: 진행한다.
+          nextStageID: null
+          useItems:
+          getItems:
+
+    - stageID: "BATTLE"
+      stageDescription: 특정 전투를 진행합니다.
+      choices:
+        - description: 전투 시작!
+          nextStageID: null
+          useItems:
+          getItems:
           - itemType: Battle
-            value: 
-            name: 
-      - description: 무시한다
-        useItems:
-          - itemType: 
-            value: 
-            name:
-        getItems:
-          - itemType: Event
-            value: 
-            name:
+            value: 1
+            name: Battle_Test_Data

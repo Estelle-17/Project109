@@ -1,20 +1,20 @@
 # string이 아닌 int, float, bool형식은 !!int와 같이 변수의 타입을 강제 지정해주어야 문제가 안생김
 battleMonsterCollection:
-  - battleNodeName: 예제 전투
+  - battleDataName: 예제 전투
     dataPath: Battle_Test_Data
     battleAppearLevel: !!int 1
     monsterAppearInformation:
       - monsterName: Monster_testMonster_Data
         spawnPointX: 6
         spawnPointY: 10
-  - battleNodeName: 예제 전투 1
+  - battleDataName: 예제 전투 1
     dataPath: Battle_Test1_Data
     battleAppearLevel: !!int 2
     monsterAppearInformation:
       - monsterName: Monster_testMonster_Data
         spawnPointX: 4
         spawnPointY: 12
-  - battleNodeName: 예제 전투 2
+  - battleDataName: 예제 전투 2
     dataPath: Battle_Test2_Data
     battleAppearLevel: !!int 3
     monsterAppearInformation:

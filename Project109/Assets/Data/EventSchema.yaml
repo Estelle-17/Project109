@@ -42,6 +42,8 @@ choice: &choice_data
   properties:
     description:
       type: string
+    nextStageID:
+      type: string
     useItems:
       type: array
       item:
@@ -70,30 +72,39 @@ properties:
     items:
       type: object
       properties:
-        eventAppearLevel:
-          type: integer
-          minimum: !!int 1
-          maximum: !!int 3
-        eventAppearCondition:
-          type: array
-          item:
-            <<: *appear_condition
-        eventObjectPath:
+        eventID:
           type: string
-        eventName:
-          type: string
-        eventDescription:
-          type: string
-        choices:
-          type: array
-          item:
-            <<: *choice_data
+          eventAppearLevel:
+            type: integer
+            minimum: !!int 1
+            maximum: !!int 3
+          eventAppearCondition:
+            type: array
+            item:
+              <<: *appear_condition
+          eventObjectPath:
+            type: string
+          stages:
+            type: array
+            items:
+              type: object
+              properties:
+                stageID:
+                  type: string
+                stageDescription:
+                  type: string
+                choices:
+                  type: array
+                  item:
+                    <<: *choice_data
+            required:
+              - stageDescription 
+              - choices
       required:
+        - eventID
         - eventAppearLevel
         - eventAppearCondition
         - eventObjectPath
-        - eventName
-        - eventDescription 
-        - choices
+        - stages
 required:
-  - eventCollection    
+  - eventCollection

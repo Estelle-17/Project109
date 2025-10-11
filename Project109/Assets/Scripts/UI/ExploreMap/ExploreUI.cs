@@ -9,7 +9,7 @@ public class ExploreUI : UIPanelBase
 
     //SO데이터 및 랜덤으로 선택된 데이터들
     AssetCacheManager dataLoader;
-    RandomItemPicker<BattleNodeData> battleItemPicker;
+    RandomItemPicker<BattleData> battleItemPicker;
     RandomItemPicker<EventData> eventItemPicker;
 
     public GameObject ViewLayout;
@@ -40,7 +40,7 @@ public class ExploreUI : UIPanelBase
         ExploreMap = new List<List<IncountNode>>();
 
         dataLoader = AssetCacheManager.instance;
-        battleItemPicker = new RandomItemPicker<BattleNodeData>(dataLoader.battleNodeList);
+        battleItemPicker = new RandomItemPicker<BattleData>(dataLoader.battleList);
         eventItemPicker = new RandomItemPicker<EventData>(dataLoader.eventList);
 
         if (dataLoader == null)
@@ -260,14 +260,14 @@ public class ExploreUI : UIPanelBase
                 {
                     //나중에 스테이지 별로 다양한 데이터가 생기면 이에 맞게 변경 예정
                     //랜덤하게 섞인 데이터들 중 한 가지를 저장
-                    if (battleItemPicker.TryGetNext(out BattleNodeData data))
+                    if (battleItemPicker.TryGetNext(out BattleData data))
                     {
                         ExploreMap[i][j].battleNodeData = data;
                     }
                     else
                     {
                         battleItemPicker.Reset();
-                        if (battleItemPicker.TryGetNext(out BattleNodeData newData))
+                        if (battleItemPicker.TryGetNext(out BattleData newData))
                         {
                             ExploreMap[i][j].battleNodeData = newData;
                         }

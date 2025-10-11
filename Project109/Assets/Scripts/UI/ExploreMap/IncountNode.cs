@@ -21,7 +21,7 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     public List<GameObject> nextIncountNode;
     public ExploreUI exploreUI;
 
-    public BattleNodeData battleNodeData;
+    public BattleData battleNodeData;
     public EventData eventNodeData;
 
     //화살표 기준 노드의 위치

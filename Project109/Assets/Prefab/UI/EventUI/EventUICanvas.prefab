@@ -216,7 +216,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   description: {fileID: 1149465517903520057}
-  eventButtonSpawnPoint: {fileID: 1809078107491383461}
+  eventButtonSpawnPoint: {fileID: 4454711284878115877}
   eventButtonPrefab: {fileID: 1606104480637898376, guid: f07b8796f2e064a46b67742010c141a3, type: 3}
 --- !u!1 &4282087743650744343
 GameObject:

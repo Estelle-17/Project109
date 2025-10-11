@@ -28,7 +28,7 @@ public class AssetCacheManager : MonoBehaviour
     public string cardKey = "Card";
     public string relicKey = "Relic";
     public string eventKey = "Event";
-    public string battleNodeKey = "BattleNode";
+    public string battleKey = "Battle";
     public string monsterKey = "Monster";
     public string characterKey = "Character";
     public string modelKey = "Model";
@@ -43,8 +43,8 @@ public class AssetCacheManager : MonoBehaviour
     public IList<EventData> eventList;
     private Dictionary<string, EventData> eventDict = new Dictionary<string, EventData>();
 
-    public IList<BattleNodeData> battleNodeList;
-    private Dictionary<string, BattleNodeData> battleNodeDict = new Dictionary<string, BattleNodeData>();
+    public IList<BattleData> battleList;
+    private Dictionary<string, BattleData> battleDict = new Dictionary<string, BattleData>();
 
     public IList<MonsterData> monsterList;
     private Dictionary<string, MonsterData> monsterDict = new Dictionary<string, MonsterData>();
@@ -82,10 +82,10 @@ public class AssetCacheManager : MonoBehaviour
         }));
 
         //전투 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<BattleNodeData>(battleNodeKey, (list, dict) =>
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<BattleData>(battleKey, (list, dict) =>
         {
-            battleNodeList = list;
-            battleNodeDict = dict;
+            battleList = list;
+            battleDict = dict;
         }));
 
         //몬스터 데이터 할당 시작
@@ -293,7 +293,7 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
     public bool TryGetRelic(string name, out RelicData relic) => relicDict.TryGetValue(name, out relic);
     public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);
-    public bool TryGetBattleNode(string name, out BattleNodeData battleNode) => battleNodeDict.TryGetValue(name, out battleNode);
+    public bool TryGetBattle(string name, out BattleData battle) => battleDict.TryGetValue(name, out battle);
     public bool TryGetCharacter(string name, out CharacterData character) => characterDict.TryGetValue(name, out character);
     public bool TryGetModel(string name, out GameObject model) => modelDict.TryGetValue(name, out model);
     public bool TryGetTexture(string name, out Texture2D texture) => textureDict.TryGetValue(name, out texture);

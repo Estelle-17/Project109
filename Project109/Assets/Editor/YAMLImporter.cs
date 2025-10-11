@@ -220,14 +220,13 @@ public class YAMLImporter
         foreach (var eventData in rawData.@eventCollection)
         {
             var asset = ScriptableObject.CreateInstance<EventData>();
+            asset.eventID = eventData.eventID;
             asset.eventAppearLevel = eventData.eventAppearLevel;
             asset.eventAppearCondition = eventData.eventAppearCondition;
             asset.eventObjectPath = eventData.eventObjectPath;
-            asset.eventName = eventData.eventName;
-            asset.eventDescription = eventData.eventDescription;
-            asset.choices = eventData.choices;
+            asset.stages = eventData.stages;
 
-            var path = $"Assets/SO/Events/{eventData.eventName}.asset";
+            var path = $"Assets/SO/Events/{eventData.eventID}.asset";
             Directory.CreateDirectory("Assets/SO/Events");
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
@@ -245,7 +244,7 @@ public class YAMLImporter
                 AssetDatabase.AssetPathToGUID(path),
                 CreateOrFindAddressablesGroup(settings, "Events")
             );
-            entry.address = eventData.eventName;
+            entry.address = eventData.eventID;
             entry.SetLabel("Event", true);
             Debug.Log("Addressables에 등록 완료: " + entry.address);
         }
@@ -253,7 +252,7 @@ public class YAMLImporter
         Debug.Log("YAML import complete.");
     }
 
-    [MenuItem("Tools/Import BattleNode YAML")]
+    [MenuItem("Tools/Import Battle YAML")]
     //[System.Obsolete]
     public static void ImportBattleNodeYAML()
     {
@@ -292,18 +291,18 @@ public class YAMLImporter
         Debug.Log("YAML validation Success:");
 
         //검증에 성공하면 ScriptableObject 생성
-        var rawData = deserializer.Deserialize<RootBattleNodeData>(yamlText);
+        var rawData = deserializer.Deserialize<RootBattleData>(yamlText);
 
         foreach (var battleNodeData in rawData.battleMonsterCollection)
         {
-            var asset = ScriptableObject.CreateInstance<BattleNodeData>();
-            asset.battleNodeName = battleNodeData.battleNodeName;
+            var asset = ScriptableObject.CreateInstance<BattleData>();
+            asset.battleDataName = battleNodeData.battleDataName;
             asset.dataPath = battleNodeData.dataPath;
             asset.battleAppearLevel = battleNodeData.battleAppearLevel;
             asset.monsterAppearInformation = battleNodeData.monsterAppearInformation;
 
             var path = $"Assets/SO/BattleNodes/{battleNodeData.dataPath}.asset";
-            Directory.CreateDirectory("Assets/SO/BattleNodes");
+            Directory.CreateDirectory("Assets/SO/Battles");
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -321,7 +320,7 @@ public class YAMLImporter
                 CreateOrFindAddressablesGroup(settings, "GameData")
             );
             entry.address = battleNodeData.dataPath;
-            entry.SetLabel("BattleNode", true);
+            entry.SetLabel("Battle", true);
             Debug.Log("Addressables에 등록 완료: " + entry.address);
         }
 
@@ -550,22 +549,22 @@ public class YAMLImporter
 
     public class EventEntry
     {
+        public string eventID { get; set; }
         public int eventAppearLevel { get; set; }
         public List<AppearCondition> eventAppearCondition { get; set; }
         public string eventObjectPath { get; set; }
         public string eventName { get; set; }
-        public string eventDescription { get; set; }
-        public List<Choice_Data> choices { get; set; }
+        public List<EventStageData> stages { get; set; }
     }
 
-    public class RootBattleNodeData
+    public class RootBattleData
     {
-        public List<BattleNodeEntry> @battleMonsterCollection { get; set; }
+        public List<BattleEntry> @battleMonsterCollection { get; set; }
     }
 
-    public class BattleNodeEntry
+    public class BattleEntry
     {
-        public string battleNodeName { get; set; }
+        public string battleDataName { get; set; }
         public string dataPath { get; set; }
         public int battleAppearLevel { get; set; }
         public List<MonsterSpawnInfo> monsterAppearInformation { get; set; }

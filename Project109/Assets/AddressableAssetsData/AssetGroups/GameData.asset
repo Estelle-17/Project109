@@ -14,7 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: GameData
   m_GUID: f43c8a2f9323d8b4c8518938a52d05a4
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 5433fbc4234279740b81058d4cda6116
+    m_Address: Battle_Test1_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Battle
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 559f8837e7bc74944a5f7e3c217ea722
+    m_Address: Battle_Test2_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Battle
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9eced0be5e011884a9055fc755eaf2ef
+    m_Address: Battle_Test_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Battle
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 68adc54c3b2506b4792e9cf9b8aaa501, type: 2}
   m_SchemaSet:

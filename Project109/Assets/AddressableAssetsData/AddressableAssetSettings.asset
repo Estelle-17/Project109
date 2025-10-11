@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: d95d70d3706113b459785feabe03a563
   m_currentHash:
     serializedVersion: 2
-    Hash: 1268d47dae09d19fac0643d668338629
+    Hash: d1897cc3c30ab1ab6db2b154e10bae45
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -33,6 +33,7 @@ MonoBehaviour:
   m_UniqueBundleIds: 0
   m_EnableJsonCatalog: 0
   m_NonRecursiveBuilding: 1
+  m_AllowNestedBundleFolders: 0
   m_CCDEnabled: 0
   m_maxConcurrentWebRequests: 3
   m_UseUWRForLocalBundles: 0
@@ -113,7 +114,7 @@ MonoBehaviour:
     - Relic
     - Card
     - Monster
-    - BattleNode
+    - Battle
     - Character
     - Model
     - Texture

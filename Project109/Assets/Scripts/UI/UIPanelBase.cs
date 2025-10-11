@@ -33,5 +33,6 @@ public class UIPanelBase : MonoBehaviour
         }
 
         UIManager.instance.RemoveActiveUIFromStack(this.gameObject);
+        this.gameObject.SetActive(false);
     }
 }

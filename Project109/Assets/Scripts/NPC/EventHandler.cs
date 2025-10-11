@@ -20,6 +20,7 @@ public class EventHandler : MonoBehaviour
 {
     [SerializeField]
     EventData eventData;
+    private Dictionary<string, EventStageData> eventStages = new Dictionary<string, EventStageData>();  //스테이지 데이터 저장
 
     public GameObject eventUICanvasPrefab;
     public EventDescriptionScript eventDescription;
@@ -64,21 +65,37 @@ public class EventHandler : MonoBehaviour
 
         //새로운 이벤트 데이터 등록 시 알맞은 Npc오브젝트 생성
         InstantiateEventNpc();
+
+        //빠른 데이터 탐색을 위해 Dictionary에 저장
+        foreach(EventStageData stageData in eventData.stages)
+        {
+            eventStages.Add(stageData.stageID, stageData);
+        }
     }
 
-    public void UpdateEventDescription()
+    public void UpdateEventDescription(string currentStageID)
     {
         if (eventData == null || eventDescription == null)
         {
             Debug.LogWarning("Failed to load EventData or EventDescription!");
             return;
         }
+        if (eventStages.Count == 0)
+        {
+            Debug.LogWarning("Failed to load EventStages!");
+            return;
+        }
 
-        eventDescription.SetDescription(eventData.eventDescription);
+        EventStageData stageData = eventStages[currentStageID];
+
+        eventDescription.SetDescription(stageData.stageDescription);
+
+        //이전에 만들어진 선택지들 제거
+        eventDescription.ClearChoiceButton();
 
         //이벤트에 맞는 선택지 추가
         int buttonIndex = 0;
-        foreach (Choice_Data choice in eventData.choices)
+        foreach (Choice_Data choice in stageData.choices)
         {
             //선택 시 랜덤으로 사용될 카드, 유물 선택
             if (CardDeckManager.instance.GetCardDeckList().Count > 0)
@@ -92,10 +109,7 @@ public class EventHandler : MonoBehaviour
 
             Button button = eventDescription.CreateChoiceButton(choice.description + "\n" + makeEventDescription.MakeChoiceDescription(choice));
 
-            //현재 선택지를 선택할 수 있는지 확인
-
-
-            //각 선택지에서 소비되는 스탯들을 비교
+            //각 선택지에서 소비되는 스탯들을 비교하여 현재 선택지를 선택할 수 있는지 확인
             foreach (Choice_UseItem item in choice.useItems)
             {
                 bool result = isChoiceCanSelectable(item,
@@ -121,8 +135,11 @@ public class EventHandler : MonoBehaviour
             buttonIndex++;
         }
 
-        //UI 설정 후 오브젝트 비활성화
-        eventDescription.gameObject.SetActive(false);
+        //처음으로 UI 설정이 진행되었다면 오브젝트 비활성화
+        if (stageData.stageID == "START")
+        {
+            eventDescription.gameObject.SetActive(false);
+        }
     }
 
     public void InstantiateEventNpc()
@@ -169,25 +186,29 @@ public class EventHandler : MonoBehaviour
     void CheckChoiceResult(int index, Choice_Data choice_Data)
     {
         Debug.Log($"Button Index {index} clicked");
-        Debug.Log($"UseItems : {eventData.choices[index].useItems.Count}, GetItems : {eventData.choices[index].getItems.Count}");
 
-        choiceHandler.CheckChoiceData(choice_Data);
-
-        eventDescription.gameObject.SetActive(false);
+        choiceHandler.CheckChoiceData(choice_Data, this);
     }
 
     private void OnDestroy()
     {
         if(luaEnv != null)
         {
-            //Lua GC를 강제로 여러 번 실행하여 모든 C# 참조 해제
-            for(int i = 0; i < 3; i++)
+            if(isChoiceCanSelectable !=  null)
             {
-                luaEnv.Tick();
+                isChoiceCanSelectable = null;
+            }
+
+            //System.GC.Collect();
+
+            //Lua GC를 강제로 여러 번 실행하여 정리
+            for(int i = 0; i < 1; i++)
+            {
+                //luaEnv.Tick();
             }
 
             //제거 시 LuaEnv 해제
-            luaEnv.Dispose();
+            //luaEnv.Dispose();
             luaEnv = null;
         }
     }

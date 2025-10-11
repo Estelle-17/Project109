@@ -26,7 +26,7 @@ public class AddressableDataLoader : MonoBehaviour
     public string cardKey = "Card";
     public string relicKey = "Relic";
     public string eventKey = "Event";
-    public string battleNodeKey = "BattleNode";
+    public string battleKey = "BattleNode";
     public string monsterKey = "Monster";
     public string characterKey = "Character";
     public string modelKey = "Model";
@@ -40,8 +40,8 @@ public class AddressableDataLoader : MonoBehaviour
     public IList<EventData> eventList;
     private Dictionary<string, EventData> eventDict = new Dictionary<string, EventData>();
 
-    public IList<BattleNodeData> battleNodeList;
-    private Dictionary<string, BattleNodeData> battleNodeDict = new Dictionary<string, BattleNodeData>();
+    public IList<BattleData> battleList;
+    private Dictionary<string, BattleData> battleDict = new Dictionary<string, BattleData>();
 
     public IList<MonsterData> monsterList;
     private Dictionary<string, MonsterData> monsterDict = new Dictionary<string, MonsterData>();
@@ -74,10 +74,10 @@ public class AddressableDataLoader : MonoBehaviour
             eventList = list;
             eventDict = dict;
         });
-        LoadAndCache<BattleNodeData>(battleNodeKey, (list, dict) =>
+        LoadAndCache<BattleData>(battleKey, (list, dict) =>
         {
-            battleNodeList = list;
-            battleNodeDict = dict;
+            battleList = list;
+            battleDict = dict;
         });
         LoadAndCache<MonsterData>(monsterKey, (list, dict) =>
         {
@@ -161,7 +161,7 @@ public class AddressableDataLoader : MonoBehaviour
     public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
     public bool TryGetRelic(string name, out RelicData relic) => relicDict.TryGetValue(name, out relic);
     public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);
-    public bool TryGetBattleNode(string name, out BattleNodeData battleNode) => battleNodeDict.TryGetValue(name, out battleNode);
+    public bool TryGetBattleNode(string name, out BattleData battleNode) => battleDict.TryGetValue(name, out battleNode);
     public bool TryGetCharacter(string name, out CharacterData character) => characterDict.TryGetValue(name, out character);
     public bool TryGetModel(string name, out GameObject model) => modelDict.TryGetValue(name, out model);
 }

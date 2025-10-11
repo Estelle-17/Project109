@@ -4,12 +4,11 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "EventData", menuName = "Events/EventData")]
 public class EventData : ScriptableObject, IIdentifiable
 {
+    public string eventID;
     public int eventAppearLevel;
     public List<AppearCondition> eventAppearCondition;
     public string eventObjectPath;
-    public string eventName;
-    public string eventDescription;
-    public List<Choice_Data> choices;
+    public List<EventStageData> stages;
 
-    public string ID => eventName;
+    public string ID => eventID;
 }

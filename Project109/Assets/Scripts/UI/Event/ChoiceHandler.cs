@@ -2,20 +2,37 @@ using UnityEngine;
 
 public class ChoiceHandler : MonoBehaviour
 {
-    public void CheckChoiceData(Choice_Data choiceData)
+    Choice_Data choiceData;
+    EventHandler eventHandler;
+
+    public void CheckChoiceData(Choice_Data newChoiceData, EventHandler newEventHandler)
     {
-        foreach(Choice_UseItem item in choiceData.useItems)
+        choiceData = newChoiceData;
+        eventHandler = newEventHandler;
+
+        foreach (Choice_UseItem item in choiceData.useItems)
         {
-            LoseItem(item, choiceData);
+            LoseItem(item);
         }
 
         foreach (Choice_GetItem item in choiceData.getItems)
         {
             GetItem(item);
         }
+
+        if (choiceData.nextStageID != "")
+        {
+            Debug.Log($"first nextStageID : {choiceData.nextStageID}");
+            eventHandler.UpdateEventDescription(choiceData.nextStageID);
+        }
+        else
+        {
+            Debug.Log($"null nextStageID : {choiceData.nextStageID}");
+            eventHandler.DisableEventDescriptionUI();
+        }
     }
 
-    void LoseItem(Choice_UseItem item, Choice_Data choiceData)
+    void LoseItem(Choice_UseItem item)
     {
         switch (item.itemType)
         {
@@ -82,13 +99,22 @@ public class ChoiceHandler : MonoBehaviour
                 }
                 break;
             case "RelicReward":
-                
+                //랜덤한 유물 기회를 획득
                 break;
             case "Battle":
-
-                break;
+                //전투 진행
+                BattleData battleData;
+                if (AssetCacheManager.instance.TryGetBattle(item.name, out battleData))
+                {
+                    GameManager.instance.loadMapHandler.SpawnMonsterInBattleNodeData(battleData);
+                }
+                else
+                {
+                    Debug.Log("알맞은 전투 데이터가 존재하지 않습니다.");
+                }
+                    break;
             case "Event":
-
+                //특정 이벤트를 불러올 때 사용될 예정
                 break;
         }
     }

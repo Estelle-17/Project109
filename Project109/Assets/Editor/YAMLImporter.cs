@@ -64,8 +64,6 @@ public class YAMLImporter
             asset.texturePath = card.texturePath;
             card.dataPath = card.dataPath;
             asset.level = card.level;
-            asset.useStamina = card.useStamina;
-            asset.effectArea = card.effectArea;
             asset.defaultEffects = card.defaultEffects;
             asset.upgradeEffects = card.upgradeEffects;
 
@@ -519,8 +517,6 @@ public class YAMLImporter
         public string texturePath { get; set; }
         public string dataPath { get; set; }
         public int level { get; set; }
-        public int useStamina { get; set; }
-        public List<EffectArea> effectArea { get; set; }
         public CardEffect defaultEffects { get; set; }
         public CardEffect upgradeEffects { get; set; }
 }

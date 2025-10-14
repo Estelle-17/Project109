@@ -5,44 +5,72 @@ cardCollection:
     texturePath: Card_test_texture
     dataPath: Card_Slash_Data
     level: !!int 1
-    useStamina: !!int 40
-    effectArea:
-      - area:
-          - "111"
-          - "010"
-          - "000"
     defaultEffects:
-      effects:
-        - effectType: Damage
-          value: 8
-          times: 1
+      effectArea:
+      - area:
+          - "00000"
+          - "01110"
+          - "00100"
+          - "00000"
+          - "00000"
+      useStamina: !!int 40
       conditions:
         - conditionType: None
           value: 0
-          description: ""
+          description: ""  
+      effects:
+        - effectType: Damage
+          baseValue: 8
+          scalingStat: None
+          scalingRatio: 1
+          targetMode: All
+          times: 1
       features:
         - cardFeatureType: None
+          featureValue: 0
+          chainStaminaCost: 0
           chainEffect:
             - effectType: None
-              value: 0
+              baseValue: 0
+              scalingStat: None
+              scalingRatio: 1
+              targetMode: All
+              times: 0
           chainCondition:
             - conditionType: None
               value: 0
               description: ""
     upgradeEffects:
-      effects:
-        - effectType: Damage
-          value: 12
-          times: 1
+      effectArea:
+      - area:
+          - "00000"
+          - "01110"
+          - "00100"
+          - "00000"
+          - "00000"
+      useStamina: !!int 40
       conditions:
         - conditionType: None
           value: 0
-          description: ""
+          description: ""  
+      effects:
+        - effectType: Damage
+          baseValue: 12
+          scalingStat: None
+          scalingRatio: 1
+          targetMode: All
+          times: 1
       features:
         - cardFeatureType: None
+          featureValue: 0
+          chainStaminaCost: 0
           chainEffect:
             - effectType: None
-              value: 0
+              baseValue: 0
+              scalingStat: None
+              scalingRatio: 1
+              targetMode: All
+              times: 0
           chainCondition:
             - conditionType: None
               value: 0
@@ -53,44 +81,72 @@ cardCollection:
     texturePath: Card_test_texture
     dataPath: Card_QuickSlash_Data
     level: !!int 1
-    useStamina: !!int 0
-    effectArea:
-      - area:
-          - "010"
-          - "010"
-          - "000"
     defaultEffects:
-      effects:
-        - effectType: Damage
-          value: 4
-          times: 1
+      effectArea:
+      - area:
+          - "00000"
+          - "00100"
+          - "00100"
+          - "00000"
+          - "00000"
+      useStamina: !!int 0
       conditions:
         - conditionType: None
           value: 0
-          description: ""
+          description: ""  
+      effects:
+        - effectType: Damage
+          baseValue: 4
+          scalingStat: None
+          scalingRatio: 1
+          targetMode: All
+          times: 1
       features:
         - cardFeatureType: None
+          featureValue: 0
+          chainStaminaCost: 0
           chainEffect:
             - effectType: None
-              value: 0
+              baseValue: 0
+              scalingStat: None
+              scalingRatio: 1
+              targetMode: All
+              times: 0
           chainCondition:
             - conditionType: None
               value: 0
               description: ""
     upgradeEffects:
-      effects:
-        - effectType: Damage
-          value: 6
-          times: 1
+      effectArea:
+      - area:
+          - "00000"
+          - "00100"
+          - "00100"
+          - "00000"
+          - "00000"
+      useStamina: !!int 0
       conditions:
         - conditionType: None
           value: 0
-          description: ""
+          description: ""  
+      effects:
+        - effectType: Damage
+          baseValue: 6
+          scalingStat: None
+          scalingRatio: 1
+          targetMode: All
+          times: 1
       features:
         - cardFeatureType: None
+          featureValue: 0
+          chainStaminaCost: 0
           chainEffect:
             - effectType: None
-              value: 0
+              baseValue: 0
+              scalingStat: None
+              scalingRatio: 1
+              targetMode: All
+              times: 0
           chainCondition:
             - conditionType: None
               value: 0
@@ -101,44 +157,72 @@ cardCollection:
     texturePath: Card_test_texture
     dataPath: Card_ComboSlash_Data
     level: !!int 1
-    useStamina: !!int 40
-    effectArea:
-      - area:
-          - "111"
-          - "010"
-          - "000"
     defaultEffects:
+      effectArea:
+      - area:
+          - "00000"
+          - "01110"
+          - "00100"
+          - "00000"
+          - "00000"
+      useStamina: !!int 40
+      conditions:
+        - conditionType: None
+          value: 0
+          description: ""  
       effects:
         - effectType: Damage
-          value: 4
+          baseValue: 4
+          scalingStat: None
+          scalingRatio: 1
+          targetMode: Random
           times: 4
-      conditions:
-        - conditionType: RandomTarget
-          value: 0
-          description: "무작위 적을 공격합니다."
       features:
         - cardFeatureType: None
+          featureValue: 0
+          chainStaminaCost: 0
           chainEffect:
             - effectType: None
-              value: 0
+              baseValue: 0
+              scalingStat: None
+              scalingRatio: 1
+              targetMode: Random
+              times: 0
           chainCondition:
             - conditionType: None
               value: 0
               description: ""
     upgradeEffects:
+      effectArea:
+      - area:
+          - "00000"
+          - "01110"
+          - "00100"
+          - "00000"
+          - "00000"
+      useStamina: !!int 40
+      conditions:
+        - conditionType: None
+          value: 0
+          description: ""  
       effects:
         - effectType: Damage
-          value: 4
+          baseValue: 4
+          scalingStat: None
+          scalingRatio: 1
+          targetMode: Random
           times: 6
-      conditions:
-        - conditionType: RandomTarget
-          value: 0
-          description: "무작위 적을 공격합니다."
       features:
         - cardFeatureType: None
+          featureValue: 0
+          chainStaminaCost: 0
           chainEffect:
             - effectType: None
-              value: 0
+              baseValue: 0
+              scalingStat: None
+              scalingRatio: 1
+              targetMode: Random
+              times: 0
           chainCondition:
             - conditionType: None
               value: 0
@@ -149,192 +233,148 @@ cardCollection:
     texturePath: Card_test_texture
     dataPath: Card_Earthquake_Data
     level: !!int 1
-    useStamina: !!int 40
-    effectArea:
-      - area:
-          - "11111"
-          - "01110"
-          - "00100"
-          - "00000"
-          - "00000"
     defaultEffects:
-      effects:
-        - effectType: Damage
-          value: 8
-          times: 1
+      effectArea:
+        - area:
+            - "11111"
+            - "01110"
+            - "00100"
+            - "00000"
+            - "00000"
+      useStamina: !!int 60
       conditions:
         - conditionType: None
           value: 0
-          description: ""
+          description: ""  
+      effects:
+        - effectType: Damage
+          baseValue: 8
+          scalingStat: Strength
+          scalingRatio: 2
+          targetMode: All
+          times: 1
       features:
         - cardFeatureType: None
+          featureValue: 0
+          chainStaminaCost: 0
           chainEffect:
             - effectType: None
-              value: 0
+              baseValue: 0
+              scalingStat: None
+              scalingRatio: 1
+              targetMode: All
+              times: 0
           chainCondition:
-            - conditionType: PowerMultiple
-              value: 2
-              description: "힘의 효과가 크게 증가됩니다."
+            - conditionType: None
+              value: 0
+              description: ""
     upgradeEffects:
-      effects:
-        - effectType: Damage
-          value: 12
-          times: 1
+      effectArea:
+        - area:
+            - "11111"
+            - "01110"
+            - "00100"
+            - "00000"
+            - "00000"
+      useStamina: !!int 60
       conditions:
         - conditionType: None
           value: 0
-          description: ""
+          description: ""  
+      effects:
+        - effectType: Damage
+          baseValue: 12
+          scalingStat: Strength
+          scalingRatio: 3
+          targetMode: Random
+          times: 1
       features:
         - cardFeatureType: None
+          featureValue: 0
+          chainStaminaCost: 0
           chainEffect:
             - effectType: None
-              value: 0
+              baseValue: 0
+              scalingStat: None
+              scalingRatio: 1
+              targetMode: All
+              times: 0
           chainCondition:
-            - conditionType: PowerMultiple
-              value: 3
-              description: "힘의 효과가 크게 증가됩니다."
+            - conditionType: None
+              value: 0
+              description: ""
 
   - className: Warrior
     cardName: 회전베기
     texturePath: Card_test_texture
     dataPath: Card_SpinningSlash_Data
     level: !!int 1
-    useStamina: !!int 40
-    effectArea:
-      - area:
-          - "111"
-          - "111"
-          - "111"
     defaultEffects:
-      effects:
-        - effectType: Damage
-          value: 8
-          times: 1
+      effectArea:
+        - area:
+            - "00000"
+            - "01110"
+            - "01110"
+            - "01110"
+            - "00000"
+      useStamina: !!int 40
       conditions:
         - conditionType: None
           value: 0
-          description: ""
+          description: ""  
+      effects:
+        - effectType: Damage
+          baseValue: 8
+          scalingStat: None
+          scalingRatio: 1
+          targetMode: All
+          times: 1
       features:
         - cardFeatureType: Finale
+          featureValue: 0
+          chainStaminaCost: 0
           chainEffect:
             - effectType: None
-              value: 0
+              baseValue: 0
+              scalingStat: None
+              scalingRatio: 1
+              targetMode: All
+              times: 0
           chainCondition:
             - conditionType: None
               value: 0
               description: ""
     upgradeEffects:
-      effects:
-        - effectType: Damage
-          value: 12
-          times: 1
+      effectArea:
+        - area:
+            - "11111"
+            - "11111"
+            - "11111"
+            - "11111"
+            - "11111"
+      useStamina: !!int 40
       conditions:
         - conditionType: None
           value: 0
-          description: ""
-      features:
-        - cardFeatureType: Finale
-          chainEffect:
-            - effectType: None
-              value: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
-
-  - className: Warrior
-    cardName: 칼등 치기
-    texturePath: Card_test_texture
-    dataPath: Card_FalseSwipe_Data
-    level: !!int 1
-    useStamina: !!int 40
-    effectArea:
-      - area:
-          - "00100"
-          - "00100"
-          - "00100"
-          - "00000"
-          - "00000"
-    defaultEffects:
+          description: ""  
       effects:
         - effectType: Damage
-          value: 6
+          baseValue: 12
+          scalingStat: None
+          scalingRatio: 1
+          targetMode: All
           times: 1
-      conditions:
-        - conditionType: TemporaryShield
-          value: 5
-          description: ""
       features:
         - cardFeatureType: None
+          featureValue: 0
+          chainStaminaCost: 0
           chainEffect:
             - effectType: None
-              value: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
-    upgradeEffects:
-      effects:
-        - effectType: Damage
-          value: 9
-          times: 1
-      conditions:
-        - conditionType: TemporaryShield
-          value: 8
-          description: ""
-      features:
-        - cardFeatureType: None
-          chainEffect:
-            - effectType: None
-              value: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
-
-  - className: Warrior
-    cardName: 선수필승
-    texturePath: Card_test_texture
-    dataPath: Card_Initiative_Data
-    level: !!int 1
-    useStamina: !!int 40
-    effectArea:
-      - area:
-          - "111"
-          - "010"
-          - "000"
-    defaultEffects:
-      effects:
-        - effectType: Damage
-          value: 8
-          times: 1
-      conditions:
-        - conditionType: None
-          value: 0
-          description: ""
-      features:
-        - cardFeatureType: Vanguard
-          chainEffect:
-            - effectType: None
-              value: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
-    upgradeEffects:
-      effects:
-        - effectType: Damage
-          value: 12
-          times: 1
-      conditions:
-        - conditionType: None
-          value: 0
-          description: ""
-      features:
-        - cardFeatureType: Vanguard
-          chainEffect:
-            - effectType: None
-              value: 0
+              baseValue: 0
+              scalingStat: None
+              scalingRatio: 1
+              targetMode: All
+              times: 0
           chainCondition:
             - conditionType: None
               value: 0

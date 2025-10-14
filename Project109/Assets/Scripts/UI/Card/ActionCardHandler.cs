@@ -9,6 +9,8 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 {
     [SerializeField] private ActionCardData cardData;
 
+    private CardEffect currentCardEffect;
+
     public TextMeshProUGUI cardName;
     public TextMeshProUGUI cardDescription;
     public TextMeshProUGUI useStamina;
@@ -39,8 +41,10 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
         cardData = newCardData;
 
+        currentCardEffect = newCardData.defaultEffects;
+
         cardName.text = cardData.cardName;
-        useStamina.text = cardData.useStamina.ToString();
+        useStamina.text = currentCardEffect.useStamina.ToString();
         if(AssetCacheManager.instance.TryGetTexture(cardData.texturePath, out Texture2D texture))
         {
             cardImage.texture = texture;
@@ -111,16 +115,16 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
         int[] convertBuffer;
 
-        for (int index = 0; index < cardData.effectArea.Count; index++)
+        for (int index = 0; index < currentCardEffect.effectArea.Count; index++)
         {
-            int areaLength = cardData.effectArea[index].area[0].Length; //공격 범위의 최대 길이
+            int areaLength = currentCardEffect.effectArea[index].area[0].Length; //공격 범위의 최대 길이
             convertBuffer = new int[areaLength];
             int startColumn = GameManager.instance.ActionCard_EffectArea.centerColumn - (areaLength / 2);   //변경할 타일의 시작 column
             int startRow = GameManager.instance.ActionCard_EffectArea.centerRow - (areaLength / 2); //변경할 타일의 시작 row
 
             for (int i = 0; i < areaLength; i++)
             {
-                ConvertStringToIntArray(cardData.effectArea[index].area[i], convertBuffer);    //string -> intArray로 변환. 데이터는 convertBuffer로 저장됨
+                ConvertStringToIntArray(currentCardEffect.effectArea[index].area[i], convertBuffer);    //string -> intArray로 변환. 데이터는 convertBuffer로 저장됨
                 for (int j = 0; j < convertBuffer.Length; j++)
                 {
                     if (convertBuffer[j] == 1)

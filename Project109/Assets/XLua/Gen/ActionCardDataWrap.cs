@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(ActionCardData);
-			Utils.BeginObjectRegister(type, L, translator, 0, 0, 13, 12);
+			Utils.BeginObjectRegister(type, L, translator, 0, 0, 11, 10);
 			
 			
 			
@@ -32,8 +32,6 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "texturePath", _g_get_texturePath);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "dataPath", _g_get_dataPath);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "level", _g_get_level);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "useStamina", _g_get_useStamina);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "effectArea", _g_get_effectArea);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "defaultEffects", _g_get_defaultEffects);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "upgradeEffects", _g_get_upgradeEffects);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "upgradeCount", _g_get_upgradeCount);
@@ -45,8 +43,6 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "texturePath", _s_set_texturePath);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "dataPath", _s_set_dataPath);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "level", _s_set_level);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "useStamina", _s_set_useStamina);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "effectArea", _s_set_effectArea);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "defaultEffects", _s_set_defaultEffects);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "upgradeEffects", _s_set_upgradeEffects);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "upgradeCount", _s_set_upgradeCount);
@@ -198,34 +194,6 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_useStamina(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.useStamina);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_effectArea(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.effectArea);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_defaultEffects(RealStatePtr L)
         {
 		    try {
@@ -366,36 +334,6 @@ namespace XLua.CSObjectWrap
 			
                 ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
                 gen_to_be_invoked.level = LuaAPI.xlua_tointeger(L, 2);
-            
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 0;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_useStamina(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.useStamina = LuaAPI.xlua_tointeger(L, 2);
-            
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 0;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_effectArea(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.effectArea = (System.Collections.Generic.List<EffectArea>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<EffectArea>));
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

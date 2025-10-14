@@ -27,11 +27,41 @@ MonoBehaviour:
     m_SerializedLabels:
     - Battle
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5d7ba1d400dac284a82409b949f8aa7d
+    m_Address: Card_Slash_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8f347491e22a89846957f89fd6fbdb11
+    m_Address: Card_SpinningSlash_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9eced0be5e011884a9055fc755eaf2ef
     m_Address: Battle_Test_Data
     m_ReadOnly: 0
     m_SerializedLabels:
     - Battle
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bdb533cb88176844e9421e36a5c2b300
+    m_Address: Card_QuickSlash_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d7c78de1ab3b90a40a5b72a5092d3f75
+    m_Address: Card_Earthquake_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d8c5e7e3dfad7a04ab3a3a7584d8c96a
+    m_Address: Card_ComboSlash_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 68adc54c3b2506b4792e9cf9b8aaa501, type: 2}

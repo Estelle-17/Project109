@@ -18,51 +18,83 @@ MonoBehaviour:
   texturePath: Card_test_texture
   dataPath: 
   level: 1
-  useStamina: 40
-  effectArea:
-  - area:
-    - 11111
-    - 01110
-    - 00100
-    - 00000
-    - 00000
   defaultEffects:
+    effectArea:
+    - area:
+      - 11111
+      - 01110
+      - 00100
+      - 00000
+      - 00000
+    useStamina: 60
     effects:
     - effectType: Damage
-      value: 8
+      baseValue: 8
+      scalingStat: Strength
+      scalingRatio: 2
+      targetMode: All
       times: 1
+      statusEffectType: 
+      durationTime: 0
     conditions:
     - conditionType: None
       value: 0
       description: 
     features:
     - cardFeatureType: None
+      featureValue: 0
+      chainStaminaCost: 0
       chainEffect:
       - effectType: None
-        value: 0
+        baseValue: 0
+        scalingStat: None
+        scalingRatio: 1
+        targetMode: All
         times: 0
+        statusEffectType: 
+        durationTime: 0
       chainCondition:
-      - conditionType: PowerMultiple
-        value: 2
-        description: "\uD798\uC758 \uD6A8\uACFC\uAC00 \uD06C\uAC8C \uC99D\uAC00\uB429\uB2C8\uB2E4."
+      - conditionType: None
+        value: 0
+        description: 
   upgradeEffects:
+    effectArea:
+    - area:
+      - 11111
+      - 01110
+      - 00100
+      - 00000
+      - 00000
+    useStamina: 60
     effects:
     - effectType: Damage
-      value: 12
+      baseValue: 12
+      scalingStat: Strength
+      scalingRatio: 3
+      targetMode: Random
       times: 1
+      statusEffectType: 
+      durationTime: 0
     conditions:
     - conditionType: None
       value: 0
       description: 
     features:
     - cardFeatureType: None
+      featureValue: 0
+      chainStaminaCost: 0
       chainEffect:
       - effectType: None
-        value: 0
+        baseValue: 0
+        scalingStat: None
+        scalingRatio: 1
+        targetMode: All
         times: 0
+        statusEffectType: 
+        durationTime: 0
       chainCondition:
-      - conditionType: PowerMultiple
-        value: 3
-        description: "\uD798\uC758 \uD6A8\uACFC\uAC00 \uD06C\uAC8C \uC99D\uAC00\uB429\uB2C8\uB2E4."
+      - conditionType: None
+        value: 0
+        description: 
   upgradeCount: 0
   runtimeID: 0

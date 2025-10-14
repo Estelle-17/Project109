@@ -18,46 +18,80 @@ MonoBehaviour:
   texturePath: Card_test_texture
   dataPath: 
   level: 1
-  useStamina: 0
-  effectArea:
-  - area:
-    - 010
-    - 010
-    - 000
   defaultEffects:
+    effectArea:
+    - area:
+      - 00000
+      - 00100
+      - 00100
+      - 00000
+      - 00000
+    useStamina: 0
     effects:
     - effectType: Damage
-      value: 4
+      baseValue: 4
+      scalingStat: None
+      scalingRatio: 1
+      targetMode: All
       times: 1
+      statusEffectType: 
+      durationTime: 0
     conditions:
     - conditionType: None
       value: 0
       description: 
     features:
     - cardFeatureType: None
+      featureValue: 0
+      chainStaminaCost: 0
       chainEffect:
       - effectType: None
-        value: 0
+        baseValue: 0
+        scalingStat: None
+        scalingRatio: 1
+        targetMode: All
         times: 0
+        statusEffectType: 
+        durationTime: 0
       chainCondition:
       - conditionType: None
         value: 0
         description: 
   upgradeEffects:
+    effectArea:
+    - area:
+      - 00000
+      - 00100
+      - 00100
+      - 00000
+      - 00000
+    useStamina: 0
     effects:
     - effectType: Damage
-      value: 6
+      baseValue: 6
+      scalingStat: None
+      scalingRatio: 1
+      targetMode: All
       times: 1
+      statusEffectType: 
+      durationTime: 0
     conditions:
     - conditionType: None
       value: 0
       description: 
     features:
     - cardFeatureType: None
+      featureValue: 0
+      chainStaminaCost: 0
       chainEffect:
       - effectType: None
-        value: 0
+        baseValue: 0
+        scalingStat: None
+        scalingRatio: 1
+        targetMode: All
         times: 0
+        statusEffectType: 
+        durationTime: 0
       chainCondition:
       - conditionType: None
         value: 0

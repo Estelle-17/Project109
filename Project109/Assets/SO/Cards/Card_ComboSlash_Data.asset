@@ -18,46 +18,80 @@ MonoBehaviour:
   texturePath: Card_test_texture
   dataPath: 
   level: 1
-  useStamina: 40
-  effectArea:
-  - area:
-    - 111
-    - 010
-    - 000
   defaultEffects:
+    effectArea:
+    - area:
+      - 00000
+      - 01110
+      - 00100
+      - 00000
+      - 00000
+    useStamina: 40
     effects:
     - effectType: Damage
-      value: 4
+      baseValue: 4
+      scalingStat: None
+      scalingRatio: 1
+      targetMode: Random
       times: 4
+      statusEffectType: 
+      durationTime: 0
     conditions:
-    - conditionType: RandomTarget
+    - conditionType: None
       value: 0
-      description: "\uBB34\uC791\uC704 \uC801\uC744 \uACF5\uACA9\uD569\uB2C8\uB2E4."
+      description: 
     features:
     - cardFeatureType: None
+      featureValue: 0
+      chainStaminaCost: 0
       chainEffect:
       - effectType: None
-        value: 0
+        baseValue: 0
+        scalingStat: None
+        scalingRatio: 1
+        targetMode: Random
         times: 0
+        statusEffectType: 
+        durationTime: 0
       chainCondition:
       - conditionType: None
         value: 0
         description: 
   upgradeEffects:
+    effectArea:
+    - area:
+      - 00000
+      - 01110
+      - 00100
+      - 00000
+      - 00000
+    useStamina: 40
     effects:
     - effectType: Damage
-      value: 4
+      baseValue: 4
+      scalingStat: None
+      scalingRatio: 1
+      targetMode: Random
       times: 6
+      statusEffectType: 
+      durationTime: 0
     conditions:
-    - conditionType: RandomTarget
+    - conditionType: None
       value: 0
-      description: "\uBB34\uC791\uC704 \uC801\uC744 \uACF5\uACA9\uD569\uB2C8\uB2E4."
+      description: 
     features:
     - cardFeatureType: None
+      featureValue: 0
+      chainStaminaCost: 0
       chainEffect:
       - effectType: None
-        value: 0
+        baseValue: 0
+        scalingStat: None
+        scalingRatio: 1
+        targetMode: Random
         times: 0
+        statusEffectType: 
+        durationTime: 0
       chainCondition:
       - conditionType: None
         value: 0

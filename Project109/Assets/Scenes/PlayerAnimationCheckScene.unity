@@ -2129,7 +2129,7 @@ MonoBehaviour:
   cardKey: Card
   relicKey: Relic
   eventKey: Event
-  battleNodeKey: BattleNode
+  battleKey: Battle
   monsterKey: Monster
   characterKey: Character
   modelKey: Model
@@ -4504,7 +4504,8 @@ MonoBehaviour:
   ActionCard_EffectArea: {fileID: 910258126}
   currentExploreUI: {fileID: 0}
   loadMapHandler: {fileID: 0}
-  currentSpawnEnemyOrNPCList: []
+  currentSpawnEnemyList: []
+  currentSpawnNPCList: []
   currentSpawnUIList: []
 --- !u!4 &2077144578
 Transform:

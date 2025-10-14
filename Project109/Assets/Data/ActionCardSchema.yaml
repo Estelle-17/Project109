@@ -4,6 +4,7 @@ effect: &skill_effect
   type: object
   effectType:
       type: string
+      description: "적용될 효과의 타입"
       enum:
       - None
       - Damage
@@ -12,26 +13,84 @@ effect: &skill_effect
       - Buff
       - Debuff
       - Move
-  value:
+  baseValue:
     type: number
     minimum: 0
+  scalingStat:
+    type: string
+    description: "효과량 계산에 사용될 캐릭터 스탯"
+    enum:
+    - None
+    - Strength
+    - Armor
+    - MaxHp
+    - CurrentHp
+  scalingRatio:
+    type: number
+    description: "scalingStat이 효과에 기여하는 비율(1.0은 스탯의 100%를 반영함)"
+    minimum: 0
+  targetMode:
+    type: string
+    description: "타겟을 어떤 방식으로 찾을 것인지"
+    enum:
+    - All
+    - Target
+    - Random
   times:
     type: number
+    description: "효과가 적용되는 횟수"
     minimum: 0
+  statusEffectType:
+    type: string
+    description: "상단의 effectType이 Buff/Debuff일 경우 적용될 상태 효과 타입"
+    enum:
+    - None
+    - Strength
+    - Armor
+    - Bleeding  #출혈
+    - Poison  #독
+    - DeadlyPoision #맹독
+    - Debilitate  #쇠약
+    - weaken  #약화
+    durationTime:
+      type: integer
+      minimum: 0
+required:
+- effectType
+- baseValue
+- scalingStat
+- scalingRatio
+- targetMode
+- times
 
 condition: &skill_condition
   type: object
   conditionType:
     type: string
+    description: "조건 발동 타입"
+    enum:
+    - None
+    - TargetHealthRatio #대상 체력 비율
+    - SelfBuffCount #자신의 버프 갯수
+    - IsPoison  #대상의 독 상태
+    - IsDeadlyPoision #대상의 맹독 상태    
+    - IsBleeding  #대상의 출혈 상태
+    - IsDebilitating  #대상의 쇠약 상태
+    - IsWeaken  #대상의 약화 상태
   value:
-    type: integer
+    type: number
   description:
     type: string
+required:
+  - conditionType
+  - value
+  - description
 
 cardFeatures: &card_features
   type: object
   cardFeatureType:
     type: string
+    description: "카드의 특성 타입들"
     enum:
       - None
       - Start_Action    #패에 들어왔을 시 바로 사용
@@ -41,7 +100,16 @@ cardFeatures: &card_features
       - Single_use      #이번 전투에서 한 번만 사용 가능
       - Destroy         #카드를 사용한 후 덱에서 없어짐
       - Divide          #카드를 사용하면 두 장으로 늘어난 후 카드 무덤으로 이동
-      - Chain           #스태미너를 N만큼 더 소모한다면 강화된 효과로 발동
+      - Chain           #스태미너를 N만큼 더 소모한다면 추가로 효과가 발동함
+      - Unavailable     #카드를 직접 사용할 수 없음
+  featureValue:
+    type: number
+    description: "특성에 따라 다르게 사용되는 값 (Echo 사용 시 증가되는 스태미너량 등)"
+
+  chainStaminaCost:
+    type: integer
+    description: "Chain발동 시 추가로 소모되는 스태미너량"
+    default: 0
   chainEffect:
     type: array
     items:
@@ -51,28 +119,44 @@ cardFeatures: &card_features
     items:
       <<: *skill_condition
 
-cardEffect: &card_effect
-  type: object
-  effects:
-    type: array
-    items:
-      <<: *skill_effect
-  conditions:
-    type: array
-    items:
-      <<: *skill_condition
-  features:
-    type: array
-    items:
-      <<: *card_features
-
 area: &effect_area
   type: object
   area:
       type: array
       items:
         type: string
+        pattern: "^[01]{5}$"
+        minItems: 5
+        maxItems: 5
 
+
+cardEffect: &card_effect
+  type: object
+  effectArea:
+    type: array
+    items:
+    <<: *effect_area
+  useStamina:
+    type: integer
+    minimum: !!int 0
+  conditions:
+    type: array
+    items:
+      <<: *skill_condition
+  effects:
+    type: array
+    items:
+      <<: *skill_effect
+  features:
+    type: array
+    items:
+      <<: *card_features
+required:
+- effectArea
+- useStamina
+- conditions
+- effects
+- features
 
 type: object
 properties:
@@ -96,13 +180,6 @@ properties:
           type: integer
           minimum: !!int 1
           maximum: !!int 3
-        useStamina:
-          type: integer
-          minimum: !!int 0
-        effectArea:
-          type: array
-          items:
-            <<: *effect_area
         defaultEffects:
           type: object
           items:
@@ -118,8 +195,6 @@ properties:
         - texturePath
         - dataPath
         - level
-        - useStamina
-        - effectArea
         - defaultEffects
         - upgradeEffects
 required:

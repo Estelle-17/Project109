@@ -2,14 +2,11 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class EraseCardDeckManager : UIPanelBase
+public class UpgradeCardHandler : UIPanelBase
 {
+    public UpgradeCardCheckHandler upgradeCardCheckHandler;
+
     public Transform contentTransform;
-
-    private int eraseCardCount;
-    public List<int> eraseCardIDs;
-
-    public Button eraseCardButton;
 
     private Dictionary<int, GameObject> activeCardUIs = new Dictionary<int, GameObject>();
 
@@ -19,7 +16,6 @@ public class EraseCardDeckManager : UIPanelBase
         {
             UIActive();
             RefreshAllCardUIs();
-            eraseCardButton.onClick.AddListener(StartEraseCards);
         }
         else
         {
@@ -59,15 +55,11 @@ public class EraseCardDeckManager : UIPanelBase
             AddCardClickEvent(cardUI);
 
             activeCardUIs.Add(card.runtimeID, cardUI.gameObject);
-
-            Debug.Log("Add card is success!");
         }
         else
         {
             ObjectPoolManager.instance.ReturnCardUI(cardUI.gameObject);
         }
-
-        Debug.Log("HandleCardAdded is end");
     }
 
     private void RefreshAllCardUIs()
@@ -93,54 +85,22 @@ public class EraseCardDeckManager : UIPanelBase
                 HandleCardAdded(card);
             }
         }
-    }
 
-    public void SetEraseCardCount(int count)
-    {
-        eraseCardCount = count;
+        Debug.Log("현재 가진 카드들 등록 완료");
     }
 
     void AddCardClickEvent(ActionCardHandler cardHandler)
     {
+        //이전에 등록했던 클릭 이벤트 제거
+        cardHandler.OnCardClick.RemoveAllListeners();
+
         //카드가 눌리면 카드 데이터를 전달과 동시에 함수 실행
         ActionCardData cardData = cardHandler.GetCardData();
-        cardHandler.OnCardClick.AddListener(() => AddEraseCard(cardHandler));
+        cardHandler.OnCardClick.AddListener(() => CheckUpgradeCard(cardData));
     }
 
-    void AddEraseCard(ActionCardHandler newCardHandler)
+    void CheckUpgradeCard(ActionCardData newCardData)
     {
-        //이미 선택된 카드가 한번 더 선택되었을 경우 지울 카드 리스트에서 제거
-        if (eraseCardIDs.Contains(newCardHandler.GetCardData().runtimeID))
-        {
-            eraseCardIDs.Remove(newCardHandler.GetCardData().runtimeID);
-            newCardHandler.bIsCardHighlight = true;
-            newCardHandler.OffSelectHighlight(); //선택이 해제되었음을 알리기 위한 하이라이트 비활성화
-        }
-        else if(eraseCardIDs.Count < eraseCardCount)
-        {
-            eraseCardIDs.Add(newCardHandler.GetCardData().runtimeID);   //지울 카드를 리스트에 저장
-            newCardHandler.bIsCardHighlight = false;
-            newCardHandler.OnSelectHighlight(); //선택됬음을 알리기 위한 하이라이트 활성화
-        }
-    }
-
-    public void StartEraseCards()
-    {
-        if(eraseCardIDs.Count == eraseCardCount) 
-        {
-            Debug.Log($"선택된 카드를 제거합니다.");
-            foreach (int cardID in eraseCardIDs)
-            {
-                CardDeckManager.instance.RemoveCard(cardID);
-            }
-
-            //카드 제거 후 UI 제거
-            UIDeactive();
-            gameObject.SetActive(false);
-        }
-        else
-        {
-            Debug.LogWarning($"{eraseCardCount}만큼 카드를 선택해야 합니다.");
-        }
+        upgradeCardCheckHandler.OnCardCheckUI(newCardData);
     }
 }

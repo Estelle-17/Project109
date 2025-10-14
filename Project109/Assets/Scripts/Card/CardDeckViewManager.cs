@@ -123,6 +123,9 @@ public class CardDeckViewManager : UIPanelBase
 
     void AddCardClickEvent(ActionCardHandler cardHandler)
     {
+        //이전에 등록했던 클릭 이벤트 제거
+        cardHandler.OnCardClick.RemoveAllListeners();
+
         //카드가 눌리면 카드 데이터를 전달과 동시에 함수 실행
         ActionCardData cardData = cardHandler.GetCardData();
         cardHandler.OnCardClick.AddListener(() => CardCheck(cardData));

@@ -4,6 +4,6 @@ using UnityEngine;
 public class SkillCondition
 {
     public string conditionType;
-    public int value;
+    public float value;
     public string description;
 }

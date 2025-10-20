@@ -34,7 +34,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "level", _g_get_level);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "defaultEffects", _g_get_defaultEffects);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "upgradeEffects", _g_get_upgradeEffects);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "upgradeCount", _g_get_upgradeCount);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "isUpgrade", _g_get_isUpgrade);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "runtimeID", _g_get_runtimeID);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "cardTexture", _s_set_cardTexture);
@@ -45,7 +45,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "level", _s_set_level);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "defaultEffects", _s_set_defaultEffects);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "upgradeEffects", _s_set_upgradeEffects);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "upgradeCount", _s_set_upgradeCount);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "isUpgrade", _s_set_isUpgrade);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "runtimeID", _s_set_runtimeID);
             
 			
@@ -222,13 +222,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_upgradeCount(RealStatePtr L)
+        static int _g_get_isUpgrade(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.upgradeCount);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.isUpgrade);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -372,13 +372,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_upgradeCount(RealStatePtr L)
+        static int _s_set_isUpgrade(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.upgradeCount = LuaAPI.xlua_tointeger(L, 2);
+                gen_to_be_invoked.isUpgrade = LuaAPI.lua_toboolean(L, 2);
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

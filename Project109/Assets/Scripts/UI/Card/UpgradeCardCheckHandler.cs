@@ -24,10 +24,10 @@ public class UpgradeCardCheckHandler : MonoBehaviour
 
         selectedCardData = newCardData;
 
-        currentCard.UpdateActionCardData(newCardData);
+        currentCard.UpdateActionCardData(newCardData, false);
         currentCard.bIsCardHighlight = false;
 
-        upgradeCard.UpdateActionCardData(newCardData);
+        upgradeCard.UpdateActionCardData(newCardData, true);
         upgradeCard.bIsCardHighlight = false;
 
         gameObject.SetActive(true);
@@ -35,6 +35,8 @@ public class UpgradeCardCheckHandler : MonoBehaviour
 
     public void StartUpgradeCards()
     {
-
+        CardDeckManager.instance.UpgradeCard(selectedCardData.runtimeID);
+        transform.root.gameObject.SetActive(false);
+        Destroy(transform.root.gameObject);
     }
 }

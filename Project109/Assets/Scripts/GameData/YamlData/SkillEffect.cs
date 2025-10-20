@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class SkillEffect
@@ -12,4 +13,5 @@ public class SkillEffect
     //Buff or Debuff일 경우 적용될 상태 효과 타입
     public string statusEffectType;
     public int durationTime;
+    public List<CardConditionalEffect> conditionalEffect;
 }

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2742698040176174491}
   - component: {fileID: 8738879886526210552}
+  - component: {fileID: 4401541317266710656}
   m_Layer: 5
   m_Name: ActionCard
   m_TagString: Untagged
@@ -55,6 +56,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardData: {fileID: 0}
+  cardDescriptionHandler: {fileID: 4401541317266710656}
   cardName: {fileID: 6541454250587398306}
   cardDescription: {fileID: 5390516900839122266}
   useStamina: {fileID: 627217548329928733}
@@ -66,6 +68,18 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   bIsCardHighlight: 1
+--- !u!114 &4401541317266710656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91790796623287000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5ef69417ca2bf44583ac24fa72dd2e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2097206914840721677
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,7 +402,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC124\uBA85\uC2A4\uD06C\uB9BD\uD2B8\n\uC124\uBA85\uC2A4\uD06C\uB9BD\uD2B8\n\uC124\uBA85\uC2A4\uD06C\uB9BD\uD2B8"
+  m_text: "\uC124\uBA85\uC2A4\uD06C\uB9BD\uD2B8 \uC124\uBA85\uC911\n\uC124\uBA85\uC2A4\uD06C\uB9BD\uD2B8
+    \uC124\uBA85\uC911\n\uC124\uBA85\uC2A4\uD06C\uB9BD\uD2B8 \uC124\uBA85\uC911"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a331125123a8feb4284c93178698674f, type: 2}
   m_sharedMaterial: {fileID: 1616524372058717833, guid: a331125123a8feb4284c93178698674f, type: 2}
@@ -415,19 +430,19 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: -4
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: -10
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -453,7 +468,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: -0.07424927, z: 0, w: -0.3984375}
+  m_margin: {x: 0, y: -10.916626, z: 0, w: -2.4924316}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -551,8 +566,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1096,8 +1111,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

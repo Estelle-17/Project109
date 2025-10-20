@@ -1,5 +1,61 @@
 # string이 아닌 int, float, bool형식은 !!int와 같이 변수의 타입을 강제 지정해주어야 문제가 안생김
 $schema:  "https://json-schema.org/draft/2020-12/schema"
+conditional_effect: &conditional_effect
+  type: object
+  properties:
+    condition:
+      type: object
+      properties:
+        conditionType:
+          type: string
+          enum:
+          - None
+          - TargetHealthRatio #대상 체력 비율
+          - SelfBuffCount #자신의 버프 갯수
+          - SelfFrenzyCount  #자신의 광분 갯수
+          - PerFrenzyBuff  #자신의 광분 버프 1개 당 값
+          - IsPoison  #대상의 독 상태
+          - IsDeadlyPoision #대상의 맹독 상태    
+          - IsBleeding  #대상의 출혈 상태
+          - IsDebilitating  #대상의 쇠약 상태
+          - IsWeaken  #대상의 약화 상태
+        value:
+          type: number
+        description:
+          type: string
+    required:
+      - conditionType
+      - value
+      - description
+    effectOverride:
+      type: object
+      properties:
+        baseValue:
+          type: number
+        staminaValue:
+          type: number
+        scalingRatio:
+          type: number
+        statusEffectType:
+          type: string
+          enum:
+          - None
+          - Strength
+          - Armor
+          - Bleeding  #출혈
+          - Poison  #독
+          - DeadlyPoision #맹독
+          - Debilitate  #쇠약
+          - weaken  #약화
+          - Frenzy  #폭주
+        durationTime:
+          type: integer
+          minimum: 0
+      minProperties: 1
+required:
+- condition
+- effectOverride  
+
 effect: &skill_effect
   type: object
   effectType:
@@ -10,6 +66,7 @@ effect: &skill_effect
       - Damage
       - Heal
       - Shield
+      - TemporaryShield
       - Buff
       - Debuff
       - Move
@@ -36,6 +93,7 @@ effect: &skill_effect
     - All
     - Target
     - Random
+    - Self
   times:
     type: number
     description: "효과가 적용되는 횟수"
@@ -51,10 +109,14 @@ effect: &skill_effect
     - Poison  #독
     - DeadlyPoision #맹독
     - Debilitate  #쇠약
-    - weaken  #약화
-    durationTime:
-      type: integer
-      minimum: 0
+    - Weaken  #약화
+  durationTime:
+    type: integer
+    minimum: 0
+  conditionalEffect:
+    type: array
+    items:
+      <<: *conditional_effect
 required:
 - effectType
 - baseValue
@@ -105,7 +167,6 @@ cardFeatures: &card_features
   featureValue:
     type: number
     description: "특성에 따라 다르게 사용되는 값 (Echo 사용 시 증가되는 스태미너량 등)"
-
   chainStaminaCost:
     type: integer
     description: "Chain발동 시 추가로 소모되는 스태미너량"
@@ -128,7 +189,6 @@ area: &effect_area
         pattern: "^[01]{5}$"
         minItems: 5
         maxItems: 5
-
 
 cardEffect: &card_effect
   type: object

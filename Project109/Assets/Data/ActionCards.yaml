@@ -14,10 +14,7 @@ cardCollection:
           - "00000"
           - "00000"
       useStamina: !!int 40
-      conditions:
-        - conditionType: None
-          value: 0
-          description: ""  
+      conditions: 
       effects:
         - effectType: Damage
           baseValue: 8
@@ -27,19 +24,6 @@ cardCollection:
           times: 1
       features:
         - cardFeatureType: None
-          featureValue: 0
-          chainStaminaCost: 0
-          chainEffect:
-            - effectType: None
-              baseValue: 0
-              scalingStat: None
-              scalingRatio: 1
-              targetMode: All
-              times: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
     upgradeEffects:
       effectArea:
       - area:
@@ -49,10 +33,7 @@ cardCollection:
           - "00000"
           - "00000"
       useStamina: !!int 40
-      conditions:
-        - conditionType: None
-          value: 0
-          description: ""  
+      conditions: 
       effects:
         - effectType: Damage
           baseValue: 12
@@ -62,19 +43,6 @@ cardCollection:
           times: 1
       features:
         - cardFeatureType: None
-          featureValue: 0
-          chainStaminaCost: 0
-          chainEffect:
-            - effectType: None
-              baseValue: 0
-              scalingStat: None
-              scalingRatio: 1
-              targetMode: All
-              times: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
 
   - className: Warrior
     cardName: 퀵 슬래시
@@ -90,10 +58,7 @@ cardCollection:
           - "00000"
           - "00000"
       useStamina: !!int 0
-      conditions:
-        - conditionType: None
-          value: 0
-          description: ""  
+      conditions: 
       effects:
         - effectType: Damage
           baseValue: 4
@@ -103,19 +68,6 @@ cardCollection:
           times: 1
       features:
         - cardFeatureType: None
-          featureValue: 0
-          chainStaminaCost: 0
-          chainEffect:
-            - effectType: None
-              baseValue: 0
-              scalingStat: None
-              scalingRatio: 1
-              targetMode: All
-              times: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
     upgradeEffects:
       effectArea:
       - area:
@@ -125,10 +77,7 @@ cardCollection:
           - "00000"
           - "00000"
       useStamina: !!int 0
-      conditions:
-        - conditionType: None
-          value: 0
-          description: ""  
+      conditions: 
       effects:
         - effectType: Damage
           baseValue: 6
@@ -138,19 +87,6 @@ cardCollection:
           times: 1
       features:
         - cardFeatureType: None
-          featureValue: 0
-          chainStaminaCost: 0
-          chainEffect:
-            - effectType: None
-              baseValue: 0
-              scalingStat: None
-              scalingRatio: 1
-              targetMode: All
-              times: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
 
   - className: Warrior
     cardName: 콤보 슬래시
@@ -166,10 +102,7 @@ cardCollection:
           - "00000"
           - "00000"
       useStamina: !!int 40
-      conditions:
-        - conditionType: None
-          value: 0
-          description: ""  
+      conditions: 
       effects:
         - effectType: Damage
           baseValue: 4
@@ -179,19 +112,6 @@ cardCollection:
           times: 4
       features:
         - cardFeatureType: None
-          featureValue: 0
-          chainStaminaCost: 0
-          chainEffect:
-            - effectType: None
-              baseValue: 0
-              scalingStat: None
-              scalingRatio: 1
-              targetMode: Random
-              times: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
     upgradeEffects:
       effectArea:
       - area:
@@ -201,10 +121,7 @@ cardCollection:
           - "00000"
           - "00000"
       useStamina: !!int 40
-      conditions:
-        - conditionType: None
-          value: 0
-          description: ""  
+      conditions: 
       effects:
         - effectType: Damage
           baseValue: 4
@@ -214,19 +131,6 @@ cardCollection:
           times: 6
       features:
         - cardFeatureType: None
-          featureValue: 0
-          chainStaminaCost: 0
-          chainEffect:
-            - effectType: None
-              baseValue: 0
-              scalingStat: None
-              scalingRatio: 1
-              targetMode: Random
-              times: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
 
   - className: Warrior
     cardName: 땅 가르기
@@ -243,9 +147,6 @@ cardCollection:
             - "00000"
       useStamina: !!int 60
       conditions:
-        - conditionType: None
-          value: 0
-          description: ""  
       effects:
         - effectType: Damage
           baseValue: 8
@@ -255,19 +156,6 @@ cardCollection:
           times: 1
       features:
         - cardFeatureType: None
-          featureValue: 0
-          chainStaminaCost: 0
-          chainEffect:
-            - effectType: None
-              baseValue: 0
-              scalingStat: None
-              scalingRatio: 1
-              targetMode: All
-              times: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
     upgradeEffects:
       effectArea:
         - area:
@@ -278,31 +166,15 @@ cardCollection:
             - "00000"
       useStamina: !!int 60
       conditions:
-        - conditionType: None
-          value: 0
-          description: ""  
       effects:
         - effectType: Damage
           baseValue: 12
           scalingStat: Strength
           scalingRatio: 3
-          targetMode: Random
+          targetMode: All
           times: 1
       features:
         - cardFeatureType: None
-          featureValue: 0
-          chainStaminaCost: 0
-          chainEffect:
-            - effectType: None
-              baseValue: 0
-              scalingStat: None
-              scalingRatio: 1
-              targetMode: All
-              times: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
 
   - className: Warrior
     cardName: 회전베기
@@ -319,9 +191,6 @@ cardCollection:
             - "00000"
       useStamina: !!int 40
       conditions:
-        - conditionType: None
-          value: 0
-          description: ""  
       effects:
         - effectType: Damage
           baseValue: 8
@@ -332,18 +201,6 @@ cardCollection:
       features:
         - cardFeatureType: Finale
           featureValue: 0
-          chainStaminaCost: 0
-          chainEffect:
-            - effectType: None
-              baseValue: 0
-              scalingStat: None
-              scalingRatio: 1
-              targetMode: All
-              times: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
     upgradeEffects:
       effectArea:
         - area:
@@ -354,9 +211,6 @@ cardCollection:
             - "11111"
       useStamina: !!int 40
       conditions:
-        - conditionType: None
-          value: 0
-          description: ""  
       effects:
         - effectType: Damage
           baseValue: 12
@@ -365,17 +219,83 @@ cardCollection:
           targetMode: All
           times: 1
       features:
-        - cardFeatureType: None
+        - cardFeatureType: Finale
           featureValue: 0
-          chainStaminaCost: 0
-          chainEffect:
-            - effectType: None
-              baseValue: 0
-              scalingStat: None
-              scalingRatio: 1
-              targetMode: All
-              times: 0
-          chainCondition:
-            - conditionType: None
-              value: 0
-              description: ""
+
+  - className: Warrior
+    cardName: 스위프트 슬래시
+    texturePath: Card_test_texture
+    dataPath: Card_SwiftSlash_Data
+    level: !!int 2
+    defaultEffects:
+      effectArea:
+        - area:
+            - "00000"
+            - "00100"
+            - "00100"
+            - "00000"
+            - "00000"
+      useStamina: !!int 30
+      conditions:
+      effects:
+        - effectType: Damage
+          baseValue: 8
+          scalingStat: None
+          scalingRatio: 1
+          targetMode: All
+          times: 1
+          statusEffectType: None
+          durationTime: 0
+          conditionalEffect:
+            - condition:
+                conditionType: SelfFrenzyCount
+                value: 1
+                description: "광분 버프 1개 당 피해가 4 증가합니다."
+              effectOverride:
+                baseValue: 4
+            - condition:
+                conditionType: SelfFrenzyCount
+                value: 1
+                description: "광분 버프 1개 당 스태미너 소모가 5 감소합니다."
+              effectOverride:
+                baseValue: 0
+                staminaValue: -5
+      features:
+        - cardFeatureType: Echo
+          featureValue: 10
+    upgradeEffects:
+      effectArea:
+          - area:
+              - "00000"
+              - "00100"
+              - "00100"
+              - "00000"
+              - "00000"
+      useStamina: !!int 30
+      conditions:
+      effects:
+        - effectType: Damage
+          baseValue: 8
+          scalingStat: None
+          scalingRatio: 1
+          targetMode: All
+          times: 1
+          statusEffectType: None
+          durationTime: 0
+          conditionalEffect:
+            - condition:
+                conditionType: SelfFrenzyCount
+                value: 1
+                description: "광분 버프 1개 당 피해가 6 증가합니다."
+              effectOverride:
+                baseValue: 6
+            - condition:
+                conditionType: SelfFrenzyCount
+                value: 1
+                description: "광분 버프 1개 당 스태미너 소모가 5 감소합니다."
+              effectOverride:
+                baseValue: 0
+                staminaValue: -5
+      features:
+        - cardFeatureType: Echo
+          featureValue: 10

@@ -21,18 +21,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Texture
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b2c816eef745a8341b5e43d70074fa30
-    m_Address: Card_Initiative_Data
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Card
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: cbf9616c9d6720b408de8db62234e9c8
-    m_Address: Card_FalseSwipe_Data
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Card
-    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 68adc54c3b2506b4792e9cf9b8aaa501, type: 2}
   m_SchemaSet:

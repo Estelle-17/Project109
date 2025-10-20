@@ -1,17 +1,19 @@
 #if UNITY_EDITOR
-using UnityEditor;
-using UnityEngine;
+using Codice.CM.Common;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting.YamlDotNet.Serialization.NodeDeserializers;
+using UnityEditor;
+using UnityEditor.AddressableAssets;
+using UnityEditor.AddressableAssets.Settings;
+using UnityEditor.AddressableAssets.Settings.GroupSchemas;
+using UnityEngine;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Schema;
-using Newtonsoft.Json.Linq;
-using UnityEditor.AddressableAssets.Settings;
-using UnityEditor.AddressableAssets;
-using UnityEditor.AddressableAssets.Settings.GroupSchemas;
-using Codice.CM.Common;
 
 public class YAMLImporter
 {
@@ -67,7 +69,7 @@ public class YAMLImporter
             asset.defaultEffects = card.defaultEffects;
             asset.upgradeEffects = card.upgradeEffects;
 
-            asset.upgradeCount = 0;
+            asset.isUpgrade = false;
 
             var path = $"Assets/SO/Cards/{card.dataPath}.asset";
             Directory.CreateDirectory("Assets/SO/Cards");

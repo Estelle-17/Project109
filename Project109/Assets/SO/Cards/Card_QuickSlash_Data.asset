@@ -36,27 +36,14 @@ MonoBehaviour:
       times: 1
       statusEffectType: 
       durationTime: 0
-    conditions:
-    - conditionType: None
-      value: 0
-      description: 
+      conditionalEffect: []
+    conditions: []
     features:
     - cardFeatureType: None
       featureValue: 0
       chainStaminaCost: 0
-      chainEffect:
-      - effectType: None
-        baseValue: 0
-        scalingStat: None
-        scalingRatio: 1
-        targetMode: All
-        times: 0
-        statusEffectType: 
-        durationTime: 0
-      chainCondition:
-      - conditionType: None
-        value: 0
-        description: 
+      chainEffect: []
+      chainCondition: []
   upgradeEffects:
     effectArea:
     - area:
@@ -75,26 +62,13 @@ MonoBehaviour:
       times: 1
       statusEffectType: 
       durationTime: 0
-    conditions:
-    - conditionType: None
-      value: 0
-      description: 
+      conditionalEffect: []
+    conditions: []
     features:
     - cardFeatureType: None
       featureValue: 0
       chainStaminaCost: 0
-      chainEffect:
-      - effectType: None
-        baseValue: 0
-        scalingStat: None
-        scalingRatio: 1
-        targetMode: All
-        times: 0
-        statusEffectType: 
-        durationTime: 0
-      chainCondition:
-      - conditionType: None
-        value: 0
-        description: 
+      chainEffect: []
+      chainCondition: []
   upgradeCount: 0
   runtimeID: 0

@@ -57,7 +57,7 @@ public class ShopUIHandler : UIPanelBase
         for(int i = 0; i < cardCount; i++)
         {
             ActionCardData currentCardData = cardData[i];
-            cardList[i].UpdateActionCardData(currentCardData);
+            cardList[i].UpdateActionCardData(currentCardData, false);
             cardList[i].OnCardClick.AddListener(() => PurchaseCard(currentCardData));
         }
     }

@@ -19,3 +19,5 @@ characterCollection:
         number: !!int 1
       - cardName: 땅 가르기
         number: !!int 1
+      - cardName: 스위프트 슬래시
+        number: !!int 1

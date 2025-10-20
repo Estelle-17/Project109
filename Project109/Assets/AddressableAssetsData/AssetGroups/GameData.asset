@@ -33,6 +33,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Card
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 68d016037e4c96740a156272cdc26328
+    m_Address: Character_Warrior_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Character
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8f347491e22a89846957f89fd6fbdb11
     m_Address: Card_SpinningSlash_Data
     m_ReadOnly: 0
@@ -44,6 +50,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Battle
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9f6395301f4b0f74aad808d518aebf87
+    m_Address: Card_SwiftSlash_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bdb533cb88176844e9421e36a5c2b300
     m_Address: Card_QuickSlash_Data

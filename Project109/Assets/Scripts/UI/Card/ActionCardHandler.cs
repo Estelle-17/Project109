@@ -9,7 +9,8 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 {
     [SerializeField] private ActionCardData cardData;
 
-    private CardEffect currentCardEffect;
+    private CardEffect currentCardEffect;   //현재 카드효과
+    [SerializeField] private CardDescriptionHandler cardDescriptionHandler;
 
     public TextMeshProUGUI cardName;
     public TextMeshProUGUI cardDescription;
@@ -30,36 +31,59 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
     void Start()
     {
         selectHighlightObject.SetActive(false);
-
-        if(cardData != null)
-        {
-            UpdateActionCardData(cardData);
-        }
     }
 
-    public void UpdateActionCardData(ActionCardData newCardData)
+    public void UpdateActionCardData(ActionCardData newCardData, bool isUpgrade)
     {
         cardData = newCardData;
 
-        currentCardEffect = newCardData.defaultEffects;
+        currentCardEffect = new CardEffect();
 
-        cardName.text = cardData.cardName;
-        useStamina.text = currentCardEffect.useStamina.ToString();
+        if (isUpgrade)
+        {
+            currentCardEffect = newCardData.upgradeEffects;
+            cardName.text = cardData.cardName + "+";
+        }
+        else
+        {
+            currentCardEffect = newCardData.defaultEffects;
+            cardName.text = cardData.cardName;
+        }
+
         if(AssetCacheManager.instance.TryGetTexture(cardData.texturePath, out Texture2D texture))
         {
             cardImage.texture = texture;
         }
 
-        cardDescription.text = SetCardDescription();
+        UpdateCardDescription();
     }
 
-    string SetCardDescription()
+    public void UpgradeCard()
     {
-        string discription = "카드 Description 입니다.";
+        if(cardData == null)
+        {
+            return;
+        }
 
-        return discription;
+        //현재 가지고 있는 카드 데이터를 기반으로 업그레이드 진행
+        currentCardEffect = cardData.upgradeEffects;
+
+        cardName.text = cardData.cardName + "+";
+
+        UpdateCardDescription();
     }
 
+    public void UpdateCardDescription()
+    {
+        //현재 버프/디버프 및 유물 상태에 따른 변경점 업데이트
+        useStamina.text = currentCardEffect.useStamina.ToString();
+
+        if (cardDescriptionHandler != null)
+        {
+            cardDescription.text = cardDescriptionHandler.MakeCardDescription(currentCardEffect);
+        }
+    }
+    
     static void ConvertStringToIntArray(string input, int[] resultBuffer)
     {
         int len = input.Length;

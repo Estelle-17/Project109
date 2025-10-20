@@ -30,6 +30,7 @@ public class CardDeckManager : MonoBehaviour
     //카드 데이터 변경 이벤트
     public event Action<ActionCardData> OnCardAdded;
     public event Action<int> OnCardRemoved;
+    public event Action<int> OnCardUpgrade;
     public event Action OnCardsRefreshed;
 
     void Start()
@@ -58,13 +59,24 @@ public class CardDeckManager : MonoBehaviour
     public void RemoveCard(int runtimeID)
     {
         ActionCardData cardToRemove = cardDeck.FirstOrDefault(c => c.runtimeID == runtimeID);
-        if (cardToRemove != null) //카드가 지워졌을 경우
+        if (cardToRemove != null)
         {
-            if(cardDeck.Remove(cardToRemove))
+            if(cardDeck.Remove(cardToRemove)) //카드가 지워졌을 경우
             {            
                 OnCardRemoved?.Invoke(runtimeID);
                 Debug.Log($"Card Removed : {cardToRemove.cardName} (RuntimeID {runtimeID})");
             }
+        }
+    }
+
+    public void UpgradeCard(int runtimeID)
+    {
+        ActionCardData cardToUpgrade = cardDeck.FirstOrDefault(c => c.runtimeID == runtimeID);
+        if (cardToUpgrade != null)
+        {
+            cardToUpgrade.isUpgrade = true;
+            OnCardUpgrade?.Invoke(runtimeID);
+            Debug.Log($"Card Upgraded : {cardToUpgrade.cardName} (RuntimeID {runtimeID})");
         }
     }
 

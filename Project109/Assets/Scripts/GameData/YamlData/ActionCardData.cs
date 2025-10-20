@@ -12,7 +12,7 @@ public class ActionCardData : ScriptableObject, IIdentifiable
     public int level;
     public CardEffect defaultEffects;
     public CardEffect upgradeEffects;
-    public int upgradeCount;
+    public bool isUpgrade;
 
     public string ID => cardName;
     public int runtimeID;

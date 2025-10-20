@@ -34,6 +34,7 @@ public class RestoreUIHandler : UIPanelBase
 
         UpgradeCardHandler upgradeCardUI = Instantiate(upgradeCardUIPrefab).GetComponent<UpgradeCardHandler>();
         Debug.Log("Card Upgrade is Process!");
+        gameObject.SetActive(false);
     }
 
     public void HealHP()

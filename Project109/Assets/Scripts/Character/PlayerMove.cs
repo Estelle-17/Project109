@@ -136,8 +136,9 @@ public class PlayerMove : MonoBehaviour
             currentTile = currentTagetTile;
 
             CanMoveTileClear();
+            playerInputController.OnDisable();
         }
-        playerInputController.OnDisable();
+        //playerInputController.OnDisable();
         //Debug.Log("CheckToTargetTile is Canceled");
     }
 

@@ -26,7 +26,7 @@ public class ExploreUI : UIPanelBase
     [SerializeField] private int StoreNumber = 1;  //맵에 등장하는 상점 갯수
     [SerializeField] private int RestoreNumber = 1;  //맵에 등장하는 휴식 갯수
     [SerializeField] private int SecretNumber = 4;  //맵에 등장하는 시크릿 갯수
-    [SerializeField] private int BoxNumber = 3;  //맵에 등장하는 상자 갯수
+    [SerializeField] private int BoxNumber = 2;  //맵에 등장하는 상자 갯수
     [SerializeField] private int EliteNumber = 3;  //맵에 등장하는 엘리트 갯수
 
     [Header ("Prefab")]
@@ -364,6 +364,46 @@ public class ExploreUI : UIPanelBase
         }
     }
 
+    //void SetNextIncountNode()
+    //{
+    //    for (int i = 0; i < ExploreMap.Count - 1; i++)
+    //    {
+    //        if (ExploreMap[i].Count == 1)
+    //        {
+    //            int currentNodeCount = 0;
+    //            int nextNodeCount = 0;
+    //            while (nextNodeCount < ExploreMap[i + 1].Count)
+    //            {
+    //                ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
+    //                nextNodeCount++;
+    //            }
+    //        }
+    //        else if (ExploreMap[i + 1].Count == 1)
+    //        {
+    //            int currentNodeCount = 0;
+    //            int nextNodeCount = 0;
+    //            while (currentNodeCount < ExploreMap[i].Count)
+    //            {
+    //                ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
+    //                currentNodeCount++;
+    //            }
+    //        }
+    //        else
+    //        {
+    //            foreach (IncountNode node in ExploreMap[i])
+    //            {
+    //                foreach(IncountNode nextNode in ExploreMap[i+1])
+    //                {
+    //                    if(Random.value < 0.5f)
+    //                    {
+    //                        node.nextIncountNode.Add(nextNode.gameObject);
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
+
     /// <summary>
     /// IncountNode의 nextIncountNode에 다음 노드들 등록
     /// </summary>
@@ -381,7 +421,7 @@ public class ExploreUI : UIPanelBase
                     nextNodeCount++;
                 }
             }
-            else if(ExploreMap[i + 1].Count == 1)
+            else if (ExploreMap[i + 1].Count == 1)
             {
                 int currentNodeCount = 0;
                 int nextNodeCount = 0;
@@ -391,7 +431,7 @@ public class ExploreUI : UIPanelBase
                     currentNodeCount++;
                 }
             }
-            else if(ExploreMap[i].Count < ExploreMap[i + 1].Count)  //왼쪽 노드가 오른쪽 노드보다 작을 경우
+            else if (ExploreMap[i].Count < ExploreMap[i + 1].Count)  //왼쪽 노드가 오른쪽 노드보다 작을 경우
             {
                 int currentNodeCount = 0;
                 int nextNodeCount = 0;
@@ -401,7 +441,7 @@ public class ExploreUI : UIPanelBase
 
                 while (currentNodeCount < ExploreMap[i].Count && nextNodeCount < ExploreMap[i + 1].Count)
                 {
-                    if(currentNodeCount == randomNodeNumber)
+                    if (currentNodeCount == randomNodeNumber)
                     {
                         //왼쪽 노드의 남은 수 + 1 = 오른쪽 노드의 남은 수가 될 때 까지 왼쪽 노드를 내려가며 등록
                         while (ExploreMap[i].Count - currentNodeCount + 1 < ExploreMap[i + 1].Count - nextNodeCount)
@@ -448,7 +488,7 @@ public class ExploreUI : UIPanelBase
                 int nextNodeCount = 0;
                 bool recentlyIgnoreNode = false;
                 //다수의 노드에게 선택될 노드 한 개를 랜덤으로 선택
-                int randomNodeNumber = Random.Range(0, ExploreMap[i+1].Count);
+                int randomNodeNumber = Random.Range(0, ExploreMap[i + 1].Count);
 
                 while (currentNodeCount < ExploreMap[i].Count && nextNodeCount < ExploreMap[i + 1].Count)
                 {
@@ -504,6 +544,21 @@ public class ExploreUI : UIPanelBase
                     }
 
                     currentNodeCount++;
+                }
+            }
+
+            //모든 노드 연결 이후 추가적인 노드 연결 진행
+            foreach (IncountNode node in ExploreMap[i])
+            {
+                foreach (IncountNode nextNode in ExploreMap[i + 1])
+                {
+                    if (Random.value < 0.3f)
+                    {
+                        if (!node.nextIncountNode.Contains(nextNode.gameObject))
+                        {
+                            node.nextIncountNode.Add(nextNode.gameObject);
+                        }
+                    }
                 }
             }
         }

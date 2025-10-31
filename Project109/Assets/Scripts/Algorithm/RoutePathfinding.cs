@@ -35,7 +35,7 @@ public class RoutePathfinding : MonoBehaviour
 {
     TileNode[,] tileNodeMap;
 
-    public List<Tile> TilePathfinding(Tile start, Tile target, Tile[,] map)
+    public List<Tile> TilePathfinding(Tile start, Tile target, List<List<Tile>> map)
     {
         PriorityQueue<TileNode> TileList = new PriorityQueue<TileNode>();
         HashSet<TileNode> openList = new HashSet<TileNode>();
@@ -76,7 +76,7 @@ public class RoutePathfinding : MonoBehaviour
                 int y = currentTile.gridY + dirY[i];
 
                 //맵을 넘어가거나 비어있지 않을 경우 제외
-                if (x >= map.GetLength(0) || y >= map.GetLength(1) || x < 0 || y < 0 || !tileNodeMap[x, y].isWalkable || closeList.Contains(tileNodeMap[x, y]))
+                if (x >= map.Count || y >= map[0].Count || x < 0 || y < 0 || !tileNodeMap[x, y].isWalkable || closeList.Contains(tileNodeMap[x, y]))
                     continue;
 
                 //현재 탐색중인 타일이 이전에 계산된 코스트보다 더 적을 경우 교환
@@ -99,14 +99,14 @@ public class RoutePathfinding : MonoBehaviour
         return resultPath;
     }
 
-    List<Tile> RetracePath(TileNode startNode, TileNode endNode, Tile[,] map)
+    List<Tile> RetracePath(TileNode startNode, TileNode endNode, List<List<Tile>> map)
     {
         List<Tile> path = new List<Tile>();
         TileNode currentTileNode = endNode;
 
         while (currentTileNode != startNode) 
         {
-            path.Add(map[currentTileNode.gridX, currentTileNode.gridY]);
+            path.Add(map[currentTileNode.gridX][currentTileNode.gridY]);
             currentTileNode = currentTileNode.parentNode;
         }
         path.Reverse();
@@ -125,10 +125,10 @@ public class RoutePathfinding : MonoBehaviour
     }
 
     //탐색을 위한 타일 맵 생성
-    void MakeTileNodeMap(Tile[, ] map)
+    void MakeTileNodeMap(List<List<Tile>> map)
     {
-        int column = map.GetLength(0);
-        int row = map.GetLength(1);
+        int column = map.Count;
+        int row = map[0].Count;
 
         tileNodeMap = new TileNode[column, row];
 
@@ -136,7 +136,7 @@ public class RoutePathfinding : MonoBehaviour
         {
             for (int rowIndex = 0; rowIndex < row; rowIndex++)
             {
-                if (map[columnIndex, rowIndex].tileState == TileState.CanMove)
+                if (map[columnIndex][rowIndex].tileState == TileState.CanMove)
                 {
                     tileNodeMap[columnIndex, rowIndex] = new TileNode(true, columnIndex, rowIndex);
                 }

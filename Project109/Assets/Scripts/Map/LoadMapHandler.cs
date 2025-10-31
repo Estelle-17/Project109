@@ -11,6 +11,7 @@ public class LoadMapHandler : MonoBehaviour
     public GameObject eventObjectPrefab;
     public GameObject shopObjectPrefab;
     public GameObject restoreObjectPrefab;
+    public GameObject rewardObjectPrefab;
 
     void Start()
     {
@@ -59,7 +60,7 @@ public class LoadMapHandler : MonoBehaviour
                     SpawnShopNPC();
                     break;
                 case IncountType.SecretBox:
-
+                    SpawnRewardNPC();
                     break;
                 case IncountType.Secret:
                     if(newIncountNode.eventNodeData != null)
@@ -136,6 +137,31 @@ public class LoadMapHandler : MonoBehaviour
         //맵 이동 시 지워질 오브젝트 목록으로 등록
         GameManager.instance.currentSpawnNPCList.Add(newRestoreNPC.gameObject);
         GameManager.instance.currentSpawnUIList.Add(newRestoreNPC.GetRestoreUI().gameObject);
+    }
+
+    void SpawnRewardNPC()
+    {
+        //카드 보상 생성
+        RewardNPC rewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardNPC>();
+        if(rewardNPC != null)
+        {
+            rewardNPC.SetReward(RewardNPCType.Card, RandomItemPickupType.CommonToUnique);
+            rewardNPC.transform.position = GameManager.instance.currentMap.CheckTileMapCenterLocation();
+        }
+        //맵 이동 시 지워질 오브젝트 목록으로 등록
+        GameManager.instance.currentSpawnNPCList.Add(rewardNPC.gameObject);
+        GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI().gameObject);
+
+        //유물 보상 생성
+        RewardNPC relicRewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardNPC>();
+        if (relicRewardNPC != null)
+        {
+            relicRewardNPC.SetReward(RewardNPCType.Relic, RandomItemPickupType.CommonToUnique);
+            relicRewardNPC.transform.position = GameManager.instance.currentMap.CheckTileMapCenterLocation() + new Vector3(16, 0, 0);
+        }
+        //맵 이동 시 지워질 오브젝트 목록으로 등록
+        GameManager.instance.currentSpawnNPCList.Add(rewardNPC.gameObject);
+        GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI().gameObject);
     }
 
     public void DestroyCurrentSpawnEnemy()

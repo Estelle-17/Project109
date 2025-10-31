@@ -16,11 +16,6 @@ public class RelicHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public UnityEvent OnRelicClick; //클릭 시 호출될 이벤트
 
-    void Start()
-    {
-        
-    }
-
     public void UpdateRelicData(RelicData newRelicData)
     {
         relicData = newRelicData;

@@ -86,7 +86,7 @@ public class TouchSystem : MonoBehaviour
 
         Debug.DrawRay(Camera.main.transform.localPosition, ray.direction * 100.0f, Color.blue);
 
-        int layerMask = LayerMask.GetMask("Player", "Enemy", "ShopNPC","EventNPC", "RestoreNPC");
+        int layerMask = LayerMask.GetMask("Player", "Enemy", "ShopNPC","EventNPC", "RestoreNPC", "RewardNPC");
 
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 10000.0f, layerMask))
@@ -132,6 +132,15 @@ public class TouchSystem : MonoBehaviour
                 if (eventHandler != null)
                 {
                     eventHandler.EnableEventDescriptionUI();
+                }
+                break;
+            case "RewardNPC":
+                CameraFocusToTarget(newObject.transform.position);
+                //root에 존재하는 EventHandler 탐색
+                RewardNPC rewardNPC = newObject.transform.root.GetComponent<RewardNPC>();
+                if (rewardNPC != null)
+                {
+                    rewardNPC.EnableRewardUI();
                 }
                 break;
         }

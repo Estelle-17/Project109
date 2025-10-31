@@ -13,16 +13,18 @@ public class Tile : MonoBehaviour
     [SerializeField]
     private Coord coord;
     public TileState tileState;
-    public GameObject canMoveAreaColor;
-    public GameObject centerTileColor;
+    public GameObject canMoveAreaTextureObject;
+    public GameObject centerTileTextureObject;
+
+    public GameObject[] tileBaseTextureObjects; //상,하,좌,우 순으로 등록
 
     public GameObject tileObjectPrefab;
     public GameObject crackTileObjectPrefab;
 
     private void Start()
     {
-        canMoveAreaColor = transform.GetChild(0).gameObject;
-        canMoveAreaColor.SetActive(false);
+        canMoveAreaTextureObject = transform.GetChild(0).gameObject;
+        canMoveAreaTextureObject.SetActive(false);
     }
 
     public void SetCoord(int column, int row)
@@ -47,11 +49,11 @@ public class Tile : MonoBehaviour
     {
         if(tileState == TileState.CanMove)
         {
-            canMoveAreaColor.SetActive(true);
+            canMoveAreaTextureObject.SetActive(true);
         }
         else
         {
-            canMoveAreaColor.SetActive(false);
+            canMoveAreaTextureObject.SetActive(false);
         }
     }
 

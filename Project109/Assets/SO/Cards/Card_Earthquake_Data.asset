@@ -17,7 +17,7 @@ MonoBehaviour:
   cardName: "\uB545 \uAC00\uB974\uAE30"
   texturePath: Card_test_texture
   dataPath: 
-  level: 1
+  level: 3
   defaultEffects:
     effectArea:
     - area:
@@ -70,5 +70,5 @@ MonoBehaviour:
       chainStaminaCost: 0
       chainEffect: []
       chainCondition: []
-  upgradeCount: 0
+  isUpgrade: 0
   runtimeID: 0

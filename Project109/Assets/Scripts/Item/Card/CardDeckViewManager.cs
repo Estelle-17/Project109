@@ -10,13 +10,13 @@ public class CardDeckViewManager : UIPanelBase
 
     private Dictionary<int, GameObject> activeCardUIs = new Dictionary<int, GameObject>();
 
-    //private void OnEnable()
-    //{
-    //    if(CardDeckManager.instance != null)
-    //    {
-    //        CardDeckManager.instance.RequestAllCardRefresh();
-    //    }
-    //}
+    private void OnEnable()
+    {
+        if (CardDeckManager.instance != null)
+        {
+            CardDeckManager.instance.RequestAllCardRefresh();
+        }
+    }
 
     private void Awake()
     {
@@ -65,7 +65,7 @@ public class CardDeckViewManager : UIPanelBase
         
         if(cardUI != null && contentTransform != null)
         {
-            cardUI.UpdateActionCardData(card, false);
+            cardUI.UpdateActionCardData(card);
             AddCardClickEvent(cardUI);
 
             activeCardUIs.Add(card.runtimeID, cardUI.gameObject);

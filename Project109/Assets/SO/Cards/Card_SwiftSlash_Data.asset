@@ -114,5 +114,5 @@ MonoBehaviour:
       chainStaminaCost: 0
       chainEffect: []
       chainCondition: []
-  upgradeCount: 0
+  isUpgrade: 0
   runtimeID: 0

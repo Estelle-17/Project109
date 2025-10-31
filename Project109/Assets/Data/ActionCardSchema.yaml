@@ -132,13 +132,18 @@ condition: &skill_condition
     description: "조건 발동 타입"
     enum:
     - None
-    - TargetHealthRatio #대상 체력 비율
-    - SelfBuffCount #자신의 버프 갯수
+    - HealthRatio #대상 체력 비율
+    - BuffCount #자신의 버프 갯수
     - IsPoison  #대상의 독 상태
     - IsDeadlyPoision #대상의 맹독 상태    
     - IsBleeding  #대상의 출혈 상태
     - IsDebilitating  #대상의 쇠약 상태
     - IsWeaken  #대상의 약화 상태
+  target:
+    type: string
+    enum:
+    - Target
+    - Self
   value:
     type: number
   description:

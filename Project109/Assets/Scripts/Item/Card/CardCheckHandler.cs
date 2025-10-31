@@ -16,7 +16,7 @@ public class CardCheckHandler : UIPanelBase
         if (cardHandler == null)
             return;
 
-        cardHandler.UpdateActionCardData(newCardData, false);
+        cardHandler.UpdateActionCardData(newCardData);
         cardHandler.bIsCardHighlight = false;
 
         UIActive();

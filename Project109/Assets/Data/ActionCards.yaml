@@ -136,7 +136,7 @@ cardCollection:
     cardName: 땅 가르기
     texturePath: Card_test_texture
     dataPath: Card_Earthquake_Data
-    level: !!int 1
+    level: !!int 3
     defaultEffects:
       effectArea:
         - area:
@@ -180,7 +180,7 @@ cardCollection:
     cardName: 회전베기
     texturePath: Card_test_texture
     dataPath: Card_SpinningSlash_Data
-    level: !!int 1
+    level: !!int 2
     defaultEffects:
       effectArea:
         - area:

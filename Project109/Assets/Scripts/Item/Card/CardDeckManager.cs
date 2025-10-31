@@ -78,6 +78,9 @@ public class CardDeckManager : MonoBehaviour
             OnCardUpgrade?.Invoke(runtimeID);
             Debug.Log($"Card Upgraded : {cardToUpgrade.cardName} (RuntimeID {runtimeID})");
         }
+
+        //업그레이드가 진행되었으니 모든 카드 업데이트 진행
+        RequestAllCardRefresh();
     }
 
     public ActionCardData GetRandomCard()

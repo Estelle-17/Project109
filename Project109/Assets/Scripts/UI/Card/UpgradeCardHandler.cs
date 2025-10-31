@@ -51,7 +51,7 @@ public class UpgradeCardHandler : UIPanelBase
 
         if (cardUI != null && contentTransform != null)
         {
-            cardUI.UpdateActionCardData(card, false);
+            cardUI.UpdateActionCardData(card);
             AddCardClickEvent(cardUI);
 
             activeCardUIs.Add(card.runtimeID, cardUI.gameObject);

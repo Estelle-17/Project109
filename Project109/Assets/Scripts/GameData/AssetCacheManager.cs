@@ -127,6 +127,9 @@ public class AssetCacheManager : MonoBehaviour
         }
 
         Debug.Log("All Data Load is Complete.");
+
+        //불러온 아이템들 세분화 진행
+        GameItemContainer.instance.UpdateItemList();
     }
 
     public IEnumerator LoadAllAssetsFromBundle(string key, string bundlePath)

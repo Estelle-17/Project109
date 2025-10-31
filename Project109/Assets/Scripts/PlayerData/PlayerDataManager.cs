@@ -4,7 +4,7 @@ public class PlayerDataManager : MonoBehaviour
 {
     public static PlayerDataManager instance { get; private set; }
 
-    public PlayerStat playerStat;
+    private PlayerStat playerStat;
 
     private void Awake()
     {
@@ -20,5 +20,13 @@ public class PlayerDataManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        playerStat = new PlayerStat();
 
+        playerStat.reward_Card_Count = 3;
+        playerStat.reward_Relic_Count = 3;
+    }
+
+    public PlayerStat GetPlayerStat() { return playerStat;}
 }

@@ -18,10 +18,62 @@ relicCollection:
     texturePath: Relic_RecoveryPlate_Texture
     dataPath: Relic_OldSword_Data
     level: !!int 1
-    description: "1칸 이내의 적을 공격할 때 주는 데미지가 5 증가한다."
+    description: "1칸 이내의 적을 공격할 때 주는 데미지가 5 증가합니다."
     conditions:
       - conditionType: ""
         value: 5
     effects:
       - effectType: Damage
         value: 5
+
+  - classType: All
+    relicName: 권투 글러브
+    texturePath: Relic_RecoveryPlate_Texture
+    dataPath: Relic_FightGlove_Data
+    level: !!int 1
+    description: "전투 시작 시 처음 공격할 때 주는 데미지가 10 증가합니다."
+    conditions:
+      - conditionType: ""
+        value: 10
+    effects:
+      - effectType: Damage
+        value: 10
+
+  - classType: All
+    relicName: 날카로운 날
+    texturePath: Relic_RecoveryPlate_Texture
+    dataPath: Relic_SharpBlade_Data
+    level: !!int 1
+    description: "적 체력에 피해를 입힐 시 출혈을 1 부여합니다."
+    conditions:
+      - conditionType: ""
+        value: 1
+    effects:
+      - effectType: Debuff
+        value: 1
+  
+  - classType: All
+    relicName: 날카로운 날
+    texturePath: Relic_RecoveryPlate_Texture
+    dataPath: Relic_SharpBlade_Data
+    level: !!int 2
+    description: "적 체력에 피해를 입힐 시 출혈을 1 부여합니다."
+    conditions:
+      - conditionType: ""
+        value: 1
+    effects:
+      - effectType: Debuff
+        value: 1
+
+  - classType: All
+    relicName: 악마의 꼬리
+    texturePath: Relic_RecoveryPlate_Texture
+    dataPath: Relic_TailOfTheDevil_Data
+    level: !!int 3
+    description: "내 턴이 시작될 때 마다 2칸 내의 적들에게 쇠약을 1 부여합니다."
+    conditions:
+      - conditionType: ""
+        value: 1
+    effects:
+      - effectType: Debuff
+        value: 1

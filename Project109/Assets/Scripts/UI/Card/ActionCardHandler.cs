@@ -33,13 +33,13 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         selectHighlightObject.SetActive(false);
     }
 
-    public void UpdateActionCardData(ActionCardData newCardData, bool isUpgrade)
+    public void UpdateActionCardData(ActionCardData newCardData)
     {
         cardData = newCardData;
 
         currentCardEffect = new CardEffect();
 
-        if (isUpgrade)
+        if (cardData.isUpgrade)
         {
             currentCardEffect = newCardData.upgradeEffects;
             cardName.text = cardData.cardName + "+";
@@ -135,7 +135,7 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
             return;
 
         //현재 선택된 카드와 맞는 효과 범위 변경
-        Tile[,] map = GameManager.instance.ActionCard_EffectArea.GetTileMap();
+        List<List<Tile>> map = GameManager.instance.ActionCard_EffectArea.GetTileMap();
 
         int[] convertBuffer;
 
@@ -155,13 +155,13 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
                     {
                         if(i == areaLength / 2 && j == areaLength / 2)  //공격을 시전 할 위치는 다른 색으로 변경
                         {
-                            map[startColumn + i, startRow + j].centerTileColor.SetActive(true);
-                            checkActiveTiles.Add(map[startColumn + i, startRow + j].centerTileColor);
+                            map[startColumn + i][startRow + j].centerTileTextureObject.SetActive(true);
+                            checkActiveTiles.Add(map[startColumn + i][startRow + j].centerTileTextureObject);
                         }
                         else
                         {
-                            map[startColumn + i, startRow + j].canMoveAreaColor.SetActive(true);
-                            checkActiveTiles.Add(map[startColumn + i, startRow + j].canMoveAreaColor);
+                            map[startColumn + i][startRow + j].centerTileTextureObject.SetActive(true);
+                            checkActiveTiles.Add(map[startColumn + i][startRow + j].centerTileTextureObject);
                         }
                     }
                 }

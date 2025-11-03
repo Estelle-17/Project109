@@ -20,14 +20,14 @@ public class ExploreUI : UIPanelBase
 
     public int currentMapFloor;
 
-    [SerializeField] private int VerticalLayoutSpacing = 30;
+    [SerializeField] private int VerticalLayoutSpacing = 60;
 
     [Header ("Map Setting")]
     [SerializeField] private int StoreNumber = 1;  //맵에 등장하는 상점 갯수
-    [SerializeField] private int RestoreNumber = 1;  //맵에 등장하는 휴식 갯수
+    [SerializeField] private int RestoreNumber = 2;  //맵에 등장하는 휴식 갯수
     [SerializeField] private int SecretNumber = 4;  //맵에 등장하는 시크릿 갯수
-    [SerializeField] private int BoxNumber = 2;  //맵에 등장하는 상자 갯수
-    [SerializeField] private int EliteNumber = 3;  //맵에 등장하는 엘리트 갯수
+    [SerializeField] private int BoxNumber = 1;  //맵에 등장하는 상자 갯수
+    [SerializeField] private int EliteNumber = 2;  //맵에 등장하는 엘리트 갯수
 
     [Header ("Prefab")]
     [SerializeField] private GameObject NodePrefab;
@@ -40,10 +40,12 @@ public class ExploreUI : UIPanelBase
         ExploreMap = new List<List<IncountNode>>();
 
         dataLoader = AssetCacheManager.instance;
-        battleItemPicker = new RandomItemPicker<BattleData>(dataLoader.battleList);
-        eventItemPicker = new RandomItemPicker<EventData>(dataLoader.eventList);
-
-        if (dataLoader == null)
+        if (dataLoader != null)
+        {
+            battleItemPicker = new RandomItemPicker<BattleData>(dataLoader.battleList);
+            eventItemPicker = new RandomItemPicker<EventData>(dataLoader.eventList);
+        }
+        else
         {
             Debug.LogWarning("AddressablesData Loader is Null!");
         }
@@ -81,7 +83,7 @@ public class ExploreUI : UIPanelBase
                 node.exploreUI = this;
                 node.SetIncountNode(IncountType.None);
                 ExploreMap[index].Add(node);
-                ExploreVerticalObjects[index].padding.top = 325;
+                ExploreVerticalObjects[index].padding.top = 300;
             }
             else if(index == mapLength - 1) //마지막 노드는 무조건 Boss로 생성
             {
@@ -89,7 +91,7 @@ public class ExploreUI : UIPanelBase
                 node.exploreUI = this;
                 node.SetIncountNode(IncountType.Boss);
                 ExploreMap[index].Add(node);
-                ExploreVerticalObjects[index].padding.top = 325;
+                ExploreVerticalObjects[index].padding.top = 300;
             }
             else if(index == mapLength / 2) //맵 중간에 회복 및 상점 위치 생성
             {
@@ -97,13 +99,13 @@ public class ExploreUI : UIPanelBase
                 node.exploreUI = this;
                 node.SetIncountNode(IncountType.Restore);
                 ExploreMap[index].Add(node);
-                ExploreVerticalObjects[index].padding.top = 260;
+                ExploreVerticalObjects[index].padding.top = 225;
 
                 IncountNode node1 = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node1.exploreUI = this;
                 node1.SetIncountNode(IncountType.Store);
                 ExploreMap[index].Add(node1);
-                ExploreVerticalObjects[index].padding.top = 260;
+                ExploreVerticalObjects[index].padding.top = 225;
 
                 //다음 섹션의 노드 저장을 위해 List추가
                 incountNodeListInSection.Add(new List<IncountNode>());
@@ -119,7 +121,7 @@ public class ExploreUI : UIPanelBase
                     node.exploreUI = this;
                     node.SetIncountNode(IncountType.Battle);
                     ExploreMap[index].Add(node);
-                    ExploreVerticalObjects[index].padding.top = 390 - (createNodeCount * 65);
+                    ExploreVerticalObjects[index].padding.top = 375 - (createNodeCount * 75);
 
                     //섹션 내의 노드들 저장
                     incountNodeListInSection[sectionIndex].Add(node);
@@ -131,7 +133,6 @@ public class ExploreUI : UIPanelBase
         foreach (IncountNode node in ExploreMap[mapLength - 2])
         {
             node.SetIncountNode(IncountType.Restore);
-            node.DisableExtraType();
         }
 
         /// <summary>
@@ -142,8 +143,68 @@ public class ExploreUI : UIPanelBase
         {
             IncountNode currentNode;
 
+            //천리안 노드 생성 (스테이지 당 1개만 존재)
+            //일반 전투인 노드들 중 랜덤으로 한 개 선택
+            if (sectionIdx == 0)
+            {
+                do
+                {
+                    //초반 부분에만 생성되도록 주의
+                    currentNode = incountNodeListInSection[sectionIdx][Random.Range(incountNodeListInSection[sectionIdx].Count / 3, incountNodeListInSection[sectionIdx].Count)];
+                }
+                while (currentNode.incountType != IncountType.Battle);
+                currentNode.SetIncountNode(IncountType.Insight);
+            }
+
+            //상자 생성
+            for (int index = 0; index < BoxNumber; index++)
+            {
+                //일반 전투인 노드들 중 랜덤으로 한 개 선택
+                do
+                {
+                    currentNode = incountNodeListInSection[sectionIdx][Random.Range(incountNodeListInSection[sectionIdx].Count / 2, incountNodeListInSection[sectionIdx].Count)];
+                }
+                while (currentNode.incountType != IncountType.Battle);
+
+                currentNode.SetIncountNode(IncountType.SecretBox);
+            }
+
             //엘리트 적 생성
             for (int index = 0; index < EliteNumber; index++)
+            {
+                //일반 전투인 노드들 중 랜덤으로 한 개 선택
+                do
+                {
+                    //초반 부분에는 생성하지 않도록 주의
+                    if (sectionIdx == 0)
+                    {
+                        currentNode = incountNodeListInSection[sectionIdx][Random.Range(incountNodeListInSection[sectionIdx].Count / 3, incountNodeListInSection[sectionIdx].Count)];
+                    }
+                    else
+                    {
+                        currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
+                    }
+                }
+                while (currentNode.incountType != IncountType.Battle);
+
+                currentNode.SetIncountNode(IncountType.Elite);
+            }
+
+            //휴식 생성
+            for (int index = 0; index < RestoreNumber; index++)
+            {
+                //일반 전투인 노드들 중 랜덤으로 한 개 선택
+                do
+                {
+                    currentNode = incountNodeListInSection[sectionIdx][Random.Range(incountNodeListInSection[sectionIdx].Count / 3, incountNodeListInSection[sectionIdx].Count)];
+                }
+                while (currentNode.incountType != IncountType.Battle);
+
+                currentNode.SetIncountNode(IncountType.Restore);
+            }
+
+            //상점 생성
+            for (int index = 0; index < StoreNumber; index++)
             {
                 //일반 전투인 노드들 중 랜덤으로 한 개 선택
                 do
@@ -152,8 +213,7 @@ public class ExploreUI : UIPanelBase
                 }
                 while (currentNode.incountType != IncountType.Battle);
 
-                currentNode.SetIncountNode(IncountType.Elite);
-                currentNode.DisableExtraType();
+                currentNode.SetIncountNode(IncountType.Store);
             }
 
             //시크릿 생성
@@ -167,7 +227,6 @@ public class ExploreUI : UIPanelBase
                 while (currentNode.incountType != IncountType.Battle);
 
                 currentNode.SetIncountNode(IncountType.Secret);
-                currentNode.DisableExtraType();
 
                 //랜덤하게 섞인 데이터들 중 한 가지를 저장
                 if (eventItemPicker.TryGetNext(out EventData data))
@@ -183,56 +242,18 @@ public class ExploreUI : UIPanelBase
                     }
                 }
             }
-
-            //상자 생성
-            for (int index = 0; index < BoxNumber; index++)
-            {
-                //일반 전투인 노드들 중 랜덤으로 한 개 선택
-                do
-                {
-                    currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
-                }
-                while (currentNode.incountType != IncountType.Battle);
-
-                currentNode.SetIncountNode(IncountType.SecretBox);
-                currentNode.DisableExtraType();
-            }
-
-            //휴식 생성
-            for (int index = 0; index < RestoreNumber; index++)
-            {
-                //일반 전투인 노드들 중 랜덤으로 한 개 선택
-                do
-                {
-                    currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
-                }
-                while (currentNode.incountType != IncountType.Battle);
-
-                currentNode.SetIncountNode(IncountType.Restore);
-                currentNode.DisableExtraType();
-            }
-
-            //상점 생성
-            for (int index = 0; index < StoreNumber; index++)
-            {
-                //일반 전투인 노드들 중 랜덤으로 한 개 선택
-                do
-                {
-                    currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
-                }
-                while (currentNode.incountType != IncountType.Battle);
-
-                currentNode.SetIncountNode(IncountType.Store);
-                currentNode.DisableExtraType();
-            }
         }
 
         //생성 시 필요한 만큼 노드 가리기
-        for (int i = GameManager.instance.checkMapNodeFloorLength; i < ExploreMap.Count; i++)
+        //중간 지점의 휴식, 상점 2개의 노드만 있는 곳은 가리지 않기
+        for (int i = GameManager.instance.GetPlayerStat().mapFloorCheck_Length; i < ExploreMap.Count; i++)
         {
-            for (int j = 0; j < ExploreMap[i].Count; j++)
+            if (mapLength / 2 != i)
             {
-                ExploreMap[i][j].CloseNodeCoverTexture();
+                for (int j = 0; j < ExploreMap[i].Count; j++)
+                {
+                    ExploreMap[i][j].CloseNodeCoverTexture();
+                }
             }
         }
 
@@ -280,7 +301,7 @@ public class ExploreUI : UIPanelBase
     public void OpenExploreMapNodesBasedOnFloorLength()
     {
         int currentFloor = GameManager.instance.currentExploreMapFloor;
-        int openNodeLength = currentFloor + GameManager.instance.checkMapNodeFloorLength;
+        int openNodeLength = currentFloor + GameManager.instance.GetPlayerStat().mapFloorCheck_Length;
         openNodeLength = openNodeLength > ExploreMap.Count ? ExploreMap.Count : openNodeLength;
 
         for (int i = currentFloor; i < openNodeLength; i++)
@@ -298,6 +319,19 @@ public class ExploreUI : UIPanelBase
         int y = Random.Range(0, ExploreMap[x].Count);
 
         ExploreMap[x][y].OpenNodeCoverTexture();
+    }
+
+    public void CloseBeforeNodes()
+    {
+        int beforeFloor = GameManager.instance.currentExploreMapFloor - 1;
+
+        for (int i = 0; i < ExploreMap[beforeFloor].Count; i++)
+        {
+            if (ExploreMap[beforeFloor][i] != GameManager.instance.beforeIncountNode)
+            {
+                ExploreMap[beforeFloor][i].CloseNodeCoverTexture();
+            }
+        }
     }
 
     IEnumerator CreateArrowUI()
@@ -364,46 +398,6 @@ public class ExploreUI : UIPanelBase
         }
     }
 
-    //void SetNextIncountNode()
-    //{
-    //    for (int i = 0; i < ExploreMap.Count - 1; i++)
-    //    {
-    //        if (ExploreMap[i].Count == 1)
-    //        {
-    //            int currentNodeCount = 0;
-    //            int nextNodeCount = 0;
-    //            while (nextNodeCount < ExploreMap[i + 1].Count)
-    //            {
-    //                ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
-    //                nextNodeCount++;
-    //            }
-    //        }
-    //        else if (ExploreMap[i + 1].Count == 1)
-    //        {
-    //            int currentNodeCount = 0;
-    //            int nextNodeCount = 0;
-    //            while (currentNodeCount < ExploreMap[i].Count)
-    //            {
-    //                ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount].gameObject);
-    //                currentNodeCount++;
-    //            }
-    //        }
-    //        else
-    //        {
-    //            foreach (IncountNode node in ExploreMap[i])
-    //            {
-    //                foreach(IncountNode nextNode in ExploreMap[i+1])
-    //                {
-    //                    if(Random.value < 0.5f)
-    //                    {
-    //                        node.nextIncountNode.Add(nextNode.gameObject);
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-
     /// <summary>
     /// IncountNode의 nextIncountNode에 다음 노드들 등록
     /// </summary>
@@ -435,7 +429,6 @@ public class ExploreUI : UIPanelBase
             {
                 int currentNodeCount = 0;
                 int nextNodeCount = 0;
-                bool recentlyIgnoreNode = false;
                 //다수의 노드에게 선택될 노드 한 개를 랜덤으로 선택
                 int randomNodeNumber = Random.Range(0, ExploreMap[i].Count);
 
@@ -456,16 +449,14 @@ public class ExploreUI : UIPanelBase
                     //이전에 아래 노드와 연결이 안됬을 경우는 무조건 연결됨
                     if (nextNodeCount + 1 < ExploreMap[i + 1].Count)
                     {
-                        if (Random.Range(0, 11) % 2 == 0 || recentlyIgnoreNode || currentNodeCount == 0 || currentNodeCount == ExploreMap[i].Count - 1)
+                        if (Random.Range(0, 10) % 2 == 0 || currentNodeCount == 0 || currentNodeCount == ExploreMap[i].Count - 1)
                         {
                             ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount + 1].gameObject);
                             nextNodeCount++;
-                            recentlyIgnoreNode = false;
                         }
                         else
                         {
                             nextNodeCount++;
-                            recentlyIgnoreNode = true;
                         }
                     }
 
@@ -521,7 +512,7 @@ public class ExploreUI : UIPanelBase
                     //이전에 아래 노드와 연결이 안됬을 경우는 무조건 연결됨
                     if (nextNodeCount + 1 < ExploreMap[i + 1].Count)
                     {
-                        if (Random.Range(0, 11) % 2 == 0 || recentlyIgnoreNode || currentNodeCount == 0 || currentNodeCount == ExploreMap[i].Count - 1)
+                        if (Random.Range(0, 10) % 2 == 0 || recentlyIgnoreNode || currentNodeCount == 0 || currentNodeCount == ExploreMap[i].Count - 1)
                         {
                             ExploreMap[i][currentNodeCount].nextIncountNode.Add(ExploreMap[i + 1][nextNodeCount + 1].gameObject);
                             nextNodeCount++;
@@ -548,19 +539,20 @@ public class ExploreUI : UIPanelBase
             }
 
             //모든 노드 연결 이후 추가적인 노드 연결 진행
-            foreach (IncountNode node in ExploreMap[i])
-            {
-                foreach (IncountNode nextNode in ExploreMap[i + 1])
-                {
-                    if (Random.value < 0.3f)
-                    {
-                        if (!node.nextIncountNode.Contains(nextNode.gameObject))
-                        {
-                            node.nextIncountNode.Add(nextNode.gameObject);
-                        }
-                    }
-                }
-            }
+            //foreach (IncountNode node in ExploreMap[i])
+            //{
+            //    foreach (IncountNode nextNode in ExploreMap[i + 1])
+            //    {
+            //        if (Random.value < 0.3f)
+            //        {
+            //            if (!node.nextIncountNode.Contains(nextNode.gameObject))
+            //            {
+            //                node.nextIncountNode.Add(nextNode.gameObject);
+            //                break;
+            //            }
+            //        }
+            //    }
+            //}
         }
     }
 

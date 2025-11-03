@@ -55,7 +55,7 @@ public class CardRewardHandler : UIPanelBase
             //랜덤한 숫자 선택
             pickNumber = Random.Range(1, 101);
 
-            ActionCardData cardData = new ActionCardData();
+            ActionCardData cardData = ScriptableObject.CreateInstance<ActionCardData>(); ;
             if (pickNumber <= uniqueRate)
             {
                 //unique카드들 중 랜덤한 1장 선택

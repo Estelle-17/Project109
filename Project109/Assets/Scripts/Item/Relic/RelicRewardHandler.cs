@@ -43,7 +43,7 @@ public class RelicRewardHandler : MonoBehaviour
             //랜덤한 유물 선택 후 등록
             pickNumber = Random.Range(1, 101);
 
-            RelicData relicData = new RelicData();
+            RelicData relicData = ScriptableObject.CreateInstance<RelicData>();
             if (pickNumber <= uniqueRate)
             {
                 //unique유물들 중 랜덤한 1장 선택
@@ -105,6 +105,7 @@ public class RelicRewardHandler : MonoBehaviour
     {
         RelicManager.instance.AddRelic(newRelicData);
         //이 카드 선택지를 제공한 NPC오브젝트 제거 및 캔버스 제거
+        UIManager.instance.OffRelicDescription();
         Destroy(rewardNPCObject);
         Destroy(gameObject);
     }

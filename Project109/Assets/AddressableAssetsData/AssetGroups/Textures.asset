@@ -21,12 +21,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Texture
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 26d88e5fd6e54154893926fab202ee54
-    m_Address: Texture_Explore_IncountNode_GetCard
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Texture
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 34e34a9696486814881516f53fca0258
     m_Address: Card_Highlight_Texture.png
     m_ReadOnly: 0
@@ -63,12 +57,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Texture
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 60953d217e31b8246be020b9579d5b35
-    m_Address: Texture_Explore_IncountNode_GetMoney
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Texture
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 61ff8f2f5a23aa142a9102f412ccc251
     m_Address: Texture_Explore_IncountNode_IconHighlight
     m_ReadOnly: 0
@@ -101,6 +89,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d07c51985be464649ac940ddbcbb1253
     m_Address: Texture_Explore_IncountNode_EliteBattle
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Texture
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d27d938f5b9900849b45589ee2089931
+    m_Address: Texture_Explore_IncountNode_Insight
     m_ReadOnly: 0
     m_SerializedLabels:
     - Texture

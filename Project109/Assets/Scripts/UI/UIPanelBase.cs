@@ -21,6 +21,11 @@ public class UIPanelBase : MonoBehaviour
             return;
         }
 
+        if(gameObject.activeSelf)
+        {
+            return;
+        }
+
         UIManager.instance.PushActiveUIPanel(this.gameObject);
     }
 

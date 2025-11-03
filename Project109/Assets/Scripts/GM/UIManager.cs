@@ -53,7 +53,7 @@ public class UIManager : MonoBehaviour
         if(relicDescription.activeSelf && relicDescriptionTransform)
         {
             Vector2 mousePos = Input.mousePosition;
-            mousePos += new Vector2(100, 35);    //offset
+            mousePos += new Vector2(50, 50);    //offset
             relicDescriptionTransform.position = mousePos;
         }
     }

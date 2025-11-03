@@ -36,7 +36,7 @@ public class RelicHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (UIManager.instance.relicDescription == null || relicData == null)
             return;
 
-        UIManager.instance.UpdateRelicDescription(relicData.description);
+        UIManager.instance.UpdateRelicDescription(relicData.relicName + "\n" + relicData.description);
         UIManager.instance.OnRelicDescription();
     }
 

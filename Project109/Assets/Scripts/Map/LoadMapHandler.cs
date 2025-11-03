@@ -35,6 +35,9 @@ public class LoadMapHandler : MonoBehaviour
 
         //다음 노드로 이동하였으니 다음 노드들의 가려진 부분들 중 일부가 보이도록 ExploreMap 업데이트
         GameManager.instance.currentExploreUI.OpenExploreMapNodesBasedOnFloorLength();
+        //이전에 이동한 노드를 제외한 나머지 노드 가리기
+        GameManager.instance.currentExploreUI.CloseBeforeNodes();
+
         GameManager.instance.currentExploreUI.CloseUI();
 
         IncountNode newIncountNode = GameManager.instance.currentIncountNode;
@@ -150,7 +153,7 @@ public class LoadMapHandler : MonoBehaviour
         }
         //맵 이동 시 지워질 오브젝트 목록으로 등록
         GameManager.instance.currentSpawnNPCList.Add(rewardNPC.gameObject);
-        GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI().gameObject);
+        GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
 
         //유물 보상 생성
         RewardNPC relicRewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardNPC>();
@@ -160,8 +163,8 @@ public class LoadMapHandler : MonoBehaviour
             relicRewardNPC.transform.position = GameManager.instance.currentMap.CheckTileMapCenterLocation() + new Vector3(16, 0, 0);
         }
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnNPCList.Add(rewardNPC.gameObject);
-        GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI().gameObject);
+        GameManager.instance.currentSpawnNPCList.Add(relicRewardNPC.gameObject);
+        GameManager.instance.currentSpawnUIList.Add(relicRewardNPC.GetRewardUI());
     }
 
     public void DestroyCurrentSpawnEnemy()

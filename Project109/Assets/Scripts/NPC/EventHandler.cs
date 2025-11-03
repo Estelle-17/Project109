@@ -113,7 +113,7 @@ public class EventHandler : MonoBehaviour
             foreach (Choice_UseItem item in choice.useItems)
             {
                 bool result = isChoiceCanSelectable(item,
-                                                    GameManager.instance.playerStat,
+                                                    GameManager.instance.GetPlayerStat(),
                                                     GameManager.instance.currentCharacter.GetCharacterStat(),
                                                     CardDeckManager.instance.GetCardDeckList(),
                                                     RelicManager.instance.GetRelicList());

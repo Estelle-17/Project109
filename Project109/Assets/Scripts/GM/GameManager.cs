@@ -32,14 +32,14 @@ public class GameManager : MonoBehaviour
     }
     
     //플레이어 관련 스탯
-    public PlayerStat playerStat;
+    private PlayerStat playerStat;
     public CharacterBase currentCharacter;
 
     //맵 관련 변수
     public int currentStageLevel = 0;
     public int currentExploreMapFloor = 0;
-    public int checkMapNodeFloorLength = 3;
     public IncountNode currentIncountNode;
+    public IncountNode beforeIncountNode;
     public BattleMapScript currentMap;
     public BattleMapScript ActionCard_EffectArea;
     public ExploreUI currentExploreUI;
@@ -56,8 +56,11 @@ public class GameManager : MonoBehaviour
         loadMapHandler = GetComponent<LoadMapHandler>();
         playerStat = new PlayerStat();
         playerStat.inGame_Currency = 0;
+        playerStat.mapFloorCheck_Length = 3;
         AddInGame_Currency(0);
     }
+
+    public PlayerStat GetPlayerStat() {  return playerStat; }
 
     public void AddInGame_Currency(int amount)
     {

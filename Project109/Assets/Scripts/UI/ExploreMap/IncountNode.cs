@@ -5,14 +5,16 @@ using UnityEngine.UI;
 
 public enum IncountType
 { 
-    None,
-    Elite,
-    Boss,
-    Store,
-    Restore,
-    Battle,
-    SecretBox,
-    Secret
+    None,       //비어있음
+    Elite,      //엘리트 몬스터
+    Boss,       //보스
+    Store,      //상점
+    Restore,    //휴식
+    Battle,     //전투
+    SecretBox,  //박스
+    Secret,     //비밀
+    Insight,    //천리안
+    ShineWell   //빛나는 우물
 }
 
 public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
@@ -28,44 +30,26 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     public Vector2 arrowRelativePos;
 
     //가리기, 선택 등 노드의 추가적인 생김새 변경을 위한 오브젝트들
-    public GameObject ExtraMoneyObject;
-    public GameObject ExtraCardObject;
     public GameObject IncountNodeCoverObject;
     public GameObject IncountNodeHighlightCircleObject;
     public GameObject IncountNodeCurrentHighlightCircleObject;
 
-    public bool isExtraMoney;
-    public bool isExtraCard;
-
     //텍스처
     [Header("NodeTexture")]
-    [SerializeField] private Sprite NoneTexture;
-    [SerializeField] private Sprite BattleTexture;
-    [SerializeField] private Sprite EliteTexture;
-    [SerializeField] private Sprite BossTexture;
-    [SerializeField] private Sprite RestoreTexture;
-    [SerializeField] private Sprite StoreTexture;
-    [SerializeField] private Sprite SecretBoxTexture;
-    [SerializeField] private Sprite SecretTexture;
+    [SerializeField] private Sprite noneTexture;
+    [SerializeField] private Sprite battleTexture;
+    [SerializeField] private Sprite eliteTexture;
+    [SerializeField] private Sprite bossTexture;
+    [SerializeField] private Sprite restoreTexture;
+    [SerializeField] private Sprite storeTexture;
+    [SerializeField] private Sprite secretBoxTexture;
+    [SerializeField] private Sprite secretTexture;
+    [SerializeField] private Sprite insightTexture;
 
     public void SetIncountNode(IncountType newIncountType)
     {
         incountType = newIncountType;
         SetNodeTexture();
-
-        if (incountType == IncountType.Battle && ExtraCardObject && ExtraMoneyObject)
-        {
-            if (Random.Range(0, 2) == 0)
-            {
-                isExtraCard = true;
-                ExtraCardObject.SetActive(true);
-            }
-            else
-            {
-                isExtraMoney = true;
-                ExtraMoneyObject.SetActive(true);
-            }
-        }
     }
 
     /// <summary>
@@ -76,20 +60,6 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         var enumValue = System.Enum.GetValues(enumType:typeof(IncountType));
         incountType = (IncountType)enumValue.GetValue(Random.Range(1, enumValue.Length));
         SetNodeTexture();
-
-        if(incountType == IncountType.Battle && ExtraCardObject && ExtraMoneyObject)
-        {
-            if(Random.Range(0, 2) == 0)
-            {
-                isExtraCard = true;
-                ExtraCardObject.SetActive(true);
-            }
-            else
-            {
-                isExtraMoney = true;
-                ExtraMoneyObject.SetActive(true);
-            }
-        }
     }
 
     /// <summary>
@@ -101,39 +71,39 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         switch (incountType)
         {
             case IncountType.None:
-                image.sprite = NoneTexture;
-                break; 
+                image.sprite = noneTexture;
+                break;
             case IncountType.Battle:
-                image.sprite = BattleTexture;
+                image.sprite = battleTexture;
                 break;
             case IncountType.Elite:
-                image.sprite = EliteTexture;
+                image.sprite = eliteTexture;
                 break;
             case IncountType.Boss:
-                image.sprite = BossTexture;
+                image.sprite = bossTexture;
                 break;
             case IncountType.Restore:
-                image.sprite = RestoreTexture;
-                break;   
+                image.sprite = restoreTexture;
+                break;
             case IncountType.Store:
-                image.sprite = StoreTexture;
+                image.sprite = storeTexture;
                 break;
             case IncountType.SecretBox:
-                image.sprite = SecretBoxTexture;
+                image.sprite = secretBoxTexture;
                 break;
             case IncountType.Secret:
-                image.sprite = SecretTexture;
+                image.sprite = secretTexture;
+                break;
+            case IncountType.Insight:
+                image.sprite = insightTexture;
+                break;
+            case IncountType.ShineWell:
+                image.sprite = insightTexture;
                 break;
             default:
-                image.sprite = NoneTexture;
+                image.sprite = noneTexture;
                 break;
         }
-    }
-
-    public void DisableExtraType()
-    {
-        ExtraCardObject.SetActive(false);
-        ExtraMoneyObject.SetActive(false);
     }
 
     public void OpenNodeCoverTexture()
@@ -150,6 +120,8 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     {
         if(GameManager.instance.currentIncountNode.nextIncountNode.Contains(this.gameObject))
         {
+            //이전의 노드를 저장 후 다음 노드로 변경
+            GameManager.instance.beforeIncountNode = GameManager.instance.currentIncountNode;
             GameManager.instance.currentIncountNode.transform.GetComponent<IncountNode>().IncountNodeCurrentHighlightCircleObject.SetActive(false);
             GameManager.instance.currentIncountNode = this; //다음 맵 로딩을 위해 이동할 노드 정보를 저장
             GameManager.instance.currentExploreMapFloor += 1;

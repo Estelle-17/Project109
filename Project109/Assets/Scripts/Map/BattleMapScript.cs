@@ -68,10 +68,10 @@ public class BattleMapScript : MonoBehaviour
         int startZ = 0; 
 
         map = new List<List<Tile>>();
-        for (int columnIndex = 0; columnIndex < mapTiles.Count; columnIndex++)
+        for (int columnIndex = 0; columnIndex < mapTiles[0].Length; columnIndex++)
         {
             map.Add(new List<Tile>());
-            for (int rowIndex = 0; rowIndex < mapTiles[0].Length; rowIndex++)
+            for (int rowIndex = 0; rowIndex < mapTiles.Count; rowIndex++)
             {
                 Tile tile = GameObject.Instantiate(prefabTile).transform.GetComponent<Tile>();
                 tile.transform.localPosition = transform.position + new Vector3(startX - columnIndex * tilePadding, 0.01f, startZ + rowIndex * tilePadding);

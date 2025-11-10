@@ -36,12 +36,13 @@ public class GameManager : MonoBehaviour
     public CharacterBase currentCharacter;
 
     //맵 관련 변수
+    public string currentMapName;
     public int currentStageLevel = 0;
     public int currentExploreMapFloor = 0;
     public IncountNode currentIncountNode;
     public IncountNode beforeIncountNode;
-    public BattleMapScript currentMap;
-    public BattleMapScript ActionCard_EffectArea;
+    public BattleMapManager currentMap;
+    public BattleMapManager ActionCard_EffectArea;
     public ExploreUI currentExploreUI;
 
     public LoadMapHandler loadMapHandler;
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         loadMapHandler = GetComponent<LoadMapHandler>();
+        currentMapName = "LostTemple";
         playerStat = new PlayerStat();
         playerStat.inGame_Currency = 0;
         playerStat.mapFloorCheck_Length = 3;

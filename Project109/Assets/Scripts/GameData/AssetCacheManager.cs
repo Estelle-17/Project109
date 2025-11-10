@@ -31,6 +31,7 @@ public class AssetCacheManager : MonoBehaviour
     public string battleKey = "Battle";
     public string monsterKey = "Monster";
     public string characterKey = "Character";
+    public string mapKey = "Map";
     public string modelKey = "Model";
     public string textureKey = "Texture";
 
@@ -51,6 +52,9 @@ public class AssetCacheManager : MonoBehaviour
 
     public IList<CharacterData> characterList;
     private Dictionary<string, CharacterData> characterDict = new Dictionary<string, CharacterData>();
+
+    public IList<MapData> mapList;
+    private Dictionary<string, MapData> mapDict = new Dictionary<string, MapData>();
 
     public IList<GameObject> modelList;
     private Dictionary<string, GameObject> modelDict = new Dictionary<string, GameObject>();
@@ -100,6 +104,13 @@ public class AssetCacheManager : MonoBehaviour
         {
             characterList = list;
             characterDict = dict;
+        }));
+
+        //맵 데이터 할당 시작
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<MapData>(mapKey, (list, dict) =>
+        {
+            mapList = list;
+            mapDict = dict;
         }));
 
         //모델링 및 오브젝트 데이터 할당 시작
@@ -298,6 +309,7 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);
     public bool TryGetBattle(string name, out BattleData battle) => battleDict.TryGetValue(name, out battle);
     public bool TryGetCharacter(string name, out CharacterData character) => characterDict.TryGetValue(name, out character);
+    public bool TryGetMap(string name, out MapData mapData) => mapDict.TryGetValue(name, out mapData);
     public bool TryGetModel(string name, out GameObject model) => modelDict.TryGetValue(name, out model);
     public bool TryGetTexture(string name, out Texture2D texture) => textureDict.TryGetValue(name, out texture);
 }

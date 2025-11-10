@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: GameData
   m_GUID: f43c8a2f9323d8b4c8518938a52d05a4
   m_SerializeEntries:
+  - m_GUID: 40b7f70c36cc09946976d86964dbff4f
+    m_Address: Map_Stage_1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Map
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5433fbc4234279740b81058d4cda6116
     m_Address: Battle_Test1_Data
     m_ReadOnly: 0

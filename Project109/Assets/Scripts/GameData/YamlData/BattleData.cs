@@ -7,7 +7,8 @@ public class BattleData : ScriptableObject, IIdentifiable
     public string battleDataName;
     public string dataPath;
     public int battleAppearLevel;
-    public List<MonsterSpawnInfo> monsterAppearInformation;
+    public string battleMapVariationName;
+    public List<string> monsterNames;
 
     public string ID => dataPath;
 }

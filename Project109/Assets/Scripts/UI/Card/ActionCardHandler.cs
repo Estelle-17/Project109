@@ -143,8 +143,8 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         {
             int areaLength = currentCardEffect.effectArea[index].area[0].Length; //공격 범위의 최대 길이
             convertBuffer = new int[areaLength];
-            int startColumn = GameManager.instance.ActionCard_EffectArea.centerColumn - (areaLength / 2);   //변경할 타일의 시작 column
-            int startRow = GameManager.instance.ActionCard_EffectArea.centerRow - (areaLength / 2); //변경할 타일의 시작 row
+            int startColumn = GameManager.instance.ActionCard_EffectArea.centerCoord.column - (areaLength / 2);   //변경할 타일의 시작 column
+            int startRow = GameManager.instance.ActionCard_EffectArea.centerCoord.row - (areaLength / 2); //변경할 타일의 시작 row
 
             for (int i = 0; i < areaLength; i++)
             {

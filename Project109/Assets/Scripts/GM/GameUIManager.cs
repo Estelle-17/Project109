@@ -38,7 +38,7 @@ public class GameUIManager : MonoBehaviour
             RelicManager.instance.OnRelicAdded += UpdateRelicItems;
             RelicManager.instance.OnRelicRemoved += RemoveRelicItem;
 
-            Debug.LogWarning("GameUI is Done!");
+            Debug.Log("GameUI is Done!");
         }
         else
         {

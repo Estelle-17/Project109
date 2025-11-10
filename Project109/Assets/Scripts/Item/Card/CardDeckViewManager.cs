@@ -29,7 +29,7 @@ public class CardDeckViewManager : UIPanelBase
 
             gameObject.SetActive(false);
 
-            Debug.LogWarning("Awake is Done!");
+            Debug.Log("Awake is Done!");
         }
         else
         {

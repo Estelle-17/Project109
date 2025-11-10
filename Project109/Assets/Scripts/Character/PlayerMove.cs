@@ -12,7 +12,7 @@ public class PlayerMove : MonoBehaviour
     public List<Tile> canMoveTiles;
     [SerializeField] private Tile currentTagetTile;
 
-    public BattleMapScript battleMap;
+    public BattleMapManager battleMap;
     public RoutePathfinding routePathfinding;
 
     [SerializeField] public List<Tile> movePath;
@@ -33,7 +33,7 @@ public class PlayerMove : MonoBehaviour
         currentTile = new Tile();
         currentTile.SetCoord(5, 1);
 
-        battleMap = GameObject.FindGameObjectWithTag("BattleMap").GetComponent<BattleMapScript>();
+        battleMap = GameObject.FindGameObjectWithTag("BattleMap").GetComponent<BattleMapManager>();
 
         if(battleMap != null)
         {

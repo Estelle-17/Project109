@@ -15,7 +15,7 @@ MonoBehaviour:
   battleDataName: "\uC608\uC81C \uC804\uD22C 1"
   dataPath: Battle_Test1_Data
   battleAppearLevel: 2
-  monsterAppearInformation:
-  - monsterName: Monster_testMonster_Data
-    spawnPointX: 4
-    spawnPointY: 12
+  battleMapVariationName: Battle2
+  monsterNames:
+  - Monster_testMonster_Data
+  - Monster_test1Monster_Data

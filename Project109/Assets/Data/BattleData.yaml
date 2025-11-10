@@ -3,21 +3,21 @@ battleMonsterCollection:
   - battleDataName: 예제 전투
     dataPath: Battle_Test_Data
     battleAppearLevel: !!int 1
-    monsterAppearInformation:
-      - monsterName: Monster_testMonster_Data
-        spawnPointX: 6
-        spawnPointY: 10
+    battleMapVariationName: Battle1
+    monsterNames:
+      - Monster_testMonster_Data
   - battleDataName: 예제 전투 1
     dataPath: Battle_Test1_Data
     battleAppearLevel: !!int 2
-    monsterAppearInformation:
-      - monsterName: Monster_testMonster_Data
-        spawnPointX: 4
-        spawnPointY: 12
+    battleMapVariationName: Battle2
+    monsterNames:
+      - Monster_testMonster_Data
+      - Monster_test1Monster_Data
   - battleDataName: 예제 전투 2
     dataPath: Battle_Test2_Data
     battleAppearLevel: !!int 3
-    monsterAppearInformation:
-      - monsterName: Monster_test1Monster_Data
-        spawnPointX: 8
-        spawnPointY: 12
+    battleMapVariationName: Battle3
+    monsterNames:
+      - Monster_test1Monster_Data
+      - Monster_testMonster_Data
+      - Monster_testMonster_Data

@@ -81,11 +81,13 @@ public class LoadMapHandler : MonoBehaviour
 
     public void SpawnMonsterInBattleNodeData(BattleData nodeData)
     {
-        foreach(MonsterSpawnInfo info in nodeData.monsterAppearInformation)
+        GameManager.instance.currentMap.UpdateMapVariationFromName(nodeData.battleMapVariationName);
+
+        foreach (string name in nodeData.monsterNames)
         {
-            Debug.Log($"Check {info.monsterName}...");
+            Debug.Log($"Check {name}...");
             //캐싱된 데이터에서 몬스터 데이터 탐색
-            if (dataLoader.TryGetMonster(info.monsterName, out var newMonsterData))
+            if (dataLoader.TryGetMonster(name, out var newMonsterData))
             {
                 Debug.Log($"MonsterData {newMonsterData.name} Load Success.");
                 //몬스터 데이터에 맞는 프리팹 탐색
@@ -93,7 +95,7 @@ public class LoadMapHandler : MonoBehaviour
                 {
                     Debug.Log("Monsterprefab Load Success.");
                     GameObject newMonster = Instantiate(monsterObject);
-                    newMonster.transform.position = GameManager.instance.currentMap.CheckTileMapLocationByRowAndColumn(info.spawnPointX, info.spawnPointY);
+                    newMonster.transform.position = GameManager.instance.currentMap.CheckEnemySpawnPoint();
 
                     GameManager.instance.currentSpawnEnemyList.Add(newMonster);
                 }
@@ -103,10 +105,12 @@ public class LoadMapHandler : MonoBehaviour
 
     void SpawnEventNPC(EventData eventData)
     {
+        GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
+
         EventHandler newEventNPC = Instantiate(eventObjectPrefab).GetComponent<EventHandler>();
         newEventNPC.SetEventData(eventData);    //이벤트 데이터 전달
         newEventNPC.UpdateEventDescription("START");   //선택지 생성. 이벤트의 시작은 특수한 상황을 제외하고 언제나 START로 시작됨
-        newEventNPC.transform.position = GameManager.instance.currentMap.CheckTileMapCenterLocation();
+        newEventNPC.transform.position = GameManager.instance.currentMap.CheckNPCSpawnPoint();
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
         GameManager.instance.currentSpawnNPCList.Add(newEventNPC.gameObject);
@@ -115,12 +119,14 @@ public class LoadMapHandler : MonoBehaviour
 
     void SpawnShopNPC()
     {
+        GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
+
         ShopUIManager newShopNPC = Instantiate(shopObjectPrefab).GetComponent<ShopUIManager>();
         if (newShopNPC != null)
         {
             newShopNPC.AddRandomItems();    //상점에 아이템 추가
             newShopNPC.UpdateShopItems();   //아이템UI로 생성
-            newShopNPC.transform.position = GameManager.instance.currentMap.CheckTileMapCenterLocation();
+            newShopNPC.transform.position = GameManager.instance.currentMap.CheckNPCSpawnPoint();
         }
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
@@ -130,11 +136,13 @@ public class LoadMapHandler : MonoBehaviour
 
     void SpawnRestoreNPC()
     {
+        GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
+
         RestoreUIManager newRestoreNPC = Instantiate(restoreObjectPrefab).GetComponent<RestoreUIManager>();
         if(newRestoreNPC != null)
         {
             newRestoreNPC.CreateRestoreUI();
-            newRestoreNPC.transform.position = GameManager.instance.currentMap.CheckTileMapCenterLocation();
+            newRestoreNPC.transform.position = GameManager.instance.currentMap.CheckNPCSpawnPoint();
         }
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
@@ -144,12 +152,14 @@ public class LoadMapHandler : MonoBehaviour
 
     void SpawnRewardNPC()
     {
+        GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
+
         //카드 보상 생성
         RewardNPC rewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardNPC>();
         if(rewardNPC != null)
         {
             rewardNPC.SetReward(RewardNPCType.Card, RandomItemPickupType.CommonToUnique);
-            rewardNPC.transform.position = GameManager.instance.currentMap.CheckTileMapCenterLocation();
+            rewardNPC.transform.position = GameManager.instance.currentMap.CheckNPCSpawnPoint();
         }
         //맵 이동 시 지워질 오브젝트 목록으로 등록
         GameManager.instance.currentSpawnNPCList.Add(rewardNPC.gameObject);
@@ -160,7 +170,7 @@ public class LoadMapHandler : MonoBehaviour
         if (relicRewardNPC != null)
         {
             relicRewardNPC.SetReward(RewardNPCType.Relic, RandomItemPickupType.CommonToUnique);
-            relicRewardNPC.transform.position = GameManager.instance.currentMap.CheckTileMapCenterLocation() + new Vector3(16, 0, 0);
+            relicRewardNPC.transform.position = GameManager.instance.currentMap.CheckNPCSpawnPoint() + new Vector3(16, 0, 0);
         }
         //맵 이동 시 지워질 오브젝트 목록으로 등록
         GameManager.instance.currentSpawnNPCList.Add(relicRewardNPC.gameObject);

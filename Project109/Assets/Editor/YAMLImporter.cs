@@ -299,7 +299,8 @@ public class YAMLImporter
             asset.battleDataName = battleNodeData.battleDataName;
             asset.dataPath = battleNodeData.dataPath;
             asset.battleAppearLevel = battleNodeData.battleAppearLevel;
-            asset.monsterAppearInformation = battleNodeData.monsterAppearInformation;
+            asset.battleMapVariationName = battleNodeData.battleMapVariationName;
+            asset.monsterNames = battleNodeData.monsterNames;
 
             var path = $"Assets/SO/BattleNodes/{battleNodeData.dataPath}.asset";
             Directory.CreateDirectory("Assets/SO/Battles");
@@ -495,6 +496,81 @@ public class YAMLImporter
         Debug.Log("YAML import complete.");
     }
 
+    [MenuItem("Tools/Import MapData YAML")]
+    //[System.Obsolete]
+    public static void ImportMapYAML()
+    {
+        string yamlPath = "Assets/Data/MapData.yaml";
+        string schemaPath = "Assets/Data/MapDataSchema.yaml";
+
+        string yamlText = File.ReadAllText(yamlPath);
+        string schemaYamlText = File.ReadAllText(schemaPath);
+
+        //YAML -> Json으로 변환
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+        var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
+
+        var jsonSerializer = new SerializerBuilder()
+            .JsonCompatible()
+            .Build();
+        string jsonText = jsonSerializer.Serialize(yamlObject);
+
+        //YAML Schema -> Json Schema로 변환
+        var schemaYamlObject = deserializer.Deserialize(new StringReader(schemaYamlText));
+        string schemaJsonText = jsonSerializer.Serialize(schemaYamlObject);
+
+        JSchema schema = JSchema.Parse(schemaJsonText);
+
+        JObject jsonObj = JObject.Parse(jsonText);
+        if (!jsonObj.IsValid(schema, out IList<string> errorMessages))
+        {
+            Debug.LogError("❌ YAML validation failed:");
+            foreach (var error in errorMessages)
+                Debug.LogError(error);
+            return;
+        }
+
+        Debug.Log("YAML validation Success:");
+
+        //검증에 성공하면 ScriptableObject 생성
+        var rawData = deserializer.Deserialize<RootMapData>(yamlText);
+
+        foreach (var mapData in rawData.mapCollection)
+        {
+            var asset = ScriptableObject.CreateInstance<MapData>();
+            asset.mapName = mapData.mapName;
+            asset.dataPath = mapData.dataPath;
+            asset.baseLayout = mapData.baseLayout;
+            asset.variations = mapData.variations;
+
+            var path = $"Assets/SO/Maps/{mapData.dataPath}.asset";
+            Directory.CreateDirectory("Assets/SO/Maps");
+            AssetDatabase.CreateAsset(asset, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            //Addressable에 등록
+            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+            if (settings == null)
+            {
+                Debug.LogError("Addressables 설정이 존재하지 않습니다.");
+                return;
+            }
+
+            AddressableAssetEntry entry = settings.CreateOrMoveEntry(
+                AssetDatabase.AssetPathToGUID(path),
+                CreateOrFindAddressablesGroup(settings, "GameData")
+            );
+            entry.address = mapData.dataPath;
+            entry.SetLabel("Map", true);
+            Debug.Log("Addressables에 등록 완료: " + entry.address);
+        }
+
+        Debug.Log("YAML import complete.");
+    }
+
     public static AddressableAssetGroup CreateOrFindAddressablesGroup(AddressableAssetSettings settings, string groupName)
     {
         AddressableAssetGroup group = settings.FindGroup(groupName);
@@ -565,7 +641,8 @@ public class YAMLImporter
         public string battleDataName { get; set; }
         public string dataPath { get; set; }
         public int battleAppearLevel { get; set; }
-        public List<MonsterSpawnInfo> monsterAppearInformation { get; set; }
+        public string battleMapVariationName { get; set; }
+        public List<string> monsterNames { get; set; }
     }
 
     public class RootMonsterData
@@ -607,6 +684,19 @@ public class YAMLImporter
         public int armor { get; set; }
         public List<string> startRelic { get; set; }
         public List<StartCard> startCards { get; set; }
+    }
+
+    public class RootMapData
+    {
+        public List<MapEntry> mapCollection { get; set; }
+    }
+
+    public class MapEntry
+    {
+        public string mapName { get; set; }
+        public string dataPath { get; set; }
+        public List<string> baseLayout { get; set; }
+        public List<MapVariation> variations { get; set; }
     }
 }
 #endif

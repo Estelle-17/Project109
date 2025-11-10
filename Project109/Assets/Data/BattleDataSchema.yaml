@@ -4,12 +4,6 @@ monster: &monster_info
   type: object
   monsterName:
     type: string
-  spawnPointX:
-    type: integer
-    minimum: !!int 0
-  spawnPointY:
-    type: integer
-    minimum: !!int 0
 
 type: object
 properties:
@@ -26,13 +20,16 @@ properties:
           type: integer
           minimum: !!int 1
           maximum: !!int 3
-        monsterAppearInformation:
+        battleMapVariationName:
+          type: string
+        monsterNames:
           type: array
           item:
-            <<: *monster_info
+            type: string
       required:
         - battleDataName
         - battleAppearLevel
-        - monsterAppearInformation
+        - battleMapVariationName
+        - monsterNames
 required:
   - battleMonsterCollection    

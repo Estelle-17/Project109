@@ -27,7 +27,7 @@ public class UpgradeCardCheckHandler : MonoBehaviour
         currentCard.UpdateActionCardData(newCardData);
         currentCard.bIsCardHighlight = false;
 
-        upgradeCard.UpdateActionCardData(newCardData);
+        upgradeCard.UpdateActionCardData(selectedCardData);
         upgradeCard.UpgradeCard();
         upgradeCard.bIsCardHighlight = false;
 

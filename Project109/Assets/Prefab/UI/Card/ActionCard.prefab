@@ -63,7 +63,6 @@ MonoBehaviour:
   cardImage: {fileID: 8240686118902014649}
   selectHighlightObject: {fileID: 7912562961185190725}
   effectAreaCheckButton: {fileID: 8411863329897311462}
-  checkActiveTiles: []
   OnCardClick:
     m_PersistentCalls:
       m_Calls: []
@@ -80,6 +79,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5ef69417ca2bf44583ac24fa72dd2e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1203608776902067929
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4413085417979794248}
+  m_Layer: 5
+  m_Name: EffectAreaSpawnPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4413085417979794248
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203608776902067929}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6265795151797592036}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 3.6999512, y: -3.25}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2097206914840721677
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,6 +812,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8975622273324122858}
+  - {fileID: 4413085417979794248}
   m_Father: {fileID: 2742698040176174491}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.01}
@@ -835,6 +870,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04a0d595d5e8b424f85b43a023772182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  effectAreaSpawnTransform: {fileID: 4413085417979794248}
 --- !u!1 &7912562961185190725
 GameObject:
   m_ObjectHideFlags: 0

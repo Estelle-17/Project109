@@ -20,12 +20,11 @@ MonoBehaviour:
   level: 3
   defaultEffects:
     effectArea:
-    - area:
-      - 11111
-      - 01110
-      - 00100
-      - 00000
-      - 00000
+    - 11111
+    - 01110
+    - 00100
+    - 00000
+    - 00000
     useStamina: 60
     effects:
     - effectType: Damage
@@ -46,12 +45,11 @@ MonoBehaviour:
       chainCondition: []
   upgradeEffects:
     effectArea:
-    - area:
-      - 11111
-      - 01110
-      - 00100
-      - 00000
-      - 00000
+    - 11111
+    - 01110
+    - 00100
+    - 00000
+    - 00000
     useStamina: 60
     effects:
     - effectType: Damage

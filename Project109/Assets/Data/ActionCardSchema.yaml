@@ -200,7 +200,10 @@ cardEffect: &card_effect
   effectArea:
     type: array
     items:
-    <<: *effect_area
+      type: string
+      pattern: "^[01]{5}$"
+      minItems: 5
+      maxItems: 5
   useStamina:
     type: integer
     minimum: !!int 0

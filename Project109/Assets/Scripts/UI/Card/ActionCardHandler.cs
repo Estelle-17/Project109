@@ -22,8 +22,6 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public EffectAreaCheckButton effectAreaCheckButton; //공격 범위 확인용 버튼
 
-    public List<GameObject> checkActiveTiles;
-
     public UnityEvent OnCardClick;  //클릭 시 호출될 이벤트
 
     public bool bIsCardHighlight;
@@ -55,7 +53,7 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
             cardImage.texture = texture;
         }
 
-        UpdateCardDescription();
+        UpdateCardDescription();   
     }
 
     public void UpgradeCard()
@@ -69,6 +67,8 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         currentCardEffect = cardData.upgradeEffects;
 
         cardName.text = cardData.cardName + "+";
+
+        cardData.isUpgrade = true;
 
         UpdateCardDescription();
     }
@@ -131,55 +131,20 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if(bIsCardHighlight)
             OnSelectHighlight();       //카드 하이라이트on
 
-        if (cardData == null)
-            return;
-
-        //현재 선택된 카드와 맞는 효과 범위 변경
-        List<List<Tile>> map = GameManager.instance.ActionCard_EffectArea.GetTileMap();
-
-        int[] convertBuffer;
-
-        for (int index = 0; index < currentCardEffect.effectArea.Count; index++)
+        //카드 범위 세팅 진행
+        if (cardData.isUpgrade)
         {
-            int areaLength = currentCardEffect.effectArea[index].area[0].Length; //공격 범위의 최대 길이
-            convertBuffer = new int[areaLength];
-            int startColumn = GameManager.instance.ActionCard_EffectArea.centerCoord.column - (areaLength / 2);   //변경할 타일의 시작 column
-            int startRow = GameManager.instance.ActionCard_EffectArea.centerCoord.row - (areaLength / 2); //변경할 타일의 시작 row
-
-            for (int i = 0; i < areaLength; i++)
-            {
-                ConvertStringToIntArray(currentCardEffect.effectArea[index].area[i], convertBuffer);    //string -> intArray로 변환. 데이터는 convertBuffer로 저장됨
-                for (int j = 0; j < convertBuffer.Length; j++)
-                {
-                    if (convertBuffer[j] == 1)
-                    {
-                        if(i == areaLength / 2 && j == areaLength / 2)  //공격을 시전 할 위치는 다른 색으로 변경
-                        {
-                            map[startColumn + i][startRow + j].centerTileTextureObject.SetActive(true);
-                            checkActiveTiles.Add(map[startColumn + i][startRow + j].centerTileTextureObject);
-                        }
-                        else
-                        {
-                            map[startColumn + i][startRow + j].centerTileTextureObject.SetActive(true);
-                            checkActiveTiles.Add(map[startColumn + i][startRow + j].centerTileTextureObject);
-                        }
-                    }
-                }
-            }
+            UIManager.instance.effectAreaManager.SetEffectArea(cardData.upgradeEffects.effectArea);      
+        }
+        else
+        {
+            UIManager.instance.effectAreaManager.SetEffectArea(cardData.defaultEffects.effectArea);
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if (bIsCardHighlight)
-            OffSelectHighlight();       //카드 하이라이트on
-
-        //현재 선택된 카드와 맞는 효과 범위 초기화
-        foreach (GameObject obj in checkActiveTiles)
-        {
-            obj.SetActive(false);
-        }
-
-        checkActiveTiles = new List<GameObject>();
+            OffSelectHighlight();       //카드 하이라이트off
     }
 }

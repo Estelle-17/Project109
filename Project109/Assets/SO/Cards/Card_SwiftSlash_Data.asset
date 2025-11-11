@@ -20,12 +20,11 @@ MonoBehaviour:
   level: 2
   defaultEffects:
     effectArea:
-    - area:
-      - 00000
-      - 00100
-      - 00100
-      - 00000
-      - 00000
+    - 00000
+    - 00100
+    - 00100
+    - 00000
+    - 00000
     useStamina: 30
     effects:
     - effectType: Damage
@@ -39,6 +38,7 @@ MonoBehaviour:
       conditionalEffect:
       - condition:
           conditionType: SelfFrenzyCount
+          target: 
           value: 1
           description: "\uAD11\uBD84 \uBC84\uD504 1\uAC1C \uB2F9 \uD53C\uD574\uAC00
             4 \uC99D\uAC00\uD569\uB2C8\uB2E4."
@@ -50,6 +50,7 @@ MonoBehaviour:
           durationTime: 0
       - condition:
           conditionType: SelfFrenzyCount
+          target: 
           value: 1
           description: "\uAD11\uBD84 \uBC84\uD504 1\uAC1C \uB2F9 \uC2A4\uD0DC\uBBF8\uB108
             \uC18C\uBAA8\uAC00 5 \uAC10\uC18C\uD569\uB2C8\uB2E4."
@@ -68,12 +69,11 @@ MonoBehaviour:
       chainCondition: []
   upgradeEffects:
     effectArea:
-    - area:
-      - 00000
-      - 00100
-      - 00100
-      - 00000
-      - 00000
+    - 00000
+    - 00100
+    - 00100
+    - 00000
+    - 00000
     useStamina: 30
     effects:
     - effectType: Damage
@@ -87,6 +87,7 @@ MonoBehaviour:
       conditionalEffect:
       - condition:
           conditionType: SelfFrenzyCount
+          target: 
           value: 1
           description: "\uAD11\uBD84 \uBC84\uD504 1\uAC1C \uB2F9 \uD53C\uD574\uAC00
             6 \uC99D\uAC00\uD569\uB2C8\uB2E4."
@@ -98,6 +99,7 @@ MonoBehaviour:
           durationTime: 0
       - condition:
           conditionType: SelfFrenzyCount
+          target: 
           value: 1
           description: "\uAD11\uBD84 \uBC84\uD504 1\uAC1C \uB2F9 \uC2A4\uD0DC\uBBF8\uB108
             \uC18C\uBAA8\uAC00 5 \uAC10\uC18C\uD569\uB2C8\uB2E4."

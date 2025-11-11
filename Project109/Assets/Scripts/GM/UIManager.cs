@@ -32,7 +32,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI relicDescriptionText;
 
     //카드 효과 범위 관련 변수
-    public GameObject cardEffectAreaBackground;
+    public EffectAreaManager effectAreaManager;
 
     //카드 상세 확인 관련 변수
     public CardCheckHandler cardCheckHandler;
@@ -183,19 +183,19 @@ public class UIManager : MonoBehaviour
 
     public void OnCardEffectAreaBackground(Vector3 newItemPos)
     {
-        if (cardEffectAreaBackground == null)
+        if (effectAreaManager == null)
             return;
 
-        cardEffectAreaBackground.transform.GetComponent<RectTransform>().position = newItemPos + new Vector3(125, 60, 0);
-        cardEffectAreaBackground.SetActive(true);
+        effectAreaManager.transform.GetComponent<RectTransform>().position = newItemPos;// + new Vector3(125, 60, 0);
+        effectAreaManager.EffectAreaEnable();
     }
 
     public void OffCardEffectAreaBackground()
     {
-        if (cardEffectAreaBackground == null)
+        if (effectAreaManager == null)
             return;
 
-        cardEffectAreaBackground.SetActive(false);
+        effectAreaManager.EffectAreaDisable();
     }
 
     #endregion

@@ -1,31 +1,27 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System;
 
 public class EffectAreaCheckButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-        
-    }
+    public RectTransform effectAreaSpawnTransform;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (UIManager.instance == null)
+        if(UIManager.instance.effectAreaManager == null)
+        {
             return;
+        }
 
-        //카드의 중앙 위치값을 줌으로써 적용범위UI의 위치 설정
-        UIManager.instance.OnCardEffectAreaBackground(transform.position);
+        UIManager.instance.OnCardEffectAreaBackground(effectAreaSpawnTransform.position);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (UIManager.instance == null)
+        if (UIManager.instance.effectAreaManager == null)
+        {
             return;
+        }
 
         UIManager.instance.OffCardEffectAreaBackground();
     }

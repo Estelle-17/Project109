@@ -7,12 +7,11 @@ cardCollection:
     level: !!int 1
     defaultEffects:
       effectArea:
-      - area:
-          - "00000"
-          - "01110"
-          - "00100"
-          - "00000"
-          - "00000"
+        - "00000"
+        - "01110"
+        - "00100"
+        - "00000"
+        - "00000"
       useStamina: !!int 40
       conditions: 
       effects:
@@ -26,12 +25,11 @@ cardCollection:
         - cardFeatureType: None
     upgradeEffects:
       effectArea:
-      - area:
-          - "00000"
-          - "01110"
-          - "00100"
-          - "00000"
-          - "00000"
+        - "00000"
+        - "01110"
+        - "00100"
+        - "00000"
+        - "00000"
       useStamina: !!int 40
       conditions: 
       effects:
@@ -51,12 +49,11 @@ cardCollection:
     level: !!int 1
     defaultEffects:
       effectArea:
-      - area:
-          - "00000"
-          - "00100"
-          - "00100"
-          - "00000"
-          - "00000"
+        - "00000"
+        - "00100"
+        - "00100"
+        - "00000"
+        - "00000"
       useStamina: !!int 0
       conditions: 
       effects:
@@ -70,12 +67,11 @@ cardCollection:
         - cardFeatureType: None
     upgradeEffects:
       effectArea:
-      - area:
-          - "00000"
-          - "00100"
-          - "00100"
-          - "00000"
-          - "00000"
+        - "00000"
+        - "00100"
+        - "00100"
+        - "00000"
+        - "00000"
       useStamina: !!int 0
       conditions: 
       effects:
@@ -95,12 +91,11 @@ cardCollection:
     level: !!int 1
     defaultEffects:
       effectArea:
-      - area:
-          - "00000"
-          - "01110"
-          - "00100"
-          - "00000"
-          - "00000"
+        - "00000"
+        - "01110"
+        - "00100"
+        - "00000"
+        - "00000"
       useStamina: !!int 40
       conditions: 
       effects:
@@ -114,12 +109,11 @@ cardCollection:
         - cardFeatureType: None
     upgradeEffects:
       effectArea:
-      - area:
-          - "00000"
-          - "01110"
-          - "00100"
-          - "00000"
-          - "00000"
+        - "00000"
+        - "01110"
+        - "00100"
+        - "00000"
+        - "00000"
       useStamina: !!int 40
       conditions: 
       effects:
@@ -139,12 +133,11 @@ cardCollection:
     level: !!int 3
     defaultEffects:
       effectArea:
-        - area:
-            - "11111"
-            - "01110"
-            - "00100"
-            - "00000"
-            - "00000"
+        - "11111"
+        - "01110"
+        - "00100"
+        - "00000"
+        - "00000"
       useStamina: !!int 60
       conditions:
       effects:
@@ -158,12 +151,11 @@ cardCollection:
         - cardFeatureType: None
     upgradeEffects:
       effectArea:
-        - area:
-            - "11111"
-            - "01110"
-            - "00100"
-            - "00000"
-            - "00000"
+        - "11111"
+        - "01110"
+        - "00100"
+        - "00000"
+        - "00000"
       useStamina: !!int 60
       conditions:
       effects:
@@ -183,12 +175,11 @@ cardCollection:
     level: !!int 2
     defaultEffects:
       effectArea:
-        - area:
-            - "00000"
-            - "01110"
-            - "01110"
-            - "01110"
-            - "00000"
+        - "00000"
+        - "01110"
+        - "01110"
+        - "01110"
+        - "00000"
       useStamina: !!int 40
       conditions:
       effects:
@@ -203,12 +194,11 @@ cardCollection:
           featureValue: 0
     upgradeEffects:
       effectArea:
-        - area:
-            - "11111"
-            - "11111"
-            - "11111"
-            - "11111"
-            - "11111"
+        - "11111"
+        - "11111"
+        - "11111"
+        - "11111"
+        - "11111"
       useStamina: !!int 40
       conditions:
       effects:
@@ -229,12 +219,11 @@ cardCollection:
     level: !!int 2
     defaultEffects:
       effectArea:
-        - area:
-            - "00000"
-            - "00100"
-            - "00100"
-            - "00000"
-            - "00000"
+        - "00000"
+        - "00100"
+        - "00100"
+        - "00000"
+        - "00000"
       useStamina: !!int 30
       conditions:
       effects:
@@ -265,12 +254,11 @@ cardCollection:
           featureValue: 10
     upgradeEffects:
       effectArea:
-          - area:
-              - "00000"
-              - "00100"
-              - "00100"
-              - "00000"
-              - "00000"
+        - "00000"
+        - "00100"
+        - "00100"
+        - "00000"
+        - "00000"
       useStamina: !!int 30
       conditions:
       effects:

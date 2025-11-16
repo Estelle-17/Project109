@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 1607343715537873091}
   - component: {fileID: 3689400478985002641}
   - component: {fileID: 6644834739760768723}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: RestoreObject
-  m_TagString: Untagged
+  m_TagString: RestoreNPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

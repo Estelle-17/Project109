@@ -44,6 +44,9 @@ public class AssetCacheManager : MonoBehaviour
     public IList<EventData> eventList;
     private Dictionary<string, EventData> eventDict = new Dictionary<string, EventData>();
 
+    public IList<EventData> specificEventList;
+    private Dictionary<string, EventData> specificEventDict = new Dictionary<string, EventData>();
+
     public IList<BattleData> battleList;
     private Dictionary<string, BattleData> battleDict = new Dictionary<string, BattleData>();
 
@@ -83,6 +86,24 @@ public class AssetCacheManager : MonoBehaviour
         {
             eventList = list;
             eventDict = dict;
+
+            //특정 이벤트 데이터 분리 작업
+            specificEventList = new List<EventData>();
+            specificEventDict = new Dictionary<string, EventData>();
+            //역순으로 순회
+            for (int index = list.Count - 1; index >= 0; index--)
+            {
+                //4: 랜덤으로 발견할 수 없는 특정 이벤트
+                if (list[index].eventAppearLevel == 4)
+                {
+                    specificEventList.Add(list[index]);
+                    specificEventDict[list[index].ID] = list[index];
+
+                    //원본 리스트 및 딕셔너리에서 제거
+                    eventDict.Remove(list[index].ID);
+                    eventList.Remove(list[index]);
+                }
+            }
         }));
 
         //전투 데이터 할당 시작
@@ -307,6 +328,7 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
     public bool TryGetRelic(string name, out RelicData relic) => relicDict.TryGetValue(name, out relic);
     public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);
+    public bool TryGetSpecificEvent(string name, out EventData ev) => specificEventDict.TryGetValue(name, out ev);
     public bool TryGetBattle(string name, out BattleData battle) => battleDict.TryGetValue(name, out battle);
     public bool TryGetCharacter(string name, out CharacterData character) => characterDict.TryGetValue(name, out character);
     public bool TryGetMap(string name, out MapData mapData) => mapDict.TryGetValue(name, out mapData);

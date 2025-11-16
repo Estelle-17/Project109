@@ -115,6 +115,11 @@ public class ChoiceHandler : MonoBehaviour
                     break;
             case "Event":
                 //특정 이벤트를 불러올 때 사용될 예정
+                //모든 탐험 노드 활성화
+                if(item.name == "OpenAllExploreNodes")
+                {
+                    GameManager.instance.currentExploreUI.OpenAllExploreMapNodes();
+                }
                 break;
         }
     }

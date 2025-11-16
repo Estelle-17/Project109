@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Event
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: adfb6ed0b4d931b45958d99a2e1987c7
+    m_Address: Insight_Event_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Event
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e226a33ebe9fa28479c803255b7cb888
     m_Address: Event_Test_Data
     m_ReadOnly: 0

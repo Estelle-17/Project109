@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 2983661355794063805}
   - component: {fileID: 5583112290836347417}
   - component: {fileID: 9189884312542547556}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: EventObject
-  m_TagString: Untagged
+  m_TagString: EventNPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 2227240760438335734}
   - component: {fileID: 1485239371241179862}
   - component: {fileID: 1301436606770372125}
-  m_Layer: 12
+  m_Layer: 8
   m_Name: Model
-  m_TagString: Untagged
+  m_TagString: RewardNPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -119,9 +119,9 @@ GameObject:
   - component: {fileID: 7451437262408315283}
   - component: {fileID: 673273665922483042}
   - component: {fileID: 5880647346244367819}
-  m_Layer: 12
+  m_Layer: 8
   m_Name: RewardNPC
-  m_TagString: Untagged
+  m_TagString: RewardNPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

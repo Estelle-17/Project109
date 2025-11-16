@@ -154,6 +154,12 @@ public class ExploreUI : UIPanelBase
                 }
                 while (currentNode.incountType != IncountType.Battle);
                 currentNode.SetIncountNode(IncountType.Insight);
+
+                //이벤트 데이터도 저장
+                if (dataLoader.TryGetSpecificEvent("Insight_Event_Data", out EventData data))
+                {
+                    currentNode.eventNodeData = data;
+                }
             }
 
             //상자 생성
@@ -298,6 +304,19 @@ public class ExploreUI : UIPanelBase
         }
     }
    
+    public void OpenAllExploreMapNodes()
+    {
+        int currentFloor = GameManager.instance.currentExploreMapFloor;
+
+        for (int i = currentFloor; i < mapLength; i++)
+        {
+            for (int j = 0; j < ExploreMap[i].Count; j++)
+            {
+                ExploreMap[i][j].OpenNodeCoverTexture();
+            }
+        }
+    }
+
     public void OpenExploreMapNodesBasedOnFloorLength()
     {
         int currentFloor = GameManager.instance.currentExploreMapFloor;

@@ -76,8 +76,11 @@ properties:
           type: string
           eventAppearLevel:
             type: integer
-            minimum: !!int 1
-            maximum: !!int 3
+            description: "0: 어디서든 발견할 수 없는 특정 이벤트,
+                          1~3: 해당 스테이지에서 발견할 수 있는 이벤트,
+                          4: 랜덤으로 발견할 수 없는 특정 이벤트"           
+            minimum: !!int 0
+            maximum: !!int 4
           eventAppearCondition:
             type: array
             item:

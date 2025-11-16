@@ -11,7 +11,7 @@ public class LoadMapHandler : MonoBehaviour
     public GameObject eventObjectPrefab;
     public GameObject shopObjectPrefab;
     public GameObject restoreObjectPrefab;
-    public GameObject rewardObjectPrefab;
+    public GameObject insightObjectPrefab;
 
     void Start()
     {
@@ -64,6 +64,12 @@ public class LoadMapHandler : MonoBehaviour
                     break;
                 case IncountType.SecretBox:
                     SpawnRewardNPC();
+                    break;
+                case IncountType.Insight:
+                    if (newIncountNode.eventNodeData != null)
+                    {
+                        SpawnEventNPC(newIncountNode.eventNodeData);
+                    }
                     break;
                 case IncountType.Secret:
                     if(newIncountNode.eventNodeData != null)
@@ -154,27 +160,9 @@ public class LoadMapHandler : MonoBehaviour
     {
         GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
 
-        //카드 보상 생성
-        RewardNPC rewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardNPC>();
-        if(rewardNPC != null)
-        {
-            rewardNPC.SetReward(RewardNPCType.Card, RandomItemPickupType.CommonToUnique);
-            rewardNPC.transform.position = GameManager.instance.currentMap.CheckNPCSpawnPoint();
-        }
-        //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnNPCList.Add(rewardNPC.gameObject);
-        GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
-
-        //유물 보상 생성
-        RewardNPC relicRewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardNPC>();
-        if (relicRewardNPC != null)
-        {
-            relicRewardNPC.SetReward(RewardNPCType.Relic, RandomItemPickupType.CommonToUnique);
-            relicRewardNPC.transform.position = GameManager.instance.currentMap.CheckNPCSpawnPoint() + new Vector3(16, 0, 0);
-        }
-        //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnNPCList.Add(relicRewardNPC.gameObject);
-        GameManager.instance.currentSpawnUIList.Add(relicRewardNPC.GetRewardUI());
+        //유물 선택지 생성
+        GameItemContainer.instance.InstantiateRelicReward(RandomItemPickupType.CommonToUnique, 
+                                                          GameManager.instance.currentMap.CheckNPCSpawnPoint());
     }
 
     public void DestroyCurrentSpawnEnemy()

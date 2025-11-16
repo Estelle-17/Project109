@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5277475171673312712}
   m_Layer: 8
   m_Name: ShopObject
-  m_TagString: Untagged
+  m_TagString: ShopNPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122,5 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shopUICanvasPrefab: {fileID: 2903306976828377386, guid: 59e749617a9ea44488963783135c935e, type: 3}
+  cardCount: 0
+  relicCount: 0
   actionCards: []
   relics: []

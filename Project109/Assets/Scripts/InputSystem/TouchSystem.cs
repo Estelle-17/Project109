@@ -86,15 +86,14 @@ public class TouchSystem : MonoBehaviour
 
         Debug.DrawRay(Camera.main.transform.localPosition, ray.direction * 100.0f, Color.blue);
 
-        int layerMask = LayerMask.GetMask("Player", "Enemy", "ShopNPC","EventNPC", "RestoreNPC", "RewardNPC");
+        int layerMask = LayerMask.GetMask("Player", "Enemy", "NPC");
 
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 10000.0f, layerMask))
         {
-            string layerName = LayerMask.LayerToName(hit.collider.gameObject.layer);
-            Debug.Log($"Detect {layerName}");
+            Debug.Log($"Detect {hit.collider.transform.root.tag}");
 
-            CheckInfoByTargetObject(layerName, hit.collider.gameObject);
+            CheckInfoByTargetObject(hit.collider.transform.root.tag, hit.collider.gameObject);
         }
     }
 

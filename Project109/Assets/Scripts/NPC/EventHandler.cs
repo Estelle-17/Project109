@@ -148,7 +148,13 @@ public class EventHandler : MonoBehaviour
         {
             Debug.Log($"Found Model from Addressable: {eventData.eventObjectPath}");
             GameObject model = Instantiate(npcPrefab, this.transform);
-            ChangeAllLayer(model, LayerMask.NameToLayer("EventNPC"));
+            if(model == null)
+            {
+                Debug.LogWarning("Failed to Instantiate Event NPC Model!");
+                return;
+            }
+            model.tag = "EventNPC";
+            ChangeAllLayer(model, LayerMask.NameToLayer("NPC"));
         }
         else
         {

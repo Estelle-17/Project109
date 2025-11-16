@@ -19,6 +19,8 @@ public class GameItemContainer : MonoBehaviour
         }
     }
 
+    public GameObject rewardObjectPrefab;
+
     //Cards
     private List<ActionCardData> commonCardList = new List<ActionCardData>();
     private List<ActionCardData> rareCardList = new List<ActionCardData>();
@@ -63,6 +65,40 @@ public class GameItemContainer : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void InstantiateCardReward(RandomItemPickupType itemPickupType, Vector3 spawnPosition)
+    {
+        if (rewardObjectPrefab == null)
+            return;
+
+        //카드 보상 생성
+        RewardNPC rewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardNPC>();
+        if (rewardNPC != null)
+        {
+            rewardNPC.SetReward(RewardNPCType.Card, itemPickupType);
+            rewardNPC.transform.position = spawnPosition;
+        }
+        //맵 이동 시 지워질 오브젝트 목록으로 등록
+        GameManager.instance.currentSpawnNPCList.Add(rewardNPC.gameObject);
+        GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
+    }
+
+    public void InstantiateRelicReward(RandomItemPickupType itemPickupType, Vector3 spawnPosition)
+    {
+        if (rewardObjectPrefab == null)
+            return;
+
+        //유물 보상 생성
+        RewardNPC relicRewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardNPC>();
+        if (relicRewardNPC != null)
+        {
+            relicRewardNPC.SetReward(RewardNPCType.Relic, RandomItemPickupType.CommonToUnique);
+            relicRewardNPC.transform.position = spawnPosition;
+        }
+        //맵 이동 시 지워질 오브젝트 목록으로 등록
+        GameManager.instance.currentSpawnNPCList.Add(relicRewardNPC.gameObject);
+        GameManager.instance.currentSpawnUIList.Add(relicRewardNPC.GetRewardUI());
     }
 
 

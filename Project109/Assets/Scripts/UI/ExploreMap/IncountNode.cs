@@ -13,6 +13,11 @@ public enum IncountType
     Battle,     //전투
     SecretBox,  //박스
     Secret,     //비밀
+}
+
+public enum ExtraIncountType
+{
+    None,
     Insight,    //천리안
     ShineWell   //빛나는 우물
 }
@@ -20,8 +25,10 @@ public enum IncountType
 public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public IncountType incountType;
+    public ExtraIncountType extraIncountType;
     public List<GameObject> nextIncountNode;
     public ExploreUI exploreUI;
+    public bool isNodeChanged;  //노드가 생성되고 노드 타입이 한번 이상 변경되었는지 여부
 
     public BattleData battleNodeData;
     public EventData eventNodeData;
@@ -33,6 +40,7 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     public GameObject IncountNodeCoverObject;
     public GameObject IncountNodeHighlightCircleObject;
     public GameObject IncountNodeCurrentHighlightCircleObject;
+    public GameObject IncountNodeExtraRewardObject;
 
     //텍스처
     [Header("NodeTexture")]
@@ -44,12 +52,17 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     [SerializeField] private Sprite storeTexture;
     [SerializeField] private Sprite secretBoxTexture;
     [SerializeField] private Sprite secretTexture;
-    [SerializeField] private Sprite insightTexture;
 
-    public void SetIncountNode(IncountType newIncountType)
+    [Header("ExtraNodeTexture")]
+    [SerializeField] private Sprite insightTexture;
+    [SerializeField] private Sprite shiningWellTexture;
+
+    public void SetIncountNode(IncountType newIncountType, ExtraIncountType newExtraIncountType)
     {
         incountType = newIncountType;
+        extraIncountType = newExtraIncountType;
         SetNodeTexture();
+        SetExtraNodeTexture();
     }
 
     /// <summary>
@@ -60,6 +73,7 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         var enumValue = System.Enum.GetValues(enumType:typeof(IncountType));
         incountType = (IncountType)enumValue.GetValue(Random.Range(1, enumValue.Length));
         SetNodeTexture();
+        SetExtraNodeTexture();
     }
 
     /// <summary>
@@ -94,11 +108,25 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
             case IncountType.Secret:
                 image.sprite = secretTexture;
                 break;
-            case IncountType.Insight:
+            default:
+                image.sprite = noneTexture;
+                break;
+        }
+    }
+
+    void SetExtraNodeTexture()
+    {
+        Image image = IncountNodeExtraRewardObject.GetComponent<Image>();
+        switch (extraIncountType)
+        {
+            case ExtraIncountType.None:
+                image.sprite = noneTexture;
+                break;
+            case ExtraIncountType.Insight:
                 image.sprite = insightTexture;
                 break;
-            case IncountType.ShineWell:
-                image.sprite = insightTexture;
+            case ExtraIncountType.ShineWell:
+                image.sprite = shiningWellTexture;
                 break;
             default:
                 image.sprite = noneTexture;
@@ -109,11 +137,17 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     public void OpenNodeCoverTexture()
     {
         IncountNodeCoverObject.SetActive(false);
+        if (extraIncountType != ExtraIncountType.None)
+        {
+            IncountNodeExtraRewardObject.SetActive(true);
+        }
+
     }
 
     public void CloseNodeCoverTexture()
     {
         IncountNodeCoverObject.SetActive(true);
+        IncountNodeExtraRewardObject.SetActive(false);
     }
 
     public void OnPointerClick(PointerEventData eventData)

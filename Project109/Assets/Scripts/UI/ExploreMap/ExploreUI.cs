@@ -81,7 +81,7 @@ public class ExploreUI : UIPanelBase
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.exploreUI = this;
-                node.SetIncountNode(IncountType.None);
+                node.SetIncountNode(IncountType.None, ExtraIncountType.None);
                 ExploreMap[index].Add(node);
                 ExploreVerticalObjects[index].padding.top = 300;
             }
@@ -89,7 +89,7 @@ public class ExploreUI : UIPanelBase
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.exploreUI = this;
-                node.SetIncountNode(IncountType.Boss);
+                node.SetIncountNode(IncountType.Boss, ExtraIncountType.None);
                 ExploreMap[index].Add(node);
                 ExploreVerticalObjects[index].padding.top = 300;
             }
@@ -97,13 +97,13 @@ public class ExploreUI : UIPanelBase
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.exploreUI = this;
-                node.SetIncountNode(IncountType.Restore);
+                node.SetIncountNode(IncountType.Restore, ExtraIncountType.None);
                 ExploreMap[index].Add(node);
                 ExploreVerticalObjects[index].padding.top = 225;
 
                 IncountNode node1 = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node1.exploreUI = this;
-                node1.SetIncountNode(IncountType.Store);
+                node1.SetIncountNode(IncountType.Store, ExtraIncountType.None);
                 ExploreMap[index].Add(node1);
                 ExploreVerticalObjects[index].padding.top = 225;
 
@@ -119,7 +119,7 @@ public class ExploreUI : UIPanelBase
                 {
                     IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                     node.exploreUI = this;
-                    node.SetIncountNode(IncountType.Battle);
+                    node.SetIncountNode(IncountType.Battle, ExtraIncountType.None);
                     ExploreMap[index].Add(node);
                     ExploreVerticalObjects[index].padding.top = 375 - (createNodeCount * 75);
 
@@ -132,7 +132,7 @@ public class ExploreUI : UIPanelBase
         //보스 전에는 무조견 휴식 존재
         foreach (IncountNode node in ExploreMap[mapLength - 2])
         {
-            node.SetIncountNode(IncountType.Restore);
+            node.SetIncountNode(IncountType.Restore, ExtraIncountType.None);
         }
 
         /// <summary>
@@ -152,8 +152,9 @@ public class ExploreUI : UIPanelBase
                     //초반 부분에만 생성되도록 주의
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(incountNodeListInSection[sectionIdx].Count / 3, incountNodeListInSection[sectionIdx].Count)];
                 }
-                while (currentNode.incountType != IncountType.Battle);
-                currentNode.SetIncountNode(IncountType.Insight);
+                while (currentNode.incountType != IncountType.Battle && currentNode.isNodeChanged);
+                currentNode.SetIncountNode(IncountType.Battle, ExtraIncountType.Insight);
+                currentNode.isNodeChanged = true;   //노드 생성이 완료된 노드는 이후에 변경되지 않도록 설정
 
                 //이벤트 데이터도 저장
                 if (dataLoader.TryGetSpecificEvent("Insight_Event_Data", out EventData data))
@@ -170,9 +171,9 @@ public class ExploreUI : UIPanelBase
                 {
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(incountNodeListInSection[sectionIdx].Count / 2, incountNodeListInSection[sectionIdx].Count)];
                 }
-                while (currentNode.incountType != IncountType.Battle);
+                while (currentNode.incountType != IncountType.Battle && currentNode.isNodeChanged);
 
-                currentNode.SetIncountNode(IncountType.SecretBox);
+                currentNode.SetIncountNode(IncountType.SecretBox, ExtraIncountType.None);
             }
 
             //엘리트 적 생성
@@ -191,9 +192,9 @@ public class ExploreUI : UIPanelBase
                         currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
                     }
                 }
-                while (currentNode.incountType != IncountType.Battle);
+                while (currentNode.incountType != IncountType.Battle && currentNode.isNodeChanged);
 
-                currentNode.SetIncountNode(IncountType.Elite);
+                currentNode.SetIncountNode(IncountType.Elite, ExtraIncountType.None);
             }
 
             //휴식 생성
@@ -204,9 +205,9 @@ public class ExploreUI : UIPanelBase
                 {
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(incountNodeListInSection[sectionIdx].Count / 3, incountNodeListInSection[sectionIdx].Count)];
                 }
-                while (currentNode.incountType != IncountType.Battle);
+                while (currentNode.incountType != IncountType.Battle && currentNode.isNodeChanged);
 
-                currentNode.SetIncountNode(IncountType.Restore);
+                currentNode.SetIncountNode(IncountType.Restore, ExtraIncountType.None);
             }
 
             //상점 생성
@@ -217,9 +218,9 @@ public class ExploreUI : UIPanelBase
                 {
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
                 }
-                while (currentNode.incountType != IncountType.Battle);
+                while (currentNode.incountType != IncountType.Battle && currentNode.isNodeChanged);
 
-                currentNode.SetIncountNode(IncountType.Store);
+                currentNode.SetIncountNode(IncountType.Store, ExtraIncountType.None);
             }
 
             //시크릿 생성
@@ -230,9 +231,9 @@ public class ExploreUI : UIPanelBase
                 {
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
                 }
-                while (currentNode.incountType != IncountType.Battle);
+                while (currentNode.incountType != IncountType.Battle && currentNode.isNodeChanged);
 
-                currentNode.SetIncountNode(IncountType.Secret);
+                currentNode.SetIncountNode(IncountType.Secret, ExtraIncountType.None);
 
                 //랜덤하게 섞인 데이터들 중 한 가지를 저장
                 if (eventItemPicker.TryGetNext(out EventData data))

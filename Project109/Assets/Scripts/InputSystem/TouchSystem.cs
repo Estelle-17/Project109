@@ -98,9 +98,9 @@ public class TouchSystem : MonoBehaviour
     }
 
     //선택된 오브젝트 종류에 따른 행동 실행
-    void CheckInfoByTargetObject(string newTarget, GameObject newObject)
+    void CheckInfoByTargetObject(string newTargetTag, GameObject newObject)
     {
-        switch (newTarget)
+        switch (newTargetTag)
         {
             case "Player":
 
@@ -136,10 +136,19 @@ public class TouchSystem : MonoBehaviour
             case "RewardNPC":
                 CameraFocusToTarget(newObject.transform.position);
                 //root에 존재하는 EventHandler 탐색
-                RewardNPC rewardNPC = newObject.transform.root.GetComponent<RewardNPC>();
+                RewardItemHandler rewardNPC = newObject.transform.root.GetComponent<RewardItemHandler>();
                 if (rewardNPC != null)
                 {
                     rewardNPC.EnableRewardUI();
+                }
+                break;
+            case "RewardBox":
+                CameraFocusToTarget(newObject.transform.position);
+                RewardBoxManager rewardBox = newObject.transform.root.GetComponent<RewardBoxManager>();
+                if (rewardBox != null)
+                {
+                    rewardBox.SetRewardItemList();
+                    rewardBox.EnableRewardListUI();
                 }
                 break;
         }

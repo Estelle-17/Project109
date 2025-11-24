@@ -65,12 +65,6 @@ public class LoadMapHandler : MonoBehaviour
                 case IncountType.SecretBox:
                     SpawnRewardNPC();
                     break;
-                case IncountType.Insight:
-                    if (newIncountNode.eventNodeData != null)
-                    {
-                        SpawnEventNPC(newIncountNode.eventNodeData);
-                    }
-                    break;
                 case IncountType.Secret:
                     if(newIncountNode.eventNodeData != null)
                     {
@@ -78,6 +72,16 @@ public class LoadMapHandler : MonoBehaviour
                     }
                     break;
                 default:
+                    break;
+            }
+
+            switch(newIncountNode.extraIncountType)
+            {
+                case ExtraIncountType.None:
+                    break;
+                case ExtraIncountType.Insight:
+                    break;
+                case ExtraIncountType.ShineWell:
                     break;
             }
         }
@@ -161,7 +165,7 @@ public class LoadMapHandler : MonoBehaviour
         GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
 
         //유물 선택지 생성
-        GameItemContainer.instance.InstantiateRelicReward(RandomItemPickupType.CommonToUnique, 
+        GameItemRewardManager.instance.InstantiateRelicReward(RandomItemPickupType.CommonToUnique, 
                                                           GameManager.instance.currentMap.CheckNPCSpawnPoint());
     }
 

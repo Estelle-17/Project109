@@ -411,6 +411,80 @@ public class YAMLImporter
         Debug.Log("YAML import complete.");
     }
 
+    [MenuItem("Tools/Import MonsterReward YAML")]
+    //[System.Obsolete]
+    public static void ImportMonsterRewardYAML()
+    {
+        string yamlPath = "Assets/Data/MonsterReward.yaml";
+        string schemaPath = "Assets/Data/MonsterRewardSchema.yaml";
+
+        string yamlText = File.ReadAllText(yamlPath);
+        string schemaYamlText = File.ReadAllText(schemaPath);
+
+        //YAML -> Json으로 변환
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+        var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
+
+        var jsonSerializer = new SerializerBuilder()
+            .JsonCompatible()
+            .Build();
+        string jsonText = jsonSerializer.Serialize(yamlObject);
+
+        //YAML Schema -> Json Schema로 변환
+        var schemaYamlObject = deserializer.Deserialize(new StringReader(schemaYamlText));
+        string schemaJsonText = jsonSerializer.Serialize(schemaYamlObject);
+
+        JSchema schema = JSchema.Parse(schemaJsonText);
+
+        JObject jsonObj = JObject.Parse(jsonText);
+        if (!jsonObj.IsValid(schema, out IList<string> errorMessages))
+        {
+            Debug.LogError("❌ YAML validation failed:");
+            foreach (var error in errorMessages)
+                Debug.LogError(error);
+            return;
+        }
+
+        Debug.Log("YAML validation Success:");
+
+        //검증에 성공하면 ScriptableObject 생성
+        var rawData = deserializer.Deserialize<RootMonsterRewardData>(yamlText);
+
+        foreach (var monsterRewardData in rawData.monsterRewardCollection)
+        {
+            var asset = ScriptableObject.CreateInstance<MonsterRewardData>();
+            asset.monsterName = monsterRewardData.monsterName;
+            asset.minDropGoldAmount = monsterRewardData.minDropGoldAmount;
+            asset.maxDropGoldAmount = monsterRewardData.maxDropGoldAmount;
+
+            var path = $"Assets/SO/Rewards/{monsterRewardData.monsterName}.asset";
+            Directory.CreateDirectory("Assets/SO/Rewards");
+            AssetDatabase.CreateAsset(asset, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            //Addressable에 등록
+            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+            if (settings == null)
+            {
+                Debug.LogError("Addressables 설정이 존재하지 않습니다.");
+                return;
+            }
+
+            AddressableAssetEntry entry = settings.CreateOrMoveEntry(
+                AssetDatabase.AssetPathToGUID(path),
+                CreateOrFindAddressablesGroup(settings, "Reward")
+            );
+            entry.address = monsterRewardData.monsterName + "_Reward_Data";
+            entry.SetLabel("Reward", true);
+            Debug.Log("Addressables에 등록 완료: " + entry.address);
+        }
+
+        Debug.Log("YAML import complete.");
+    }
+
     [MenuItem("Tools/Import Character YAML")]
     //[System.Obsolete]
     public static void ImportCharacterYAML()
@@ -663,6 +737,18 @@ public class YAMLImporter
         public float staminaRegen { get; set; }
         public int strength { get; set; }
         public int armor { get; set; }
+    }
+
+    public class RootMonsterRewardData
+    {
+        public List<MonsterRewardEntry> @monsterRewardCollection { get; set; }
+    }
+
+    public class MonsterRewardEntry
+    {
+        public string monsterName { get; set; }
+        public int minDropGoldAmount { get; set; }
+        public int maxDropGoldAmount { get; set; }
     }
 
     public class RootCharacterData

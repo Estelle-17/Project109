@@ -21,8 +21,20 @@ MonoBehaviour:
     m_SerializedLabels:
     - Model
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 334fa702f0f93e34da1c869f05859cdc
+    m_Address: MemorySharp_Model
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Model
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 483804fe5a31926439b888af42e9f475
     m_Address: NPC_Restore_Bonfire_Model
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Model
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 93a4f31f94b4c484dabd34de56eb3609
+    m_Address: Gold_Model
     m_ReadOnly: 0
     m_SerializedLabels:
     - Model

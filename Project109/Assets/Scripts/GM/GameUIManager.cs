@@ -20,11 +20,13 @@ public class GameUIManager : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+    [Header("InGame Currency UI")]
+    public Image inGame_Currency_Gold_Image;
+    public TextMeshProUGUI inGame_Currency_Gold_Text;
+    public Image inGame_Currency_MemorySharp_Image;
+    public TextMeshProUGUI inGame_Currency_MemorySharp_Text;
 
-    public Image inGame_Currency_Image;
-
-    public TextMeshProUGUI inGame_Currency_Text;
-
+    [Header("InGame Relic UI")]
     public GameObject relicUIPrefab;
     public Transform relicSpawnTransform;
     private Dictionary<string, GameObject> relicUIObjects = new Dictionary<string, GameObject>();
@@ -46,9 +48,14 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
-    public void UpdateInGameCurrencyText(string newText)
+    public void UpdateGoldText(string newText)
     {
-        inGame_Currency_Text.text = newText;
+        inGame_Currency_Gold_Text.text = newText;
+    }
+
+    public void UpdateMemorySharpText(string newText)
+    {
+        inGame_Currency_MemorySharp_Text.text = newText;
     }
 
     private void UpdateRelicItems(RelicData newRelicData)

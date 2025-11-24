@@ -30,6 +30,7 @@ public class AssetCacheManager : MonoBehaviour
     public string eventKey = "Event";
     public string battleKey = "Battle";
     public string monsterKey = "Monster";
+    public string monsterRewardKey = "Reward";
     public string characterKey = "Character";
     public string mapKey = "Map";
     public string modelKey = "Model";
@@ -53,6 +54,9 @@ public class AssetCacheManager : MonoBehaviour
     public IList<MonsterData> monsterList;
     private Dictionary<string, MonsterData> monsterDict = new Dictionary<string, MonsterData>();
 
+    public IList<MonsterRewardData> monsterRewardList;
+    private Dictionary<string, MonsterRewardData> monsterRewardDict = new Dictionary<string, MonsterRewardData>();
+
     public IList<CharacterData> characterList;
     private Dictionary<string, CharacterData> characterDict = new Dictionary<string, CharacterData>();
 
@@ -62,8 +66,8 @@ public class AssetCacheManager : MonoBehaviour
     public IList<GameObject> modelList;
     private Dictionary<string, GameObject> modelDict = new Dictionary<string, GameObject>();
 
-    public IList<Texture2D> textureList;
-    private Dictionary<string, Texture2D> textureDict = new Dictionary<string, Texture2D>();
+    public IList<Sprite> textureList;
+    private Dictionary<string, Sprite> textureDict = new Dictionary<string, Sprite>();
 
     private IEnumerator Start()
     {
@@ -120,6 +124,13 @@ public class AssetCacheManager : MonoBehaviour
             monsterDict = dict;
         }));
 
+        //몬스터 보상 데이터 할당 시작
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<MonsterRewardData>(monsterRewardKey, (list, dict) =>
+        {
+            monsterRewardList = list;
+            monsterRewardDict = dict;
+        }));
+
         //캐릭터 데이터 할당 시작
         yield return StartCoroutine(LoadAndCacheFromAddressableData<CharacterData>(characterKey, (list, dict) =>
         {
@@ -161,7 +172,7 @@ public class AssetCacheManager : MonoBehaviour
         Debug.Log("All Data Load is Complete.");
 
         //불러온 아이템들 세분화 진행
-        GameItemContainer.instance.UpdateItemList();
+        GameItemRewardManager.instance.UpdateItemList();
     }
 
     public IEnumerator LoadAllAssetsFromBundle(string key, string bundlePath)
@@ -294,9 +305,9 @@ public class AssetCacheManager : MonoBehaviour
     /// <summary>
     /// Addressable 키를 통해 텍스처를 비동기로 불러오고 후처리 실행
     /// </summary>
-    IEnumerator LoadAndCacheTextureFromAddressableData(string key, Action<IList<Texture2D>, Dictionary<string, Texture2D>> onLoaded)
+    IEnumerator LoadAndCacheTextureFromAddressableData(string key, Action<IList<Sprite>, Dictionary<string, Sprite>> onLoaded)
     {
-        AsyncOperationHandle<IList<Texture2D>> handle = Addressables.LoadAssetsAsync<Texture2D>(key, null);
+        AsyncOperationHandle<IList<Sprite>> handle = Addressables.LoadAssetsAsync<Sprite>(key, null);
 
         yield return handle;
 
@@ -304,7 +315,7 @@ public class AssetCacheManager : MonoBehaviour
         {
             //불러온 데이터 저장
             var list = handle.Result;
-            var dict = new Dictionary<string, Texture2D>();
+            var dict = new Dictionary<string, Sprite>();
 
             //Dictionary에 데이터 저장
             foreach (var item in list)
@@ -326,6 +337,7 @@ public class AssetCacheManager : MonoBehaviour
 
     public bool TryGetCard(string name, out ActionCardData card) => cardDict.TryGetValue(name, out card);
     public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
+    public bool TryGetMonsterReward(string name, out MonsterRewardData reward) => monsterRewardDict.TryGetValue(name, out reward);
     public bool TryGetRelic(string name, out RelicData relic) => relicDict.TryGetValue(name, out relic);
     public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);
     public bool TryGetSpecificEvent(string name, out EventData ev) => specificEventDict.TryGetValue(name, out ev);
@@ -333,5 +345,5 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetCharacter(string name, out CharacterData character) => characterDict.TryGetValue(name, out character);
     public bool TryGetMap(string name, out MapData mapData) => mapDict.TryGetValue(name, out mapData);
     public bool TryGetModel(string name, out GameObject model) => modelDict.TryGetValue(name, out model);
-    public bool TryGetTexture(string name, out Texture2D texture) => textureDict.TryGetValue(name, out texture);
+    public bool TryGetTexture(string name, out Sprite texture) => textureDict.TryGetValue(name, out texture);
 }

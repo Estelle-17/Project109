@@ -42,7 +42,6 @@ public class GameManager : MonoBehaviour
     public IncountNode currentIncountNode;
     public IncountNode beforeIncountNode;
     public BattleMapManager currentMap;
-    public BattleMapManager ActionCard_EffectArea;
     public ExploreUI currentExploreUI;
 
     public LoadMapHandler loadMapHandler;
@@ -57,16 +56,28 @@ public class GameManager : MonoBehaviour
         loadMapHandler = GetComponent<LoadMapHandler>();
         currentMapName = "LostTemple";
         playerStat = new PlayerStat();
-        playerStat.inGame_Currency = 0;
+        playerStat.inGame_Currency_Gold = 0;
         playerStat.mapFloorCheck_Length = 3;
-        AddInGame_Currency(0);
+        AddInGame_Currency(CurrencyType.Gold, 0);
+        AddInGame_Currency(CurrencyType.MemorySharp, 0);
     }
 
     public PlayerStat GetPlayerStat() {  return playerStat; }
 
-    public void AddInGame_Currency(int amount)
+    public void AddInGame_Currency(CurrencyType type, int amount)
     {
-        playerStat.inGame_Currency += amount;
-        GameUIManager.instance.UpdateInGameCurrencyText(playerStat.inGame_Currency.ToString());
+        switch (type)
+        {
+            case CurrencyType.Gold:
+                playerStat.inGame_Currency_Gold += amount;
+                GameUIManager.instance.UpdateGoldText(playerStat.inGame_Currency_Gold.ToString());
+                break;
+            case CurrencyType.MemorySharp:
+                playerStat.inGame_Currency_MemorySharp += amount;
+                GameUIManager.instance.UpdateMemorySharpText(playerStat.inGame_Currency_MemorySharp.ToString());
+                break;
+            default:
+                break;
+        }
     }
 }

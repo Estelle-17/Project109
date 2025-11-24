@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "ActionCardData", menuName = "ActionCard/ActionCardData")]
 public class ActionCardData : ScriptableObject, IIdentifiable
 {
-    public Texture2D cardTexture;
+    public Sprite cardTexture;
     public string className;
     public string cardName;
     public string texturePath;

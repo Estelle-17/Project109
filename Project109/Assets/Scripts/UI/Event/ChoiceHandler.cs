@@ -37,7 +37,7 @@ public class ChoiceHandler : MonoBehaviour
         switch (item.itemType)
         {
             case "Money":
-                GameManager.instance.AddInGame_Currency(-item.value);
+                GameManager.instance.AddInGame_Currency(CurrencyType.Gold, -item.value);
                 break;
             case "MaxHp":
                 //value값만큼 플레이어 최대 체력 차감
@@ -73,7 +73,7 @@ public class ChoiceHandler : MonoBehaviour
         switch (item.itemType)
         {
             case "Money":
-                GameManager.instance.AddInGame_Currency(item.value);
+                GameManager.instance.AddInGame_Currency(CurrencyType.Gold, item.value);
                 break;
             case "MaxHp":
                 //value값만큼 플레이어 최대 체력 증가

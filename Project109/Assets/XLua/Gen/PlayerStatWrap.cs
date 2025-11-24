@@ -1,4 +1,4 @@
-﻿#if USE_UNI_LUA
+#if USE_UNI_LUA
 using LuaAPI = UniLua.Lua;
 using RealStatePtr = UniLua.ILuaState;
 using LuaCSFunction = UniLua.CSharpFunctionDelegate;
@@ -87,7 +87,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 PlayerStat gen_to_be_invoked = (PlayerStat)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.inGame_Currency);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.inGame_Currency_Gold);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -131,7 +131,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 PlayerStat gen_to_be_invoked = (PlayerStat)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.inGame_Currency = LuaAPI.xlua_tointeger(L, 2);
+                gen_to_be_invoked.inGame_Currency_Gold = LuaAPI.xlua_tointeger(L, 2);
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

@@ -19,6 +19,7 @@ public class BattleMapManager : MonoBehaviour
     public int column;
     public int row;
     public (int column, int row) centerCoord;
+    public (int column, int row) rewardCoord;
     public int tilePadding;
 
     public Vector3 CheckTileMapLocationByRowAndColumn(int newColumn, int newRow)
@@ -29,6 +30,11 @@ public class BattleMapManager : MonoBehaviour
     public Vector3 CheckTileMapCenterLocation()
     {
         return map[centerCoord.column][centerCoord.row].transform.position;
+    }
+
+    public Vector3 CheckTileMapRewardLocation()
+    {
+        return map[rewardCoord.column][rewardCoord.row].transform.position;
     }
 
     public List<List<Tile>> GetTileMap() { return map; }
@@ -118,6 +124,11 @@ public class BattleMapManager : MonoBehaviour
                 if (baseMapTiles[columnIndex][rowIndex] == '1')
                 {
                     tile.tileState = TileState.Full;
+                }
+                if (baseMapTiles[columnIndex][rowIndex] == '2')
+                {
+                    tile.tileState = TileState.Full;
+                    rewardCoord = (columnIndex, rowIndex);
                 }
                 map[columnIndex].Add(tile);
             }

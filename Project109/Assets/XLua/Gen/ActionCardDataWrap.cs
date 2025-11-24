@@ -1,4 +1,4 @@
-﻿#if USE_UNI_LUA
+#if USE_UNI_LUA
 using LuaAPI = UniLua.Lua;
 using RealStatePtr = UniLua.ILuaState;
 using LuaCSFunction = UniLua.CSharpFunctionDelegate;
@@ -258,7 +258,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.cardTexture = (UnityEngine.Texture2D)translator.GetObject(L, 2, typeof(UnityEngine.Texture2D));
+                gen_to_be_invoked.cardTexture = (UnityEngine.Sprite)translator.GetObject(L, 2, typeof(UnityEngine.Sprite));
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

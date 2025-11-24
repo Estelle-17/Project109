@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "RelicData", menuName = "Relic/RelicData")]
 public class RelicData : ScriptableObject, IIdentifiable
 {
-    public Texture2D relicTexture;
+    public Sprite relicTexture;
     public string classType;
     public string relicName;
     public string texturePath;

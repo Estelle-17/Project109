@@ -147,7 +147,7 @@ public class TouchSystem : MonoBehaviour
                 RewardBoxManager rewardBox = newObject.transform.root.GetComponent<RewardBoxManager>();
                 if (rewardBox != null)
                 {
-                    rewardBox.SetRewardItemList();
+                    //rewardBox.SetRewardItemList();
                     rewardBox.EnableRewardListUI();
                 }
                 break;

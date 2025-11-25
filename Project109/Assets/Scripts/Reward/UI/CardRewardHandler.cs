@@ -46,6 +46,8 @@ public class CardRewardHandler : UIPanelBase
     void GetCard(ActionCardData newCardData)
     {
         CardDeckManager.instance.AddCard(newCardData);
+
+        UIManager.instance.ReactivateTempDeactiveUIPanel();
         //이 카드 선택지를 제공한 NPC오브젝트 제거 및 캔버스 제거
         Destroy(rootObject);
         Destroy(gameObject);

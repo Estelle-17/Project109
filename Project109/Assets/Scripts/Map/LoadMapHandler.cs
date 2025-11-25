@@ -8,10 +8,11 @@ public class LoadMapHandler : MonoBehaviour
     public AssetCacheManager dataLoader;
 
     //프리팹은 나중에 모딩을 생각해서 addressable로 변경 예정
-    public GameObject eventObjectPrefab;
-    public GameObject shopObjectPrefab;
-    public GameObject restoreObjectPrefab;
-    public GameObject insightObjectPrefab;
+    [SerializeField] private GameObject eventObjectPrefab;
+    [SerializeField] private GameObject shopObjectPrefab;
+    [SerializeField] private GameObject restoreObjectPrefab;
+    [SerializeField] private GameObject insightObjectPrefab;
+    [SerializeField] private GameObject rewardBoxPrefab;
 
     void Start()
     {
@@ -49,12 +50,13 @@ public class LoadMapHandler : MonoBehaviour
                     break;
                 case IncountType.Battle:
                     SpawnMonsterInBattleNodeData(newIncountNode.battleNodeData);
+                    SpawnRewardBox();
                     break;
                 case IncountType.Elite:
-
+                    SpawnRewardBox();
                     break;
                 case IncountType.Boss:
-
+                    SpawnRewardBox();
                     break;
                 case IncountType.Restore:
                     SpawnRestoreNPC();
@@ -167,6 +169,20 @@ public class LoadMapHandler : MonoBehaviour
         //유물 선택지 생성
         GameItemRewardManager.instance.InstantiateRelicReward(RandomItemPickupType.CommonToUnique, 
                                                           GameManager.instance.currentMap.CheckNPCSpawnPoint());
+    }
+
+    void SpawnRewardBox()
+    {
+        RewardBoxManager newRewardBox = Instantiate(rewardBoxPrefab).GetComponent<RewardBoxManager>();
+
+        if (newRewardBox != null)
+        {
+            newRewardBox.SetRewardItemList();
+        }
+
+        //맵 이동 시 지워질 오브젝트 목록으로 등록
+        GameManager.instance.currentSpawnNPCList.Add(newRewardBox.gameObject);
+        GameManager.instance.currentSpawnUIList.Add(newRewardBox.GetRewardListUI());
     }
 
     public void DestroyCurrentSpawnEnemy()

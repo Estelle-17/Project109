@@ -56,6 +56,8 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
                 cardRewardHandler.rootObject = this.gameObject;
                 cardRewardHandler.gameObject.SetActive(false);
 
+                GameManager.instance.currentSpawnUIList.Add(currentRewardUIObject);
+
                 itemText.text = "새로운 카드 보상!";
                 break;
             case ItemRewardUIType.Relic:    //단일 유물 획득 보상
@@ -81,6 +83,7 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
                 GameManager.instance.AddInGame_Currency(CurrencyType.MemorySharp, rewardValue);
                 break;
             case ItemRewardUIType.Card:
+                UIManager.instance.TempDeactivateCurrentActiveUIPanel();
                 currentRewardUIObject.GetComponent<CardRewardHandler>().UIActive();
                 break;
             case ItemRewardUIType.Relic:

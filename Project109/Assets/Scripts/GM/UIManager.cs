@@ -25,6 +25,7 @@ public class UIManager : MonoBehaviour
 
     //현재 활성화된 UI정보 리스트
     private Stack<GameObject> activeUICanvasList = new Stack<GameObject>();
+    private Stack<GameObject> tempDeactiveUICanvasList = new Stack<GameObject>();
 
     //유물 관련 변수
     public GameObject relicDescription;
@@ -78,6 +79,48 @@ public class UIManager : MonoBehaviour
         GameObject popObject = activeUICanvasList.Pop();
         popObject.SetActive(false);
         Debug.Log($"[UIManager] Poped : {popObject.name}. Current UIList Stack Count : {activeUICanvasList.Count}");
+
+        //터치 활성화 여부 확인
+        SetPlayerTouchSystemActiveInGame();
+    }
+
+    //현재 활성화된 UI들 임시 비활성화
+    public void TempDeactivateCurrentActiveUIPanel()
+    {
+        if (activeUICanvasList.Count == 0)
+            return;
+
+        //현재 활성화된 UI들 비활성화 후 임시 스택에 저장
+        while(activeUICanvasList.Count > 0)
+        {
+            GameObject ui = activeUICanvasList.Pop();
+            ui.SetActive(false);
+            tempDeactiveUICanvasList.Push(ui);
+        }
+        Debug.Log($"[UIManager] TempDeactivate Stack Count: {tempDeactiveUICanvasList.Count}.");
+
+        //초기화 후 새로운 UI 활성화
+        activeUICanvasList.Clear();
+
+        //터치 활성화 여부 확인
+        SetPlayerTouchSystemActiveInGame();
+    }
+
+    //임시로 비활성화된 UI들 다시 활성화
+    public void ReactivateTempDeactiveUIPanel()
+    {
+        if (tempDeactiveUICanvasList.Count == 0)
+            return;
+
+        //현재 임시로 비활성화된 UI들 활성화 진행
+        while (tempDeactiveUICanvasList.Count > 0)
+        {
+            GameObject ui = tempDeactiveUICanvasList.Pop();
+            ui.SetActive(true);
+            activeUICanvasList.Push(ui);
+        }
+        tempDeactiveUICanvasList.Clear();
+        Debug.Log($"[UIManager] TempDeactivate UIs Activate. Current UIList Stack Count : {activeUICanvasList.Count}");
 
         //터치 활성화 여부 확인
         SetPlayerTouchSystemActiveInGame();

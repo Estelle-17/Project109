@@ -14,6 +14,11 @@ public class RewardBoxManager : MonoBehaviour
 
     public void SetRewardItemList()
     {
+        if(GameManager.instance.currentIncountNode == null)
+        {
+            return;
+        }
+
         rewardListUI = Instantiate(rewardListUIPrefab).GetComponent<RewardListUIHandler>();
 
         if(rewardListUI != null)
@@ -45,14 +50,19 @@ public class RewardBoxManager : MonoBehaviour
 
         rewardListUI.gameObject.SetActive(false);
     }
+    
+    public GameObject GetRewardListUI()
+    {
+        return rewardListUI.gameObject;
+    }
 
     public void EnableRewardListUI()
     {
-        rewardListUI.UIActive();
+        rewardListUI?.UIActive();
     }
 
     public void DisableRewardListUI()
     {
-        rewardListUI.UIDeactive();
+        rewardListUI?.UIDeactive();
     }
 }

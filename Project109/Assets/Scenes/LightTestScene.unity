@@ -384,7 +384,8 @@ Transform:
   m_LocalPosition: {x: 75.5, y: -74.5, z: 17.099998}
   m_LocalScale: {x: 17, y: 1, z: 13}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2022158716}
   m_Father: {fileID: 4497892593636410097}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!114 &45716261
@@ -3205,6 +3206,18 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4868615}
+        m_TargetAssemblyTypeName: CardDeckViewManager, Assembly-CSharp
+        m_MethodName: TempDeactivateCurrentUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 4868615}
         m_TargetAssemblyTypeName: UIPanelBase, Assembly-CSharp
         m_MethodName: UIActive
         m_Mode: 1
@@ -5137,7 +5150,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 76, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1968183220
+--- !u!1 &2022158715
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5145,9 +5158,105 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1968183223}
-  - component: {fileID: 1968183222}
-  - component: {fileID: 1968183221}
+  - component: {fileID: 2022158716}
+  - component: {fileID: 2022158719}
+  - component: {fileID: 2022158718}
+  - component: {fileID: 2022158717}
+  m_Layer: 9
+  m_Name: OpenUITrigger
+  m_TagString: Trigger
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2022158716
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2022158715}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.584, y: 15, z: 12.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 45716260}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2022158717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2022158715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ad80bf4f06fb874593829f7f436daf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specificUIObject: {fileID: 290354950}
+  requiredMapState: 0
+--- !u!65 &2022158718
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2022158715}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.25, y: 30, z: 0.1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &2022158719
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2022158715}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
+--- !u!1 &2046993066
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2046993069}
+  - component: {fileID: 2046993068}
+  - component: {fileID: 2046993067}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -5155,13 +5264,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1968183221
+--- !u!114 &2046993067
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1968183220}
+  m_GameObject: {fileID: 2046993066}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
@@ -5186,13 +5295,13 @@ MonoBehaviour:
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
   m_ScrollDeltaPerTick: 6
---- !u!114 &1968183222
+--- !u!114 &2046993068
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1968183220}
+  m_GameObject: {fileID: 2046993066}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
@@ -5201,13 +5310,13 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
---- !u!4 &1968183223
+--- !u!4 &2046993069
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1968183220}
+  m_GameObject: {fileID: 2046993066}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -5251,6 +5360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff88fc520a8ea274f969cfcc1091e74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentMapState: 0
   currentCharacter: {fileID: 0}
   currentMapName: 
   currentStageLevel: 0
@@ -5570,6 +5680,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 4868615}
+        m_TargetAssemblyTypeName: CardDeckViewManager, Assembly-CSharp
+        m_MethodName: ReActivateTempUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 4868610}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -7750,8 +7872,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 182.0672, y: 181.356, z: 16.402615}
-  m_Center: {x: 0, y: -0, z: 8.201307}
+  m_Size: {x: 182.0672, y: 181.356, z: 1}
+  m_Center: {x: 0, y: -0, z: 16}
 --- !u!137 &4559402758378274143
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -9077,7 +9199,6 @@ SceneRoots:
   - {fileID: 807622583}
   - {fileID: 330585546}
   - {fileID: 1273197968}
-  - {fileID: 1968183223}
   - {fileID: 1272209226}
   - {fileID: 4497892593636410097}
   - {fileID: 604326098}
@@ -9085,3 +9206,4 @@ SceneRoots:
   - {fileID: 4868614}
   - {fileID: 417770251}
   - {fileID: 33542177}
+  - {fileID: 2046993069}

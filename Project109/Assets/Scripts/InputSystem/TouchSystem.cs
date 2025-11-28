@@ -86,7 +86,7 @@ public class TouchSystem : MonoBehaviour
 
         Debug.DrawRay(Camera.main.transform.localPosition, ray.direction * 100.0f, Color.blue);
 
-        int layerMask = LayerMask.GetMask("Player", "Enemy", "NPC");
+        int layerMask = LayerMask.GetMask("Player", "Enemy", "NPC", "Map");
 
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 10000.0f, layerMask))
@@ -94,6 +94,8 @@ public class TouchSystem : MonoBehaviour
             Debug.Log($"Detect {hit.collider.transform.root.tag}");
 
             CheckInfoByTargetObject(hit.collider.transform.root.tag, hit.collider.gameObject);
+
+            CheckTriggerByTargetObject(hit.collider.tag, hit.collider.gameObject);
         }
     }
 
@@ -149,6 +151,21 @@ public class TouchSystem : MonoBehaviour
                 {
                     //rewardBox.SetRewardItemList();
                     rewardBox.EnableRewardListUI();
+                }
+                break;
+        }
+    }
+
+    //선택된 트리거 종류에 따른 행동 실행
+    void CheckTriggerByTargetObject(string newTargetTag, GameObject newObject)
+    {
+        switch(newTargetTag)
+        {
+            case "Trigger":
+                OpenUIWhenClicked openUI = newObject.GetComponent<OpenUIWhenClicked>();
+                if (openUI != null)  //특정 트리거가 감지되고 Active할 UI가 존재한다면
+                {
+                    openUI.ActiveObject();
                 }
                 break;
         }

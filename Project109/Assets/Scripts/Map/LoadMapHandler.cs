@@ -49,27 +49,34 @@ public class LoadMapHandler : MonoBehaviour
                 case IncountType.None:
                     break;
                 case IncountType.Battle:
+                    GameManager.instance.currentMapState = MapState.Battle;
                     SpawnMonsterInBattleNodeData(newIncountNode.battleNodeData);
                     SpawnRewardBox();
                     break;
                 case IncountType.Elite:
+                    GameManager.instance.currentMapState = MapState.Battle;
                     SpawnRewardBox();
                     break;
                 case IncountType.Boss:
+                    GameManager.instance.currentMapState = MapState.Battle;
                     SpawnRewardBox();
                     break;
                 case IncountType.Restore:
+                    GameManager.instance.currentMapState = MapState.None;
                     SpawnRestoreNPC();
                     break;
                 case IncountType.Store:
+                    GameManager.instance.currentMapState = MapState.None;
                     SpawnShopNPC();
                     break;
                 case IncountType.SecretBox:
+                    GameManager.instance.currentMapState = MapState.None;
                     SpawnRewardNPC();
                     break;
                 case IncountType.Secret:
                     if(newIncountNode.eventNodeData != null)
                     {
+                        GameManager.instance.currentMapState = MapState.Event;
                         SpawnEventNPC(newIncountNode.eventNodeData);
                     }
                     break;

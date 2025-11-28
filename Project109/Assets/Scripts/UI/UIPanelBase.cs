@@ -40,4 +40,26 @@ public class UIPanelBase : MonoBehaviour
         UIManager.instance.RemoveActiveUIFromStack(this.gameObject);
         this.gameObject.SetActive(false);
     }
+
+    public void TempDeactivateCurrentUI()
+    {
+        if (UIManager.instance == null)
+        {
+            Debug.LogWarning("UIManager is null. Check UIManager setting in hierarchy.");
+            return;
+        }
+
+        UIManager.instance.TempDeactivateCurrentActiveUIPanel();
+    }
+
+    public void ReActivateTempUI()
+    {
+        if (UIManager.instance == null)
+        {
+            Debug.LogWarning("UIManager is null. Check UIManager setting in hierarchy.");
+            return;
+        }
+
+        UIManager.instance.ReactivateTempDeactiveUIPanel();
+    }
 }

@@ -15,6 +15,7 @@ TagManager:
   - InsightNPC
   - Enemy
   - RewardBox
+  - Trigger
   layers:
   - Default
   - TransparentFX

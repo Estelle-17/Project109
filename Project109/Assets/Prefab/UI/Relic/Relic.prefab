@@ -126,7 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   relicData: {fileID: 0}
   relicName: {fileID: 0}
-  relicImage: {fileID: 0}
+  relicImage: {fileID: 5516583811069031710}
   OnRelicClick:
     m_PersistentCalls:
       m_Calls: []

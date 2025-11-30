@@ -87,14 +87,14 @@ public class GameItemRewardManager : MonoBehaviour
         }
 
         //Card Picker 초기화
-        commonCardPicker = new RandomItemPicker<ActionCardData>(GameItemRewardManager.instance.GetCommonCardList());
-        rareCardPicker = new RandomItemPicker<ActionCardData>(GameItemRewardManager.instance.GetRareCardList());
-        uniqueCardPicker = new RandomItemPicker<ActionCardData>(GameItemRewardManager.instance.GetUniqueCardList());
+        commonCardPicker = new RandomItemPicker<ActionCardData>(commonCardList);
+        rareCardPicker = new RandomItemPicker<ActionCardData>(rareCardList);
+        uniqueCardPicker = new RandomItemPicker<ActionCardData>(uniqueCardList);
 
         //Relic Picker 초기화
-        commonRelicPicker = new RandomItemPicker<RelicData>(GameItemRewardManager.instance.GetCommonRelicList());
-        rareRelicPicker = new RandomItemPicker<RelicData>(GameItemRewardManager.instance.GetRareRelicList());
-        uniqueRelicPicker = new RandomItemPicker<RelicData>(GameItemRewardManager.instance.GetUniqueRelicList());
+        commonRelicPicker = new RandomItemPicker<RelicData>(commonRelicList);
+        rareRelicPicker = new RandomItemPicker<RelicData>(rareRelicList);
+        uniqueRelicPicker = new RandomItemPicker<RelicData>(uniqueRelicList);
 }
 
     public ActionCardData GetRandomCardDataByPickupType(RandomItemPickupType pickupType)
@@ -223,6 +223,25 @@ public class GameItemRewardManager : MonoBehaviour
         }
 
         return relicData;
+    }
+
+    public void RemoveObtainedRelicByPlayer(RelicData relicData)
+    {
+        switch(relicData.level)
+        {
+            case 1:
+                commonRelicList.Remove(relicData);
+                commonRelicPicker = new RandomItemPicker<RelicData>(commonRelicList);
+                break;
+            case 2:
+                rareRelicList.Remove(relicData);
+                rareRelicPicker = new RandomItemPicker<RelicData>(rareRelicList);
+                break;
+            case 3:
+                uniqueRelicList.Remove(relicData);
+                uniqueRelicPicker = new RandomItemPicker<RelicData>(uniqueRelicList);
+                break;
+        }
     }
 
     public void InstantiateCardReward(RandomItemPickupType itemPickupType, Vector3 spawnPosition)

@@ -15,7 +15,7 @@ MonoBehaviour:
   relicTexture: {fileID: 0}
   classType: All
   relicName: "\uAD8C\uD22C \uAE00\uB7EC\uBE0C"
-  texturePath: Relic_RecoveryPlate_Texture
+  texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_FightGlove_Data
   level: 1
   description: "\uC804\uD22C \uC2DC\uC791 \uC2DC \uCC98\uC74C \uACF5\uACA9\uD560

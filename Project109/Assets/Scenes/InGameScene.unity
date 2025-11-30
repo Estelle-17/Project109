@@ -416,7 +416,7 @@ MonoBehaviour:
   column: 11
   row: 14
   tilePadding: 10
-  mapCreateTest: 0
+  mapCreateTest: 1
 --- !u!1 &109783496
 GameObject:
   m_ObjectHideFlags: 0

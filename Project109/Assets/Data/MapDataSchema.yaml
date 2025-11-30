@@ -29,7 +29,7 @@ properties:
           type: array
           items:
             type: string
-            pattern: "^[012]+$"  # 0: 이동 가능, 1: 이동 불가능, 2: 보상 생성 위치
+            pattern: "^[01SR]+$"  # 0: 이동 가능, 1: 이동 불가능, 2: 보상 생성 위치
         variations:
           type: array
           items:

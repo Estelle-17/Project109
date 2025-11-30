@@ -20,6 +20,7 @@ public class BattleMapManager : MonoBehaviour
     public int row;
     public (int column, int row) centerCoord;
     public (int column, int row) rewardCoord;
+    public (int column, int row) playerSpawnCoord;
     public int tilePadding;
 
     public Vector3 CheckTileMapLocationByRowAndColumn(int newColumn, int newRow)
@@ -35,6 +36,10 @@ public class BattleMapManager : MonoBehaviour
     public Vector3 CheckTileMapRewardLocation()
     {
         return map[rewardCoord.column][rewardCoord.row].transform.position;
+    }
+    public Vector3 CheckPlayerSpawnLocation()
+    {
+        return map[playerSpawnCoord.column][playerSpawnCoord.row].transform.position;
     }
 
     public List<List<Tile>> GetTileMap() { return map; }
@@ -125,10 +130,14 @@ public class BattleMapManager : MonoBehaviour
                 {
                     tile.tileState = TileState.Full;
                 }
-                if (baseMapTiles[columnIndex][rowIndex] == '2')
+                else if (baseMapTiles[columnIndex][rowIndex] == 'R')
                 {
                     tile.tileState = TileState.Full;
                     rewardCoord = (columnIndex, rowIndex);
+                }
+                else if (baseMapTiles[columnIndex][rowIndex] == 'S')
+                {
+                    playerSpawnCoord = (columnIndex, rowIndex);
                 }
                 map[columnIndex].Add(tile);
             }

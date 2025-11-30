@@ -15,7 +15,7 @@ MonoBehaviour:
   relicTexture: {fileID: 0}
   classType: All
   relicName: "\uC545\uB9C8\uC758 \uAF2C\uB9AC"
-  texturePath: Relic_RecoveryPlate_Texture
+  texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_TailOfTheDevil_Data
   level: 3
   description: "\uB0B4 \uD134\uC774 \uC2DC\uC791\uB420 \uB54C \uB9C8\uB2E4 2\uCE78

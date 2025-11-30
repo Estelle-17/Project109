@@ -93,6 +93,15 @@ public class LoadMapHandler : MonoBehaviour
                 case ExtraIncountType.ShineWell:
                     break;
             }
+
+            //플레이어 위치 이동
+            GameManager.instance.currentCharacter.transform.position = GameManager.instance.currentMap.CheckPlayerSpawnLocation();
+            PlayerMove playerMove = GameManager.instance.currentCharacter.transform.GetComponent<PlayerMove>();
+            if(playerMove != null)
+            {
+                (int column, int row) coord = GameManager.instance.currentMap.playerSpawnCoord;
+                playerMove.SetCurrentTile(GameManager.instance.currentMap.GetTileMap()[coord.column][coord.row]);
+            }
         }
 
         StartCoroutine(FadeOut(isLoadingNode));

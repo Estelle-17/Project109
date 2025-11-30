@@ -72,6 +72,9 @@ public class GameManager : MonoBehaviour
         playerStat.mapFloorCheck_Length = 3;
         AddInGame_Currency(CurrencyType.Gold, 0);
         AddInGame_Currency(CurrencyType.MemorySharp, 0);
+
+        //불러온 아이템들 세분화 진행
+        GameItemRewardManager.instance.UpdateItemList();
     }
 
     public PlayerStat GetPlayerStat() {  return playerStat; }

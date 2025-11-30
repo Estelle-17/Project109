@@ -171,8 +171,10 @@ public class AssetCacheManager : MonoBehaviour
 
         Debug.Log("All Data Load is Complete.");
 
-        //불러온 아이템들 세분화 진행
-        GameItemRewardManager.instance.UpdateItemList();
+        if (SceneLoadManager.instance != null)
+        {
+            SceneLoadManager.instance.ActiveStartButton();
+        }
     }
 
     public IEnumerator LoadAllAssetsFromBundle(string key, string bundlePath)
@@ -321,7 +323,9 @@ public class AssetCacheManager : MonoBehaviour
             foreach (var item in list)
             {
                 if (!dict.ContainsKey(item.name))
+                {
                     dict[item.name] = item;
+                }
             }
 
             Debug.Log($"{key}, {dict.Count} item Load Complete");

@@ -56,6 +56,11 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    public void SetCurrentTile(Tile newTile)
+    {
+        currentTile = newTile;
+    }
+
     /// <summary>
     /// 현재 플레이어가 있는 타일, 움직일 수 있는 거리를 가지고 맵의 어느 부분까지 이동이 가능한지 확인
     /// </summary>

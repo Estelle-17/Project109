@@ -60,7 +60,7 @@ MonoBehaviour:
   cardName: {fileID: 6541454250587398306}
   cardDescription: {fileID: 5390516900839122266}
   useStamina: {fileID: 627217548329928733}
-  cardImage: {fileID: 0}
+  cardImage: {fileID: 7404496649476818643}
   selectHighlightObject: {fileID: 7912562961185190725}
   effectAreaCheckButton: {fileID: 8411863329897311462}
   OnCardClick:

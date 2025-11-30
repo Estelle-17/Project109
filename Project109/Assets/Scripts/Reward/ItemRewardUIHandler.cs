@@ -18,7 +18,7 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
     private GameObject currentRewardUIObject;
     private ItemRewardUIType currentItemRewardUIType;
 
-    private RelicData rewardRelicData;
+    [SerializeField] private RelicData rewardRelicData;
     private int rewardValue;
 
     [SerializeField] private Image itemTexture;
@@ -58,12 +58,20 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
 
                 GameManager.instance.currentSpawnUIList.Add(currentRewardUIObject);
 
+                itemTexture.gameObject.SetActive(false);
                 itemText.text = "새로운 카드 보상!";
                 break;
             case ItemRewardUIType.Relic:    //단일 유물 획득 보상
                 rewardRelicData = GameItemRewardManager.instance.GetRandomRelicDataByPickupType(itemPickupType);
 
-                itemTexture.sprite = rewardRelicData.relicTexture;
+                if (AssetCacheManager.instance.TryGetTexture(rewardRelicData.texturePath, out Sprite texture))
+                {
+                    itemTexture.sprite = texture;
+                }
+                else
+                {
+                    Debug.LogWarning($"[ItemRewardUIHandler] 유물 텍스처 로드 실패: {rewardRelicData.texturePath}");
+                }
                 itemText.text = $"{rewardRelicData.relicName}";
                 break;
         }

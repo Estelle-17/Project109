@@ -18,11 +18,8 @@ MonoBehaviour:
   texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_TailOfTheDevil_Data
   level: 3
+  canUpgrade: 1
   description: "\uB0B4 \uD134\uC774 \uC2DC\uC791\uB420 \uB54C \uB9C8\uB2E4 2\uCE78
     \uB0B4\uC758 \uC801\uB4E4\uC5D0\uAC8C \uC1E0\uC57D\uC744 1 \uBD80\uC5EC\uD569\uB2C8\uB2E4."
-  conditions:
-  - conditionType: 
-    value: 1
-  effects:
-  - effectType: Debuff
-    value: 1
+  upgradeDescription: "\uB0B4 \uD134\uC774 \uC2DC\uC791\uB420 \uB54C \uB9C8\uB2E4
+    3\uCE78 \uB0B4\uC758 \uC801\uB4E4\uC5D0\uAC8C \uC1E0\uC57D\uC744 1 \uBD80\uC5EC\uD569\uB2C8\uB2E4."

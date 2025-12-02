@@ -82,7 +82,10 @@ public class UpgradeCardHandler : UIPanelBase
         {
             foreach (ActionCardData card in CardDeckManager.instance.GetCardDeckList())
             {
-                HandleCardAdded(card);
+                if (!card.isUpgrade)
+                {
+                    HandleCardAdded(card);
+                }
             }
         }
 

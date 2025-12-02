@@ -10,13 +10,13 @@ public class RewardListUIHandler : UIPanelBase
 
     }
 
-    public void AddRewardItem(ItemRewardUIType rewardType, RandomItemPickupType pickupType, int value)
+    public void AddRewardItem(ItemRewardUIType rewardType, RandomCardPickupType cardType, RandomRelicPickupType reilcType, int value)
     {
         ItemRewardUIHandler item = Instantiate(rewardItemPrefab, rewardItemSpawnTransform).GetComponent<ItemRewardUIHandler>();
 
         if(item != null)
         {
-            item.SetReward(rewardType, pickupType, value);
+            item.SetReward(rewardType, cardType, reilcType, value);
         }
     }
 }

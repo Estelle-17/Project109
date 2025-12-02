@@ -10,9 +10,9 @@ public class RelicData : ScriptableObject, IIdentifiable
     public string texturePath;
     public string dataPath;
     public int level;
+    public bool canUpgrade;
     public string description;
-    public List<RelicCondition> conditions;
-    public List<RelicEffect> effects;
+    public string upgradeDescription;
 
     public string ID => relicName;
 }

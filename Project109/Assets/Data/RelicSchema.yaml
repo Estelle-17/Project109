@@ -45,22 +45,18 @@ properties:
           type: integer
           minimum: !!int 1
           maximum: !!int 4
+        canUpgrade:
+          type: boolean
         description:
           type: string
-        conditions:
-          type: array
-          item:
-            <<: *relic_condition
-        effects:
-          type: array
-          items:
-            <<: *relic_effect
+        upgradeDescription:
+          type: string
       required:
         - classType
         - relicName
-        - level 
+        - level
+        - canUpgrade
         - description
-        - conditions
-        - effects
+        - upgradeDescription
 required:
   - relicCollection    

@@ -1,8 +1,8 @@
 function IsChoiceCanSelectable(item, Player, Character, Card, Relic)
     print('ItemType :', item.itemType)
     if item.itemType == "Money" then
-        if Player.inGame_Currency >= item.value then
-            print(Player.inGame_Currency, ' > ', item.value)
+        if Player.inGame_Currency_Gold >= item.value then
+            print(Player.inGame_Currency_Gold, ' > ', item.value)
             return true
         end
     elseif item.itemType == "MaxHp" then
@@ -28,7 +28,7 @@ function IsChoiceCanSelectable(item, Player, Character, Card, Relic)
             if Relic[i].relicName == item.name then
                 return true
             end
-        end  
+        end
     elseif item.itemType == "RandomCard" then
         if Card.Count ~= 0 then
             return true;

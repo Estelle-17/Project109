@@ -77,7 +77,7 @@ public class LoadMapHandler : MonoBehaviour
                     if(newIncountNode.eventNodeData != null)
                     {
                         GameManager.instance.currentMapState = MapState.Event;
-                        SpawnEventNPC(newIncountNode.eventNodeData);
+                        SpawnEventNPC(newIncountNode.eventNodeData, true);
                     }
                     break;
                 default:
@@ -89,6 +89,10 @@ public class LoadMapHandler : MonoBehaviour
                 case ExtraIncountType.None:
                     break;
                 case ExtraIncountType.Insight:
+                    if (newIncountNode.eventNodeData != null)
+                    {
+                        SpawnEventNPC(newIncountNode.eventNodeData, false);
+                    }
                     break;
                 case ExtraIncountType.ShineWell:
                     break;
@@ -131,9 +135,12 @@ public class LoadMapHandler : MonoBehaviour
         }
     }
 
-    void SpawnEventNPC(EventData eventData)
+    void SpawnEventNPC(EventData eventData, bool isProcessUpdateVariation)
     {
-        GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
+        if (isProcessUpdateVariation)
+        {
+            GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
+        }
 
         EventHandler newEventNPC = Instantiate(eventObjectPrefab).GetComponent<EventHandler>();
         newEventNPC.SetEventData(eventData);    //이벤트 데이터 전달
@@ -183,7 +190,7 @@ public class LoadMapHandler : MonoBehaviour
         GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
 
         //유물 선택지 생성
-        GameItemRewardManager.instance.InstantiateRelicReward(RandomItemPickupType.CommonToUnique, 
+        GameItemRewardManager.instance.InstantiateRelicReward(RandomRelicPickupType.CommonToUnique, 
                                                           GameManager.instance.currentMap.CheckNPCSpawnPoint());
     }
 

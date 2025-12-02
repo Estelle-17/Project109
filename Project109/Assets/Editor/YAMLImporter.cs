@@ -146,9 +146,9 @@ public class YAMLImporter
             asset.texturePath = relic.texturePath;
             asset.dataPath = relic.dataPath;
             asset.level = relic.level;
+            asset.canUpgrade = relic.canUpgrade;
             asset.description = relic.description;
-            asset.effects = relic.effects;
-            asset.conditions = relic.conditions;
+            asset.upgradeDescription = relic.upgradeDescription;
 
             var path = $"Assets/SO/Relics/{relic.dataPath}.asset";
             Directory.CreateDirectory("Assets/SO/Relics");
@@ -685,9 +685,9 @@ public class YAMLImporter
         public string texturePath { get; set; }
         public string dataPath { get; set; }
         public int level { get; set; }
+        public bool canUpgrade { get; set; }
         public string description { get; set; }
-        public List<RelicCondition> conditions { get; set; }
-        public List<RelicEffect> effects { get; set; }
+        public string upgradeDescription { get; set; }
     }
 
     public class RootEventData

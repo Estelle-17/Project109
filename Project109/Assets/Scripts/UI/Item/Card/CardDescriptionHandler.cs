@@ -124,7 +124,7 @@ public class CardDescriptionHandler : MonoBehaviour
                 description += "개전\n";
                 break;
             case "Vanguard":
-                description += "선봉대\n";
+                description += "선봉대: " + feature.description + "\n";
                 break;
             case "Finale":
                 description += "종전\n";

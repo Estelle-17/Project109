@@ -71,6 +71,7 @@ public class BattleMapManager : MonoBehaviour
         }
         else
         {
+            Debug.Log("No NPC Spawn Point Available, Return Center Location");
             return CheckTileMapCenterLocation();
         }
     }
@@ -139,6 +140,10 @@ public class BattleMapManager : MonoBehaviour
                 {
                     playerSpawnCoord = (columnIndex, rowIndex);
                 }
+                else if (baseMapTiles[columnIndex][rowIndex] == 'C')
+                {
+                    centerCoord = (columnIndex, rowIndex);
+                }
                 map[columnIndex].Add(tile);
             }
         }
@@ -146,7 +151,6 @@ public class BattleMapManager : MonoBehaviour
         //맵 크기 저장
         column = map.Count;
         row = map[0].Count;
-        centerCoord = (column / 2,  row / 2);
 
         Debug.Log($"Column: {column}, Row: {row}");
 

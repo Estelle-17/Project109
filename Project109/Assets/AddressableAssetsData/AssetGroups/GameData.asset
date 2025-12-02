@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: GameData
   m_GUID: f43c8a2f9323d8b4c8518938a52d05a4
   m_SerializeEntries:
+  - m_GUID: 10802d5d34a43d44c947ecf5150242b0
+    m_Address: Card_Initiative_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 40b7f70c36cc09946976d86964dbff4f
     m_Address: Map_Stage_1
     m_ReadOnly: 0
@@ -35,6 +41,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5d7ba1d400dac284a82409b949f8aa7d
     m_Address: Card_Slash_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 62ec03ad80cb27642927084494378761
+    m_Address: Card_Rumbling_Data
     m_ReadOnly: 0
     m_SerializedLabels:
     - Card
@@ -65,6 +77,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bdb533cb88176844e9421e36a5c2b300
     m_Address: Card_QuickSlash_Data
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c4153211fab590e4392b25a926eb0601
+    m_Address: Card_FalseSwipe_Data
     m_ReadOnly: 0
     m_SerializedLabels:
     - Card

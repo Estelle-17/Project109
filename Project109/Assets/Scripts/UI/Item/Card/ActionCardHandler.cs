@@ -83,28 +83,6 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
             cardDescription.text = cardDescriptionHandler.MakeCardDescription(currentCardEffect);
         }
     }
-    
-    static void ConvertStringToIntArray(string input, int[] resultBuffer)
-    {
-        int len = input.Length;
-        if(resultBuffer.Length < len)
-        {
-            Debug.Log("공격 범위 설정 중 버퍼 크기가 문자열보다 작습니다.");
-            return;
-        }
-
-        for(int i = 0; i < len; i++)
-        {
-            if (input[i] < '0' || input[i] > '9')
-            {
-                Debug.LogError($"유효하지 않은 숫자 문자: {input[i]}");
-            }
-            else
-            {
-                resultBuffer[i] = input[i] - '0';
-            }
-        }
-    }
 
     public ActionCardData GetCardData()
     {

@@ -152,7 +152,7 @@ public class ExploreUI : UIPanelBase
                     //초반 부분에만 생성되도록 주의
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(incountNodeListInSection[sectionIdx].Count / 3, incountNodeListInSection[sectionIdx].Count)];
                 }
-                while (currentNode.incountType != IncountType.Battle && currentNode.isNodeChanged);
+                while (currentNode.incountType != IncountType.Battle || currentNode.isNodeChanged);
                 currentNode.SetIncountNode(IncountType.Battle, ExtraIncountType.Insight);
                 currentNode.isNodeChanged = true;   //노드 생성이 완료된 노드는 이후에 변경되지 않도록 설정
 
@@ -171,7 +171,7 @@ public class ExploreUI : UIPanelBase
                 {
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(incountNodeListInSection[sectionIdx].Count / 2, incountNodeListInSection[sectionIdx].Count)];
                 }
-                while (currentNode.incountType != IncountType.Battle && currentNode.isNodeChanged);
+                while (currentNode.incountType != IncountType.Battle || currentNode.isNodeChanged);
 
                 currentNode.SetIncountNode(IncountType.SecretBox, ExtraIncountType.None);
             }
@@ -192,7 +192,7 @@ public class ExploreUI : UIPanelBase
                         currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
                     }
                 }
-                while (currentNode.incountType != IncountType.Battle && currentNode.isNodeChanged);
+                while (currentNode.incountType != IncountType.Battle || currentNode.isNodeChanged);
 
                 currentNode.SetIncountNode(IncountType.Elite, ExtraIncountType.None);
             }
@@ -205,7 +205,7 @@ public class ExploreUI : UIPanelBase
                 {
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(incountNodeListInSection[sectionIdx].Count / 3, incountNodeListInSection[sectionIdx].Count)];
                 }
-                while (currentNode.incountType != IncountType.Battle && currentNode.isNodeChanged);
+                while (currentNode.incountType != IncountType.Battle || currentNode.isNodeChanged);
 
                 currentNode.SetIncountNode(IncountType.Restore, ExtraIncountType.None);
             }
@@ -218,7 +218,7 @@ public class ExploreUI : UIPanelBase
                 {
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
                 }
-                while (currentNode.incountType != IncountType.Battle && currentNode.isNodeChanged);
+                while (currentNode.incountType != IncountType.Battle || currentNode.isNodeChanged);
 
                 currentNode.SetIncountNode(IncountType.Store, ExtraIncountType.None);
             }
@@ -231,7 +231,7 @@ public class ExploreUI : UIPanelBase
                 {
                     currentNode = incountNodeListInSection[sectionIdx][Random.Range(0, incountNodeListInSection[sectionIdx].Count)];
                 }
-                while (currentNode.incountType != IncountType.Battle && currentNode.isNodeChanged);
+                while (currentNode.incountType != IncountType.Battle || currentNode.isNodeChanged);
 
                 currentNode.SetIncountNode(IncountType.Secret, ExtraIncountType.None);
 

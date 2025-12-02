@@ -27,21 +27,20 @@ public class RewardBoxManager : MonoBehaviour
             switch(GameManager.instance.currentIncountNode.incountType)
             {
                 case IncountType.Battle:
-                    rewardListUI.AddRewardItem(ItemRewardUIType.Gold, RandomItemPickupType.Common, 60);
-                    rewardListUI.AddRewardItem(ItemRewardUIType.MemorySharp, RandomItemPickupType.Common, 2);
-                    rewardListUI.AddRewardItem(ItemRewardUIType.Card, RandomItemPickupType.CommonToUnique, 1);
+                    rewardListUI.AddRewardItem(ItemRewardUIType.Gold, RandomCardPickupType.Common, RandomRelicPickupType.Common, 60);
+                    rewardListUI.AddRewardItem(ItemRewardUIType.MemorySharp, RandomCardPickupType.Common, RandomRelicPickupType.Common, 2);
+                    rewardListUI.AddRewardItem(ItemRewardUIType.Card, RandomCardPickupType.CommonToUnique, RandomRelicPickupType.Common, 1);
                     break;
                 case IncountType.Elite:
-                    rewardListUI.AddRewardItem(ItemRewardUIType.Gold, RandomItemPickupType.Common, 80);
-                    rewardListUI.AddRewardItem(ItemRewardUIType.MemorySharp, RandomItemPickupType.Common, 5);
-                    rewardListUI.AddRewardItem(ItemRewardUIType.Card, RandomItemPickupType.CommonToUnique, 1);
-                    rewardListUI.AddRewardItem(ItemRewardUIType.Relic, RandomItemPickupType.CommonToUnique, 1);
+                    rewardListUI.AddRewardItem(ItemRewardUIType.Gold, RandomCardPickupType.Common, RandomRelicPickupType.Common, 80);
+                    rewardListUI.AddRewardItem(ItemRewardUIType.MemorySharp, RandomCardPickupType.Common, RandomRelicPickupType.Common, 5);
+                    rewardListUI.AddRewardItem(ItemRewardUIType.Card, RandomCardPickupType.CommonToUnique, RandomRelicPickupType.Common, 1);
+                    rewardListUI.AddRewardItem(ItemRewardUIType.Relic, RandomCardPickupType.Common, RandomRelicPickupType.CommonToUnique, 1);
                     break;
                 case IncountType.Boss:
-                    rewardListUI.AddRewardItem(ItemRewardUIType.Gold, RandomItemPickupType.Common, 100);
-                    rewardListUI.AddRewardItem(ItemRewardUIType.MemorySharp, RandomItemPickupType.Common, 15);
-                    rewardListUI.AddRewardItem(ItemRewardUIType.Card, RandomItemPickupType.Unique, 1);
-                    rewardListUI.AddRewardItem(ItemRewardUIType.Relic, RandomItemPickupType.Unique, 1);
+                    rewardListUI.AddRewardItem(ItemRewardUIType.Gold, RandomCardPickupType.Common, RandomRelicPickupType.Common, 150);
+                    rewardListUI.AddRewardItem(ItemRewardUIType.MemorySharp, RandomCardPickupType.Common, RandomRelicPickupType.Common, 10);
+                    rewardListUI.AddRewardItem(ItemRewardUIType.Card, RandomCardPickupType.CommonToUnique, RandomRelicPickupType.Common, 1);
                     break;
                 default:
                     break;

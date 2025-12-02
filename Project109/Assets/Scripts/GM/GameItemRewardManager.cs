@@ -1,6 +1,27 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+public enum RandomCardPickupType
+{
+    Common,
+    Rare,
+    Unique,
+    CommonToUnique,
+    CommonToRare,
+    RareToUnique
+}
+
+public enum RandomRelicPickupType
+{
+    Common,
+    Rare,
+    Unique,
+    CommonToUnique,
+    CommonToRare,
+    RareToUnique,
+    Boss
+}
+
 public class GameItemRewardManager : MonoBehaviour
 {
     public static GameItemRewardManager instance { get; private set; }
@@ -34,10 +55,12 @@ public class GameItemRewardManager : MonoBehaviour
     private List<RelicData> commonRelicList = new List<RelicData>();
     private List<RelicData> rareRelicList = new List<RelicData>();
     private List<RelicData> uniqueRelicList = new List<RelicData>();
+    private List<RelicData> bossRelicList = new List<RelicData>();
 
     RandomItemPicker<RelicData> commonRelicPicker;
     RandomItemPicker<RelicData> rareRelicPicker;
     RandomItemPicker<RelicData> uniqueRelicPicker;
+    RandomItemPicker<RelicData> bossRelicPicker;
 
     //등급별 확률
     int commonRate;
@@ -50,6 +73,23 @@ public class GameItemRewardManager : MonoBehaviour
         commonRate = 70;
         rareRate = 25;
         uniqueRate = 5;
+    }
+
+    public void ResetCardLists()
+    {
+        //Card Picker 초기화
+        commonCardPicker = new RandomItemPicker<ActionCardData>(commonCardList);
+        rareCardPicker = new RandomItemPicker<ActionCardData>(rareCardList);
+        uniqueCardPicker = new RandomItemPicker<ActionCardData>(uniqueCardList);
+    }
+
+    public void ResetRelicLists()
+    {
+        //Relic Picker 초기화
+        commonRelicPicker = new RandomItemPicker<RelicData>(commonRelicList);
+        rareRelicPicker = new RandomItemPicker<RelicData>(rareRelicList);
+        uniqueRelicPicker = new RandomItemPicker<RelicData>(uniqueRelicList);
+        bossRelicPicker = new RandomItemPicker<RelicData>(bossRelicList);
     }
 
     public void UpdateItemList()
@@ -83,6 +123,9 @@ public class GameItemRewardManager : MonoBehaviour
                 case 3:
                     uniqueRelicList.Add(data);
                     break;
+                case 4:
+                    bossRelicList.Add(data);
+                    break;
             }
         }
 
@@ -95,18 +138,149 @@ public class GameItemRewardManager : MonoBehaviour
         commonRelicPicker = new RandomItemPicker<RelicData>(commonRelicList);
         rareRelicPicker = new RandomItemPicker<RelicData>(rareRelicList);
         uniqueRelicPicker = new RandomItemPicker<RelicData>(uniqueRelicList);
-}
+        bossRelicPicker = new RandomItemPicker<RelicData>(bossRelicList);
+    }
 
-    public ActionCardData GetRandomCardDataByPickupType(RandomItemPickupType pickupType)
+    public void EraseRelicFromList(RelicData relicData)
+    {
+        switch (relicData.level)
+        {
+            case 1:
+                Debug.Log("Removing common Relic: " + relicData.relicName + ", Count: "+ commonRelicList.Count);
+                foreach (RelicData data in commonRelicList)
+                {
+                    if (data.relicName == relicData.relicName)
+                    {
+                        commonRelicList.Remove(data);
+                        break;
+                    }
+                }
+                commonRelicPicker = new RandomItemPicker<RelicData>(commonRelicList);
+                Debug.Log("commonRelicPicker Count: " + commonRelicPicker.Count());
+                break;
+            case 2:
+                Debug.Log("Removing rare Relic: " + relicData.relicName + ", Count: " + rareRelicList.Count);
+                foreach (RelicData data in rareRelicList)
+                {
+                    if (data.relicName == relicData.relicName)
+                    {
+                        rareRelicList.Remove(data);
+                        break;
+                    }
+                }
+                rareRelicPicker = new RandomItemPicker<RelicData>(rareRelicList);
+                Debug.Log("rareRelicPicker Count: " + rareRelicPicker.Count());
+                break;
+            case 3:
+                Debug.Log("Removing unique Relic: " + relicData.relicName + ", Count: " + uniqueRelicList.Count);
+                foreach (RelicData data in uniqueRelicList)
+                {
+                    if (data.relicName == relicData.relicName)
+                    {
+                        uniqueRelicList.Remove(data);
+                        break;
+                    }
+                }
+                uniqueRelicPicker = new RandomItemPicker<RelicData>(uniqueRelicList);
+                Debug.Log("uniqueRelicPicker Count: " + uniqueRelicPicker.Count());
+                break;
+            case 4:
+                Debug.Log("Removing boss Relic: " + relicData.relicName + ", Count: " + bossRelicList.Count);
+                foreach (RelicData data in bossRelicList)
+                {
+                    if (data.relicName == relicData.relicName)
+                    {
+                        bossRelicList.Remove(data);
+                        break;
+                    }
+                }
+                bossRelicPicker = new RandomItemPicker<RelicData>(bossRelicList);
+                Debug.Log("bossRelicPicker Count: " + bossRelicPicker.Count());
+                break;
+        }
+        Debug.Log("Relic Removed from List: " + relicData.relicName);
+    }
+
+    public void AddRelicFromList(RelicData relicData)
+    {
+        switch (relicData.level)
+        {
+            case 1:
+                if (commonRelicList.Contains(relicData))
+                    return;
+
+                commonRelicList.Add(relicData);
+                commonRelicPicker = new RandomItemPicker<RelicData>(commonRelicList);
+                break;
+            case 2:
+                if (rareRelicList.Contains(relicData))
+                    return;
+
+                rareRelicList.Add(relicData);
+                rareRelicPicker = new RandomItemPicker<RelicData>(rareRelicList);
+                break;
+            case 3:
+                if (uniqueRelicList.Contains(relicData))
+                    return;
+
+                uniqueRelicList.Add(relicData);
+                uniqueRelicPicker = new RandomItemPicker<RelicData>(uniqueRelicList);
+                break;
+            case 4:
+                if (bossRelicList.Contains(relicData))
+                    return;
+
+                bossRelicList.Add(relicData);
+                bossRelicPicker = new RandomItemPicker<RelicData>(bossRelicList);
+                break;
+        }
+        Debug.Log("Relic Added to List: " + relicData.relicName);
+    }
+
+    public ActionCardData GetRandomCardDataByPickupType(RandomCardPickupType pickupType)
     {
         //랜덤한 숫자 선택
         int pickNumber = Random.Range(1, 101);
 
         ActionCardData cardData = ScriptableObject.CreateInstance<ActionCardData>();
+
+        //픽업 타입에 따른 확률 조정
+        switch (pickupType)
+        {
+            case RandomCardPickupType.Common:
+                commonRate = 100;
+                rareRate = 0;
+                uniqueRate = 0;
+                break;
+            case RandomCardPickupType.Rare:
+                commonRate = 0;
+                rareRate = 100;
+                uniqueRate = 0;
+                break;
+            case RandomCardPickupType.Unique:
+                commonRate = 0;
+                rareRate = 0;
+                uniqueRate = 100;
+                break;
+            case RandomCardPickupType.CommonToUnique:
+                commonRate = 60;
+                rareRate = 30;
+                uniqueRate = 10;
+                break;
+            case RandomCardPickupType.CommonToRare:
+                commonRate = 70;
+                rareRate = 30;
+                uniqueRate = 0;
+                break;
+            case RandomCardPickupType.RareToUnique:
+                commonRate = 0;
+                rareRate = 80;
+                uniqueRate = 20;
+                break;
+        }
+
         if (pickNumber <= uniqueRate)
         {
-            uniqueCardPicker.Reset();
-
             //unique카드들 중 랜덤한 1장 선택
             if (uniqueCardPicker.TryGetNext(out ActionCardData data))
             {
@@ -123,8 +297,6 @@ public class GameItemRewardManager : MonoBehaviour
         }
         else if (pickNumber > uniqueRate && pickNumber <= uniqueRate + rareRate)
         {
-            rareCardPicker.Reset();
-
             //rare카드들 중 랜덤한 1장 선택
             if (rareCardPicker.TryGetNext(out ActionCardData data))
             {
@@ -141,8 +313,6 @@ public class GameItemRewardManager : MonoBehaviour
         }
         else
         {
-            commonCardPicker.Reset();
-
             //common카드들 중 랜덤한 1장 선택
             if (commonCardPicker.TryGetNext(out ActionCardData data))
             {
@@ -161,16 +331,65 @@ public class GameItemRewardManager : MonoBehaviour
         return cardData;
     }
 
-    public RelicData GetRandomRelicDataByPickupType(RandomItemPickupType pickupType)
+    public RelicData GetRandomRelicDataByPickupType(RandomRelicPickupType pickupType)
     {
         //랜덤한 유물 선택 후 등록
         int pickNumber = Random.Range(1, 101);
 
         RelicData relicData = ScriptableObject.CreateInstance<RelicData>();
+
+        //픽업 타입에 따른 확률 조정
+        switch (pickupType)
+        {
+            case RandomRelicPickupType.Common:
+                commonRate = 100;
+                rareRate = 0;
+                uniqueRate = 0;
+                break;
+            case RandomRelicPickupType.Rare:
+                commonRate = 0;
+                rareRate = 100;
+                uniqueRate = 0;
+                break;
+            case RandomRelicPickupType.Unique:
+                commonRate = 0;
+                rareRate = 0;
+                uniqueRate = 100;
+                break;
+            case RandomRelicPickupType.CommonToUnique:
+                commonRate = 60;
+                rareRate = 30;
+                uniqueRate = 10;
+                break;
+            case RandomRelicPickupType.CommonToRare:
+                commonRate = 70;
+                rareRate = 30;
+                uniqueRate = 0;
+                break;
+            case RandomRelicPickupType.RareToUnique:
+                commonRate = 0;
+                rareRate = 80;
+                uniqueRate = 20;
+                break;
+            case RandomRelicPickupType.Boss:
+                //보스 유물은 무조건 보스 유물 중에서 선택
+                if (bossRelicPicker.TryGetNext(out RelicData data))
+                {
+                    relicData = data;
+                }
+                else
+                {
+                    bossRelicPicker.Reset();
+                    if (bossRelicPicker.TryGetNext(out RelicData newData))
+                    {
+                        relicData = newData;
+                    }
+                }
+                return relicData;
+        }
+
         if (pickNumber <= uniqueRate)
         {
-            uniqueRelicPicker.Reset();
-
             //unique유물들 중 랜덤한 1장 선택
             if (uniqueRelicPicker.TryGetNext(out RelicData data))
             {
@@ -187,8 +406,6 @@ public class GameItemRewardManager : MonoBehaviour
         }
         else if (pickNumber > uniqueRate && pickNumber <= uniqueRate + rareRate)
         {
-            rareRelicPicker.Reset();
-
             //rare유물들 중 랜덤한 1장 선택
             if (rareRelicPicker.TryGetNext(out RelicData data))
             {
@@ -205,8 +422,6 @@ public class GameItemRewardManager : MonoBehaviour
         }
         else
         {
-            commonRelicPicker.Reset();
-
             //common유물들 중 랜덤한 1장 선택
             if (commonRelicPicker.TryGetNext(out RelicData data))
             {
@@ -244,7 +459,7 @@ public class GameItemRewardManager : MonoBehaviour
         }
     }
 
-    public void InstantiateCardReward(RandomItemPickupType itemPickupType, Vector3 spawnPosition)
+    public void InstantiateCardReward(RandomCardPickupType itemPickupType, Vector3 spawnPosition)
     {
         if (rewardObjectPrefab == null)
             return;
@@ -253,7 +468,7 @@ public class GameItemRewardManager : MonoBehaviour
         RewardItemHandler rewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardItemHandler>();
         if (rewardNPC != null)
         {
-            rewardNPC.SetReward(RewardItemType.Card, itemPickupType, 0);
+            rewardNPC.SetReward(RewardItemType.Card, itemPickupType, RandomRelicPickupType.Common, 0);
             rewardNPC.transform.position = spawnPosition;
         }
         //맵 이동 시 지워질 오브젝트 목록으로 등록
@@ -261,7 +476,7 @@ public class GameItemRewardManager : MonoBehaviour
         GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
     }
 
-    public void InstantiateRelicReward(RandomItemPickupType itemPickupType, Vector3 spawnPosition)
+    public void InstantiateRelicReward(RandomRelicPickupType itemPickupType, Vector3 spawnPosition)
     {
         if (rewardObjectPrefab == null)
             return;
@@ -270,14 +485,13 @@ public class GameItemRewardManager : MonoBehaviour
         RewardItemHandler relicRewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardItemHandler>();
         if (relicRewardNPC != null)
         {
-            relicRewardNPC.SetReward(RewardItemType.Relic, itemPickupType, 0);
+            relicRewardNPC.SetReward(RewardItemType.Relic, RandomCardPickupType.Common, itemPickupType, 0);
             relicRewardNPC.transform.position = spawnPosition;
         }
         //맵 이동 시 지워질 오브젝트 목록으로 등록
         GameManager.instance.currentSpawnNPCList.Add(relicRewardNPC.gameObject);
         GameManager.instance.currentSpawnUIList.Add(relicRewardNPC.GetRewardUI());
     }
-
 
     public List<ActionCardData> GetCommonCardList() {   return commonCardList;  }
     public List<ActionCardData> GetRareCardList() { return rareCardList; }

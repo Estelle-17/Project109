@@ -39,7 +39,9 @@ MonoBehaviour:
     conditions: []
     features:
     - cardFeatureType: Finale
+      description: 
       featureValue: 0
+      bonusEffect: []
       chainStaminaCost: 0
       chainEffect: []
       chainCondition: []
@@ -64,7 +66,9 @@ MonoBehaviour:
     conditions: []
     features:
     - cardFeatureType: Finale
+      description: 
       featureValue: 0
+      bonusEffect: []
       chainStaminaCost: 0
       chainEffect: []
       chainCondition: []

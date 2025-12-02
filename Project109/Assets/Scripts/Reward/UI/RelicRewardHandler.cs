@@ -12,7 +12,7 @@ public class RelicRewardHandler : MonoBehaviour
 
     }
 
-    public void SettingRelics(RandomItemPickupType pickupType, int rewardRelicCount)
+    public void SettingRelics(RandomRelicPickupType pickupType, int rewardRelicCount)
     {
         for (int count = 0; count < rewardRelicCount; count++)
         {

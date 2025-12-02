@@ -2,16 +2,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum RandomItemPickupType
-{
-    Common,
-    Rare,
-    Unique,
-    CommonToUnique,
-    CommonToRare,
-    RareToUnique
-}
-
 public class CardRewardHandler : UIPanelBase
 {
     [SerializeField] private List<ActionCardHandler> cardList;
@@ -25,8 +15,10 @@ public class CardRewardHandler : UIPanelBase
 
     }
 
-    public void SettingCards(RandomItemPickupType pickupType, int rewardCardCount)
+    public void SettingCards(RandomCardPickupType pickupType, int rewardCardCount)
     {
+        GameItemRewardManager.instance.ResetCardLists();
+
         for (int count = 0; count < rewardCardCount; count++)
         {
             ActionCardHandler card = Instantiate(cardObjectPrefab, cardSpawnTransform).GetComponent<ActionCardHandler>();

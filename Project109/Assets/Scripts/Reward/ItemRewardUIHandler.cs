@@ -33,7 +33,7 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
 
     }
 
-    public void SetReward(ItemRewardUIType npcType, RandomItemPickupType itemPickupType, int value)
+    public void SetReward(ItemRewardUIType npcType, RandomCardPickupType cardType, RandomRelicPickupType reilcType, int value)
     {
         currentItemRewardUIType = npcType;
 
@@ -52,17 +52,17 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
             case ItemRewardUIType.Card:
                 currentRewardUIObject = Instantiate(cardRewardUIPrefab);
                 CardRewardHandler cardRewardHandler = currentRewardUIObject.GetComponent<CardRewardHandler>();
-                cardRewardHandler.SettingCards(itemPickupType, PlayerDataManager.instance.GetPlayerStat().reward_Card_Count);    //보여줄 아이템의 수는 상황에 따라 변경 가능
+                cardRewardHandler.SettingCards(cardType, PlayerDataManager.instance.GetPlayerStat().reward_Card_Count);    //보여줄 아이템의 수는 상황에 따라 변경 가능
                 cardRewardHandler.rootObject = this.gameObject;
                 cardRewardHandler.gameObject.SetActive(false);
 
                 GameManager.instance.currentSpawnUIList.Add(currentRewardUIObject);
 
                 itemTexture.gameObject.SetActive(false);
-                itemText.text = "새로운 카드 보상!";
+                itemText.text = "새로운 기억 보상!";
                 break;
             case ItemRewardUIType.Relic:    //단일 유물 획득 보상
-                rewardRelicData = GameItemRewardManager.instance.GetRandomRelicDataByPickupType(itemPickupType);
+                rewardRelicData = GameItemRewardManager.instance.GetRandomRelicDataByPickupType(reilcType);
 
                 if (AssetCacheManager.instance.TryGetTexture(rewardRelicData.texturePath, out Sprite texture))
                 {

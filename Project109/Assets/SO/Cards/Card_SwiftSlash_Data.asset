@@ -46,6 +46,8 @@ MonoBehaviour:
           baseValue: 4
           staminaValue: 0
           scalingRatio: 0
+          targetMode: 
+          times: 0
           statusEffectType: 
           durationTime: 0
       - condition:
@@ -58,12 +60,16 @@ MonoBehaviour:
           baseValue: 0
           staminaValue: -5
           scalingRatio: 0
+          targetMode: 
+          times: 0
           statusEffectType: 
           durationTime: 0
     conditions: []
     features:
     - cardFeatureType: Echo
+      description: 
       featureValue: 10
+      bonusEffect: []
       chainStaminaCost: 0
       chainEffect: []
       chainCondition: []
@@ -95,6 +101,8 @@ MonoBehaviour:
           baseValue: 6
           staminaValue: 0
           scalingRatio: 0
+          targetMode: 
+          times: 0
           statusEffectType: 
           durationTime: 0
       - condition:
@@ -107,12 +115,16 @@ MonoBehaviour:
           baseValue: 0
           staminaValue: -5
           scalingRatio: 0
+          targetMode: 
+          times: 0
           statusEffectType: 
           durationTime: 0
     conditions: []
     features:
     - cardFeatureType: Echo
+      description: 
       featureValue: 10
+      bonusEffect: []
       chainStaminaCost: 0
       chainEffect: []
       chainCondition: []

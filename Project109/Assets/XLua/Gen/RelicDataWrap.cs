@@ -1,4 +1,4 @@
-#if USE_UNI_LUA
+﻿#if USE_UNI_LUA
 using LuaAPI = UniLua.Lua;
 using RealStatePtr = UniLua.ILuaState;
 using LuaCSFunction = UniLua.CSharpFunctionDelegate;
@@ -32,9 +32,9 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "texturePath", _g_get_texturePath);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "dataPath", _g_get_dataPath);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "level", _g_get_level);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "canUpgrade", _g_get_canUpgrade);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "description", _g_get_description);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "conditions", _g_get_conditions);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "effects", _g_get_effects);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "upgradeDescription", _g_get_upgradeDescription);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "relicTexture", _s_set_relicTexture);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "classType", _s_set_classType);
@@ -42,9 +42,9 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "texturePath", _s_set_texturePath);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "dataPath", _s_set_dataPath);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "level", _s_set_level);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "canUpgrade", _s_set_canUpgrade);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "description", _s_set_description);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "conditions", _s_set_conditions);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "effects", _s_set_effects);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "upgradeDescription", _s_set_upgradeDescription);
             
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
@@ -192,6 +192,20 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_canUpgrade(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                RelicData gen_to_be_invoked = (RelicData)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.canUpgrade);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_description(RealStatePtr L)
         {
 		    try {
@@ -206,27 +220,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_conditions(RealStatePtr L)
+        static int _g_get_upgradeDescription(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 RelicData gen_to_be_invoked = (RelicData)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.conditions);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_effects(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                RelicData gen_to_be_invoked = (RelicData)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.effects);
+                LuaAPI.lua_pushstring(L, gen_to_be_invoked.upgradeDescription);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -326,6 +326,21 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_canUpgrade(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                RelicData gen_to_be_invoked = (RelicData)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.canUpgrade = LuaAPI.lua_toboolean(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _s_set_description(RealStatePtr L)
         {
 		    try {
@@ -341,28 +356,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_conditions(RealStatePtr L)
+        static int _s_set_upgradeDescription(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 RelicData gen_to_be_invoked = (RelicData)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.conditions = (System.Collections.Generic.List<RelicCondition>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<RelicCondition>));
-            
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 0;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_effects(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                RelicData gen_to_be_invoked = (RelicData)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.effects = (System.Collections.Generic.List<RelicEffect>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<RelicEffect>));
+                gen_to_be_invoked.upgradeDescription = LuaAPI.lua_tostring(L, 2);
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

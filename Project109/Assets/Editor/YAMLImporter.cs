@@ -61,17 +61,19 @@ public class YAMLImporter
         foreach (var card in rawData.@cardCollection)
         {
             var asset = ScriptableObject.CreateInstance<ActionCardData>();
+            asset.path = card.path;
             asset.className = card.className;
             asset.cardName = card.cardName;
+            asset.rarity = card.rarity;
+            asset.stamina = card.stamina;
+            asset.cardType = card.CardType;
+            asset.targetType = card.TargetType;
             asset.texturePath = card.texturePath;
-            card.dataPath = card.dataPath;
-            asset.level = card.level;
-            asset.defaultEffects = card.defaultEffects;
-            asset.upgradeEffects = card.upgradeEffects;
+            card.upgradeCardPath = card.upgradeCardPath;
 
             asset.isUpgrade = false;
 
-            var path = $"Assets/SO/Cards/{card.dataPath}.asset";
+            var path = $"Assets/SO/Cards/{"Card_" + card.path}.asset";
             Directory.CreateDirectory("Assets/SO/Cards");
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
@@ -89,7 +91,7 @@ public class YAMLImporter
                 AssetDatabase.AssetPathToGUID(path),
                 CreateOrFindAddressablesGroup(settings, "GameData")
             );
-            entry.address = card.dataPath;
+            entry.address = "Card_" + card.path;
             entry.SetLabel("Card", true);
             Debug.Log("Addressables에 등록 완료: " + entry.address);
         }
@@ -145,7 +147,7 @@ public class YAMLImporter
             asset.relicName = relic.relicName;
             asset.texturePath = relic.texturePath;
             asset.dataPath = relic.dataPath;
-            asset.level = relic.level;
+            asset.rarity = relic.rarity;
             asset.canUpgrade = relic.canUpgrade;
             asset.description = relic.description;
             asset.upgradeDescription = relic.upgradeDescription;
@@ -645,6 +647,80 @@ public class YAMLImporter
         Debug.Log("YAML import complete.");
     }
 
+    [MenuItem("Tools/Import CardDescription YAML")]
+    //[System.Obsolete]
+    public static void ImportCardDescriptionYAML()
+    {
+        string yamlPath = "Assets/Data/CardDescription.yaml";
+        string schemaPath = "Assets/Data/CardDescriptionSchema.yaml";
+
+        string yamlText = File.ReadAllText(yamlPath);
+        string schemaYamlText = File.ReadAllText(schemaPath);
+
+        //YAML -> Json으로 변환
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+        var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
+
+        var jsonSerializer = new SerializerBuilder()
+            .JsonCompatible()
+            .Build();
+        string jsonText = jsonSerializer.Serialize(yamlObject);
+
+        //YAML Schema -> Json Schema로 변환
+        var schemaYamlObject = deserializer.Deserialize(new StringReader(schemaYamlText));
+        string schemaJsonText = jsonSerializer.Serialize(schemaYamlObject);
+
+        JSchema schema = JSchema.Parse(schemaJsonText);
+
+        JObject jsonObj = JObject.Parse(jsonText);
+        if (!jsonObj.IsValid(schema, out IList<string> errorMessages))
+        {
+            Debug.LogError("❌ YAML validation failed:");
+            foreach (var error in errorMessages)
+                Debug.LogError(error);
+            return;
+        }
+
+        Debug.Log("YAML validation Success:");
+
+        //검증에 성공하면 ScriptableObject 생성
+        var rawData = deserializer.Deserialize<RootCardDescriptionData>(yamlText);
+
+        foreach (var card in rawData.cardDescriptionCollection)
+        {
+            var asset = ScriptableObject.CreateInstance<CardDescription>();
+            asset.path = card.path;
+            asset.cardName = card.cardName;
+            asset.description = card.description;
+
+            var path = $"Assets/SO/Description/{card.path + "_Description"}.asset";
+            Directory.CreateDirectory("Assets/SO/Description");
+            AssetDatabase.CreateAsset(asset, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            //Addressable에 등록
+            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+            if (settings == null)
+            {
+                Debug.LogError("Addressables 설정이 존재하지 않습니다.");
+                return;
+            }
+
+            AddressableAssetEntry entry = settings.CreateOrMoveEntry(
+                AssetDatabase.AssetPathToGUID(path),
+                CreateOrFindAddressablesGroup(settings, "Description")
+            );
+            entry.address = card.path + "_Description";
+            entry.SetLabel("Description", true);
+            Debug.Log("Addressables에 등록 완료: " + entry.address);
+        }
+
+        Debug.Log("YAML import complete.");
+    }
+
     public static AddressableAssetGroup CreateOrFindAddressablesGroup(AddressableAssetSettings settings, string groupName)
     {
         AddressableAssetGroup group = settings.FindGroup(groupName);
@@ -664,14 +740,17 @@ public class YAMLImporter
 
     public class CardEntry
     {
+        public string path { get; set; }
         public string className { get; set; }
         public string cardName { get; set; }
+        public int rarity { get; set; }
+        public int stamina { get; set; }
+        public string CardType { get; set; }
+        public string TargetType { get; set; }
+        public List<string> effectArea { get; set; }
         public string texturePath { get; set; }
-        public string dataPath { get; set; }
-        public int level { get; set; }
-        public CardEffect defaultEffects { get; set; }
-        public CardEffect upgradeEffects { get; set; }
-}
+        public string upgradeCardPath { get; set; }
+    }
 
     public class RootRelicData
     {
@@ -684,7 +763,7 @@ public class YAMLImporter
         public string relicName { get; set; }
         public string texturePath { get; set; }
         public string dataPath { get; set; }
-        public int level { get; set; }
+        public int rarity { get; set; }
         public bool canUpgrade { get; set; }
         public string description { get; set; }
         public string upgradeDescription { get; set; }
@@ -783,6 +862,18 @@ public class YAMLImporter
         public string dataPath { get; set; }
         public List<string> baseLayout { get; set; }
         public List<MapVariation> variations { get; set; }
+    }
+
+    public class RootCardDescriptionData
+    {
+        public List<CardDescriptionEntry> cardDescriptionCollection { get; set; }
+    }
+
+    public class CardDescriptionEntry
+    {
+        public string path { get; set; }
+        public string cardName { get; set; }
+        public string description { get; set; }
     }
 }
 #endif

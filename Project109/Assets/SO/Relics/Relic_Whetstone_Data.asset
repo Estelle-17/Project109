@@ -17,7 +17,7 @@ MonoBehaviour:
   relicName: "\uC22B\uB3CC"
   texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_Whetstone_Data
-  level: 2
+  rarity: 2
   canUpgrade: 1
   description: "\uC27C\uD130\uC5D0 \uC785\uC7A5 \uC2DC \uBB34\uC791\uC704 \uAE30\uC5B5
     1\uAC1C\uAC00 \uAC15\uD654\uB429\uB2C8\uB2E4."

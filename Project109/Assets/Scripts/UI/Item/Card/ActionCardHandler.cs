@@ -4,12 +4,13 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 using UnityEngine.Events;
+using System.Text;
 
 public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] private ActionCardData cardData;
 
-    private CardEffect currentCardEffect;   //현재 카드효과
+    //private CardEffect currentCardEffect;   //현재 카드효과
     [SerializeField] private CardDescriptionHandler cardDescriptionHandler;
 
     public TextMeshProUGUI cardName;
@@ -35,25 +36,21 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
         cardData = newCardData;
 
-        currentCardEffect = new CardEffect();
-
         if (cardData.isUpgrade)
         {
-            currentCardEffect = newCardData.upgradeEffects;
             cardName.text = cardData.cardName + "+";
         }
         else
         {
-            currentCardEffect = newCardData.defaultEffects;
             cardName.text = cardData.cardName;
         }
 
-        if(AssetCacheManager.instance.TryGetTexture(cardData.texturePath, out Sprite texture))
+        UpdateCardDescription();
+
+        if (AssetCacheManager.instance.TryGetTexture(cardData.texturePath, out Sprite texture))
         {
             cardImage.sprite = texture;
         }
-
-        UpdateCardDescription();   
     }
 
     public void UpgradeCard()
@@ -64,9 +61,9 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         }
 
         //현재 가지고 있는 카드 데이터를 기반으로 업그레이드 진행
-        currentCardEffect = cardData.upgradeEffects;
+        //currentCardEffect = cardData.upgradeEffects;
 
-        cardName.text = cardData.cardName + "+";
+        cardName.SetText(cardData.cardName + "+");
 
         cardData.isUpgrade = true;
 
@@ -75,12 +72,13 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void UpdateCardDescription()
     {
-        //현재 버프/디버프 및 유물 상태에 따른 변경점 업데이트
-        useStamina.text = currentCardEffect.useStamina.ToString();
-
-        if (cardDescriptionHandler != null)
+        if (AssetCacheManager.instance.TryGetCardDescription(cardData.path, out CardDescription description))
         {
-            cardDescription.text = cardDescriptionHandler.MakeCardDescription(currentCardEffect);
+            cardDescription.SetText(description.description);
+        }
+        else 
+        { 
+            Debug.LogWarning("Card description not found for path: " + cardData.path);
         }
     }
 
@@ -112,11 +110,11 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         //카드 범위 세팅 진행
         if (cardData.isUpgrade)
         {
-            UIManager.instance.effectAreaManager.SetEffectArea(cardData.upgradeEffects.effectArea);      
+            //UIManager.instance.effectAreaManager.SetEffectArea(cardData.upgradeEffects.effectArea);      
         }
         else
         {
-            UIManager.instance.effectAreaManager.SetEffectArea(cardData.defaultEffects.effectArea);
+            //UIManager.instance.effectAreaManager.SetEffectArea(cardData.defaultEffects.effectArea);
         }
     }
 

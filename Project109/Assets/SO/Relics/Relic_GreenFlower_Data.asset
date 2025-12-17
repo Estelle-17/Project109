@@ -17,7 +17,7 @@ MonoBehaviour:
   relicName: "\uCD08\uB85D\uC0C9 \uAF43"
   texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_GreenFlower_Data
-  level: 2
+  rarity: 2
   canUpgrade: 1
   description: "\uC804\uD22C \uC911 \uD68C\uBCF5\uB7C9\uC774 30% \uC99D\uAC00\uD569\uB2C8\uB2E4."
   upgradeDescription: "\uC804\uD22C \uC911 \uD68C\uBCF5\uB7C9\uC774 50% \uC99D\uAC00\uD569\uB2C8\uB2E4."

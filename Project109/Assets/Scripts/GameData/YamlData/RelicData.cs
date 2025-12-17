@@ -9,7 +9,7 @@ public class RelicData : ScriptableObject, IIdentifiable
     public string relicName;
     public string texturePath;
     public string dataPath;
-    public int level;
+    public int rarity;
     public bool canUpgrade;
     public string description;
     public string upgradeDescription;

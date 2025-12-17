@@ -17,7 +17,7 @@ MonoBehaviour:
   relicName: "\uBE44\uD0C0\uBBFC"
   texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_Vitamin_Data
-  level: 2
+  rarity: 2
   canUpgrade: 0
   description: "\uC55E\uC73C\uB85C\uC758 \uAE30\uC5B5 \uBCF4\uC0C1\uC5D0\uC11C \uC120\uD0DD\uC9C0\uAC00
     1\uAC1C \uB354 \uC8FC\uC5B4\uC9D1\uB2C8\uB2E4."

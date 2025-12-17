@@ -17,7 +17,7 @@ MonoBehaviour:
   relicName: "\uAE08\uB369\uC774"
   texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_GoldNugget_Data
-  level: 2
+  rarity: 2
   canUpgrade: 0
   description: "\uACE8\uB4DC\uB97C 400 \uD68D\uB4DD\uD569\uB2C8\uB2E4."
   upgradeDescription: 

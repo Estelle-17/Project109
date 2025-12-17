@@ -17,7 +17,7 @@ MonoBehaviour:
   relicName: "\uC218\uC0C1\uD55C \uC57D\uBB3C"
   texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_SuspiciousDrug_Data
-  level: 1
+  rarity: 1
   canUpgrade: 1
   description: "\uC804\uD22C \uC2DC\uC791 \uC2DC \uCD5C\uB300 \uC2A4\uD0DC\uBBF8\uB108\uB97C
     20 \uC5BB\uC2B5\uB2C8\uB2E4. \uCCAB \uD134\uC774 \uC885\uB8CC\uB418\uBA74 \uCD5C\uB300

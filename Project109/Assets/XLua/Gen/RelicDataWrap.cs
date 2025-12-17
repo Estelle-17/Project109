@@ -31,7 +31,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "relicName", _g_get_relicName);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "texturePath", _g_get_texturePath);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "dataPath", _g_get_dataPath);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "level", _g_get_level);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "rarity", _g_get_rarity);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "canUpgrade", _g_get_canUpgrade);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "description", _g_get_description);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "upgradeDescription", _g_get_upgradeDescription);
@@ -41,7 +41,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "relicName", _s_set_relicName);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "texturePath", _s_set_texturePath);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "dataPath", _s_set_dataPath);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "level", _s_set_level);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "rarity", _s_set_rarity);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "canUpgrade", _s_set_canUpgrade);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "description", _s_set_description);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "upgradeDescription", _s_set_upgradeDescription);
@@ -178,13 +178,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_level(RealStatePtr L)
+        static int _g_get_rarity(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 RelicData gen_to_be_invoked = (RelicData)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.level);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.rarity);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -311,13 +311,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_level(RealStatePtr L)
+        static int _s_set_rarity(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 RelicData gen_to_be_invoked = (RelicData)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.level = LuaAPI.xlua_tointeger(L, 2);
+                gen_to_be_invoked.rarity = LuaAPI.xlua_tointeger(L, 2);
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

@@ -5,6 +5,7 @@ public class EffectOverride
 {
     public float baseValue;
     public float staminaValue;
+    public float damageRatio;
     public float scalingRatio;
     public string targetMode;
     public int times;

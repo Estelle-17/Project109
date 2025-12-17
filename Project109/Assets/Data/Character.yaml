@@ -13,11 +13,11 @@ characterCollection:
     startRelic:
       - "재생성 철판"
     startCards:
-      - cardName: 슬래시
+      - cardName: Slash
         number: !!int 4
-      - cardName: 콤보 슬래시
+      - cardName: ComboSlash
         number: !!int 1
-      - cardName: 땅 가르기
+      - cardName: Earthquake
         number: !!int 1
-      - cardName: 스위프트 슬래시
+      - cardName: SwiftSlash
         number: !!int 1

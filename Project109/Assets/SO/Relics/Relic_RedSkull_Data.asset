@@ -17,7 +17,7 @@ MonoBehaviour:
   relicName: "\uBE68\uAC04 \uD574\uACE8"
   texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_RedSkull_Data
-  level: 1
+  rarity: 1
   canUpgrade: 1
   description: "\uCCB4\uB825\uC774 40%\uBBF8\uB9CC\uC77C \uACBD\uC6B0 \uD798\uC744
     3 \uC5BB\uC2B5\uB2C8\uB2E4."

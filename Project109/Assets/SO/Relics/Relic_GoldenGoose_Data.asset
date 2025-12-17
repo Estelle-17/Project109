@@ -17,7 +17,7 @@ MonoBehaviour:
   relicName: "\uD669\uAE08 \uAC70\uC704"
   texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_GoldenGoose_Data
-  level: 1
+  rarity: 1
   canUpgrade: 1
   description: "\uB2E4\uC74C \uCE78\uC73C\uB85C \uC774\uB3D9\uD560 \uB54C \uB9C8\uB2E4
     \uACE8\uB4DC\uB97C 10 \uC783\uC2B5\uB2C8\uB2E4. \uC0C1\uC810\uC5D0\uC11C \uC5B4\uB5A4

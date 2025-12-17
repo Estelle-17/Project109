@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa819df5be163b346ba6d2587629c308, type: 3}
+  m_Name: Card_Initiative
+  m_EditorClassIdentifier: 
+  cardTexture: {fileID: 0}
+  path: Initiative
+  className: Warrior
+  cardName: "\uC120\uC218\uD544\uC2B9"
+  rarity: 2
+  stamina: 40
+  cardType: Attack
+  targetType: All
+  effectArea: []
+  texturePath: Card_test_texture
+  upgradeCardPath: 
+  isEvolved: 0
+  isUpgrade: 0
+  runtimeID: 0

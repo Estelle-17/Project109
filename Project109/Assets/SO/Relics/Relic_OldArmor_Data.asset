@@ -17,7 +17,7 @@ MonoBehaviour:
   relicName: "\uB0A1\uC740 \uAC11\uC637"
   texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_OldArmor_Data
-  level: 1
+  rarity: 1
   canUpgrade: 1
   description: "\uC804\uD22C \uC2DC\uC791 \uC2DC \uBC29\uC5B4\uB97C 1 \uC5BB\uC2B5\uB2C8\uB2E4"
   upgradeDescription: "\uC804\uD22C \uC2DC\uC791 \uC2DC \uBC29\uC5B4\uB97C 2 \uC5BB\uC2B5\uB2C8\uB2E4"

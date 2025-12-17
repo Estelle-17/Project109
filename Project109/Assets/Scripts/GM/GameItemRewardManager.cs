@@ -96,7 +96,7 @@ public class GameItemRewardManager : MonoBehaviour
     {
         foreach(ActionCardData data in AssetCacheManager.instance.cardList)
         {
-            switch (data.level) //1~3
+            switch (data.rarity) //1~3
             {
                 case 1:
                     commonCardList.Add(data);
@@ -112,7 +112,7 @@ public class GameItemRewardManager : MonoBehaviour
 
         foreach (RelicData data in AssetCacheManager.instance.relicList)
         {
-            switch (data.level) //1~3
+            switch (data.rarity) //1~3
             {
                 case 1:
                     commonRelicList.Add(data);
@@ -143,7 +143,7 @@ public class GameItemRewardManager : MonoBehaviour
 
     public void EraseRelicFromList(RelicData relicData)
     {
-        switch (relicData.level)
+        switch (relicData.rarity)
         {
             case 1:
                 Debug.Log("Removing common Relic: " + relicData.relicName + ", Count: "+ commonRelicList.Count);
@@ -203,7 +203,7 @@ public class GameItemRewardManager : MonoBehaviour
 
     public void AddRelicFromList(RelicData relicData)
     {
-        switch (relicData.level)
+        switch (relicData.rarity)
         {
             case 1:
                 if (commonRelicList.Contains(relicData))
@@ -442,7 +442,7 @@ public class GameItemRewardManager : MonoBehaviour
 
     public void RemoveObtainedRelicByPlayer(RelicData relicData)
     {
-        switch(relicData.level)
+        switch(relicData.rarity)
         {
             case 1:
                 commonRelicList.Remove(relicData);

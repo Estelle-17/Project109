@@ -41,7 +41,7 @@ properties:
           type: string
         dataPath:
           type: string
-        level:  # 유물 희귀도
+        rarity:  # 유물 희귀도
           type: integer
           minimum: !!int 1
           maximum: !!int 4
@@ -54,7 +54,7 @@ properties:
       required:
         - classType
         - relicName
-        - level
+        - rarity
         - canUpgrade
         - description
         - upgradeDescription

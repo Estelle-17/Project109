@@ -17,7 +17,7 @@ MonoBehaviour:
   relicName: "\uC5D0\uC5B4 \uB7EC\uB2DD \uC288\uC988"
   texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_AirRunningShoes_Data
-  level: 1
+  rarity: 1
   canUpgrade: 1
   description: "\uB9E4 \uD134 \uC774\uB3D9\uC5D0 \uAD00\uB828\uB41C \uD589\uB3D9\uC758
     \uC2A4\uD0DC\uBBF8\uB108 \uC18C\uBAA8\uAC00 20% \uAC10\uC18C\uD569\uB2C8\uB2E4."

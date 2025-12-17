@@ -17,7 +17,7 @@ MonoBehaviour:
   relicName: "\uD560\uC778 \uCE74\uB4DC"
   texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_SaleCard_Data
-  level: 1
+  rarity: 1
   canUpgrade: 1
   description: "\uC0C1\uC778\uC758 \uBB3C\uAC74 \uAC00\uACA9\uC774 30% \uAC10\uC18C\uD569\uB2C8\uB2E4."
   upgradeDescription: "\uC0C1\uC778\uC758 \uBB3C\uAC74 \uAC00\uACA9\uC774 50% \uAC10\uC18C\uD569\uB2C8\uB2E4."

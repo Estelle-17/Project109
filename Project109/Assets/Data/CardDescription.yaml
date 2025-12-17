@@ -1,0 +1,11 @@
+# string이 아닌 int, float, bool형식은 !!int와 같이 변수의 타입을 강제 지정해주어야 문제가 안생김
+cardDescriptionCollection:
+  - path: Slash
+    cardName: 슬래시
+    description: "피해를 !damage! 줍니다."
+  - path: QuickSlash
+    cardName: 퀵 슬래시
+    description: "피해를 !damage! 줍니다."
+  - path: ComboSlash
+    cardName: 콤보 슬래시
+    description: "피해를 !damage! 만큼 !times! 번 줍니다."

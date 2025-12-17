@@ -5,15 +5,21 @@ using System.Collections.Generic;
 public class ActionCardData : ScriptableObject, IIdentifiable
 {
     public Sprite cardTexture;
+    public string path;
     public string className;
     public string cardName;
+    public int rarity;
+    public int stamina;
+    public string cardType;
+    public string targetType;
+    public List<string> effectArea;
     public string texturePath;
-    public string dataPath;
-    public int level;
-    public CardEffect defaultEffects;
-    public CardEffect upgradeEffects;
+    public string upgradeCardPath;
+
+    public bool isEvolved;
+
     public bool isUpgrade;
 
-    public string ID => cardName;
+    public string ID => path;
     public int runtimeID;
 }

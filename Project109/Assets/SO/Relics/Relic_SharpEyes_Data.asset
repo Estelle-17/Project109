@@ -17,7 +17,7 @@ MonoBehaviour:
   relicName: "\uB0A0\uCE74\uB85C\uC6B4 \uB208\uB3D9\uC790"
   texturePath: Relic_RecoveryPlate_Sprite
   dataPath: Relic_SharpEyes_Data
-  level: 2
+  rarity: 2
   canUpgrade: 1
   description: "\uC5D8\uB9AC\uD2B8 \uBC0F \uBCF4\uC2A4 \uCE78\uC758 \uC801\uB4E4\uC774
     HP\uAC00 15% \uAC10\uC18C\uD569\uB2C8\uB2E4."

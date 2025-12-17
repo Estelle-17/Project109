@@ -35,6 +35,7 @@ public class AssetCacheManager : MonoBehaviour
     public string mapKey = "Map";
     public string modelKey = "Model";
     public string textureKey = "Texture";
+    public string descriptionKey = "Description";
 
     public IList<ActionCardData> cardList;
     private Dictionary<string, ActionCardData> cardDict = new Dictionary<string, ActionCardData>();
@@ -68,6 +69,9 @@ public class AssetCacheManager : MonoBehaviour
 
     public IList<Sprite> textureList;
     private Dictionary<string, Sprite> textureDict = new Dictionary<string, Sprite>();
+
+    public IList<CardDescription> cardDescriptionList;
+    private Dictionary<string, CardDescription> cardDescriptionDict = new Dictionary<string, CardDescription>();
 
     private IEnumerator Start()
     {
@@ -157,6 +161,13 @@ public class AssetCacheManager : MonoBehaviour
         {
             textureList = list;
             textureDict = dict;
+        }));
+
+        //카드 Description 데이터 할당 시작
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<CardDescription>(descriptionKey, (list, dict) =>
+        {
+            cardDescriptionList = list;
+            cardDescriptionDict = dict;
         }));
 
         ModManager modManager = GetComponent<ModManager>();
@@ -350,4 +361,5 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetMap(string name, out MapData mapData) => mapDict.TryGetValue(name, out mapData);
     public bool TryGetModel(string name, out GameObject model) => modelDict.TryGetValue(name, out model);
     public bool TryGetTexture(string name, out Sprite texture) => textureDict.TryGetValue(name, out texture);
+    public bool TryGetCardDescription(string name, out CardDescription description) => cardDescriptionDict.TryGetValue(name, out description);
 }

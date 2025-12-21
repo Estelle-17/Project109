@@ -27,7 +27,7 @@ public class EventHandler : MonoBehaviour
 
     private LuaEnv luaEnv;
     private CheckSelectable isChoiceCanSelectable;
-    public string luaChoiceSelectableScript;
+    private string luaChoiceSelectableScript;
 
     ChoiceDescriptionHandler makeEventDescription;
     ChoiceHandler choiceHandler;

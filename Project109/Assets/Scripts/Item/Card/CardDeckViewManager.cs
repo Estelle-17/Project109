@@ -26,6 +26,7 @@ public class CardDeckViewManager : UIPanelBase
             CardDeckManager.instance.OnCardRemoved += HandleCardRemoved;
             CardDeckManager.instance.OnCardsRefreshed += RefreshAllCardUIs;
             CardDeckManager.instance.OnCardUpgrade += HandleCardUpgrade;
+            CardDeckManager.instance.OnCardEvolve += HandleCardEvolve;
 
             gameObject.SetActive(false);
 
@@ -105,6 +106,18 @@ public class CardDeckViewManager : UIPanelBase
             if(cardHandler != null)
             {
                 cardHandler.UpgradeCard();
+            }
+        }
+    }
+
+    private void HandleCardEvolve(int runtimeID)
+    {
+        if (activeCardUIs.TryGetValue(runtimeID, out GameObject cardUIObject))
+        {
+            ActionCardHandler cardHandler = cardUIObject.GetComponent<ActionCardHandler>();
+            if (cardHandler != null)
+            {
+                cardHandler.EvolveCard();
             }
         }
     }

@@ -11,7 +11,7 @@ public class ShopUIHandler : UIPanelBase
     public GameObject cardPrefab;
     public GameObject relicPrefab;
     public GameObject potionPrefab;
-    public GameObject eraseCardUIPrefab;
+    public GameObject upgradeCardUIPrefab;
 
     public List<ActionCardHandler> cardList;
     public List<RelicHandler> relicList;
@@ -21,7 +21,7 @@ public class ShopUIHandler : UIPanelBase
 
     void Start()
     {
-        eraseCardButton.onClick.AddListener(OpenEraseCardUI);   //버튼 등록
+        eraseCardButton.onClick.AddListener(OpenUpgradeCardUI);   //버튼 등록
     }
 
     /// <summary>
@@ -89,9 +89,9 @@ public class ShopUIHandler : UIPanelBase
         RelicManager.instance.AddRelic(relicData);
     }
 
-    public void OpenEraseCardUI()
+    public void OpenUpgradeCardUI()
     {
-        EraseCardDeckManager eraseCardDeckManager = Instantiate(eraseCardUIPrefab).GetComponent<EraseCardDeckManager>();
-        eraseCardDeckManager.SetEraseCardCount(1);    //카드를 지우는 갯수 입력
+        UpgradeCardHandler upgradeCardUI = Instantiate(upgradeCardUIPrefab).GetComponent<UpgradeCardHandler>();
+        Debug.Log("Card Upgrade is Process!");
     }
 }

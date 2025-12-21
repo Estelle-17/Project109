@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using GameItem.Types;
 
 public class CardDeckManager : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class CardDeckManager : MonoBehaviour
     public event Action<ActionCardData> OnCardAdded;
     public event Action<int> OnCardRemoved;
     public event Action<int> OnCardUpgrade;
+    public event Action<int> OnCardEvolve;
     public event Action OnCardsRefreshed;
 
     void Start()
@@ -75,11 +77,28 @@ public class CardDeckManager : MonoBehaviour
         if (cardToUpgrade != null)
         {
             cardToUpgrade.isUpgrade = true;
+            cardToUpgrade.cardName += "+";
             OnCardUpgrade?.Invoke(runtimeID);
             Debug.Log($"Card Upgraded : {cardToUpgrade.cardName} (RuntimeID {runtimeID})");
         }
 
         //업그레이드가 진행되었으니 모든 카드 업데이트 진행
+        RequestAllCardRefresh();
+    }
+
+    public void EvolveCard(int runtimeID, EvolveType type)
+    {
+        ActionCardData cardToEvolve = cardDeck.FirstOrDefault(c => c.runtimeID == runtimeID);
+        if (cardToEvolve != null)
+        {
+            cardToEvolve.isEvolved = true;
+            cardToEvolve.cardName = "★" + cardToEvolve.cardName;
+            cardToEvolve.evolveType = type;
+            OnCardEvolve?.Invoke(runtimeID);
+            Debug.Log($"Card Evolved : {cardToEvolve.cardName} (RuntimeID {runtimeID})");
+        }
+
+        //Evolve가 진행되었으니 모든 카드 업데이트 진행
         RequestAllCardRefresh();
     }
 
@@ -110,20 +129,5 @@ public class CardDeckManager : MonoBehaviour
         newCard.runtimeID = nextRuntimeID++;
 
         return newCard;
-        //ActionCardData newCard = new ActionCardData
-        //{
-        //    cardTexture = newCardData.cardTexture,
-        //    className = newCardData.className,
-        //    cardName = newCardData.cardName,
-        //    texturePath = newCardData.texturePath,
-        //    level = newCardData.level,
-        //    useStamina = newCardData.useStamina,
-        //    effectArea = newCardData.effectArea,
-        //    defaultEffects = newCardData.defaultEffects,
-        //    upgradeEffects = newCardData.upgradeEffects,
-        //    upgradeCount = newCardData.upgradeCount,
-
-        //    runtimeID = nextRuntimeID++
-        //};
     }
 }

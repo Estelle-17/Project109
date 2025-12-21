@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using GameItem.Types;
 
 public class RelicRewardHandler : MonoBehaviour
 {

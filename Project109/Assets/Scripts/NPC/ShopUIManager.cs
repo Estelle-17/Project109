@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
-using System.ComponentModel;
+using GameItem.Types;
 
 public class ShopUIManager : MonoBehaviour
 {
@@ -38,37 +38,6 @@ public class ShopUIManager : MonoBehaviour
         {
             relics.Add(GameItemRewardManager.instance.GetRandomRelicDataByPickupType(RandomRelicPickupType.CommonToUnique));
         }
-        //for (int i = 0; i < cardCount; i++)  //랜덤한 카드 데이터 저장
-        //{
-        //    if (cardItemPicker.TryGetNext(out ActionCardData data))
-        //    {
-        //        actionCards.Add(data);
-        //    }
-        //    else
-        //    {
-        //        cardItemPicker.Reset();
-        //        if (cardItemPicker.TryGetNext(out ActionCardData newData))
-        //        {
-        //            actionCards.Add(newData);
-        //        }
-        //    }
-        //}
-
-        //for (int i = 0; i < relicCount; i++) //랜덤한 유물 데이터 저장
-        //{
-        //    if (relicItemPicker.TryGetNext(out RelicData data))
-        //    {
-        //        relics.Add(data);
-        //    }
-        //    else
-        //    {
-        //        relicItemPicker.Reset();
-        //        if (relicItemPicker.TryGetNext(out RelicData newData))
-        //        {
-        //            relics.Add(newData);
-        //        }
-        //    }
-        //}
     }
 
     public void UpdateShopItems() //상점UI 생성 후 아이템 진열

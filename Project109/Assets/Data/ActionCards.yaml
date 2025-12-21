@@ -138,7 +138,7 @@ cardCollection:
   - path: WeaknessPierce
     className: Warrior
     cardName: 약점 관통
-    rarity: !!int 2
+    rarity: !!int 3
     stamina: !!int 40
     cardType: Attack
     targetType: All

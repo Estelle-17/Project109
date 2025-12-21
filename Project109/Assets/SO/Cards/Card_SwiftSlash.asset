@@ -20,9 +20,16 @@ MonoBehaviour:
   stamina: 30
   cardType: Attack
   targetType: All
-  effectArea: []
+  effectArea:
+  - 00000
+  - 00100
+  - 00100
+  - 00000
+  - 00000
   texturePath: Card_test_texture
+  evolvedCardPath: 
   upgradeCardPath: 
   isEvolved: 0
+  evolveType: 0
   isUpgrade: 0
   runtimeID: 0

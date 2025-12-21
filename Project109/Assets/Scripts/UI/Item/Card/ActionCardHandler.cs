@@ -1,10 +1,12 @@
-using UnityEngine;
+using GameItem.Types;
+using System;
 using System.Collections.Generic;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using TMPro;
-using UnityEngine.Events;
 using System.Text;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
@@ -23,7 +25,7 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public EffectAreaCheckButton effectAreaCheckButton; //공격 범위 확인용 버튼
 
-    public UnityEvent OnCardClick;  //클릭 시 호출될 이벤트
+    public UnityEvent OnCardClick;  //클릭 시 호출될 이벤트(다양한 변수들도 쉽게 호출하기 위해 UnityEvent 사용)
 
     public bool bIsCardHighlight;
 
@@ -34,16 +36,14 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void UpdateActionCardData(ActionCardData newCardData)
     {
+        if(newCardData == null)
+        {
+            Debug.LogWarning("New Card Data is null!");
+            return;
+        }
         cardData = newCardData;
 
-        if (cardData.isUpgrade)
-        {
-            cardName.text = cardData.cardName + "+";
-        }
-        else
-        {
-            cardName.text = cardData.cardName;
-        }
+        cardName.text = cardData.cardName;
 
         UpdateCardDescription();
 
@@ -56,16 +56,34 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public void UpgradeCard()
     {
         if(cardData == null)
-        {
             return;
-        }
 
         //현재 가지고 있는 카드 데이터를 기반으로 업그레이드 진행
         //currentCardEffect = cardData.upgradeEffects;
 
-        cardName.SetText(cardData.cardName + "+");
+        cardName.SetText(cardName.text + "+");
 
-        cardData.isUpgrade = true;
+        UpdateCardDescription();
+    }
+
+    //특정 타입으로 진화 후의 카드 변경
+    public void EvolveCard(EvolveType type)
+    {
+        if (cardData == null)
+            return;
+
+        cardName.SetText("★" + cardName.text);
+
+        UpdateCardDescription();
+    }
+
+    //저장된 카드 데이터로 진화 후의 카드 변경
+    public void EvolveCard()
+    {
+        if (cardData == null)
+            return;
+
+        cardName.SetText("★" + cardName.text);
 
         UpdateCardDescription();
     }
@@ -108,14 +126,7 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
             OnSelectHighlight();       //카드 하이라이트on
 
         //카드 범위 세팅 진행
-        if (cardData.isUpgrade)
-        {
-            //UIManager.instance.effectAreaManager.SetEffectArea(cardData.upgradeEffects.effectArea);      
-        }
-        else
-        {
-            //UIManager.instance.effectAreaManager.SetEffectArea(cardData.defaultEffects.effectArea);
-        }
+        UIManager.instance.effectAreaManager.SetEffectArea(cardData.effectArea);
     }
 
     public void OnPointerExit(PointerEventData eventData)

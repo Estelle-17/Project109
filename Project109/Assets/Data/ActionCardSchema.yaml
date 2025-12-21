@@ -44,8 +44,10 @@ properties:
             maxItems: !!int 5
         texturePath:
           type: string
+        evolvedCardPath:
+          type: string           
         upgradeCardPath:
-          type: string    
+          type: string
       required:
         - path
         - className

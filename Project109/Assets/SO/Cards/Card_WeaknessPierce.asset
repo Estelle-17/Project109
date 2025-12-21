@@ -16,13 +16,20 @@ MonoBehaviour:
   path: WeaknessPierce
   className: Warrior
   cardName: "\uC57D\uC810 \uAD00\uD1B5"
-  rarity: 2
+  rarity: 3
   stamina: 40
   cardType: Attack
   targetType: All
-  effectArea: []
+  effectArea:
+  - 00100
+  - 00100
+  - 00100
+  - 00000
+  - 00000
   texturePath: Card_test_texture
+  evolvedCardPath: 
   upgradeCardPath: 
   isEvolved: 0
+  evolveType: 0
   isUpgrade: 0
   runtimeID: 0

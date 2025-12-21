@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using GameItem.Types;
 
 public class LoadMapHandler : MonoBehaviour
 {

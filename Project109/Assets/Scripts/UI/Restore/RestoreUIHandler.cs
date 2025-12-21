@@ -12,7 +12,7 @@ public enum RestoreUICategory
 
 public class RestoreUIHandler : UIPanelBase
 {
-    public GameObject upgradeCardUIPrefab;
+    public GameObject eraseCardUIPrefab;
 
     public TextMeshProUGUI description;
 
@@ -29,11 +29,11 @@ public class RestoreUIHandler : UIPanelBase
 
     public void EnableUpgradeUI()
     {
-        if (upgradeCardUIPrefab == null)
+        if (eraseCardUIPrefab == null)
             return;
 
-        UpgradeCardHandler upgradeCardUI = Instantiate(upgradeCardUIPrefab).GetComponent<UpgradeCardHandler>();
-        Debug.Log("Card Upgrade is Process!");
+        EraseCardDeckManager eraseCardDeckManager = Instantiate(eraseCardUIPrefab).GetComponent<EraseCardDeckManager>();
+        eraseCardDeckManager.SetEraseCardCount(1);
         gameObject.SetActive(false);
     }
 

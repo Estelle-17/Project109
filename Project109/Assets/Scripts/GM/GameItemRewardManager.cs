@@ -1,26 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
-public enum RandomCardPickupType
-{
-    Common,
-    Rare,
-    Unique,
-    CommonToUnique,
-    CommonToRare,
-    RareToUnique
-}
-
-public enum RandomRelicPickupType
-{
-    Common,
-    Rare,
-    Unique,
-    CommonToUnique,
-    CommonToRare,
-    RareToUnique,
-    Boss
-}
+using GameItem.Types;
 
 public class GameItemRewardManager : MonoBehaviour
 {

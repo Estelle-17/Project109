@@ -21,7 +21,7 @@ public class BattleMapManager : MonoBehaviour
     public (int column, int row) centerCoord;
     public (int column, int row) rewardCoord;
     public (int column, int row) playerSpawnCoord;
-    public int tilePadding;
+    public float tilePadding;
 
     public Vector3 CheckTileMapLocationByRowAndColumn(int newColumn, int newRow)
     {

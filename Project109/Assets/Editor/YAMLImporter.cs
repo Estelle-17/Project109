@@ -68,8 +68,10 @@ public class YAMLImporter
             asset.stamina = card.stamina;
             asset.cardType = card.CardType;
             asset.targetType = card.TargetType;
+            asset.effectArea = card.effectArea;
             asset.texturePath = card.texturePath;
-            card.upgradeCardPath = card.upgradeCardPath;
+            asset.evolvedCardPath = card.evolvedCardPath;
+            asset.upgradeCardPath = card.upgradeCardPath;
 
             asset.isUpgrade = false;
 
@@ -749,6 +751,7 @@ public class YAMLImporter
         public string TargetType { get; set; }
         public List<string> effectArea { get; set; }
         public string texturePath { get; set; }
+        public string evolvedCardPath { get; set; }
         public string upgradeCardPath { get; set; }
     }
 

@@ -22,7 +22,7 @@ public class UpgradeCardCheckHandler : MonoBehaviour
         if (currentCard == null || upgradeCard == null)
             return;
 
-        selectedCardData = newCardData;
+        selectedCardData = Instantiate(newCardData);
 
         currentCard.UpdateActionCardData(newCardData);
         currentCard.bIsCardHighlight = false;
@@ -39,5 +39,13 @@ public class UpgradeCardCheckHandler : MonoBehaviour
         CardDeckManager.instance.UpgradeCard(selectedCardData.runtimeID);
         transform.root.gameObject.SetActive(false);
         Destroy(transform.root.gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        if (selectedCardData != null)
+        {
+            Destroy(selectedCardData);
+        }
     }
 }

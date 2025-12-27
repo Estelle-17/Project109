@@ -1,10 +1,5 @@
 using UnityEngine;
-
-public enum RewardItemType
-{
-    Card,
-    Relic
-}
+using GameItem.Types;
 
 public class RewardItemHandler : MonoBehaviour
 {

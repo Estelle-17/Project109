@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using GameItem.Types;
 
 [CreateAssetMenu(fileName = "ActionCardData", menuName = "ActionCard/ActionCardData")]
 public class ActionCardData : ScriptableObject, IIdentifiable
@@ -14,9 +15,11 @@ public class ActionCardData : ScriptableObject, IIdentifiable
     public string targetType;
     public List<string> effectArea;
     public string texturePath;
+    public string evolvedCardPath;
     public string upgradeCardPath;
 
     public bool isEvolved;
+    public EvolveType evolveType;
 
     public bool isUpgrade;
 

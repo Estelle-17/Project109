@@ -409,7 +409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44b36d0bfd0faab45a2c857def301adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upgradeCardUIPrefab: {fileID: 7885794208291660814, guid: 10d658feb5d4e2a4d81e106c15e2a848, type: 3}
+  eraseCardUIPrefab: {fileID: 7885794208291660814, guid: c2a60781ac1aa88438250bb61a874ecd, type: 3}
   description: {fileID: 119338012455837095}
   restoreButton: {fileID: 813247879187375518}
   upgradeButton: {fileID: 1444237004547048398}
@@ -478,7 +478,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB2E8\uB828"
+  m_text: "\uB9DD\uAC01"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 98275428364c09444b0db637bbca0884, type: 2}
   m_sharedMaterial: {fileID: 330105162385329556, guid: 98275428364c09444b0db637bbca0884, type: 2}

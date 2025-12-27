@@ -1,4 +1,5 @@
 using UnityEngine;
+using GameItem.Types;
 
 public class RewardBoxManager : MonoBehaviour
 {

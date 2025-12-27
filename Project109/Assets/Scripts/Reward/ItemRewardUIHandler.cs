@@ -2,14 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
-public enum ItemRewardUIType
-{
-    Gold,
-    MemorySharp,
-    Card,
-    Relic
-}
+using GameItem.Types;
 
 public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {

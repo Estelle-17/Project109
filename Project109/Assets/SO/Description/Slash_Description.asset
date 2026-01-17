@@ -15,3 +15,5 @@ MonoBehaviour:
   path: Slash
   cardName: "\uC2AC\uB798\uC2DC"
   description: "\uD53C\uD574\uB97C !damage! \uC90D\uB2C8\uB2E4."
+  extraDescriptions: []
+  masteryDescriptions: []

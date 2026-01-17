@@ -37,6 +37,7 @@ public class UpgradeCardCheckHandler : MonoBehaviour
     public void StartUpgradeCards()
     {
         CardDeckManager.instance.UpgradeCard(selectedCardData.runtimeID);
+        UIManager.instance.HideCardExtraDescription();
         transform.root.gameObject.SetActive(false);
         Destroy(transform.root.gameObject);
     }

@@ -42,10 +42,12 @@ properties:
             pattern: "^[01]{5}$"
             minItems: !!int 5
             maxItems: !!int 5
+        maxMasteryPoint:
+          type: integer
         texturePath:
           type: string
         evolvedCardPath:
-          type: string           
+          type: string
         upgradeCardPath:
           type: string
       required:

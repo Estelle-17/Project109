@@ -15,3 +15,5 @@ MonoBehaviour:
   path: ComboSlash
   cardName: "\uCF64\uBCF4 \uC2AC\uB798\uC2DC"
   description: "\uD53C\uD574\uB97C !damage! \uB9CC\uD07C !times! \uBC88 \uC90D\uB2C8\uB2E4."
+  extraDescriptions: []
+  masteryDescriptions: []

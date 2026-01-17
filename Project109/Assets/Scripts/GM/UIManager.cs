@@ -32,8 +32,9 @@ public class UIManager : MonoBehaviour
     RectTransform relicDescriptionTransform;
     public TextMeshProUGUI relicDescriptionText;
 
-    //카드 효과 범위 관련 변수
+    //카드 추가 설명 관련 변수
     public EffectAreaManager effectAreaManager;
+    public ExtraDescriptionManager extraDescriptionManager;
 
     //카드 상세 확인 관련 변수
     public CardCheckHandler cardCheckHandler;
@@ -239,6 +240,49 @@ public class UIManager : MonoBehaviour
             return;
 
         effectAreaManager.EffectAreaDisable();
+    }
+
+    #endregion
+
+    #region 카드 추가 설명UI
+
+    public void UpdateCardExtraDescription(ActionCardData cardData, Transform spawnPos)
+    {
+        extraDescriptionManager.transform.position = spawnPos.position;
+
+        if (cardData.maxMasteryPoint > 0)
+        {
+            Debug.Log("Set Mastery Point Description");
+            extraDescriptionManager.SetMasteryPointDescription(cardData.cardType, cardData.maxMasteryPoint);
+        }
+        else
+        {
+            extraDescriptionManager.ClearMasteryPointDescription();
+        }
+
+        if (AssetCacheManager.instance.TryGetCardDescription(cardData.path, out CardDescription description))
+        {
+            if (extraDescriptionManager)
+            {
+                extraDescriptionManager.SetExtraDescription(description.extraDescriptions);
+            }
+        }
+        else
+        {
+            if (extraDescriptionManager)
+            {
+                extraDescriptionManager.ClearExtraDescription();
+            }
+            Debug.LogWarning("Card description not found for path: " + cardData.path);
+        }
+    }
+
+    public void HideCardExtraDescription()
+    {
+        if(extraDescriptionManager)
+        {
+            extraDescriptionManager.HideExtraDescription();
+        }
     }
 
     #endregion

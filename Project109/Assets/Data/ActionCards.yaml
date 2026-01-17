@@ -88,6 +88,7 @@ cardCollection:
         - "00100"
         - "00000"
         - "00000"
+    maxMasteryPoint: !!int 250
     texturePath: Card_test_texture
 
   - path: Earthquake
@@ -103,6 +104,7 @@ cardCollection:
         - "00100"
         - "00000"
         - "00000"
+    maxMasteryPoint: !!int 250
     texturePath: Card_test_texture
 
   - path: SpinningSlash
@@ -133,6 +135,7 @@ cardCollection:
         - "00100"
         - "00000"
         - "00000"
+    maxMasteryPoint: !!int 250
     texturePath: Card_test_texture
 
   - path: WeaknessPierce

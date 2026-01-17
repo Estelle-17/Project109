@@ -24,10 +24,12 @@ public class GameItemRewardManager : MonoBehaviour
 
     //Cards
     private List<ActionCardData> commonCardList = new List<ActionCardData>();
+    private List<ActionCardData> uncommonCardList = new List<ActionCardData>();
     private List<ActionCardData> rareCardList = new List<ActionCardData>();
     private List<ActionCardData> uniqueCardList = new List<ActionCardData>();
 
     RandomItemPicker<ActionCardData> commonCardPicker;
+    RandomItemPicker<ActionCardData> uncommonCardPicker;
     RandomItemPicker<ActionCardData> rareCardPicker;
     RandomItemPicker<ActionCardData> uniqueCardPicker;
 
@@ -44,6 +46,7 @@ public class GameItemRewardManager : MonoBehaviour
 
     //등급별 확률
     int commonRate;
+    int uncommonRate;
     int rareRate;
     int uniqueRate;
 
@@ -59,6 +62,7 @@ public class GameItemRewardManager : MonoBehaviour
     {
         //Card Picker 초기화
         commonCardPicker = new RandomItemPicker<ActionCardData>(commonCardList);
+        uncommonCardPicker = new RandomItemPicker<ActionCardData>(uncommonCardList);
         rareCardPicker = new RandomItemPicker<ActionCardData>(rareCardList);
         uniqueCardPicker = new RandomItemPicker<ActionCardData>(uniqueCardList);
     }
@@ -82,9 +86,12 @@ public class GameItemRewardManager : MonoBehaviour
                     commonCardList.Add(data);
                     break;
                 case 2:
-                    rareCardList.Add(data);
+                    uncommonCardList.Add(data);
                     break;
                 case 3:
+                    rareCardList.Add(data);
+                    break;
+                case 4:
                     uniqueCardList.Add(data);
                     break;
             }
@@ -111,6 +118,7 @@ public class GameItemRewardManager : MonoBehaviour
 
         //Card Picker 초기화
         commonCardPicker = new RandomItemPicker<ActionCardData>(commonCardList);
+        uncommonCardPicker = new RandomItemPicker<ActionCardData>(uncommonCardList);
         rareCardPicker = new RandomItemPicker<ActionCardData>(rareCardList);
         uniqueCardPicker = new RandomItemPicker<ActionCardData>(uniqueCardList);
 
@@ -229,31 +237,37 @@ public class GameItemRewardManager : MonoBehaviour
         {
             case RandomCardPickupType.Common:
                 commonRate = 100;
+                uncommonRate = 0;
+                rareRate = 0;
+                uniqueRate = 0;
+                break;
+            case RandomCardPickupType.Uncommon:
+                commonRate = 0;
+                uncommonRate = 100;
                 rareRate = 0;
                 uniqueRate = 0;
                 break;
             case RandomCardPickupType.Rare:
                 commonRate = 0;
+                uncommonRate = 0;
                 rareRate = 100;
                 uniqueRate = 0;
                 break;
             case RandomCardPickupType.Unique:
                 commonRate = 0;
+                uncommonRate = 0;
                 rareRate = 0;
                 uniqueRate = 100;
                 break;
-            case RandomCardPickupType.CommonToUnique:
+            case RandomCardPickupType.CommonToUncommon:
                 commonRate = 60;
-                rareRate = 30;
-                uniqueRate = 10;
-                break;
-            case RandomCardPickupType.CommonToRare:
-                commonRate = 70;
-                rareRate = 30;
+                uncommonRate = 40;
+                rareRate = 0;
                 uniqueRate = 0;
                 break;
             case RandomCardPickupType.RareToUnique:
                 commonRate = 0;
+                uncommonRate = 0;
                 rareRate = 80;
                 uniqueRate = 20;
                 break;
@@ -286,6 +300,22 @@ public class GameItemRewardManager : MonoBehaviour
             {
                 rareCardPicker.Reset();
                 if (rareCardPicker.TryGetNext(out ActionCardData newData))
+                {
+                    cardData = newData;
+                }
+            }
+        }
+        else if (pickNumber > uniqueRate + rareRate && pickNumber <= uniqueRate + rareRate + uncommonRate)
+        {
+            //uncommon카드들 중 랜덤한 1장 선택
+            if (uncommonCardPicker.TryGetNext(out ActionCardData data))
+            {
+                cardData = data;
+            }
+            else
+            {
+                uncommonCardPicker.Reset();
+                if (uncommonCardPicker.TryGetNext(out ActionCardData newData))
                 {
                     cardData = newData;
                 }

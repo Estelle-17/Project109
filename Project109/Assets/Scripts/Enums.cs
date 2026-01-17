@@ -19,10 +19,10 @@ namespace GameItem.Types
     public enum RandomCardPickupType
     {
         Common,
+        Uncommon,
         Rare,
         Unique,
-        CommonToUnique,
-        CommonToRare,
+        CommonToUncommon,
         RareToUnique
     }
 

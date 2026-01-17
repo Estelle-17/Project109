@@ -69,6 +69,7 @@ public class YAMLImporter
             asset.cardType = card.CardType;
             asset.targetType = card.TargetType;
             asset.effectArea = card.effectArea;
+            asset.maxMasteryPoint = card.maxMasteryPoint;
             asset.texturePath = card.texturePath;
             asset.evolvedCardPath = card.evolvedCardPath;
             asset.upgradeCardPath = card.upgradeCardPath;
@@ -696,6 +697,8 @@ public class YAMLImporter
             asset.path = card.path;
             asset.cardName = card.cardName;
             asset.description = card.description;
+            asset.extraDescriptions = card.extraDescriptions;
+            asset.masteryDescriptions = card.masteryDescriptions;
 
             var path = $"Assets/SO/Description/{card.path + "_Description"}.asset";
             Directory.CreateDirectory("Assets/SO/Description");
@@ -750,6 +753,7 @@ public class YAMLImporter
         public string CardType { get; set; }
         public string TargetType { get; set; }
         public List<string> effectArea { get; set; }
+        public int maxMasteryPoint { get; set; }
         public string texturePath { get; set; }
         public string evolvedCardPath { get; set; }
         public string upgradeCardPath { get; set; }
@@ -877,6 +881,8 @@ public class YAMLImporter
         public string path { get; set; }
         public string cardName { get; set; }
         public string description { get; set; }
+        public List<ExtraDescription> extraDescriptions { get; set; }
+        public List<MasteryDescription> masteryDescriptions { get; set; }
     }
 }
 #endif

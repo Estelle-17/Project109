@@ -50,6 +50,7 @@ public class EvolveCardCheckHandler : MonoBehaviour
     public void StartEvolveCard(EvolveType type)
     {
         CardDeckManager.instance.EvolveCard(selectedCardData.runtimeID, type);
+        UIManager.instance.HideCardExtraDescription();
         transform.root.gameObject.SetActive(false);
         Destroy(transform.root.gameObject);
     }

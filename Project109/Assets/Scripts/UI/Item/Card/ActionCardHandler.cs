@@ -22,6 +22,7 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public Image cardImage;  //카드 데이터에 맞는 이미지
 
     public GameObject selectHighlightObject;    //선택을 알려주는 하이라이트 UI
+    [SerializeField] private GameObject extraDescriptionSpawnPos;      //추가 설명UI 스폰 위치
 
     public EffectAreaCheckButton effectAreaCheckButton; //공격 범위 확인용 버튼
 
@@ -90,9 +91,18 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void UpdateCardDescription()
     {
+        //if(cardData.maxMasteryPoint > 0)
+        //{
+        //    extraDescriptionManager.SetMasteryPointDescription(cardData.cardType, cardData.maxMasteryPoint);
+        //}
+
         if (AssetCacheManager.instance.TryGetCardDescription(cardData.path, out CardDescription description))
         {
             cardDescription.SetText(description.description);
+            //if(extraDescriptionManager)
+            //{
+            //    extraDescriptionManager.SetExtraDescription(description.extraDescriptions);
+            //}
         }
         else 
         { 
@@ -122,8 +132,14 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(bIsCardHighlight)
+        //transform.SetAsLastSibling(); //카드가 다른 UI 위에 표시되도록 설정
+
+        if (bIsCardHighlight)
             OnSelectHighlight();       //카드 하이라이트on
+
+        //extraDescriptionManager.ShowExtraDescription();    //추가 설명 UI 보여주기
+        if(cardData != null)
+            UIManager.instance.UpdateCardExtraDescription(cardData, extraDescriptionSpawnPos.transform);
 
         //카드 범위 세팅 진행
         UIManager.instance.effectAreaManager.SetEffectArea(cardData.effectArea);
@@ -133,5 +149,9 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
         if (bIsCardHighlight)
             OffSelectHighlight();       //카드 하이라이트off
+
+        UIManager.instance.HideCardExtraDescription();
+
+        //extraDescriptionManager.HideExtraDescription();    //추가 설명 UI 보여주기
     }
 }

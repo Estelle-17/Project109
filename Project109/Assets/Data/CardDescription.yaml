@@ -9,3 +9,36 @@ cardDescriptionCollection:
   - path: ComboSlash
     cardName: 콤보 슬래시
     description: "피해를 !damage! 만큼 !times! 번 줍니다."
+
+  - path: Rumbling
+    cardName: 땅울림
+    description: "피해를 !damage! 줍니다.\n쇠약을 !amount! 부여합니다.\n약화를 !amount! 부여합니다."
+    extraDescriptions:
+      - name: 쇠약
+        description: 받는 피해가 50% 증가합니다.
+      - name: 약화
+        description: 입히는 피해가 25% 감소합니다.
+
+  - path: Initiative
+    cardName: 선수핋승
+    description: "<color=#0000CD>선봉대\n!times! 번 추가로 공격합니다.</color>\n피해를 !damage! 줍니다."
+    extraDescriptions:
+      - name: 선봉대
+        description: 턴마다 처음으로 사용될 시 추가 효과 획득
+    masteryDescriptions:
+      - path: Initiative_DamageAmp
+        name: 피해 증폭
+        description: "기본 데미지가 3 증가합니다."
+        maxUpgradeCount: !!int 0
+      - path: Initiative_ReadyStance
+        name: 준비 자세
+        description: "선봉대 발동 시 피해가 5 증가합니다."
+        maxUpgradeCount: !!int 0
+      - path: Initiative_SleightOfHand
+        name: 가벼운 손놀림
+        description: "소모 스태미너가 10 감소합니다."
+        maxUpgradeCount: !!int 3
+      - path: Initiative_ComboAttack
+        name: 연격
+        description: "피해가 60%로 감소합니다.\n타수가 2배 증가합니다."
+        maxUpgradeCount: !!int 1

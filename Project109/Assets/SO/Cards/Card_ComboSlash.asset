@@ -29,6 +29,8 @@ MonoBehaviour:
   texturePath: Card_test_texture
   evolvedCardPath: 
   upgradeCardPath: 
+  currentMasteryPoint: 0
+  maxMasteryPoint: 0
   isEvolved: 0
   evolveType: 0
   isUpgrade: 0

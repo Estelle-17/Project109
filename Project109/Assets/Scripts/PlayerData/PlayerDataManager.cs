@@ -26,6 +26,7 @@ public class PlayerDataManager : MonoBehaviour
 
         playerStat.reward_Card_Count = 3;
         playerStat.reward_Relic_Count = 3;
+        playerStat.mastery_Choice_Count = 3;
     }
 
     public PlayerStat GetPlayerStat() { return playerStat;}

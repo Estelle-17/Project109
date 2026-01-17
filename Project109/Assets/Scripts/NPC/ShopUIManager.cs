@@ -32,7 +32,7 @@ public class ShopUIManager : MonoBehaviour
     {
         for (int i = 0; i < cardCount; i++)  //랜덤한 카드 데이터 저장
         {
-            actionCards.Add(GameItemRewardManager.instance.GetRandomCardDataByPickupType(RandomCardPickupType.CommonToUnique));
+            actionCards.Add(GameItemRewardManager.instance.GetRandomCardDataByPickupType(RandomCardPickupType.CommonToUncommon));
         }
         for (int i = 0; i < relicCount; i++) //랜덤한 유물 데이터 저장
         {

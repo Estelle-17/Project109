@@ -21,8 +21,20 @@ MonoBehaviour:
     m_SerializedLabels:
     - Description
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3c9fbf990c4fea34490edfbabf7d1fcf
+    m_Address: Rumbling_Description
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Description
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 719dd8201e91f0a45bf316ca73b163f9
     m_Address: QuickSlash_Description
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Description
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aff75d22dcdec51479d76af483077d11
+    m_Address: Initiative_Description
     m_ReadOnly: 0
     m_SerializedLabels:
     - Description

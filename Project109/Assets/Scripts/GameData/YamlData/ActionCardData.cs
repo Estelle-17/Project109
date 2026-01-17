@@ -17,6 +17,8 @@ public class ActionCardData : ScriptableObject, IIdentifiable
     public string texturePath;
     public string evolvedCardPath;
     public string upgradeCardPath;
+    public int currentMasteryPoint;
+    public int maxMasteryPoint;
 
     public bool isEvolved;
     public EvolveType evolveType;

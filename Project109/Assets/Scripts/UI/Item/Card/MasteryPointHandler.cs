@@ -11,23 +11,33 @@ public class MasteryPointHandler : MonoBehaviour
 
     private int maxMasteryPoint;
 
-    public void SetMasteryDescription(string cardType, int maxPoint)
+    public void SetMasteryDescription(ActionCardData cardData, int maxPoint)
     {
         //마스터리 설명 UI 업데이트
 
         valueText.SetText("0 / " + maxPoint);
-        descriptionText.SetText(SetMasteryDescription(cardType));
+        descriptionText.SetText(SetMasteryDescription(cardData.cardType));
         masteryPointBar.fillAmount = 0f;
 
-        maxMasteryPoint = maxPoint;
+        UpdateMasteryPointUI(cardData.path);
     }
 
-    public void UpdateMasteryPointUI(int currentPoint)
+    public void UpdateMasteryPointUI(string cardID)
     {
         //마스터리 포인트 UI 업데이트
-        valueText.SetText(currentPoint + " / " + maxMasteryPoint);
-        float fillAmount = maxMasteryPoint > 0 ? (float)currentPoint / maxMasteryPoint : 0f;
-        masteryPointBar.fillAmount = Mathf.Clamp01(fillAmount);
+        if(!CardMasteryManager.instance)
+        {
+            Debug.LogWarning("CardMasteryManager.instance is null!");
+            return;
+        }
+
+        CardMasteryStat masteryStat = CardMasteryManager.instance.GetCardMasteryStat(cardID);
+        if(masteryStat != null)
+        {
+            valueText.SetText(masteryStat.current_mastery_value + " / " + masteryStat.max_mastery_value);
+            float fillAmount = masteryStat.max_mastery_value > 0 ? masteryStat.current_mastery_value / masteryStat.max_mastery_value : 0f;
+            masteryPointBar.fillAmount = Mathf.Clamp01(fillAmount);
+        }
     }
 
     public string SetMasteryDescription(string cardType)

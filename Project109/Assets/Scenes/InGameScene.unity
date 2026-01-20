@@ -2904,8 +2904,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 271673011}
-  - {fileID: 1242362845}
   - {fileID: 5299500924612451770}
+  - {fileID: 1242362845}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7502,6 +7502,68 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2742698040176174491, guid: 7bf842e38fdd34c45a527b95f26c8f4f, type: 3}
   m_PrefabInstance: {fileID: 1044578805}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1605494596
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1605494597}
+  - component: {fileID: 1605494598}
+  m_Layer: 5
+  m_Name: CardExtraDescriptionSpawnPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1605494597
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605494596}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2143283316}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.15, y: 0.75}
+  m_AnchorMax: {x: 0.15, y: 0.75}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
+--- !u!114 &1605494598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605494596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 2.5
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &1629509169
 GameObject:
   m_ObjectHideFlags: 0
@@ -9683,7 +9745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c77731b97bc61164a84972c619b18b98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardMasteryUIPrefab: {fileID: 189166546382261157, guid: 50100ec96eec4cd41912472846028670, type: 3}
+  masteryUpgradeUIPrefab: {fileID: 189166546382261157, guid: 50100ec96eec4cd41912472846028670, type: 3}
 --- !u!1 &2081569538
 GameObject:
   m_ObjectHideFlags: 0
@@ -9769,7 +9831,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2077144585}
         m_TargetAssemblyTypeName: CardMasteryManager, Assembly-CSharp
-        m_MethodName: OpenCardMasteryTestUI
+        m_MethodName: ProcessMasteryUpgrade
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 11400000, guid: 09d2ce73f7d9921499ba581344c42e33, type: 2}
@@ -9971,6 +10033,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardHandler: {fileID: 1567907229}
+  detailDescriptionUIPrefab: {fileID: 4635436370369700347, guid: 2a1fa658cb3bb634190ff8a59225e8d4, type: 3}
+  detailDescriptionUITransform: {fileID: 1605494597}
 --- !u!114 &2143283313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10048,6 +10112,7 @@ RectTransform:
   m_Children:
   - {fileID: 871757103}
   - {fileID: 1567907230}
+  - {fileID: 1605494597}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -11021,6 +11086,10 @@ PrefabInstance:
     - target: {fileID: 997492241170858143, guid: 66abdf25b6a0e5e4fbf0d60904c6121c, type: 3}
       propertyPath: m_Name
       value: CardDeckCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 997492241170858143, guid: 66abdf25b6a0e5e4fbf0d60904c6121c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7045555817398906721, guid: 66abdf25b6a0e5e4fbf0d60904c6121c, type: 3}
       propertyPath: m_SizeDelta.y
@@ -13058,6 +13127,18 @@ PrefabInstance:
     - target: {fileID: 1489415962883859485, guid: 910a7bf8eee14884aa7a3429f57c4bf6, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1489415962883859485, guid: 910a7bf8eee14884aa7a3429f57c4bf6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1489415962883859485, guid: 910a7bf8eee14884aa7a3429f57c4bf6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1489415962883859485, guid: 910a7bf8eee14884aa7a3429f57c4bf6, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1489415962883859485, guid: 910a7bf8eee14884aa7a3429f57c4bf6, type: 3}
       propertyPath: m_LocalPosition.x

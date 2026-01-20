@@ -248,12 +248,24 @@ public class UIManager : MonoBehaviour
 
     public void UpdateCardExtraDescription(ActionCardData cardData, Transform spawnPos)
     {
+        InstantiateCardExtraDescription(cardData, spawnPos);
+    }
+
+    public void UpdateCardExtraDescription(ActionCardData cardData, Transform spawnPos, Vector3 newLocalScale)
+    {
+        extraDescriptionManager.transform.localScale = newLocalScale;
+
+        InstantiateCardExtraDescription(cardData, spawnPos);
+    }
+
+    private void InstantiateCardExtraDescription(ActionCardData cardData, Transform spawnPos)
+    {
         extraDescriptionManager.transform.position = spawnPos.position;
 
         if (cardData.maxMasteryPoint > 0)
         {
             Debug.Log("Set Mastery Point Description");
-            extraDescriptionManager.SetMasteryPointDescription(cardData.cardType, cardData.maxMasteryPoint);
+            extraDescriptionManager.SetMasteryPointDescription(cardData, cardData.maxMasteryPoint);
         }
         else
         {

@@ -110,6 +110,12 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         }
     }
 
+    public void UpdateExtraDescription()
+    {
+        if (cardData != null)
+            UIManager.instance.UpdateCardExtraDescription(cardData, extraDescriptionSpawnPos.transform);
+    }
+
     public ActionCardData GetCardData()
     {
         return cardData;
@@ -139,10 +145,10 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
         //extraDescriptionManager.ShowExtraDescription();    //추가 설명 UI 보여주기
         if(cardData != null)
-            UIManager.instance.UpdateCardExtraDescription(cardData, extraDescriptionSpawnPos.transform);
+            UIManager.instance.UpdateCardExtraDescription(cardData, extraDescriptionSpawnPos.transform, transform.localScale);
 
         //카드 범위 세팅 진행
-        UIManager.instance.effectAreaManager.SetEffectArea(cardData.effectArea);
+        UIManager.instance.effectAreaManager.SetEffectArea(cardData.effectArea, transform.localScale);
     }
 
     public void OnPointerExit(PointerEventData eventData)

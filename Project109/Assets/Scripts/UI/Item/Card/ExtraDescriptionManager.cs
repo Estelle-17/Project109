@@ -12,13 +12,13 @@ public class ExtraDescriptionManager : MonoBehaviour
 
     List<GameObject> extraDescriptionUIs = new List<GameObject>();
 
-    public void SetMasteryPointDescription(string cardType, int maxMasteryPoint)
+    public void SetMasteryPointDescription(ActionCardData cardData, int maxMasteryPoint)
     {
         ClearMasteryPointDescription();
 
         //숙련도 UI 생성
         masteryPointDescriptionUI = Instantiate(MasteryPointDescriptionUI, gameObject.transform).GetComponent<MasteryPointHandler>();
-        masteryPointDescriptionUI.SetMasteryDescription(cardType, maxMasteryPoint);
+        masteryPointDescriptionUI.SetMasteryDescription(cardData, maxMasteryPoint);
     }
 
     public void ClearMasteryPointDescription()

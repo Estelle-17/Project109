@@ -97,6 +97,16 @@ namespace Card.Types
         Target,
         Random
     }
+
+    public enum CardMasteryType
+    {
+        UseCard,
+        DealDamage,
+        GuardDamage,
+        KillEnemy,
+        Heal,
+        DrawCard
+    }
 }
 
 public class Enums

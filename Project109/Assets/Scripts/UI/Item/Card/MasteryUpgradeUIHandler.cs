@@ -22,8 +22,6 @@ public class MasteryUpgradeUIHandler : UIPanelBase
         List<MasteryDescription> availableMasteryList = CardMasteryManager.instance.GetRandomMasteryOption(selectedCardData,
                                                                                                            PlayerDataManager.instance.GetPlayerStat().mastery_Choice_Count);
 
-
-
         foreach (MasteryDescription masteryDescription in availableMasteryList)
         {
             GameObject choiceObj = Instantiate(masteryChoicePrefab, contentTransform);

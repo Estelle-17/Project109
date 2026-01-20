@@ -25,6 +25,17 @@ public class EffectAreaManager : MonoBehaviour
 
     public void SetEffectArea(List<string> area)
     {
+        ChangeEffectArea(area);
+    }
+
+    public void SetEffectArea(List<string> area, Vector3 newLocalScale)
+    {
+        gameObject.transform.localScale = newLocalScale;
+        ChangeEffectArea(area);
+    }
+
+    private void ChangeEffectArea(List<string> area)
+    {
         //Object가 등록이 되지 않았다면 강제로 등록
         if (activateBoxObject.Count == 0)
         {
@@ -37,9 +48,9 @@ public class EffectAreaManager : MonoBehaviour
         }
 
         int index = 0;
-        for(int i = 0; i < area.Count; i++)
+        for (int i = 0; i < area.Count; i++)
         {
-            for(int j = 0; j < area[i].Length; j++)
+            for (int j = 0; j < area[i].Length; j++)
             {
                 if (area[i][j] == '1')
                 {

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class UpgradeCardHandler : UIPanelBase
 {
     public UpgradeCardCheckHandler upgradeCardCheckHandler;
+    public UpgradeMasteryCardCheckHandler upgradeMasteryCardCheckHandler;
 
     public Transform contentTransform;
 
@@ -104,6 +105,19 @@ public class UpgradeCardHandler : UIPanelBase
 
     void CheckUpgradeCard(ActionCardData newCardData)
     {
-        upgradeCardCheckHandler.OnCardCheckUI(newCardData);
+        if(newCardData == null || upgradeCardCheckHandler == null || upgradeMasteryCardCheckHandler == null)
+        {
+            Debug.LogWarning("CheckUpgradeCard: newCardData or handlers are null");
+            return;
+        }
+
+        if(newCardData.maxMasteryPoint > 0)
+        {
+            upgradeMasteryCardCheckHandler.OnCardCheckUI(newCardData);
+        }
+        else
+        {
+            upgradeCardCheckHandler.OnCardCheckUI(newCardData);
+        }
     }
 }

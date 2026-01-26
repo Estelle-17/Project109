@@ -70,6 +70,7 @@ public class GameManager : MonoBehaviour
         playerStat = new PlayerStat();
         playerStat.inGame_Currency_Gold = 0;
         playerStat.mapFloorCheck_Length = 3;
+        playerStat.Upgrade_MasteryPoint_Value = 500;
         AddInGame_Currency(CurrencyType.Gold, 0);
         AddInGame_Currency(CurrencyType.MemorySharp, 0);
 

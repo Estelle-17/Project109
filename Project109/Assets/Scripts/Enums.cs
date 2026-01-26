@@ -105,7 +105,8 @@ namespace Card.Types
         GuardDamage,
         KillEnemy,
         Heal,
-        DrawCard
+        DrawCard,
+        UpgradeCard
     }
 }
 

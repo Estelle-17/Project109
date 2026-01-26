@@ -30,6 +30,7 @@ public class YAMLImporter
         //YAML -> Json으로 변환
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .WithNodeTypeResolver(new NumericTypeResolver())
             .Build();
         var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
 
@@ -69,9 +70,10 @@ public class YAMLImporter
             asset.cardType = card.CardType;
             asset.targetType = card.TargetType;
             asset.effectArea = card.effectArea;
+            asset.amountList = card.amountList;
+            asset.upgradeAmountList = card.upgradeAmountList;
             asset.maxMasteryPoint = card.maxMasteryPoint;
             asset.texturePath = card.texturePath;
-            asset.evolvedCardPath = card.evolvedCardPath;
             asset.upgradeCardPath = card.upgradeCardPath;
 
             asset.isUpgrade = false;
@@ -115,6 +117,7 @@ public class YAMLImporter
         //YAML -> Json으로 변환
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .WithNodeTypeResolver(new NumericTypeResolver())
             .Build();
         var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
 
@@ -194,6 +197,7 @@ public class YAMLImporter
         //YAML -> Json으로 변환
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .WithNodeTypeResolver(new NumericTypeResolver())
             .Build();
         var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
 
@@ -270,6 +274,7 @@ public class YAMLImporter
         //YAML -> Json으로 변환
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .WithNodeTypeResolver(new NumericTypeResolver())
             .Build();
         var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
 
@@ -346,6 +351,7 @@ public class YAMLImporter
         //YAML -> Json으로 변환
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .WithNodeTypeResolver(new NumericTypeResolver())
             .Build();
         var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
 
@@ -429,6 +435,7 @@ public class YAMLImporter
         //YAML -> Json으로 변환
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .WithNodeTypeResolver(new NumericTypeResolver())
             .Build();
         var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
 
@@ -503,6 +510,7 @@ public class YAMLImporter
         //YAML -> Json으로 변환
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .WithNodeTypeResolver(new NumericTypeResolver())
             .Build();
         var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
 
@@ -588,6 +596,7 @@ public class YAMLImporter
         //YAML -> Json으로 변환
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .WithNodeTypeResolver(new NumericTypeResolver())
             .Build();
         var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
 
@@ -663,6 +672,7 @@ public class YAMLImporter
         //YAML -> Json으로 변환
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .WithNodeTypeResolver(new NumericTypeResolver())
             .Build();
         var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
 
@@ -753,9 +763,10 @@ public class YAMLImporter
         public string CardType { get; set; }
         public string TargetType { get; set; }
         public List<string> effectArea { get; set; }
+        public List<int> amountList { get; set; }
+        public List<int> upgradeAmountList { get; set; }
         public int maxMasteryPoint { get; set; }
         public string texturePath { get; set; }
-        public string evolvedCardPath { get; set; }
         public string upgradeCardPath { get; set; }
     }
 

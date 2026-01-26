@@ -13,6 +13,8 @@ cardCollection:
         - "00100"
         - "00000"
         - "00000"
+    amountList: [8]
+    upgradeAmountList: [4]
     texturePath: Card_test_texture
 
   - path: QuickSlash
@@ -28,6 +30,8 @@ cardCollection:
         - "00100"
         - "00000"
         - "00000"
+    amountList: [4]
+    upgradeAmountList: [2]
     texturePath: Card_test_texture
 
   - path: ComboSlash
@@ -43,6 +47,8 @@ cardCollection:
         - "00100"
         - "00000"
         - "00000"
+    amountList: [4, 4]
+    upgradeAmountList: [0, 2]
     texturePath: Card_test_texture 
 
   - path: Rumbling
@@ -58,6 +64,8 @@ cardCollection:
         - "11111"
         - "11111"
         - "11111"
+    amountList: [2, 1, 1]
+    upgradeAmountList: [0, 1, 1]
     texturePath: Card_test_texture 
 
   - path: FalseSwipe
@@ -73,6 +81,8 @@ cardCollection:
         - "00100"
         - "00000"
         - "00000"
+    amountList: [6, 5]
+    upgradeAmountList: [3, 3]
     texturePath: Card_test_texture
 
   - path: Initiative
@@ -88,6 +98,8 @@ cardCollection:
         - "00100"
         - "00000"
         - "00000"
+    amountList: [1, 8]
+    upgradeAmountList: [1, 0]
     maxMasteryPoint: !!int 250
     texturePath: Card_test_texture
 
@@ -104,6 +116,8 @@ cardCollection:
         - "00100"
         - "00000"
         - "00000"
+    amountList: [8, 20, 2]
+    upgradeAmountList: [4, 0, 1]
     maxMasteryPoint: !!int 250
     texturePath: Card_test_texture
 
@@ -120,6 +134,8 @@ cardCollection:
         - "01110"
         - "01110"
         - "00000"
+    amountList: [6]
+    upgradeAmountList: [9]
     texturePath: Card_test_texture
 
   - path: SwiftSlash
@@ -135,6 +151,8 @@ cardCollection:
         - "00100"
         - "00000"
         - "00000"
+    amountList: [8, 4, 5]
+    upgradeAmountList: [0, 2, 0]
     maxMasteryPoint: !!int 250
     texturePath: Card_test_texture
 
@@ -151,4 +169,6 @@ cardCollection:
         - "00100"
         - "00000"
         - "00000"
+    amountList: [8, 2]
+    upgradeAmountList: [4, 1]
     texturePath: Card_test_texture

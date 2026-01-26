@@ -42,11 +42,17 @@ properties:
             pattern: "^[01]{5}$"
             minItems: !!int 5
             maxItems: !!int 5
+        amountList:
+          type: array
+          items:
+            type: integer
+        upgradeAmountList:
+          type: array
+          items:
+            type: integer
         maxMasteryPoint:
           type: integer
         texturePath:
-          type: string
-        evolvedCardPath:
           type: string
         upgradeCardPath:
           type: string
@@ -59,6 +65,7 @@ properties:
         - cardType
         - targetType
         - effectArea
+        - amountList
         - texturePath
 required:
   - cardCollection

@@ -59,21 +59,13 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if(cardData == null)
             return;
 
-        //현재 가지고 있는 카드 데이터를 기반으로 업그레이드 진행
-        //currentCardEffect = cardData.upgradeEffects;
+        //카드 데이터를 기반으로 업그레이드 진행
+        for(int index = 0; index < cardData.amountList.Count; index++)
+        {
+            cardData.amountList[index] += cardData.upgradeAmountList[index];
+        }
 
         cardName.SetText(cardName.text + "+");
-
-        UpdateCardDescription();
-    }
-
-    //특정 타입으로 진화 후의 카드 변경
-    public void EvolveCard(EvolveType type)
-    {
-        if (cardData == null)
-            return;
-
-        cardName.SetText("★" + cardName.text);
 
         UpdateCardDescription();
     }
@@ -91,18 +83,9 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void UpdateCardDescription()
     {
-        //if(cardData.maxMasteryPoint > 0)
-        //{
-        //    extraDescriptionManager.SetMasteryPointDescription(cardData.cardType, cardData.maxMasteryPoint);
-        //}
-
         if (AssetCacheManager.instance.TryGetCardDescription(cardData.path, out CardDescription description))
         {
             cardDescription.SetText(description.description);
-            //if(extraDescriptionManager)
-            //{
-            //    extraDescriptionManager.SetExtraDescription(description.extraDescriptions);
-            //}
         }
         else 
         { 

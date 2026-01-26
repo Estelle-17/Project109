@@ -172,20 +172,23 @@ public class CardMasteryManager : MonoBehaviour
             case CardMasteryType.UseCard:
                 xpGain = 10;
                 break;
-                case CardMasteryType.DealDamage:
+            case CardMasteryType.DealDamage:
                 xpGain = amount;
                 break;
-                case CardMasteryType.GuardDamage:
+            case CardMasteryType.GuardDamage:
                 xpGain = amount;
                 break;
-                case CardMasteryType.KillEnemy:
+            case CardMasteryType.KillEnemy:
                 xpGain = 50;
                 break;
-                case CardMasteryType.Heal:
+            case CardMasteryType.Heal:
                 xpGain = amount * 1.5f;
                 break;
-                case CardMasteryType.DrawCard:
+            case CardMasteryType.DrawCard:
                 xpGain = 5;
+                break;
+            case CardMasteryType.UpgradeCard:
+                xpGain = amount;
                 break;
         }
 

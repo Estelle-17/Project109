@@ -14,8 +14,9 @@ public class ActionCardData : ScriptableObject, IIdentifiable
     public string cardType;
     public string targetType;
     public List<string> effectArea;
+    public List<int> amountList;
+    public List<int> upgradeAmountList;
     public string texturePath;
-    public string evolvedCardPath;
     public string upgradeCardPath;
     public int maxMasteryPoint;
 

@@ -26,10 +26,10 @@ MonoBehaviour:
   - 00100
   - 00000
   - 00000
+  amountList: 0600000005000000
+  upgradeAmountList: 0300000003000000
   texturePath: Card_test_texture
-  evolvedCardPath: 
   upgradeCardPath: 
-  currentMasteryPoint: 0
   maxMasteryPoint: 0
   isEvolved: 0
   evolveType: 0

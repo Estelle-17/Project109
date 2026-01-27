@@ -54,8 +54,6 @@ properties:
           type: integer
         texturePath:
           type: string
-        upgradeCardPath:
-          type: string
       required:
         - path
         - className
@@ -66,6 +64,7 @@ properties:
         - targetType
         - effectArea
         - amountList
+        - upgradeAmountList
         - texturePath
 required:
   - cardCollection

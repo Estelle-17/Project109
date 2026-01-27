@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   path: Rumbling
   cardName: "\uB545\uC6B8\uB9BC"
-  description: "\uD53C\uD574\uB97C !damage! \uC90D\uB2C8\uB2E4.\n\uC1E0\uC57D\uC744
-    !amount! \uBD80\uC5EC\uD569\uB2C8\uB2E4.\n\uC57D\uD654\uB97C !amount! \uBD80\uC5EC\uD569\uB2C8\uB2E4."
+  description: "\uD53C\uD574\uB97C [0] \uC90D\uB2C8\uB2E4.\n\uC1E0\uC57D\uC744 [1]
+    \uBD80\uC5EC\uD569\uB2C8\uB2E4.\n\uC57D\uD654\uB97C [2] \uBD80\uC5EC\uD569\uB2C8\uB2E4."
   extraDescriptions:
   - name: "\uC1E0\uC57D"
     description: "\uBC1B\uB294 \uD53C\uD574\uAC00 50% \uC99D\uAC00\uD569\uB2C8\uB2E4."

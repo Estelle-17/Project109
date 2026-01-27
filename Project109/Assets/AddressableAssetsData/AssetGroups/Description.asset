@@ -21,8 +21,26 @@ MonoBehaviour:
     m_SerializedLabels:
     - Description
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 119870b60d9b0ef46923d5c5dbf338be
+    m_Address: WeaknessPierce_Description
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Description
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3c9fbf990c4fea34490edfbabf7d1fcf
     m_Address: Rumbling_Description
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Description
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 495121a4c91980642bf2d5f6d4e9c499
+    m_Address: FalseSwipe_Description
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Description
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4a124d65a6a73a446a78ce3af252e8d3
+    m_Address: Earthquake_Description
     m_ReadOnly: 0
     m_SerializedLabels:
     - Description
@@ -39,8 +57,20 @@ MonoBehaviour:
     m_SerializedLabels:
     - Description
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c220d28a51fe4424ba8aff537d620d84
+    m_Address: SwiftSlash_Description
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Description
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dd6aa1d8be9c46c4790c1b868a4169c9
     m_Address: ComboSlash_Description
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Description
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f4a0fb251164b1748b7ec41f31ccdb3e
+    m_Address: SpinningSlash_Description
     m_ReadOnly: 0
     m_SerializedLabels:
     - Description

@@ -116,8 +116,8 @@ cardCollection:
         - "00100"
         - "00000"
         - "00000"
-    amountList: [8, 20, 2]
-    upgradeAmountList: [4, 0, 1]
+    amountList: [8, 2]
+    upgradeAmountList: [4, 1]
     maxMasteryPoint: !!int 250
     texturePath: Card_test_texture
 
@@ -151,15 +151,15 @@ cardCollection:
         - "00100"
         - "00000"
         - "00000"
-    amountList: [8, 4, 5]
-    upgradeAmountList: [0, 2, 0]
+    amountList: [8, 2, 3]
+    upgradeAmountList: [0, 4, 0]
     maxMasteryPoint: !!int 250
     texturePath: Card_test_texture
 
   - path: WeaknessPierce
     className: Warrior
     cardName: 약점 관통
-    rarity: !!int 3
+    rarity: !!int 2
     stamina: !!int 40
     cardType: Attack
     targetType: All
@@ -170,5 +170,5 @@ cardCollection:
         - "00000"
         - "00000"
     amountList: [8, 2]
-    upgradeAmountList: [4, 1]
+    upgradeAmountList: [3, 1]
     texturePath: Card_test_texture

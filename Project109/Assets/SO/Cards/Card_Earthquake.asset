@@ -26,8 +26,8 @@ MonoBehaviour:
   - 00100
   - 00000
   - 00000
-  amountList: 080000001400000002000000
-  upgradeAmountList: 040000000000000001000000
+  amountList: 0800000002000000
+  upgradeAmountList: 0400000001000000
   texturePath: Card_test_texture
   upgradeCardPath: 
   maxMasteryPoint: 250

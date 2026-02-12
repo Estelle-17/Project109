@@ -25,6 +25,29 @@ cardDescriptionCollection:
     cardName: 칼등 치기
     description: "피해를 [0] 줍니다.\n임시 쉴드를 [1] 얻습니다."
 
+  - path: FinishingBlow
+    cardName: 마무리 타격
+    description: "피해를 [0] 줍니다.\n이번 턴에 사용된 카드 1장 당 데미지가 [1] 증가합니다."
+
+  - path: RisingStrike
+    cardName: 어퍼컷
+    description: "피해를 [0] 줍니다.\n쇠약을 [1] 부여합니다."
+    extraDescriptions:
+      - name: 쇠약
+        description: 받는 피해가 50% 증가합니다.
+
+  - path: Pummel
+    cardName: 구타
+    description: "피해를 [0] 줍니다.\n이번 전투 동안 구타 카드 피해량이 [1] 증가합니다."
+
+  - path: PommelStrike
+    cardName: 손잡이 타격
+    description: "피해를 [0] 줍니다.\n카드를 [1] 장 뽑습니다."
+
+  - path: BattleRoar
+    cardName: 전투의 포효
+    description: "카드를 [0] 장 뽑습니다.\n뽑은 카드들은 사용하기 전까지 스태미너 소모가 [1] 감소합니다."
+
   - path: Initiative
     cardName: 선수핋승
     description: "<color=#0000CD>선봉대\n[0] 번 추가로 공격합니다.</color>\n피해를 [1] 줍니다."
@@ -75,7 +98,7 @@ cardDescriptionCollection:
 
   - path: SpinningSlash
     cardName: 회전베기
-    description: "<color=#0000CD>종전 20</color>피해를 [0] 줍니다."
+    description: "<color=#0000CD>종전 20</color>\n피해를 [0] 줍니다."
     extraDescriptions:
       - name: 종전
         description: 턴 종료 시 남은 스태미너를 전부 소모하여 X당 한 번 씩 시전합니다.
@@ -106,7 +129,7 @@ cardDescriptionCollection:
     description: "피해를 [0] 줍니다.\n광분 버프 1개 당 피해량이 2 증가합니다."
     extraDescriptions:
       - name: 광분
-        description: 행동 카드의 스태미너 소모를 5 감소시킵니다.\n턴 종료 시 남은 광분 버프가 50% 감소합니다.
+        description: 중첩 당행동 카드의 스태미너 소모를 5 감소시킵니다.\n턴 종료 시 남은 광분 버프가 50% 감소합니다.
       - name: 메아리
         description: 카드를 낸 턴에 한해 그 카드를 다시 낼 수 있음.
     masteryDescriptions:

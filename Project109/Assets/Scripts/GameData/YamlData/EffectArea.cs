@@ -4,5 +4,6 @@ using System.Collections.Generic;
 [System.Serializable]
 public class EffectArea
 {
-    public List<string> area;
+    public string areaType;
+    public int distance;
 }

@@ -131,7 +131,7 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
             UIManager.instance.UpdateCardExtraDescription(cardData, extraDescriptionSpawnPos.transform, transform.localScale);
 
         //카드 범위 세팅 진행
-        UIManager.instance.effectAreaManager.SetEffectArea(cardData.effectArea, transform.localScale);
+        //UIManager.instance.effectAreaManager.SetEffectArea(cardData.effectArea, transform.localScale);
     }
 
     public void OnPointerExit(PointerEventData eventData)

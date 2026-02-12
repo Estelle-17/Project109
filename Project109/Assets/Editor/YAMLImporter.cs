@@ -69,7 +69,9 @@ public class YAMLImporter
             asset.stamina = card.stamina;
             asset.cardType = card.CardType;
             asset.targetType = card.TargetType;
-            asset.effectArea = card.effectArea;
+            asset.targetMinDistance = card.targetMinDistance;
+            asset.targetMaxDistance = card.targetMaxDistance;
+            asset.additionalEffectAreaList = card.additionalEffectAreaList;
             asset.amountList = card.amountList;
             asset.upgradeAmountList = card.upgradeAmountList;
             asset.maxMasteryPoint = card.maxMasteryPoint;
@@ -762,7 +764,9 @@ public class YAMLImporter
         public int stamina { get; set; }
         public string CardType { get; set; }
         public string TargetType { get; set; }
-        public List<string> effectArea { get; set; }
+        public int targetMinDistance { get; set; }
+        public int targetMaxDistance { get; set; }
+        public List<EffectArea> additionalEffectAreaList { get; set; }
         public List<int> amountList { get; set; }
         public List<int> upgradeAmountList { get; set; }
         public int maxMasteryPoint { get; set; }

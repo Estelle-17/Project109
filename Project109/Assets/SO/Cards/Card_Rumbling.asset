@@ -20,12 +20,11 @@ MonoBehaviour:
   stamina: 20
   cardType: Attack
   targetType: All
-  effectArea:
-  - 11111
-  - 11111
-  - 11111
-  - 11111
-  - 11111
+  targetMinDistance: 0
+  targetMaxDistance: 0
+  additionalEffectAreaList:
+  - areaType: CircleFill
+    distance: 3
   amountList: 020000000100000001000000
   upgradeAmountList: 000000000100000001000000
   texturePath: Card_test_texture

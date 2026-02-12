@@ -13,7 +13,9 @@ public class ActionCardData : ScriptableObject, IIdentifiable
     public int stamina;
     public string cardType;
     public string targetType;
-    public List<string> effectArea;
+    public int targetMinDistance;
+    public int targetMaxDistance;
+    public List<EffectArea> additionalEffectAreaList;
     public List<int> amountList;
     public List<int> upgradeAmountList;
     public string texturePath;

@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Card
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0ef8c6514d163a24e9fb2c3ea73ea49e
+    m_Address: Card_PommelStrike
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 126b79f2b5720b643bc3d868fd9d2464
     m_Address: Card_FalseSwipe
     m_ReadOnly: 0
@@ -29,6 +35,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1e915869198d92743b25b15f3294252b
     m_Address: Card_Earthquake
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 25d87b6ebefbdd644bd05bdede16b3d6
+    m_Address: Card_Pummel
     m_ReadOnly: 0
     m_SerializedLabels:
     - Card
@@ -93,6 +105,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Card
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 90c740622f6c38b4cabeeaec307960a3
+    m_Address: Card_RisingStrike
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 99f73d0061050ae4ea5ec1d6fa6b4321
     m_Address: Card_ComboSlash
     m_ReadOnly: 0
@@ -104,6 +122,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Battle
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a0ccb3602a1b2e842be85a5c3c374e83
+    m_Address: Card_FinishingBlow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a34813b7e0f230d4fbf8a73d28fc3cb6
+    m_Address: Card_BattleRoar
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 68adc54c3b2506b4792e9cf9b8aaa501, type: 2}

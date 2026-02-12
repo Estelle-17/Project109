@@ -6,13 +6,12 @@ cardCollection:
     rarity: !!int 1 
     stamina: !!int 40
     cardType: Attack
-    targetType: All
-    effectArea:
-        - "00000"
-        - "01110"
-        - "00100"
-        - "00000"
-        - "00000"
+    targetType: Target
+    targetMinDistance: 1
+    targetMaxDistance: 1
+    additionalEffectAreaList:
+      - areaType: None
+        distance: 0
     amountList: [8]
     upgradeAmountList: [4]
     texturePath: Card_test_texture
@@ -23,13 +22,12 @@ cardCollection:
     rarity: !!int 1
     stamina: !!int 0
     cardType: Attack
-    targetType: All
-    effectArea:
-        - "00000"
-        - "00100"
-        - "00100"
-        - "00000"
-        - "00000"
+    targetType: Target
+    targetMinDistance: 1
+    targetMaxDistance: 1
+    additionalEffectAreaList:
+      - areaType: None
+        distance: 0
     amountList: [4]
     upgradeAmountList: [2]
     texturePath: Card_test_texture
@@ -40,13 +38,12 @@ cardCollection:
     rarity: !!int 1
     stamina: !!int 40
     cardType: Attack
-    targetType: Random
-    effectArea:
-        - "00000"
-        - "01110"
-        - "00100"
-        - "00000"
-        - "00000"
+    targetType: Target
+    targetMinDistance: 1
+    targetMaxDistance: 1
+    additionalEffectAreaList:
+      - areaType: None
+        distance: 0
     amountList: [4, 4]
     upgradeAmountList: [0, 2]
     texturePath: Card_test_texture 
@@ -58,12 +55,11 @@ cardCollection:
     stamina: !!int 20
     cardType: Attack
     targetType: All
-    effectArea:
-        - "11111"
-        - "11111"
-        - "11111"
-        - "11111"
-        - "11111"
+    targetMinDistance: 0
+    targetMaxDistance: 0
+    additionalEffectAreaList:
+      - areaType: CircleFill
+        distance: 3
     amountList: [2, 1, 1]
     upgradeAmountList: [0, 1, 1]
     texturePath: Card_test_texture 
@@ -74,15 +70,94 @@ cardCollection:
     rarity: !!int 1
     stamina: !!int 40
     cardType: Attack
-    targetType: All
-    effectArea:
-        - "00100"
-        - "00100"
-        - "00100"
-        - "00000"
-        - "00000"
+    targetType: Target
+    targetMinDistance: 1
+    targetMaxDistance: 1
+    additionalEffectAreaList:
+      - areaType: None
+        distance: 0
     amountList: [6, 5]
     upgradeAmountList: [3, 3]
+    texturePath: Card_test_texture
+
+  - path: FinishingBlow
+    className: Warrior
+    cardName: 마무리 타격
+    rarity: !!int 1
+    stamina: !!int 30
+    cardType: Attack
+    targetType: Target
+    targetMinDistance: 1
+    targetMaxDistance: 2
+    additionalEffectAreaList:
+      - areaType: None
+        distance: 0
+    amountList: [6, 3]
+    upgradeAmountList: [0, 2]
+    texturePath: Card_test_texture
+
+  - path: RisingStrike
+    className: Warrior
+    cardName: 어퍼컷
+    rarity: !!int 1
+    stamina: !!int 20
+    cardType: Attack
+    targetType: Target
+    targetMinDistance: 1
+    targetMaxDistance: 1
+    additionalEffectAreaList:
+      - areaType: None
+        distance: 0
+    amountList: [4, 1]
+    upgradeAmountList: [0, 1]
+    texturePath: Card_test_texture
+
+  - path: Pummel
+    className: Warrior
+    cardName: 구타
+    rarity: !!int 1
+    stamina: !!int 10
+    cardType: Attack
+    targetType: Target
+    targetMinDistance: 1
+    targetMaxDistance: 1
+    additionalEffectAreaList:
+      - areaType: None
+        distance: 0
+    amountList: [3, 2]
+    upgradeAmountList: [0, 2]
+    texturePath: Card_test_texture
+
+  - path: PommelStrike
+    className: Warrior
+    cardName: 손잡이 타격
+    rarity: !!int 1
+    stamina: !!int 30
+    cardType: Attack
+    targetType: Target
+    targetMinDistance: 1
+    targetMaxDistance: 1
+    additionalEffectAreaList:
+      - areaType: None
+        distance: 0
+    amountList: [8, 1]
+    upgradeAmountList: [4, 1]
+    texturePath: Card_test_texture
+
+  - path: BattleRoar
+    className: Warrior
+    cardName: 전투의 포효
+    rarity: !!int 1
+    stamina: !!int 40
+    cardType: Skill
+    targetType: All
+    targetMinDistance: 0
+    targetMaxDistance: 0
+    additionalEffectAreaList:
+      - areaType: None
+        distance: 0
+    amountList: [2, 10]
+    upgradeAmountList: [1, 10]
     texturePath: Card_test_texture
 
   - path: Initiative
@@ -91,13 +166,12 @@ cardCollection:
     rarity: !!int 2
     stamina: !!int 40
     cardType: Attack
-    targetType: All
-    effectArea:
-        - "00100"
-        - "01110"
-        - "00100"
-        - "00000"
-        - "00000"
+    targetType: Target
+    targetMinDistance: 1
+    targetMaxDistance: 2
+    additionalEffectAreaList:
+      - areaType: Cross
+        distance: 1
     amountList: [1, 8]
     upgradeAmountList: [1, 0]
     maxMasteryPoint: !!int 250
@@ -109,13 +183,12 @@ cardCollection:
     rarity: !!int 2
     stamina: !!int 60
     cardType: Attack
-    targetType: All
-    effectArea:
-        - "11111"
-        - "01110"
-        - "00100"
-        - "00000"
-        - "00000"
+    targetType: Target
+    targetMinDistance: 1
+    targetMaxDistance: 3
+    additionalEffectAreaList:
+      - areaType: None
+        distance: 0
     amountList: [8, 2]
     upgradeAmountList: [4, 1]
     maxMasteryPoint: !!int 250
@@ -127,13 +200,12 @@ cardCollection:
     rarity: !!int 1
     stamina: !!int 40
     cardType: Attack
-    targetType: All
-    effectArea:
-        - "00000"
-        - "01110"
-        - "01110"
-        - "01110"
-        - "00000"
+    targetType: Target
+    targetMinDistance: 0
+    targetMaxDistance: 0
+    additionalEffectAreaList:
+      - areaType: CircleFill
+        distance: 2
     amountList: [6]
     upgradeAmountList: [9]
     texturePath: Card_test_texture
@@ -144,13 +216,12 @@ cardCollection:
     rarity: !!int 2
     stamina: !!int 30
     cardType: Attack
-    targetType: All
-    effectArea:
-        - "00000"
-        - "00100"
-        - "00100"
-        - "00000"
-        - "00000"
+    targetType: Target
+    targetMinDistance: 1
+    targetMaxDistance: 1
+    additionalEffectAreaList:
+      - areaType: XShape
+        distance: 0
     amountList: [8, 2, 3]
     upgradeAmountList: [0, 4, 0]
     maxMasteryPoint: !!int 250
@@ -162,13 +233,12 @@ cardCollection:
     rarity: !!int 2
     stamina: !!int 40
     cardType: Attack
-    targetType: All
-    effectArea:
-        - "00100"
-        - "00100"
-        - "00100"
-        - "00000"
-        - "00000"
+    targetType: Target
+    targetMinDistance: 1
+    targetMaxDistance: 2
+    additionalEffectAreaList:
+      - areaType: None
+        distance: 0
     amountList: [8, 2]
     upgradeAmountList: [3, 1]
     texturePath: Card_test_texture

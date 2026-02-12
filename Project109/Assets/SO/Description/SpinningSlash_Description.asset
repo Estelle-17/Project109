@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   path: SpinningSlash
   cardName: "\uD68C\uC804\uBCA0\uAE30"
-  description: "<color=#0000CD>\uC885\uC804 20</color>\uD53C\uD574\uB97C [0] \uC90D\uB2C8\uB2E4."
+  description: "<color=#0000CD>\uC885\uC804 20</color>\n\uD53C\uD574\uB97C [0] \uC90D\uB2C8\uB2E4."
   extraDescriptions:
   - name: "\uC885\uC804"
     description: "\uD134 \uC885\uB8CC \uC2DC \uB0A8\uC740 \uC2A4\uD0DC\uBBF8\uB108\uB97C

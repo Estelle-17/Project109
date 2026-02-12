@@ -13,7 +13,7 @@ public class EffectAreaCheckButton : MonoBehaviour, IPointerEnterHandler, IPoint
             return;
         }
 
-        UIManager.instance.OnCardEffectAreaBackground(effectAreaSpawnTransform.position);
+        //UIManager.instance.OnCardEffectAreaBackground(effectAreaSpawnTransform.position);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -23,6 +23,6 @@ public class EffectAreaCheckButton : MonoBehaviour, IPointerEnterHandler, IPoint
             return;
         }
 
-        UIManager.instance.OffCardEffectAreaBackground();
+        //UIManager.instance.OffCardEffectAreaBackground();
     }
 }

@@ -10,7 +10,7 @@ public enum MapState
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static GameManager instance { get; private set; }
 
     private void Awake()
     {
@@ -23,18 +23,6 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(this.gameObject);
-        }
-    }
-
-    public static GameManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                return null;
-            }
-            return instance;
         }
     }
 

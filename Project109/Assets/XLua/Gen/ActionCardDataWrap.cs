@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(ActionCardData);
-			Utils.BeginObjectRegister(type, L, translator, 0, 0, 15, 14);
+			Utils.BeginObjectRegister(type, L, translator, 0, 0, 21, 20);
 			
 			
 			
@@ -34,10 +34,16 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "stamina", _g_get_stamina);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "cardType", _g_get_cardType);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "targetType", _g_get_targetType);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "effectArea", _g_get_effectArea);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "targetMinDistance", _g_get_targetMinDistance);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "targetMaxDistance", _g_get_targetMaxDistance);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "additionalEffectAreaList", _g_get_additionalEffectAreaList);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "amountList", _g_get_amountList);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "upgradeAmountList", _g_get_upgradeAmountList);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "texturePath", _g_get_texturePath);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "upgradeCardPath", _g_get_upgradeCardPath);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "maxMasteryPoint", _g_get_maxMasteryPoint);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "isEvolved", _g_get_isEvolved);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "evolveType", _g_get_evolveType);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "isUpgrade", _g_get_isUpgrade);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "runtimeID", _g_get_runtimeID);
             
@@ -49,10 +55,16 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "stamina", _s_set_stamina);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "cardType", _s_set_cardType);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "targetType", _s_set_targetType);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "effectArea", _s_set_effectArea);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "targetMinDistance", _s_set_targetMinDistance);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "targetMaxDistance", _s_set_targetMaxDistance);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "additionalEffectAreaList", _s_set_additionalEffectAreaList);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "amountList", _s_set_amountList);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "upgradeAmountList", _s_set_upgradeAmountList);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "texturePath", _s_set_texturePath);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "upgradeCardPath", _s_set_upgradeCardPath);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "maxMasteryPoint", _s_set_maxMasteryPoint);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "isEvolved", _s_set_isEvolved);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "evolveType", _s_set_evolveType);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "isUpgrade", _s_set_isUpgrade);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "runtimeID", _s_set_runtimeID);
             
@@ -230,13 +242,69 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_effectArea(RealStatePtr L)
+        static int _g_get_targetMinDistance(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.effectArea);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.targetMinDistance);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_targetMaxDistance(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.targetMaxDistance);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_additionalEffectAreaList(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.additionalEffectAreaList);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_amountList(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.amountList);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_upgradeAmountList(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.upgradeAmountList);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -272,6 +340,20 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_maxMasteryPoint(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.maxMasteryPoint);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_isEvolved(RealStatePtr L)
         {
 		    try {
@@ -279,6 +361,20 @@ namespace XLua.CSObjectWrap
 			
                 ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
                 LuaAPI.lua_pushboolean(L, gen_to_be_invoked.isEvolved);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_evolveType(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.evolveType);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -436,13 +532,73 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_effectArea(RealStatePtr L)
+        static int _s_set_targetMinDistance(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.effectArea = (System.Collections.Generic.List<string>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<string>));
+                gen_to_be_invoked.targetMinDistance = LuaAPI.xlua_tointeger(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_targetMaxDistance(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.targetMaxDistance = LuaAPI.xlua_tointeger(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_additionalEffectAreaList(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.additionalEffectAreaList = (System.Collections.Generic.List<EffectArea>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<EffectArea>));
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_amountList(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.amountList = (System.Collections.Generic.List<int>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<int>));
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_upgradeAmountList(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.upgradeAmountList = (System.Collections.Generic.List<int>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<int>));
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
@@ -481,6 +637,21 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_maxMasteryPoint(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.maxMasteryPoint = LuaAPI.xlua_tointeger(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _s_set_isEvolved(RealStatePtr L)
         {
 		    try {
@@ -488,6 +659,22 @@ namespace XLua.CSObjectWrap
 			
                 ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
                 gen_to_be_invoked.isEvolved = LuaAPI.lua_toboolean(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_evolveType(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                ActionCardData gen_to_be_invoked = (ActionCardData)translator.FastGetCSObj(L, 1);
+                GameItem.Types.EvolveType gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.evolveType = gen_value;
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

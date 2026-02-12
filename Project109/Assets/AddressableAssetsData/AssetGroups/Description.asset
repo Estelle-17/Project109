@@ -45,8 +45,32 @@ MonoBehaviour:
     m_SerializedLabels:
     - Description
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 52cabdc59c88feb44bda58e039f402e7
+    m_Address: RisingStrike_Description
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Description
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 719dd8201e91f0a45bf316ca73b163f9
     m_Address: QuickSlash_Description
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Description
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 81497d7a5f1321542902c224ba2bef3f
+    m_Address: BattleRoar_Description
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Description
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8bf8dcd84640f5f4a8ee73d4f667e92b
+    m_Address: Pummel_Description
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Description
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 97fb4586d82ec4d488a3689a6e09f965
+    m_Address: PommelStrike_Description
     m_ReadOnly: 0
     m_SerializedLabels:
     - Description
@@ -59,6 +83,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c220d28a51fe4424ba8aff537d620d84
     m_Address: SwiftSlash_Description
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Description
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c9aec026b200aa94c81e2db3b2382dfd
+    m_Address: FinishingBlow_Description
     m_ReadOnly: 0
     m_SerializedLabels:
     - Description

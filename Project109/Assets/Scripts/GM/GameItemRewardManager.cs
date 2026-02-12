@@ -469,7 +469,7 @@ public class GameItemRewardManager : MonoBehaviour
         }
     }
 
-    public void InstantiateCardReward(RandomCardPickupType itemPickupType, Vector3 spawnPosition)
+    public void InstantiateItemReward(RewardItemType rewardType, RandomCardPickupType itemPickupType, Vector3 spawnPosition)
     {
         if (rewardObjectPrefab == null)
             return;
@@ -478,7 +478,7 @@ public class GameItemRewardManager : MonoBehaviour
         RewardItemHandler rewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardItemHandler>();
         if (rewardNPC != null)
         {
-            rewardNPC.SetReward(RewardItemType.Card, itemPickupType, RandomRelicPickupType.Common, 0);
+            rewardNPC.SetReward(rewardType, itemPickupType, RandomRelicPickupType.Common, 0);
             rewardNPC.transform.position = spawnPosition;
         }
         //맵 이동 시 지워질 오브젝트 목록으로 등록
@@ -486,21 +486,21 @@ public class GameItemRewardManager : MonoBehaviour
         GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
     }
 
-    public void InstantiateRelicReward(RandomRelicPickupType itemPickupType, Vector3 spawnPosition)
+    public void InstantiateItemReward(RewardItemType rewardType, RandomRelicPickupType itemPickupType, Vector3 spawnPosition)
     {
         if (rewardObjectPrefab == null)
             return;
 
-        //유물 보상 생성
-        RewardItemHandler relicRewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardItemHandler>();
-        if (relicRewardNPC != null)
+        //카드 보상 생성
+        RewardItemHandler rewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardItemHandler>();
+        if (rewardNPC != null)
         {
-            relicRewardNPC.SetReward(RewardItemType.Relic, RandomCardPickupType.Common, itemPickupType, 0);
-            relicRewardNPC.transform.position = spawnPosition;
+            rewardNPC.SetReward(rewardType, RandomCardPickupType.Common, itemPickupType, 0);
+            rewardNPC.transform.position = spawnPosition;
         }
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnNPCList.Add(relicRewardNPC.gameObject);
-        GameManager.instance.currentSpawnUIList.Add(relicRewardNPC.GetRewardUI());
+        GameManager.instance.currentSpawnNPCList.Add(rewardNPC.gameObject);
+        GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
     }
 
     public List<ActionCardData> GetCommonCardList() {   return commonCardList;  }

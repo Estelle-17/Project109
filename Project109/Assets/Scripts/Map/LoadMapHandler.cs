@@ -191,8 +191,9 @@ public class LoadMapHandler : MonoBehaviour
         GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
 
         //유물 선택지 생성
-        GameItemRewardManager.instance.InstantiateRelicReward(RandomRelicPickupType.CommonToUnique, 
-                                                          GameManager.instance.currentMap.CheckNPCSpawnPoint());
+        GameItemRewardManager.instance.InstantiateItemReward(RewardItemType.Relic,
+                                                             RandomRelicPickupType.CommonToUnique, 
+                                                             GameManager.instance.currentMap.CheckNPCSpawnPoint());
     }
 
     void SpawnRewardBox()

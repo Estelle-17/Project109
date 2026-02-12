@@ -19,13 +19,12 @@ MonoBehaviour:
   rarity: 2
   stamina: 40
   cardType: Attack
-  targetType: All
-  effectArea:
-  - 00100
-  - 01110
-  - 00100
-  - 00000
-  - 00000
+  targetType: Target
+  targetMinDistance: 1
+  targetMaxDistance: 2
+  additionalEffectAreaList:
+  - areaType: Cross
+    distance: 1
   amountList: 0100000008000000
   upgradeAmountList: 0100000000000000
   texturePath: Card_test_texture

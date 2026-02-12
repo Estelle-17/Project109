@@ -39,6 +39,10 @@ public class UIManager : MonoBehaviour
     //카드 상세 확인 관련 변수
     public CardCheckHandler cardCheckHandler;
 
+    //카드 범위 확인 관련 변수
+    public EffectAreaTile effectAreaTile;
+    public EffectAreaTile AdditionalEffectAreaTile;
+
     void Start()
     {
         canvasRect = GetComponent<RectTransform>();
@@ -225,21 +229,30 @@ public class UIManager : MonoBehaviour
 
     #region 카드 범위확인 UI
 
-    public void OnCardEffectAreaBackground(Vector3 newItemPos)
+    public void ClearEffectAreaTiles()
     {
-        if (effectAreaManager == null)
+        if (effectAreaTile == null)
             return;
 
-        effectAreaManager.transform.GetComponent<RectTransform>().position = newItemPos;// + new Vector3(125, 60, 0);
-        effectAreaManager.EffectAreaEnable();
+        effectAreaTile.ClearAllTiles();
+        AdditionalEffectAreaTile.ClearAllTiles();
+
     }
 
-    public void OffCardEffectAreaBackground()
+    public void SetEffectAreaFromTargetDistance(int minDistance, int maxDistance, TileType type)
     {
-        if (effectAreaManager == null)
+        if (effectAreaTile == null)
             return;
 
-        effectAreaManager.EffectAreaDisable();
+        effectAreaTile.SetTileFromTargetDistance(minDistance, maxDistance, type);
+    }
+
+    public void SetEffectAreaFromShapeGenerator(string shapeName, int radius, TileType type)
+    {
+        if (effectAreaTile == null)
+            return;
+
+        AdditionalEffectAreaTile.SetTileFromShapeGenerator(shapeName, radius, type);
     }
 
     #endregion

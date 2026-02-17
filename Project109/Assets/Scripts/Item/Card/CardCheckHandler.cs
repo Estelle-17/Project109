@@ -10,6 +10,8 @@ public class CardCheckHandler : UIPanelBase
     [SerializeField] private GameObject detailDescriptionUIPrefab;
     [SerializeField] private Transform detailDescriptionUITransform;
 
+    [SerializeField] private ExtraDescriptionManager extraDescriptionManager;
+
     void Start()
     {
         
@@ -23,6 +25,7 @@ public class CardCheckHandler : UIPanelBase
 
         cardHandler.UpdateActionCardData(newCardData);
         cardHandler.bIsCardHighlight = false;
+        cardHandler.bAlwaysShowExtraDescription = true;
 
         UIActive();
 
@@ -38,6 +41,10 @@ public class CardCheckHandler : UIPanelBase
             Destroy(child.gameObject);
         }
 
+        //카드 상세 설명 업데이트
+        UpdateCardExtraDescription(newCardData, cardHandler.extraDescriptionSpawnPos.transform, cardHandler.transform.localScale);
+
+        //카드 마스터리 업그레이드 정보 가져오기
         Dictionary<string, int> masteryUpgrades = CardMasteryManager.instance.GetCardMasteryUpgrades(newCardData.ID);
 
         if(masteryUpgrades != null)
@@ -76,6 +83,38 @@ public class CardCheckHandler : UIPanelBase
                                                                    additionalEffectArea.distance,
                                                                    TileType.AdditionalEffectTile);
             }
+        }
+    }
+
+    public void UpdateCardExtraDescription(ActionCardData cardData, Transform spawnPos, Vector3 newLocalScale)
+    {
+        extraDescriptionManager.transform.localScale = newLocalScale;
+        extraDescriptionManager.transform.position = spawnPos.position;
+
+        if (cardData.maxMasteryPoint > 0)
+        {
+            Debug.Log("Set Mastery Point Description");
+            extraDescriptionManager.SetMasteryPointDescription(cardData, cardData.maxMasteryPoint);
+        }
+        else
+        {
+            extraDescriptionManager.ClearMasteryPointDescription();
+        }
+
+        if (AssetCacheManager.instance.TryGetCardDescription(cardData.path, out CardDescription description))
+        {
+            if (extraDescriptionManager)
+            {
+                extraDescriptionManager.SetExtraDescription(description.extraDescriptions);
+            }
+        }
+        else
+        {
+            if (extraDescriptionManager)
+            {
+                extraDescriptionManager.ClearExtraDescription();
+            }
+            Debug.LogWarning("Card description not found for path: " + cardData.path);
         }
     }
 }

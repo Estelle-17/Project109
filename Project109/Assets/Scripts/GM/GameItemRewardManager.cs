@@ -20,7 +20,8 @@ public class GameItemRewardManager : MonoBehaviour
         }
     }
 
-    public GameObject rewardObjectPrefab;
+    [SerializeField] private GameObject rewardObjectPrefab;
+    [SerializeField] private GameObject rewardBoxPrefab;
 
     //Cards
     private List<ActionCardData> commonCardList = new List<ActionCardData>();
@@ -469,30 +470,13 @@ public class GameItemRewardManager : MonoBehaviour
         }
     }
 
-    public void InstantiateItemReward(RewardItemType rewardType, RandomCardPickupType itemPickupType, Vector3 spawnPosition)
-    {
-        if (rewardObjectPrefab == null)
-            return;
-
-        //카드 보상 생성
-        RewardItemHandler rewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardItemHandler>();
-        if (rewardNPC != null)
-        {
-            rewardNPC.SetReward(rewardType, itemPickupType, RandomRelicPickupType.Common, 0);
-            rewardNPC.transform.position = spawnPosition;
-        }
-        //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnNPCList.Add(rewardNPC.gameObject);
-        GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
-    }
-
     public void InstantiateItemReward(RewardItemType rewardType, RandomRelicPickupType itemPickupType, Vector3 spawnPosition)
     {
         if (rewardObjectPrefab == null)
             return;
 
         //카드 보상 생성
-        RewardItemHandler rewardNPC = Instantiate(rewardObjectPrefab).GetComponent<RewardItemHandler>();
+        ChoiceRewardUIHandler rewardNPC = Instantiate(rewardObjectPrefab).GetComponent<ChoiceRewardUIHandler>();
         if (rewardNPC != null)
         {
             rewardNPC.SetReward(rewardType, RandomCardPickupType.Common, itemPickupType, 0);
@@ -503,7 +487,26 @@ public class GameItemRewardManager : MonoBehaviour
         GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
     }
 
-    public List<ActionCardData> GetCommonCardList() {   return commonCardList;  }
+    public void SpawnRewardBox()
+    {
+        if (GameManager.instance.currentIncountNode == null)
+        {
+            return;
+        }
+
+        RewardBoxManager newRewardBox = Instantiate(rewardBoxPrefab).GetComponent<RewardBoxManager>();
+
+        if (newRewardBox != null)
+        {
+            newRewardBox.SetRewardItemList();
+        }
+
+        //맵 이동 시 지워질 오브젝트 목록으로 등록
+        GameManager.instance.currentSpawnNPCList.Add(newRewardBox.gameObject);
+        GameManager.instance.currentSpawnUIList.Add(newRewardBox.GetRewardListUI());
+    }
+
+    public List<ActionCardData> GetCommonCardList() { return commonCardList; }
     public List<ActionCardData> GetRareCardList() { return rareCardList; }
     public List<ActionCardData> GetUniqueCardList() { return uniqueCardList; }
 

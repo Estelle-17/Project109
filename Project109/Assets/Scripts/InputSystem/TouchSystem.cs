@@ -138,7 +138,7 @@ public class TouchSystem : MonoBehaviour
             case "RewardNPC":
                 CameraFocusToTarget(newObject.transform.position);
                 //root에 존재하는 EventHandler 탐색
-                RewardItemHandler rewardNPC = newObject.transform.root.GetComponent<RewardItemHandler>();
+                ChoiceRewardUIHandler rewardNPC = newObject.transform.root.GetComponent<ChoiceRewardUIHandler>();
                 if (rewardNPC != null)
                 {
                     rewardNPC.EnableRewardUI();
@@ -161,11 +161,11 @@ public class TouchSystem : MonoBehaviour
     {
         switch(newTargetTag)
         {
-            case "Trigger":
-                OpenUIWhenClicked openUI = newObject.GetComponent<OpenUIWhenClicked>();
-                if (openUI != null)  //특정 트리거가 감지되고 Active할 UI가 존재한다면
+            case "MapEntrance":
+                NextEntranceHandler entrance = newObject.GetComponent<NextEntranceHandler>();
+                if (entrance != null)  //특정 트리거가 감지되고 Active할 UI가 존재한다면
                 {
-                    openUI.ActiveObject();
+                    entrance.ProcessNextEntrance();
                 }
                 break;
         }

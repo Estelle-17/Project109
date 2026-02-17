@@ -309,6 +309,13 @@ public class UIManager : MonoBehaviour
             extraDescriptionManager.HideExtraDescription();
         }
     }
+    public void ShowCardExtraDescription()
+    {
+        if (extraDescriptionManager)
+        {
+            extraDescriptionManager.ShowExtraDescription();
+        }
+    }
 
     #endregion
 }

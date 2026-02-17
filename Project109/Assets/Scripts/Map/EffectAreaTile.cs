@@ -50,7 +50,7 @@ public class EffectAreaTile : MonoBehaviour
         //    SetTileFromShapeGenerator("XShape", 2, TileType.AdditionalEffectTile);
         //else
         //    SetTileFromTargetDistance(2, 4, TileType.TargetTile);
-        
+
     }
 
     public void SetTileColor(int x, int y, TileType type)
@@ -74,7 +74,7 @@ public class EffectAreaTile : MonoBehaviour
             return;
 
         // 특정 거리 범위 내의 타일 좌표들을 가져옴
-        List<Vector2Int> areaTiles = gridAreaSearch.GetGridArea(textureWidth, centerWidth, centerHeight, minDistance, maxDistance);
+        List<Vector2Int> areaTiles = gridAreaSearch.GetGridArea(new Vector2Int(textureWidth, textureHeight), centerWidth, centerHeight, minDistance, maxDistance);
 
         //쉐이더에 맞는 색상 설정
         Color controlColor = Color.clear;
@@ -88,7 +88,7 @@ public class EffectAreaTile : MonoBehaviour
         //타일 변경 진행
         foreach (var coord in areaTiles)
         {
-            texture.SetPixel(coord.x, coord.y, controlColor);
+            texture.SetPixel(coord.y, coord.x, controlColor);
         }
 
         texture.Apply();
@@ -118,7 +118,7 @@ public class EffectAreaTile : MonoBehaviour
         //타일 변경 진행
         foreach (var coord in areaTiles)
         {
-            texture.SetPixel(coord.x, coord.y, controlColor);
+            texture.SetPixel(coord.y, coord.x, controlColor);
         }
 
         texture.Apply();

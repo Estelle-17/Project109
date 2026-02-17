@@ -4,14 +4,14 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class GridAreaSearch
 {
-    public List<Vector2Int> GetGridArea(int mapSize, int targetX, int targetY, int minDist, int maxDist)
+    public List<Vector2Int> GetGridArea(Vector2Int mapSize, int targetX, int targetY, int minDist, int maxDist)
     {
         List<Vector2Int> results = new List<Vector2Int>();
 
         int startX = Mathf.Max(0, targetX - maxDist);
-        int endX = Mathf.Min(mapSize - 1, targetX + maxDist);
+        int endX = Mathf.Min(mapSize.x - 1, targetX + maxDist);
         int startY = Mathf.Max(0, targetY - maxDist);
-        int endY = Mathf.Min(mapSize - 1, targetY + maxDist);
+        int endY = Mathf.Min(mapSize.y - 1, targetY + maxDist);
 
         for(int x = startX; x <= endX; x++)
         {

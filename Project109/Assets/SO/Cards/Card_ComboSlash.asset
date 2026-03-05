@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa819df5be163b346ba6d2587629c308, type: 3}
   m_Name: Card_ComboSlash
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::ActionCardData
   cardTexture: {fileID: 0}
   path: ComboSlash
   className: Warrior
@@ -19,7 +19,7 @@ MonoBehaviour:
   rarity: 1
   stamina: 40
   cardType: Attack
-  targetType: Target
+  targetType: Area
   targetMinDistance: 1
   targetMaxDistance: 1
   additionalEffectAreaList:

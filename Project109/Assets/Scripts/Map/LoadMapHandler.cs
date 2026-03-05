@@ -13,6 +13,7 @@ public class LoadMapHandler : MonoBehaviour
     [SerializeField] private GameObject shopObjectPrefab;
     [SerializeField] private GameObject restoreObjectPrefab;
     [SerializeField] private GameObject insightObjectPrefab;
+    [SerializeField] private GameObject rewardMapObjectPrefab;
 
     void Start()
     {
@@ -51,15 +52,15 @@ public class LoadMapHandler : MonoBehaviour
                 case IncountType.Battle:
                     GameManager.instance.currentMapState = MapState.Battle;
                     SpawnMonsterInBattleNodeData(newIncountNode.battleNodeData);
-                    //GameItemRewardManager.instance.SpawnRewardBox();
+                    GameItemRewardManager.instance.SpawnRewardBox(GameManager.instance.currentMap.CheckTileMapRewardLocation());
                     break;
                 case IncountType.Elite:
                     GameManager.instance.currentMapState = MapState.Battle;
-                    //GameItemRewardManager.instance.SpawnRewardBox();
+                    GameItemRewardManager.instance.SpawnRewardBox(GameManager.instance.currentMap.CheckTileMapRewardLocation());
                     break;
                 case IncountType.Boss:
                     GameManager.instance.currentMapState = MapState.Battle;
-                    //GameItemRewardManager.instance.SpawnRewardBox();
+                    GameItemRewardManager.instance.SpawnRewardBox(GameManager.instance.currentMap.CheckTileMapRewardLocation());
                     break;
                 case IncountType.Restore:
                     GameManager.instance.currentMapState = MapState.None;

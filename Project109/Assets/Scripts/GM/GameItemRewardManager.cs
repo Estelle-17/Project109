@@ -487,14 +487,14 @@ public class GameItemRewardManager : MonoBehaviour
         GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
     }
 
-    public void SpawnRewardBox()
+    public void SpawnRewardBox(Vector3 spawnPosition)
     {
         if (GameManager.instance.currentIncountNode == null)
         {
             return;
         }
 
-        RewardBoxManager newRewardBox = Instantiate(rewardBoxPrefab).GetComponent<RewardBoxManager>();
+        RewardBoxManager newRewardBox = Instantiate(rewardBoxPrefab, spawnPosition, Quaternion.identity).GetComponent<RewardBoxManager>();
 
         if (newRewardBox != null)
         {

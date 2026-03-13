@@ -30,6 +30,7 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public bool bIsCardHighlight;
     public bool bAlwaysShowExtraDescription;
+    public bool bShowEffectAreaUI;
 
     void Start()
     {
@@ -128,8 +129,6 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //transform.SetAsLastSibling(); //카드가 다른 UI 위에 표시되도록 설정
-
         if (bIsCardHighlight)
             OnSelectHighlight();       //카드 하이라이트on
 
@@ -137,7 +136,11 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         ShowCardExtraDescription();
 
         //카드 범위 세팅 진행
-        //UIManager.instance.effectAreaManager.SetEffectArea(cardData.effectArea, transform.localScale);
+        if(bShowEffectAreaUI)
+        {
+            Debug.Log("Show Effect Area UI");
+            UIManager.instance.UpdateEffectAreaUI(cardData);
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -148,5 +151,10 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if(!bAlwaysShowExtraDescription)
             UIManager.instance.HideCardExtraDescription();
         //extraDescriptionManager.HideExtraDescription();    //추가 설명 UI 보여주기
+
+        if (bShowEffectAreaUI)
+        {
+            UIManager.instance.ClearEffectAreaTiles();
+        }
     }
 }

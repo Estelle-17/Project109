@@ -30,6 +30,7 @@ public class CardRewardHandler : UIPanelBase
             ActionCardData cardData = GameItemRewardManager.instance.GetRandomCardDataByPickupType(pickupType);
 
             card.UpdateActionCardData(cardData);
+            card.bShowEffectAreaUI = true;
 
             card.OnCardClick.AddListener(() => GetCard(cardData));
         }

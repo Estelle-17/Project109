@@ -229,6 +229,24 @@ public class UIManager : MonoBehaviour
 
     #region 카드 범위확인 UI
 
+    public void UpdateEffectAreaUI(ActionCardData newCardData)
+    {
+        UIManager.instance.ClearEffectAreaTiles();
+
+        //효과 범위 설정
+        UIManager.instance.SetEffectAreaFromTargetDistance(newCardData.targetMinDistance,
+                                                           newCardData.targetMaxDistance,
+                                                           TileType.TargetTile);
+
+        //추가 효과 범위 설정
+        foreach (EffectArea additionalEffectArea in newCardData.additionalEffectAreaList)
+        {
+            UIManager.instance.SetEffectAreaFromShapeGenerator(additionalEffectArea.areaType,
+                                                               additionalEffectArea.distance,
+                                                               TileType.AdditionalEffectTile);
+        }
+    }
+
     public void ClearEffectAreaTiles()
     {
         if (effectAreaTile == null)

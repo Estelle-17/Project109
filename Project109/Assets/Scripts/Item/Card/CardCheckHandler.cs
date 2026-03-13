@@ -69,20 +69,7 @@ public class CardCheckHandler : UIPanelBase
         //카드 효과 범위 업데이트
         if(UIManager.instance != null)
         {
-            UIManager.instance.ClearEffectAreaTiles();
-
-            //효과 범위 설정
-            UIManager.instance.SetEffectAreaFromTargetDistance(newCardData.targetMinDistance,
-                                                               newCardData.targetMaxDistance,
-                                                               TileType.TargetTile);
-
-            //추가 효과 범위 설정
-            foreach (EffectArea additionalEffectArea in newCardData.additionalEffectAreaList)
-            {
-                UIManager.instance.SetEffectAreaFromShapeGenerator(additionalEffectArea.areaType,
-                                                                   additionalEffectArea.distance,
-                                                                   TileType.AdditionalEffectTile);
-            }
+            UIManager.instance.UpdateEffectAreaUI(newCardData);
         }
     }
 

@@ -3,7 +3,8 @@ using UnityEngine.UI;
 
 public class UpgradeCardCheckHandler : MonoBehaviour
 {
-    private ActionCardData selectedCardData;
+    private ActionCardData currentCardData;
+    private ActionCardData selectedUpgradeCardData;
 
     [SerializeField] private ActionCardHandler currentCard;
     [SerializeField] private ActionCardHandler upgradeCard;
@@ -22,21 +23,25 @@ public class UpgradeCardCheckHandler : MonoBehaviour
         if (currentCard == null || upgradeCard == null)
             return;
 
-        selectedCardData = Instantiate(newCardData);
+        currentCardData = newCardData;
 
         currentCard.UpdateActionCardData(newCardData);
         currentCard.bIsCardHighlight = false;
 
-        upgradeCard.UpdateActionCardData(selectedCardData);
-        upgradeCard.UpgradeCard();
-        upgradeCard.bIsCardHighlight = false;
+        if (AssetCacheManager.instance.TryGetCard(newCardData.upgradeCardPath, out ActionCardData upgradeCardData))
+        {
+            selectedUpgradeCardData = upgradeCardData;
+
+            upgradeCard.UpdateActionCardData(selectedUpgradeCardData);
+            upgradeCard.bIsCardHighlight = false;
+        }
 
         gameObject.SetActive(true);
     }
 
     public void StartUpgradeCards()
     {
-        CardDeckManager.instance.UpgradeCard(selectedCardData.runtimeID);
+        CardDeckManager.instance.UpgradeCard(currentCardData.runtimeID);
         UIManager.instance.HideCardExtraDescription();
         transform.root.gameObject.SetActive(false);
         Destroy(transform.root.gameObject);
@@ -44,9 +49,9 @@ public class UpgradeCardCheckHandler : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (selectedCardData != null)
+        if (selectedUpgradeCardData != null)
         {
-            Destroy(selectedCardData);
+            //Destroy(selectedUpgradeCardData);
         }
     }
 }

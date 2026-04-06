@@ -81,6 +81,11 @@ public class GameItemRewardManager : MonoBehaviour
     {
         foreach(ActionCardData data in AssetCacheManager.instance.cardList)
         {
+            if(data.bIsUpgradeCard)
+            {
+                continue; //업그레이드 카드들은 보상으로 등장하지 않음
+            }
+
             switch (data.rarity) //1~3
             {
                 case 1:

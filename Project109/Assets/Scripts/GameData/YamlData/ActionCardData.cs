@@ -9,6 +9,7 @@ public class ActionCardData : ScriptableObject, IIdentifiable
     public string path;
     public string className;
     public string cardName;
+    public bool bIsUpgradeCard;
     public int rarity;
     public int stamina;
     public string cardType;
@@ -17,10 +18,10 @@ public class ActionCardData : ScriptableObject, IIdentifiable
     public int targetMaxDistance;
     public List<EffectArea> additionalEffectAreaList;
     public List<int> amountList;
-    public List<int> upgradeAmountList;
     public string texturePath;
     public string upgradeCardPath;
     public int maxMasteryPoint;
+    public List<int> specificProperties;
 
     public bool isEvolved;
     public EvolveType evolveType;

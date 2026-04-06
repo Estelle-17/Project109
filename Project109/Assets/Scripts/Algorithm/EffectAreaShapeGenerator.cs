@@ -6,7 +6,7 @@ public class EffectAreaShapeGenerator : MonoBehaviour
 {
     public static EffectAreaShapeGenerator instance { get; private set; }
 
-    private Dictionary<string, Func<Vector2Int, int, int, int, List<Vector2Int>>> shapeAlgorithms;
+    private Dictionary<string, Func<Vector2Int, int, int, int, int, List<Vector2Int>>> shapeAlgorithms;
 
     private void Awake()
     {
@@ -21,23 +21,24 @@ public class EffectAreaShapeGenerator : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        shapeAlgorithms = new Dictionary<string, Func<Vector2Int, int, int, int, List<Vector2Int>>>()
+        shapeAlgorithms = new Dictionary<string, Func<Vector2Int, int, int, int, int, List<Vector2Int>>>()
         {
-            { "None", GetDefaultShape }, // 기본값 (중심점만)
-            { "SquareLine", GetSquareLine }, // 빈 네모
-            { "SquareFill", GetSquareFill }, // 꽉 찬 네모
-            { "CircleLine", GetCircleLine }, // 빈 원
-            { "CircleFill", GetCircleFill }, // 꽉 찬 원
-            { "Cross",      GetCross },      // 십자가 (+)
-            { "XShape",     GetXShape }      // X 자
+            { "None",       GetDefaultShape },  // 기본값 (중심점만)
+            { "SquareLine", GetSquareLine },    // 빈 네모
+            { "SquareFill", GetSquareFill },    // 꽉 찬 네모
+            { "CircleLine", GetCircleLine },    // 빈 원
+            { "CircleFill", GetCircleFill },    // 꽉 찬 원
+            { "Cross",      GetCross },         // 십자가 (+)
+            { "XShape",     GetXShape },        // X 자
+            { "TargetLine", GetTargetLine }     // 타겟 지정 라인
         };
     }
 
-    public List<Vector2Int> GetShapePositions(string shapeName, Vector2Int mapSize, int targetX, int targetY, int radius)
+    public List<Vector2Int> GetShapePositions(string shapeName, Vector2Int mapSize, int shapeLength, int targetX, int targetY, int radius)
     {
         if (shapeAlgorithms.TryGetValue(shapeName, out var algorithm))
         {
-            return algorithm(mapSize, targetX, targetY, radius);
+            return algorithm(mapSize, targetX, targetY, shapeLength, radius);
         }
         else
         {
@@ -46,7 +47,7 @@ public class EffectAreaShapeGenerator : MonoBehaviour
         }
     }
 
-    private List<Vector2Int> GetDefaultShape(Vector2Int mapSize, int targetX, int targetY, int radius)
+    private List<Vector2Int> GetDefaultShape(Vector2Int mapSize, int targetX, int targetY, int shapeLength, int radius)
     {
         List<Vector2Int> results = new List<Vector2Int>();
 
@@ -55,7 +56,7 @@ public class EffectAreaShapeGenerator : MonoBehaviour
         return results;
     }
 
-    private List<Vector2Int> GetSquareLine(Vector2Int mapSize, int targetX, int targetY, int radius)
+    private List<Vector2Int> GetSquareLine(Vector2Int mapSize, int targetX, int targetY, int shapeLength, int radius)
     {
         List<Vector2Int> results = new List<Vector2Int>();
 
@@ -78,7 +79,7 @@ public class EffectAreaShapeGenerator : MonoBehaviour
         return results;
     }
 
-    private List<Vector2Int> GetSquareFill(Vector2Int mapSize, int targetX, int targetY, int radius)
+    private List<Vector2Int> GetSquareFill(Vector2Int mapSize, int targetX, int targetY, int shapeLength, int radius)
     {
         List<Vector2Int> results = new List<Vector2Int>();
 
@@ -95,7 +96,7 @@ public class EffectAreaShapeGenerator : MonoBehaviour
         return results;
     }
 
-    private List<Vector2Int> GetCircleLine(Vector2Int mapSize, int targetX, int targetY, int radius)
+    private List<Vector2Int> GetCircleLine(Vector2Int mapSize, int targetX, int targetY, int shapeLength, int radius)
     {
         List<Vector2Int> results = new List<Vector2Int>();
 
@@ -117,7 +118,7 @@ public class EffectAreaShapeGenerator : MonoBehaviour
         return results;
     }
 
-    private List<Vector2Int> GetCircleFill(Vector2Int mapSize, int targetX, int targetY, int radius)
+    private List<Vector2Int> GetCircleFill(Vector2Int mapSize, int targetX, int targetY, int shapeLength, int radius)
     {
         List<Vector2Int> results = new List<Vector2Int>();
 
@@ -139,7 +140,7 @@ public class EffectAreaShapeGenerator : MonoBehaviour
         return results;
     }
 
-    private List<Vector2Int> GetCross(Vector2Int mapSize, int targetX, int targetY, int radius)
+    private List<Vector2Int> GetCross(Vector2Int mapSize, int targetX, int targetY, int shapeLength, int radius)
     {
         List<Vector2Int> results = new List<Vector2Int>();
 
@@ -153,7 +154,7 @@ public class EffectAreaShapeGenerator : MonoBehaviour
         return results;
     }
 
-    private List<Vector2Int> GetXShape(Vector2Int mapSize, int targetX, int targetY, int radius)
+    private List<Vector2Int> GetXShape(Vector2Int mapSize, int targetX, int targetY, int shapeLength, int radius)
     {
         List<Vector2Int> results = new List<Vector2Int>();
 
@@ -163,6 +164,23 @@ public class EffectAreaShapeGenerator : MonoBehaviour
             {
                 results.Add(new Vector2Int(targetX + i, targetY + i));
                 if (i != 0) results.Add(new Vector2Int(targetX + i, targetY - i));
+            }
+        }
+
+        return results;
+    }
+
+    private List<Vector2Int> GetTargetLine(Vector2Int mapSize, int targetX, int targetY, int shapeLength, int radius)
+    {
+        List<Vector2Int> results = new List<Vector2Int>();
+
+        for (int x = targetX - (shapeLength / 2); x <= targetX + (shapeLength / 2); x++)
+        {
+            for (int y = targetY; y <= targetY + radius; y++)
+            {
+                //범위 안이라면 모두 추가
+                if (x >= 0 && x < mapSize.x && y >= 0 && y < mapSize.y)
+                    results.Add(new Vector2Int(x, y));
             }
         }
 

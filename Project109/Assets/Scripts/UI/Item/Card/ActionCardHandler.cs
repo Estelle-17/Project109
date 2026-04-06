@@ -61,15 +61,25 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if(cardData == null)
             return;
 
-        //카드 데이터를 기반으로 업그레이드 진행
-        for(int index = 0; index < cardData.amountList.Count; index++)
+        if(AssetCacheManager.instance.TryGetCard(cardData.upgradeCardPath, out ActionCardData upgradeCardData))
         {
-            cardData.amountList[index] += cardData.upgradeAmountList[index];
+            cardData = Instantiate(upgradeCardData);
+
+            cardName.text = cardData.cardName;
+
+            UpdateCardDescription();
+
+            if (AssetCacheManager.instance.TryGetTexture(cardData.texturePath, out Sprite texture))
+            {
+                cardImage.sprite = texture;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Failed to Upgrade Card!");
         }
 
-        cardName.SetText(cardName.text + "+");
-
-        UpdateCardDescription();
+        //UpdateCardDescription();
     }
 
     //저장된 카드 데이터로 진화 후의 카드 변경

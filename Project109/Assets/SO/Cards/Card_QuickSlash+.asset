@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa819df5be163b346ba6d2587629c308, type: 3}
-  m_Name: Card_FalseSwipe
+  m_Name: Card_QuickSlash+
   m_EditorClassIdentifier: Assembly-CSharp::ActionCardData
   cardTexture: {fileID: 0}
-  path: FalseSwipe
+  path: QuickSlash+
   className: Warrior
-  cardName: "\uCE7C\uB4F1 \uCE58\uAE30"
-  bIsUpgradeCard: 0
+  cardName: "\uD035 \uC2AC\uB798\uC2DC+"
+  bIsUpgradeCard: 1
   rarity: 1
-  stamina: 60
+  stamina: 30
   cardType: Attack
   targetType: Target
   targetMinDistance: 1
@@ -26,9 +26,9 @@ MonoBehaviour:
   additionalEffectAreaList:
   - areaType: None
     distance: 0
-  amountList: 0600000005000000
+  amountList: 08000000
   texturePath: Card_test_texture
-  upgradeCardPath: FalseSwipe+
+  upgradeCardPath: 
   maxMasteryPoint: 0
   specificProperties: 
   isEvolved: 0

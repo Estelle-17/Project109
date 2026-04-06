@@ -76,10 +76,24 @@ public class CardDeckManager : MonoBehaviour
         ActionCardData cardToUpgrade = cardDeck.FirstOrDefault(c => c.runtimeID == runtimeID);
         if (cardToUpgrade != null)
         {
-            cardToUpgrade.isUpgrade = true;
-            cardToUpgrade.cardName += "+";
-            OnCardUpgrade?.Invoke(runtimeID);
-            Debug.Log($"Card Upgraded : {cardToUpgrade.cardName} (RuntimeID {runtimeID})");
+            if (AssetCacheManager.instance.TryGetCard(cardToUpgrade.upgradeCardPath, out ActionCardData upgradeCardData))
+            {
+                Debug.Log($"{cardToUpgrade.name} Upgrade -> {upgradeCardData.name}");
+                ActionCardData newCard = Instantiate(upgradeCardData);
+
+                foreach(ActionCardData card in cardDeck)    //업그레이드된 카드로 변경
+                {
+                    if (card.runtimeID == runtimeID)
+                    {
+                        int index = cardDeck.IndexOf(card);
+                        cardDeck[index] = newCard;
+                        cardDeck[index].runtimeID = runtimeID;    //업그레이드된 카드에도 기존 카드의 RuntimeID 유지
+                        break;
+                    }
+                }
+                OnCardUpgrade?.Invoke(runtimeID);
+                Debug.Log($"Card Upgraded : {cardToUpgrade.cardName} (RuntimeID {runtimeID})");
+            }
         }
 
         //업그레이드가 진행되었으니 모든 카드 업데이트 진행

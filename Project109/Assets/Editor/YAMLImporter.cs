@@ -65,6 +65,7 @@ public class YAMLImporter
             asset.path = card.path;
             asset.className = card.className;
             asset.cardName = card.cardName;
+            asset.bIsUpgradeCard = card.bIsUpgradeCard;
             asset.rarity = card.rarity;
             asset.stamina = card.stamina;
             asset.cardType = card.CardType;
@@ -73,10 +74,10 @@ public class YAMLImporter
             asset.targetMaxDistance = card.targetMaxDistance;
             asset.additionalEffectAreaList = card.additionalEffectAreaList;
             asset.amountList = card.amountList;
-            asset.upgradeAmountList = card.upgradeAmountList;
             asset.maxMasteryPoint = card.maxMasteryPoint;
             asset.texturePath = card.texturePath;
             asset.upgradeCardPath = card.upgradeCardPath;
+            asset.specificProperties = card.specificProperties;
 
             asset.isUpgrade = false;
 
@@ -760,6 +761,7 @@ public class YAMLImporter
         public string path { get; set; }
         public string className { get; set; }
         public string cardName { get; set; }
+        public bool bIsUpgradeCard { get; set; }
         public int rarity { get; set; }
         public int stamina { get; set; }
         public string CardType { get; set; }
@@ -768,10 +770,10 @@ public class YAMLImporter
         public int targetMaxDistance { get; set; }
         public List<EffectArea> additionalEffectAreaList { get; set; }
         public List<int> amountList { get; set; }
-        public List<int> upgradeAmountList { get; set; }
         public int maxMasteryPoint { get; set; }
         public string texturePath { get; set; }
         public string upgradeCardPath { get; set; }
+        public List<int> specificProperties { get; set; }
     }
 
     public class RootRelicData

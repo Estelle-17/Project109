@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
 
 public enum TileType
 {
@@ -94,7 +95,7 @@ public class EffectAreaTile : MonoBehaviour
         texture.Apply();
     }
 
-    public void SetTileFromShapeGenerator(string shapeName, int radius, TileType type)
+    public void SetTileFromShapeGenerator(string shapeName, int shapeLength, int radius, TileType type)
     {
         if (gridAreaSearch == null)
             return;
@@ -102,6 +103,7 @@ public class EffectAreaTile : MonoBehaviour
         // 특정 거리 범위 내의 타일 좌표들을 가져옴
         List<Vector2Int> areaTiles = EffectAreaShapeGenerator.instance.GetShapePositions(shapeName, 
                                                                                          new Vector2Int(textureWidth, textureHeight),
+                                                                                         shapeLength,
                                                                                          centerWidth,
                                                                                          centerHeight,
                                                                                          radius);

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class UIManager : MonoBehaviour
 {
@@ -58,7 +59,7 @@ public class UIManager : MonoBehaviour
     {
         if(relicDescription.activeSelf && relicDescriptionTransform)
         {
-            Vector2 mousePos = Input.mousePosition;
+            Vector2 mousePos = Mouse.current.position.ReadValue();
             mousePos += new Vector2(50, 50);    //offset
             relicDescriptionTransform.position = mousePos;
         }
@@ -242,6 +243,7 @@ public class UIManager : MonoBehaviour
         foreach (EffectArea additionalEffectArea in newCardData.additionalEffectAreaList)
         {
             UIManager.instance.SetEffectAreaFromShapeGenerator(additionalEffectArea.areaType,
+                                                               Mathf.Abs(newCardData.targetMaxDistance - newCardData.targetMinDistance),
                                                                additionalEffectArea.distance,
                                                                TileType.AdditionalEffectTile);
         }
@@ -265,12 +267,12 @@ public class UIManager : MonoBehaviour
         effectAreaTile.SetTileFromTargetDistance(minDistance, maxDistance, type);
     }
 
-    public void SetEffectAreaFromShapeGenerator(string shapeName, int radius, TileType type)
+    public void SetEffectAreaFromShapeGenerator(string shapeName, int shapeLength, int radius, TileType type)
     {
         if (effectAreaTile == null)
             return;
 
-        AdditionalEffectAreaTile.SetTileFromShapeGenerator(shapeName, radius, type);
+        AdditionalEffectAreaTile.SetTileFromShapeGenerator(shapeName, shapeLength, radius, type);
     }
 
     #endregion

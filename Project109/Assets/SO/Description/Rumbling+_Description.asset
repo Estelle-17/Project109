@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62ca0b44bd0dcac458676231b3b7720e, type: 3}
-  m_Name: Rumbling_Description
+  m_Name: Rumbling+_Description
   m_EditorClassIdentifier: Assembly-CSharp::CardDescription
-  path: Rumbling
-  cardName: "\uB545\uC6B8\uB9BC"
+  path: Rumbling+
+  cardName: "\uB545\uC6B8\uB9BC+"
   description: "\uD53C\uD574\uB97C [0] \uC90D\uB2C8\uB2E4.\n\uC1E0\uC57D\uC744 [1]
     \uBD80\uC5EC\uD569\uB2C8\uB2E4.\n\uC57D\uD654\uB97C [2] \uBD80\uC5EC\uD569\uB2C8\uB2E4."
   extraDescriptions:

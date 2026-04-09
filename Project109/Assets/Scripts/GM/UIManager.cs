@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.InputSystem;
+using Card.Types;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -235,7 +237,8 @@ public class UIManager : MonoBehaviour
         UIManager.instance.ClearEffectAreaTiles();
 
         //효과 범위 설정
-        UIManager.instance.SetEffectAreaFromTargetDistance(newCardData.targetMinDistance,
+        UIManager.instance.SetEffectAreaFromTargetDistance(newCardData.targetType,
+                                                           newCardData.targetMinDistance,
                                                            newCardData.targetMaxDistance,
                                                            TileType.TargetTile);
 
@@ -259,12 +262,19 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void SetEffectAreaFromTargetDistance(int minDistance, int maxDistance, TileType type)
+    public void SetEffectAreaFromTargetDistance(string cardTargetType, int minDistance, int maxDistance, TileType type)
     {
         if (effectAreaTile == null)
             return;
 
-        effectAreaTile.SetTileFromTargetDistance(minDistance, maxDistance, type);
+        if (Enum.TryParse(cardTargetType, out TargetType parsedTargetType))
+        {
+            effectAreaTile.SetTileFromTargetDistance(parsedTargetType, minDistance, maxDistance, type);
+        }
+        else
+        {
+            Debug.LogWarning($"Invalid TargetType string: {cardTargetType}");
+        }
     }
 
     public void SetEffectAreaFromShapeGenerator(string shapeName, int shapeLength, int radius, TileType type)

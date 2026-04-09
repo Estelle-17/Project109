@@ -2,6 +2,7 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
+using Card.Types;
 
 public enum TileType
 {
@@ -69,13 +70,13 @@ public class EffectAreaTile : MonoBehaviour
         texture.Apply();
     }
 
-    public void SetTileFromTargetDistance(int minDistance, int maxDistance, TileType type)
+    public void SetTileFromTargetDistance(TargetType cardTargetType, int minDistance, int maxDistance, TileType type)
     {
         if(gridAreaSearch == null)
             return;
 
         // 특정 거리 범위 내의 타일 좌표들을 가져옴
-        List<Vector2Int> areaTiles = gridAreaSearch.GetGridArea(new Vector2Int(textureWidth, textureHeight), centerWidth, centerHeight, minDistance, maxDistance);
+        List<Vector2Int> areaTiles = gridAreaSearch.GetGridArea(cardTargetType, new Vector2Int(textureWidth, textureHeight), centerWidth, centerHeight, minDistance, maxDistance);
 
         //쉐이더에 맞는 색상 설정
         Color controlColor = Color.clear;

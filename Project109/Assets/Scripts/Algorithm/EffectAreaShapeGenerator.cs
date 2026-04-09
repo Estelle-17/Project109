@@ -174,9 +174,9 @@ public class EffectAreaShapeGenerator : MonoBehaviour
     {
         List<Vector2Int> results = new List<Vector2Int>();
 
-        for (int x = targetX - (shapeLength / 2); x <= targetX + (shapeLength / 2); x++)
+        for (int x = targetX - (radius / 2); x <= targetX + (radius / 2); x++)
         {
-            for (int y = targetY; y <= targetY + radius; y++)
+            for (int y = targetY; y <= targetY + shapeLength; y++)
             {
                 //범위 안이라면 모두 추가
                 if (x >= 0 && x < mapSize.x && y >= 0 && y < mapSize.y)

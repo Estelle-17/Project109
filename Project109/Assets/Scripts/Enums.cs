@@ -93,9 +93,10 @@ namespace Card.Types
 
     public enum TargetType  //공격 대상 타입
     {
-        All,
         Target,
-        Random
+        Area,
+        Self,
+        All
     }
 
     public enum CardMasteryType

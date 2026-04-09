@@ -179,10 +179,10 @@ cardCollection:
     cardType: Attack
     targetType: Target
     targetMinDistance: 1
-    targetMaxDistance: 2
+    targetMaxDistance: 3
     additionalEffectAreaList:
-      - areaType: CircleFill
-        distance: 1
+      - areaType: TargetLine
+        distance: 0
     amountList: [6, 3]
     upgradeCardPath: FinishingBlow+
     texturePath: Card_test_texture
@@ -196,10 +196,10 @@ cardCollection:
     cardType: Attack
     targetType: Target
     targetMinDistance: 1
-    targetMaxDistance: 2
+    targetMaxDistance: 3
     additionalEffectAreaList:
-      - areaType: CircleFill
-        distance: 1
+      - areaType: TargetLine
+        distance: 0
     amountList: [6, 5]
     upgradeCardPath: ""
     texturePath: Card_test_texture
@@ -299,12 +299,12 @@ cardCollection:
     rarity: !!int 2
     stamina: !!int 60
     cardType: Attack
-    targetType: Area
+    targetType: Target
     targetMinDistance: 1
     targetMaxDistance: 3
     additionalEffectAreaList:
       - areaType: TargetLine
-        distance: 3
+        distance: 1
     amountList: [8, 2]
     upgradeCardPath: ""
     maxMasteryPoint: !!int 250
@@ -355,12 +355,12 @@ cardCollection:
     rarity: !!int 2
     stamina: !!int 60
     cardType: Attack
-    targetType: Area
+    targetType: Target
     targetMinDistance: 1
-    targetMaxDistance: 3
+    targetMaxDistance: 2
     additionalEffectAreaList:
       - areaType: TargetLine
-        distance: 1
+        distance: 0
     amountList: [8, 2]
     upgradeCardPath: ""
     maxMasteryPoint: !!int 250

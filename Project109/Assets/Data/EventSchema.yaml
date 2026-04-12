@@ -7,12 +7,16 @@ useItem: &use_items
     enum:
     - Money
     - MaxHp
+    - MaxHpPercent
     - Hp
+    - HpPercent
     - MaxStamina
     - SpecificCard
     - RandomCard
     - SpecificRelic
     - RandomRelic
+    - RandomPotion
+    - Gold
     value:
       type: integer
     name:
@@ -25,11 +29,19 @@ getItem: &get_items
     enum:
     - Money
     - MaxHp
+    - MaxHpPercent
     - Hp
+    - HpPercent
+    - MaxStamina
     - SpecificCard
     - CardReward
+    - EraseCard
+    - UpgradeCard
     - SpecificRelic
     - RelicReward
+    - RandomRelic
+    - Potion
+    - Gold
     - Battle
     - Event
     value:
@@ -76,7 +88,7 @@ properties:
           type: string
           eventAppearLevel:
             type: integer
-            description: "0: 어디서든 발견할 수 없는 특정 이벤트,
+            description: "0: 어디서든 발견할 수 있는 특정 이벤트,
                           1~3: 해당 스테이지에서 발견할 수 있는 이벤트,
                           4: 랜덤으로 발견할 수 없는 특정 이벤트"           
             minimum: !!int 0

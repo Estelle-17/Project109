@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "RelicData", menuName = "Relic/RelicData")]
 public class RelicData : ScriptableObject, IIdentifiable

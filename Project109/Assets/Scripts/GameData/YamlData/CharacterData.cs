@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "CharacterData", menuName = "Character/CharacterData")]
 public class CharacterData : ScriptableObject, IIdentifiable
@@ -10,11 +10,7 @@ public class CharacterData : ScriptableObject, IIdentifiable
     public string assetPath;
     public int level;
     public string description;
-    public float hp;
-    public float stamina;
-    public float staminaRegen;
-    public int strength;
-    public int armor;
+    public CharacterStat characterStat;
     public List<string> startRelic;
     public List<StartCard> startCards;
 

@@ -38,7 +38,7 @@ public class YAMLImporter
             .JsonCompatible()
             .Build();
         string jsonText = jsonSerializer.Serialize(yamlObject);
-        
+
         //YAML Schema -> Json Schema로 변환
         var schemaYamlObject = deserializer.Deserialize(new StringReader(schemaYamlText));
         string schemaJsonText = jsonSerializer.Serialize(schemaYamlObject);
@@ -550,11 +550,7 @@ public class YAMLImporter
             asset.assetPath = characterData.assetPath;
             asset.level = characterData.level;
             asset.description = characterData.description;
-            asset.hp = characterData.hp;
-            asset.stamina = characterData.stamina;
-            asset.staminaRegen = characterData.staminaRegen;
-            asset.strength = characterData.strength;
-            asset.armor = characterData.armor;
+            asset.characterStat = characterData.characterStat;
             asset.startRelic = characterData.startRelic;
             asset.startCards = characterData.startCards;
 
@@ -866,11 +862,7 @@ public class YAMLImporter
         public string assetPath { get; set; }
         public int level { get; set; }
         public string description { get; set; }
-        public float hp { get; set; }
-        public float stamina { get; set; }
-        public float staminaRegen { get; set; }
-        public int strength { get; set; }
-        public int armor { get; set; }
+        public CharacterStat characterStat { get; set; }
         public List<string> startRelic { get; set; }
         public List<StartCard> startCards { get; set; }
     }

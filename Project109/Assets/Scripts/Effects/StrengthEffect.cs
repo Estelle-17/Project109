@@ -16,7 +16,7 @@ public class StrengthEffect : EffectBase, IOnBeforeDealDamage
 
     public void OnBeforeDealDamage(ref DamageInfo info)
     {
-        // ??공격??가 ?��?지�?가?�기 직전, ???�연????증�???strength)???�해준??
+        // 내가 공격자가 되어 데미지를 가하기 직전, 현재 스택 수치만큼 데미지를 증가시켜준다.
         info.baseDamageAmount += currentStack;
     }
 

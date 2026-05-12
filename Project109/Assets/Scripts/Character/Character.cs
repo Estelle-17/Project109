@@ -21,7 +21,7 @@ public class Character : MonoBehaviour
     [SerializeField]
     private CharacterStat _characterStat;
 
-    // ?��????�출?�는 ?��????�재 ?�탯
+    // 외부에 노출되는 런타임 현재 스탯
     public CharacterStat curCharacterStat => _characterStat;
 
     public EffectManager effectManager;
@@ -103,14 +103,14 @@ public class Character : MonoBehaviour
     private bool staminaFullFired = false;
 
     /// <summary>
-    /// BattleManager?�서 �??�레???�출. 배속???�용??dt�?받는??
+    /// BattleManager에서 매 프레임 호출. 배속을 적용해 dt를 받는다.
     /// </summary>
     public void BattleTick(float dt)
     {
-        // ?�태미나 ?�복
+        // 스태미나 회복
         curStamina += curCharacterStat.staminaRegenPerSecond * dt;
 
-        // ?�펙????
+        // 이펙트 틱
         effectManager.Tick(dt);
 
         if (!staminaFullFired && curStamina >= curCharacterStat.maxStamina)
@@ -121,7 +121,7 @@ public class Character : MonoBehaviour
     }
 
     /// <summary>
-    /// ??종료 ???�출?�여 ?�태미나 리셋 �??�래�?초기??
+    /// 턴 종료 시 호출하여 스태미나 리셋 및 플래그 초기화
     /// </summary>
     public void ResetStamina()
     {
@@ -137,15 +137,15 @@ public class Character : MonoBehaviour
     {
         if (isDead) return;
 
-        // 1. 공격?�의 "공격 직전" 발동 (ex. ??Strength) 버프�??�해 baseDamageAmount 증�?)
+        // 1. 공격자의 "공격 직전" 발동 (ex. 힘(Strength) 버프를 통해 baseDamageAmount 증가)
         if (!info.damageFlags.HasFlag(DamageFlag.NoCasterEvents) && info.caster != null)
             info.caster.eventBus?.Invoke<IOnBeforeDealDamage>(l => l.OnBeforeDealDamage(ref info));
 
-        // 2. ?�격?�의 "방어 직전" ?�과 발동 (ex. ?��?지 경감, ?�피 처리 ??
+        // 2. 피격자의 "방어 직전" 효과 발동 (ex. 데미지 경감, 회피 처리 등)
         if (!info.damageFlags.HasFlag(DamageFlag.NoTargetEvents))
             this.eventBus?.Invoke<IOnBeforeTakeDamage>(l => l.OnBeforeTakeDamage(ref info));
 
-        // ?�피?�었?��? 체크 (?�입 미정?�로 주석 처리)
+        // 회피되었는지 체크 (도입 미정으로 주석 처리)
         // if (info.isDodged) return;
 
         float finalDamage = info.baseDamageAmount * info.damageMultiplier;
@@ -154,7 +154,7 @@ public class Character : MonoBehaviour
         info.shieldDamageAmount = 0f;
         info.hpDamageAmount = 0f;
 
-        // 3. ?�제 ?��?지 ?�용
+        // 3. 실제 데미지 적용
         if (!info.damageFlags.HasFlag(DamageFlag.IgnoreShield))
         {
             if (shield > 0f)
@@ -168,7 +168,7 @@ public class Character : MonoBehaviour
                     info.isShieldBroken = true;
                     OnCharacterShieldChanged?.Invoke(this);
 
-                    // ?�드 ?�괴 즉시 ?�벤??발생
+                    // 실드 파괴 즉시 이벤트 발생
                     if (!info.damageFlags.HasFlag(DamageFlag.NoCasterEvents) && info.caster != null)
                         info.caster.eventBus?.Invoke<IOnBreakShield>(l => l.OnBreakShield(info));
                     
@@ -182,20 +182,20 @@ public class Character : MonoBehaviour
         info.hpDamageAmount = finalDamage;
         info.isBlocked = (info.shieldDamageAmount > 0f && info.hpDamageAmount <= 0f);
 
-        // ?��? ?��?지�?체력???�용
+        // 남은 데미지를 체력에 적용
         if (info.hpDamageAmount > 0f)
         {
             curHealth -= info.hpDamageAmount;
         }
 
-        // 4. 결과 기록 (?�망 ?��?)
+        // 4. 결과 기록 (사망 여부)
         if (curHealth <= 0f)
         {
             curHealth = 0f;
             info.isFatal = true;
         }
 
-        // 5. 공격?�의 "공격 직후" 발동 (ex. ?�혈, ?�??처치 ??추�? ?�과 ??
+        // 5. 공격자의 "공격 직후" 발동 (ex. 흡혈, 대상 처치 시 추가 효과 등)
         if (!info.damageFlags.HasFlag(DamageFlag.NoCasterEvents) && info.caster != null)
         {
             info.caster.eventBus?.Invoke<IOnAfterDealDamage>(l => l.OnAfterDealDamage(info));
@@ -203,13 +203,13 @@ public class Character : MonoBehaviour
                 info.caster.eventBus?.Invoke<IOnKill>(l => l.OnKill(info));
         }
 
-        // 6. ?�격?�의 "방어 직후" 발동 (ex. 가???��?지 반사 ??
+        // 6. 피격자의 "방어 직후" 발동 (ex. 가시 데미지 반사 등)
         if (!info.damageFlags.HasFlag(DamageFlag.NoTargetEvents))
         {
             this.eventBus?.Invoke<IOnAfterTakeDamage>(l => l.OnAfterTakeDamage(info));
         }
 
-        // 7. 게임 ???�망 ?�정
+        // 7. 게임 내 사망 확정
         if (info.isFatal)
         {
             isDead = true;
@@ -222,12 +222,12 @@ public class Character : MonoBehaviour
     {
         if (isDead) return;
 
-        // ?�량 증�?/감소 ?�의 처리
+        // 힐량 증가/감소 등의 처리
         if (info.caster != null)
             info.caster.eventBus?.Invoke<IOnBeforeGiveHeal>(l => l.OnBeforeGiveHeal(ref info));
         this.eventBus?.Invoke<IOnBeforeTakeHeal>(l => l.OnBeforeTakeHeal(ref info));
 
-        float healAmount = info.baseHealAmount; // ?�후 healMultiplier ??추�? 가??
+        float healAmount = info.baseHealAmount; // 향후 healMultiplier 등 추가 가능
 
         if (info.healFlags.HasFlag(HealFlag.OverHeal))
         {
@@ -238,7 +238,7 @@ public class Character : MonoBehaviour
             curHealth = Mathf.Min(curCharacterStat.maxHealth, curHealth + healAmount);
         }
 
-        // ?�복 직후 처리
+        // 회복 직후 처리
         if (info.caster != null)
             info.caster.eventBus?.Invoke<IOnAfterGiveHeal>(l => l.OnAfterGiveHeal(info));
         this.eventBus?.Invoke<IOnAfterTakeHeal>(l => l.OnAfterTakeHeal(info));
@@ -311,21 +311,21 @@ public class Character : MonoBehaviour
     {
         if (isDead) return;
 
-        // 1. ?�전??Caster)??"?��? 부?�하�?직전" ?�물/버프 발동 (ex. ??부????+1?�택)
+        // 1. 시전자(Caster)의 "내가 부여하기 직전" 유물/버프 발동 (ex. 독 부여 시 +1스택)
         if (info.caster != null)
             info.caster.eventBus?.Invoke<IOnBeforeApplyEffect>(l => l.OnBeforeApplyEffect(ref info));
 
-        // 2. ?�격??Target)??"?��? 받기 직전" ?�물/버프 발동 (ex. ?�공�? ?�버??무효??
+        // 2. 피격자(Target)의 "내가 받기 직전" 유물/버프 발동 (ex. 인공물: 디버프 무효화)
         this.eventBus?.Invoke<IOnBeforeApplyEffect>(l => l.OnBeforeApplyEffect(ref info));
 
-        // 3. 무효??Cancel) ?�정 검??
+        // 3. 무효화(Cancel) 판정 검사
         if (info.effectFlags.HasFlag(EffectFlag.Cancel))
-            return; // ?�공�??�에 ?�해 막혔?��?�?종료
+            return; // 인공물 등에 의해 막혔으므로 종료
 
-        // 4. 무사???�과?�으므�?진짜�?버프 추�? (?�때 Added, Stacked ?�의 UI ?�벤?��? ?�짐)
+        // 4. 무사히 통과했으므로 진짜로 버프 추가 (이때 Added, Stacked 등의 UI 이벤트가 터짐)
         this.effectManager.AddEffect(info.caster, info.effect, info.FinalStack, info.FinalDuration);
 
-        // 5. 부??직후 ?�이?�라??(ex. 취약 부???�공 ???�화??부??
+        // 5. 부여 직후 파이프라인 (ex. 취약 부여 성공 시 약화도 부여)
         if (info.caster != null)
             info.caster.eventBus?.Invoke<IOnAfterApplyEffect>(l => l.OnAfterApplyEffect(info));
         this.eventBus?.Invoke<IOnAfterApplyEffect>(l => l.OnAfterApplyEffect(info));

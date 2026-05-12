@@ -253,7 +253,7 @@ public class ExploreUI : UIPanelBase
 
         //생성 시 필요한 만큼 노드 가리기
         //중간 지점의 휴식, 상점 2개의 노드만 있는 곳은 가리지 않기
-        for (int i = GameManager.instance.GetPlayerStat().mapFloorCheck_Length; i < ExploreMap.Count; i++)
+        for (int i = RunManager.instance.player.playerStat.mapFloorCheck_Length; i < ExploreMap.Count; i++)
         {
             if (mapLength / 2 != i)
             {
@@ -267,11 +267,11 @@ public class ExploreUI : UIPanelBase
         SetBattleNodeData();
 
         //시작 지점 저장
-        GameManager.instance.currentIncountNode = ExploreMap[0][0];
+        RunManager.instance.currentIncountNode = ExploreMap[0][0];
         ExploreMap[0][0].IncountNodeCurrentHighlightCircleObject.SetActive(true);
 
         //GameManager에 현재 ExploreMap 저장
-        GameManager.instance.currentExploreUI = this;
+        RunManager.instance.currentExploreUI = this;
 
         //각 노드끼리 연결하는 Arrow생성
         StartCoroutine(CreateArrowUI());
@@ -307,7 +307,7 @@ public class ExploreUI : UIPanelBase
    
     public void OpenAllExploreMapNodes()
     {
-        int currentFloor = GameManager.instance.currentExploreMapFloor;
+        int currentFloor = RunManager.instance.currentExploreMapFloor;
 
         for (int i = currentFloor; i < mapLength; i++)
         {
@@ -320,8 +320,8 @@ public class ExploreUI : UIPanelBase
 
     public void OpenExploreMapNodesBasedOnFloorLength()
     {
-        int currentFloor = GameManager.instance.currentExploreMapFloor;
-        int openNodeLength = currentFloor + GameManager.instance.GetPlayerStat().mapFloorCheck_Length;
+        int currentFloor = RunManager.instance.currentExploreMapFloor;
+        int openNodeLength = currentFloor + RunManager.instance.player.playerStat.mapFloorCheck_Length;
         openNodeLength = openNodeLength > ExploreMap.Count ? ExploreMap.Count : openNodeLength;
 
         for (int i = currentFloor; i < openNodeLength; i++)
@@ -343,11 +343,11 @@ public class ExploreUI : UIPanelBase
 
     public void CloseBeforeNodes()
     {
-        int beforeFloor = GameManager.instance.currentExploreMapFloor - 1;
+        int beforeFloor = RunManager.instance.currentExploreMapFloor - 1;
 
         for (int i = 0; i < ExploreMap[beforeFloor].Count; i++)
         {
-            if (ExploreMap[beforeFloor][i] != GameManager.instance.beforeIncountNode)
+            if (ExploreMap[beforeFloor][i] != RunManager.instance.beforeIncountNode)
             {
                 ExploreMap[beforeFloor][i].CloseNodeCoverTexture();
             }

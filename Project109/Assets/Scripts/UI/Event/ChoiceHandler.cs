@@ -37,7 +37,10 @@ public class ChoiceHandler : MonoBehaviour
         switch (item.itemType)
         {
             case "Money":
-                GameManager.instance.AddInGame_Currency(CurrencyType.Gold, -item.value);
+                RunManager.instance.player.playerStat.inGame_Currency_Gold -= item.value;
+                break;
+            case "MemorySharp":
+                RunManager.instance.player.playerStat.inGame_Currency_MemorySharp -= item.value;
                 break;
             case "MaxHp":
                 //value값만큼 플레이어 최대 체력 차감
@@ -47,7 +50,7 @@ public class ChoiceHandler : MonoBehaviour
                 break;
             case "SpecificCard":
                 ActionCardData specificCard = CardDeckManager.instance.GetSpecificCard(item.name);
-                if(specificCard != null)
+                if (specificCard != null)
                 {
                     CardDeckManager.instance.RemoveCard(specificCard.runtimeID);
                 }
@@ -57,14 +60,14 @@ public class ChoiceHandler : MonoBehaviour
                 CardDeckManager.instance.RemoveCard(choiceData.randomLoseCard.runtimeID);
                 break;
             case "SpecificRelic":
-                RelicData specificRelic = RelicManager.instance.GetSpecificRelic(item.name);
-                if(specificRelic != null)
+                RelicData specificRelic = RunManager.instance.player.GetSpecificRelic(item.name);
+                if (specificRelic != null)
                 {
-                    RelicManager.instance.RemoveRelic(specificRelic.relicName);
+                    RunManager.instance.player.RemoveRelic(specificRelic);
                 }
                 break;
             case "RandomRelic":
-                RelicManager.instance.RemoveRelic(choiceData.randomLoseRelic.relicName);
+                RunManager.instance.player.RemoveRelic(choiceData.randomLoseRelic);
                 break;
         }
     }
@@ -73,7 +76,10 @@ public class ChoiceHandler : MonoBehaviour
         switch (item.itemType)
         {
             case "Money":
-                GameManager.instance.AddInGame_Currency(CurrencyType.Gold, item.value);
+                RunManager.instance.player.playerStat.inGame_Currency_Gold += item.value;
+                break;
+            case "MemorySharp":
+                RunManager.instance.player.playerStat.inGame_Currency_MemorySharp += item.value;
                 break;
             case "MaxHp":
                 //value값만큼 플레이어 최대 체력 증가
@@ -93,9 +99,9 @@ public class ChoiceHandler : MonoBehaviour
                 break;
             case "SpecificRelic":
                 RelicData specificRelic;
-                if(AssetCacheManager.instance.TryGetRelic(item.name, out specificRelic))
+                if (AssetCacheManager.instance.TryGetRelic(item.name, out specificRelic))
                 {
-                    RelicManager.instance.AddRelic(specificRelic);
+                    RunManager.instance.player.AddRelic(specificRelic);
                 }
                 break;
             case "RelicReward":
@@ -106,19 +112,19 @@ public class ChoiceHandler : MonoBehaviour
                 BattleData battleData;
                 if (AssetCacheManager.instance.TryGetBattle(item.name, out battleData))
                 {
-                    GameManager.instance.loadMapHandler.SpawnMonsterInBattleNodeData(battleData);
+                    RunManager.instance.loadMapHandler.SpawnMonsterInBattleNodeData(battleData);
                 }
                 else
                 {
                     Debug.Log("알맞은 전투 데이터가 존재하지 않습니다.");
                 }
-                    break;
+                break;
             case "Event":
                 //특정 이벤트를 불러올 때 사용될 예정
                 //모든 탐험 노드 활성화
-                if(item.name == "OpenAllExploreNodes")
+                if (item.name == "OpenAllExploreNodes")
                 {
-                    GameManager.instance.currentExploreUI.OpenAllExploreMapNodes();
+                    RunManager.instance.currentExploreUI.OpenAllExploreMapNodes();
                 }
                 break;
         }

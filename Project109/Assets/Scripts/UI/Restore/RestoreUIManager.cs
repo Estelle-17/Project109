@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RestoreUIManager : MonoBehaviour
+public class RestoreUIManager : MonoBehaviour, IInteractable
 {
     public GameObject restoreUIPrefab;
     public RestoreUIHandler restoreUI;
@@ -38,5 +38,12 @@ public class RestoreUIManager : MonoBehaviour
         {
             restoreUI.UIDeactive();
         }
+    }
+
+    public bool RequiresCameraFocus => true;
+
+    public void OnInteract()
+    {
+        EnableRestoreUI();
     }
 }

@@ -14,7 +14,7 @@ public class SceneLoadManager : MonoBehaviour
         {
             instance = this;
 
-            DontDestroyOnLoad(this.gameObject);
+            // DontDestroyOnLoad(this.gameObject);
         }
         else
         {
@@ -43,9 +43,17 @@ public class SceneLoadManager : MonoBehaviour
     //임시로 만든 함수
     public void ActiveStartButton()
     {
-        if(activeButtonAfterLoadAsset == null)
+        if (activeButtonAfterLoadAsset == null)
             return;
 
         activeButtonAfterLoadAsset.interactable = true;
+    }
+
+    void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
     }
 }

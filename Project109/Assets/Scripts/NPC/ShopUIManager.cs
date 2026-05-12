@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using GameItem.Types;
 
-public class ShopUIManager : MonoBehaviour
+public class ShopUIManager : MonoBehaviour, IInteractable
 {
     public GameObject shopUICanvasPrefab;
     ShopUIHandler shopUI;
@@ -74,5 +74,12 @@ public class ShopUIManager : MonoBehaviour
         {
             shopUI.gameObject.SetActive(false);
         }
+    }
+
+    public bool RequiresCameraFocus => true;
+
+    public void OnInteract()
+    {
+        EnableShopUI();
     }
 }

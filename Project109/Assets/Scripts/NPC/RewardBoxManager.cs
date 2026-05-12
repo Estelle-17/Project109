@@ -1,7 +1,7 @@
 using UnityEngine;
 using GameItem.Types;
 
-public class RewardBoxManager : MonoBehaviour
+public class RewardBoxManager : MonoBehaviour, IInteractable
 {
     [SerializeField] private GameObject rewardBoxModelPrefab;
 
@@ -15,7 +15,7 @@ public class RewardBoxManager : MonoBehaviour
 
     public void SetRewardItemList()
     {
-        if(GameManager.instance.currentIncountNode == null)
+        if(RunManager.instance.currentIncountNode == null)
         {
             return;
         }
@@ -25,7 +25,7 @@ public class RewardBoxManager : MonoBehaviour
         if(rewardListUI != null)
         {
             //아이템 보상의 재화 수량은 데이터로 정해질 예정
-            switch(GameManager.instance.currentIncountNode.incountType)
+            switch(RunManager.instance.currentIncountNode.incountType)
             {
                 case IncountType.Battle:
                     rewardListUI.AddRewardItem(ItemRewardUIType.Gold, RandomCardPickupType.Common, RandomRelicPickupType.Common, 60);
@@ -64,5 +64,12 @@ public class RewardBoxManager : MonoBehaviour
     public void DisableRewardListUI()
     {
         rewardListUI?.UIDeactive();
+    }
+
+    public bool RequiresCameraFocus => true;
+
+    public void OnInteract()
+    {
+        EnableRewardListUI();
     }
 }

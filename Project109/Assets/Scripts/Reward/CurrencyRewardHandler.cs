@@ -28,7 +28,7 @@ public class CurrencyRewardHandler : MonoBehaviour
 
         //타입에 맞는 재화 오브젝트 생성
         if (AssetCacheManager.instance != null)
-        {   
+        {
             switch (currencyType)
             {
                 case CurrencyType.Gold:
@@ -53,7 +53,14 @@ public class CurrencyRewardHandler : MonoBehaviour
     {
         yield return new WaitForSeconds(1.0f); //1초 대기 후 재화 추가
 
-        GameManager.instance.AddInGame_Currency(currencyType, currencyValue);
+        if (currencyType == CurrencyType.Gold)
+        {
+            RunManager.instance.player.playerStat.inGame_Currency_Gold += currencyValue;
+        }
+        else if (currencyType == CurrencyType.MemorySharp)
+        {
+            RunManager.instance.player.playerStat.inGame_Currency_MemorySharp += currencyValue;
+        }
 
         //재화 추가 후 오브젝트 삭제
         Destroy(this.gameObject);

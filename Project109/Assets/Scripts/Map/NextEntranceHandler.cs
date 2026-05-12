@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NextEntranceHandler : MonoBehaviour
+public class NextEntranceHandler : MonoBehaviour, IInteractable
 {
     private IncountNode currentNode;
 
@@ -15,5 +15,12 @@ public class NextEntranceHandler : MonoBehaviour
             return;
 
         currentNode.LoadMapDataFromIncountNode();
+    }
+
+    public bool RequiresCameraFocus => false;
+
+    public void OnInteract()
+    {
+        ProcessNextEntrance();
     }
 }

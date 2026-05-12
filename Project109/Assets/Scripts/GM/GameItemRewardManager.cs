@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using GameItem.Types;
 
-public class GameItemRewardManager : MonoBehaviour
+public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
 {
     public static GameItemRewardManager instance { get; private set; }
 
@@ -57,6 +57,29 @@ public class GameItemRewardManager : MonoBehaviour
         commonRate = 70;
         rareRate = 25;
         uniqueRate = 5;
+    }
+
+    public void SubscribeToPlayerEvents()
+    {
+        // TODO: 차후 보상 풀 자체를 유지하는 방식(Push) 대신, 보상 획득 시점에 
+        // RunManager.instance.player.relics를 참조하여 동적으로 획득 가능 유물만 추려내는(Pull) 방식으로 변경 권장.
+        if (RunManager.instance != null && RunManager.instance.player != null)
+        {
+            RunManager.instance.player.eventBus.Add<IOnAddRelic>(this);
+            RunManager.instance.player.eventBus.Add<IOnRemoveRelic>(this);
+        }
+    }
+
+    public void OnAddRelic(RelicData relicData)
+    {
+        // TODO: 동적 추출(Pull) 방식으로 변경 시 이 이벤트 콜백은 삭제할 수 있습니다.
+        EraseRelicFromList(relicData);
+    }
+
+    public void OnRemoveRelic(RelicData relicData)
+    {
+        // TODO: 동적 추출(Pull) 방식으로 변경 시 이 이벤트 콜백은 삭제할 수 있습니다.
+        AddRelicFromList(relicData);
     }
 
     public void ResetCardLists()
@@ -488,13 +511,13 @@ public class GameItemRewardManager : MonoBehaviour
             rewardNPC.transform.position = spawnPosition;
         }
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnNPCList.Add(rewardNPC.gameObject);
-        GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
+        RunManager.instance.currentSpawnNPCList.Add(rewardNPC.gameObject);
+        RunManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
     }
 
     public void SpawnRewardBox(Vector3 spawnPosition)
     {
-        if (GameManager.instance.currentIncountNode == null)
+        if (RunManager.instance.currentIncountNode == null)
         {
             return;
         }
@@ -507,8 +530,8 @@ public class GameItemRewardManager : MonoBehaviour
         }
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnNPCList.Add(newRewardBox.gameObject);
-        GameManager.instance.currentSpawnUIList.Add(newRewardBox.GetRewardListUI());
+        RunManager.instance.currentSpawnNPCList.Add(newRewardBox.gameObject);
+        RunManager.instance.currentSpawnUIList.Add(newRewardBox.GetRewardListUI());
     }
 
     public List<ActionCardData> GetCommonCardList() { return commonCardList; }

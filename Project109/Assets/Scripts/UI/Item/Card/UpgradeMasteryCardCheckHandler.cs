@@ -24,7 +24,7 @@ public class UpgradeMasteryCardCheckHandler : MonoBehaviour
         selectedCardData = Instantiate(newCardData);
 
         currentMasteryPointUI.PreviewUpgradeMasteryPointUI(selectedCardData.path,
-                                                           GameManager.instance.GetPlayerStat().Upgrade_MasteryPoint_Value);
+                                                           RunManager.instance.player.playerStat.Upgrade_MasteryPoint_Value);
 
         gameObject.SetActive(true);
     }
@@ -32,7 +32,7 @@ public class UpgradeMasteryCardCheckHandler : MonoBehaviour
     public void StartUpgradeCards()
     {
         CardMasteryManager.instance.ReportAction(Card.Types.CardMasteryType.UpgradeCard,
-                                                 GameManager.instance.GetPlayerStat().Upgrade_MasteryPoint_Value,
+                                                 RunManager.instance.player.playerStat.Upgrade_MasteryPoint_Value,
                                                  selectedCardData);
         UIManager.instance.HideCardExtraDescription();
         transform.root.gameObject.SetActive(false);

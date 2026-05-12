@@ -1,8 +1,8 @@
+using GameItem.Types;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using GameItem.Types;
 
 public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -45,11 +45,11 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
             case ItemRewardUIType.Card:
                 currentRewardUIObject = Instantiate(cardRewardUIPrefab);
                 CardRewardHandler cardRewardHandler = currentRewardUIObject.GetComponent<CardRewardHandler>();
-                cardRewardHandler.SettingCards(cardType, PlayerDataManager.instance.GetPlayerStat().reward_Card_Count);    //보여줄 아이템의 수는 상황에 따라 변경 가능
+                cardRewardHandler.SettingCards(cardType, RunManager.instance.player.playerStat.reward_Card_Count);    //보여줄 아이템의 수는 상황에 따라 변경 가능
                 cardRewardHandler.rootObject = this.gameObject;
                 cardRewardHandler.gameObject.SetActive(false);
 
-                GameManager.instance.currentSpawnUIList.Add(currentRewardUIObject);
+                RunManager.instance.currentSpawnUIList.Add(currentRewardUIObject);
 
                 itemTexture.gameObject.SetActive(false);
                 itemText.text = "새로운 기억 보상!";
@@ -75,20 +75,20 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
     public void OnPointerClick(PointerEventData eventData)
     {
         //UI 클릭 시 보상 UI 활성화
-        switch(currentItemRewardUIType)
+        switch (currentItemRewardUIType)
         {
             case ItemRewardUIType.Gold:
-                GameManager.instance.AddInGame_Currency(CurrencyType.Gold, rewardValue);
+                RunManager.instance.player.playerStat.inGame_Currency_Gold += rewardValue;
                 break;
             case ItemRewardUIType.MemorySharp:
-                GameManager.instance.AddInGame_Currency(CurrencyType.MemorySharp, rewardValue);
+                RunManager.instance.player.playerStat.inGame_Currency_MemorySharp += rewardValue;
                 break;
             case ItemRewardUIType.Card:
                 UIManager.instance.TempDeactivateCurrentActiveUIPanel();
                 currentRewardUIObject.GetComponent<CardRewardHandler>().UIActive();
                 break;
             case ItemRewardUIType.Relic:
-                RelicManager.instance.AddRelic(rewardRelicData);
+                RunManager.instance.player.AddRelic(rewardRelicData);
                 //이 유물 선택지를 제공한 UI 제거
                 UIManager.instance.OffRelicDescription();
                 break;

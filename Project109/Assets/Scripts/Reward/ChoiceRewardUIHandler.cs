@@ -1,7 +1,7 @@
 using UnityEngine;
 using GameItem.Types;
 
-public class ChoiceRewardUIHandler : MonoBehaviour
+public class ChoiceRewardUIHandler : MonoBehaviour, IInteractable
 {
     [SerializeField] private GameObject cardRewardPrefab;
     [SerializeField] private GameObject relicRewardPrefab;
@@ -20,14 +20,14 @@ public class ChoiceRewardUIHandler : MonoBehaviour
             case RewardItemType.Card:
                 currentRewardUIObject = Instantiate(cardRewardPrefab);
                 CardRewardHandler cardRewardHandler = currentRewardUIObject.GetComponent<CardRewardHandler>();
-                cardRewardHandler.SettingCards(cardType, PlayerDataManager.instance.GetPlayerStat().reward_Card_Count);    //보여줄 아이템의 수는 상황에 따라 변경 가능
+                cardRewardHandler.SettingCards(cardType, RunManager.instance.player.playerStat.reward_Card_Count);    //보여줄 아이템의 수는 상황에 따라 변경 가능
                 cardRewardHandler.rootObject = this.gameObject;
                 DisableRewardUI();
                 break;
             case RewardItemType.Relic:
                 currentRewardUIObject = Instantiate(relicRewardPrefab);
                 RelicRewardHandler relicRewardHandler = currentRewardUIObject.GetComponent<RelicRewardHandler>();
-                relicRewardHandler.SettingRelics(reilcType, PlayerDataManager.instance.GetPlayerStat().reward_Card_Count);    //보여줄 아이템의 수는 상황에 따라 변경 가능
+                relicRewardHandler.SettingRelics(reilcType, RunManager.instance.player.playerStat.reward_Card_Count);    //보여줄 아이템의 수는 상황에 따라 변경 가능
                 relicRewardHandler.rootObject = this.gameObject;
                 DisableRewardUI();
                 break;
@@ -44,5 +44,12 @@ public class ChoiceRewardUIHandler : MonoBehaviour
     public void DisableRewardUI()
     {
         currentRewardUIObject.SetActive(false);
+    }
+
+    public bool RequiresCameraFocus => true;
+
+    public void OnInteract()
+    {
+        EnableRewardUI();
     }
 }

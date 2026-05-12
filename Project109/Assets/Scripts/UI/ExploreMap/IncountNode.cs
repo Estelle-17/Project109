@@ -152,18 +152,18 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 
     public void LoadMapDataFromIncountNode()
     {
-        if (GameManager.instance.currentIncountNode.nextIncountNode.Contains(this.gameObject))
+        if (RunManager.instance.currentIncountNode.nextIncountNode.Contains(this.gameObject))
         {
             //이전의 노드를 저장 후 다음 노드로 변경
-            GameManager.instance.beforeIncountNode = GameManager.instance.currentIncountNode;
-            GameManager.instance.currentIncountNode.transform.GetComponent<IncountNode>().IncountNodeCurrentHighlightCircleObject.SetActive(false);
-            GameManager.instance.currentIncountNode = this; //다음 맵 로딩을 위해 이동할 노드 정보를 저장
-            GameManager.instance.currentExploreMapFloor += 1;
+            RunManager.instance.beforeIncountNode = RunManager.instance.currentIncountNode;
+            RunManager.instance.currentIncountNode.transform.GetComponent<IncountNode>().IncountNodeCurrentHighlightCircleObject.SetActive(false);
+            RunManager.instance.currentIncountNode = this; //다음 맵 로딩을 위해 이동할 노드 정보를 저장
+            RunManager.instance.currentExploreMapFloor += 1;
             if (exploreUI != null)
             {
                 IncountNodeCurrentHighlightCircleObject.SetActive(true);
 
-                GameManager.instance.loadMapHandler.StartFadeInOut(true);
+                RunManager.instance.loadMapHandler.StartFadeInOut(true);
             }
         }
         else

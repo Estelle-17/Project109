@@ -1,22 +1,22 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
 using XLua;
-using System.Collections.Generic;
 
 [CSharpCallLua]
 public delegate bool CheckSelectable(
     Choice_UseItem item,
-    PlayerStat player,
-    CharacterStat character,
+    Player player,
+    Character character,
     List<ActionCardData> card,
     List<RelicData> relic
     );
 
-public class EventHandler : MonoBehaviour
+public class EventHandler : MonoBehaviour, IInteractable
 {
     [SerializeField]
     EventData eventData;
@@ -54,7 +54,7 @@ public class EventHandler : MonoBehaviour
         luaEnv.DoString(luaString);
 
         isChoiceCanSelectable = luaEnv.Global.Get<CheckSelectable>("IsChoiceCanSelectable");
-        if(isChoiceCanSelectable == null)
+        if (isChoiceCanSelectable == null)
         {
             Debug.LogError("XLua : 'IsChoiceCanSelectable' function not found!");
         }
@@ -67,7 +67,7 @@ public class EventHandler : MonoBehaviour
         InstantiateEventNpc();
 
         //빠른 데이터 탐색을 위해 Dictionary에 저장
-        foreach(EventStageData stageData in eventData.stages)
+        foreach (EventStageData stageData in eventData.stages)
         {
             eventStages.Add(stageData.stageID, stageData);
         }
@@ -102,9 +102,9 @@ public class EventHandler : MonoBehaviour
             {
                 choice.randomLoseCard = CardDeckManager.instance.GetRandomCard();
             }
-            if (RelicManager.instance.GetRelicList().Count > 0)
+            if (RunManager.instance.player.relics.Count > 0)
             {
-                choice.randomLoseRelic = RelicManager.instance.GetRandomRelic();
+                choice.randomLoseRelic = RunManager.instance.player.GetRandomRelic();
             }
 
             Button button = eventDescription.CreateChoiceButton(choice.description + "\n" + makeEventDescription.MakeChoiceDescription(choice));
@@ -113,10 +113,10 @@ public class EventHandler : MonoBehaviour
             foreach (Choice_UseItem item in choice.useItems)
             {
                 bool result = isChoiceCanSelectable(item,
-                                                    GameManager.instance.GetPlayerStat(),
-                                                    GameManager.instance.currentCharacter.GetCharacterStat(),
+                                                    RunManager.instance.player,
+                                                    RunManager.instance.player.character,
                                                     CardDeckManager.instance.GetCardDeckList(),
-                                                    RelicManager.instance.GetRelicList());
+                                                    RunManager.instance.player.relics);
                 if (!result)
                 {
                     button.interactable = false;
@@ -144,11 +144,11 @@ public class EventHandler : MonoBehaviour
 
     public void InstantiateEventNpc()
     {
-        if(AssetCacheManager.instance.TryGetModel(eventData.eventObjectPath, out GameObject npcPrefab))
+        if (AssetCacheManager.instance.TryGetModel(eventData.eventObjectPath, out GameObject npcPrefab))
         {
             Debug.Log($"Found Model from Addressable: {eventData.eventObjectPath}");
             GameObject model = Instantiate(npcPrefab, this.transform);
-            if(model == null)
+            if (model == null)
             {
                 Debug.LogWarning("Failed to Instantiate Event NPC Model!");
                 return;
@@ -161,13 +161,13 @@ public class EventHandler : MonoBehaviour
             Debug.Log($"Found Failed from Addressable: {eventData.eventObjectPath}");
         }
     }
-    
+
     //특정 오브젝트의 모든 layer 변경
     void ChangeAllLayer(GameObject model, int layer)
     {
         model.layer = layer;
 
-        foreach(Transform child in model.transform)
+        foreach (Transform child in model.transform)
         {
             ChangeAllLayer(child.gameObject, layer);
         }
@@ -175,7 +175,7 @@ public class EventHandler : MonoBehaviour
 
     public void EnableEventDescriptionUI()
     {
-        if(eventDescription != null)
+        if (eventDescription != null)
         {
             eventDescription.UIActive();
         }
@@ -198,9 +198,9 @@ public class EventHandler : MonoBehaviour
 
     private void OnDestroy()
     {
-        if(luaEnv != null)
+        if (luaEnv != null)
         {
-            if(isChoiceCanSelectable !=  null)
+            if (isChoiceCanSelectable != null)
             {
                 isChoiceCanSelectable = null;
             }
@@ -208,7 +208,7 @@ public class EventHandler : MonoBehaviour
             //System.GC.Collect();
 
             //Lua GC를 강제로 여러 번 실행하여 정리
-            for(int i = 0; i < 1; i++)
+            for (int i = 0; i < 1; i++)
             {
                 //luaEnv.Tick();
             }
@@ -217,5 +217,12 @@ public class EventHandler : MonoBehaviour
             //luaEnv.Dispose();
             luaEnv = null;
         }
+    }
+
+    public bool RequiresCameraFocus => true;
+
+    public void OnInteract()
+    {
+        EnableEventDescriptionUI();
     }
 }

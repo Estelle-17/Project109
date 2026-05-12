@@ -20,7 +20,7 @@ public class MasteryUpgradeUIHandler : UIPanelBase
 
         //특정 갯수만큼 무작위 마스터리 선택지 생성
         List<MasteryDescription> availableMasteryList = CardMasteryManager.instance.GetRandomMasteryOption(selectedCardData,
-                                                                                                           PlayerDataManager.instance.GetPlayerStat().mastery_Choice_Count);
+                                                                                                           RunManager.instance.player.playerStat.mastery_Choice_Count);
 
         foreach (MasteryDescription masteryDescription in availableMasteryList)
         {

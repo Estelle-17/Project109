@@ -1,10 +1,10 @@
-using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.UI;
-using TMPro;
-using UnityEngine.InputSystem;
 using Card.Types;
 using System;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
         {
             instance = this;
 
-            DontDestroyOnLoad(this.gameObject);
+            // DontDestroyOnLoad(this.gameObject);
         }
         else
         {
@@ -50,7 +50,7 @@ public class UIManager : MonoBehaviour
     {
         canvasRect = GetComponent<RectTransform>();
 
-        if(relicDescription != null)
+        if (relicDescription != null)
         {
             OffRelicDescription();
             relicDescriptionTransform = relicDescription.transform.GetComponent<RectTransform>();
@@ -59,11 +59,19 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if(relicDescription.activeSelf && relicDescriptionTransform)
+        if (relicDescription.activeSelf && relicDescriptionTransform)
         {
             Vector2 mousePos = Mouse.current.position.ReadValue();
             mousePos += new Vector2(50, 50);    //offset
             relicDescriptionTransform.position = mousePos;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
         }
     }
 
@@ -99,7 +107,7 @@ public class UIManager : MonoBehaviour
             return;
 
         //현재 활성화된 UI들 비활성화 후 임시 스택에 저장
-        while(activeUICanvasList.Count > 0)
+        while (activeUICanvasList.Count > 0)
         {
             GameObject ui = activeUICanvasList.Pop();
             ui.SetActive(false);
@@ -140,7 +148,7 @@ public class UIManager : MonoBehaviour
             return;
 
         //최상위 UI가 제거된 UI와 일치하는지 확인
-        if(activeUICanvasList.Peek() == targetObject)
+        if (activeUICanvasList.Peek() == targetObject)
         {
             activeUICanvasList.Pop();
             Debug.Log($"[UIManager] Removed top : {targetObject.name}. Current UIList Stack Count : {activeUICanvasList.Count}");
@@ -150,10 +158,10 @@ public class UIManager : MonoBehaviour
             //최상위 UI가 아닌 경우 스택을 순회하여 강제로 제거
             Stack<GameObject> tempStack = new Stack<GameObject>();
             bool bfoundObject = false;
-            while(activeUICanvasList.Count > 0)
+            while (activeUICanvasList.Count > 0)
             {
                 GameObject currentObject = activeUICanvasList.Pop();
-                if(currentObject == targetObject)
+                if (currentObject == targetObject)
                 {
                     bfoundObject = true;
                     Debug.Log($"[UIManager] Force Removed UI : {targetObject.name}.");
@@ -182,13 +190,13 @@ public class UIManager : MonoBehaviour
 
     public void SetPlayerTouchSystemActiveInGame()
     {
-        if(activeUICanvasList.Count == 0)
+        if (activeUICanvasList.Count == 0)
         {
-            TouchSystem.instance.EnableObjectInteractionInput();
+            PlayerInputController.instance.EnableObjectInteractionInput();
         }
         else
         {
-            TouchSystem.instance.DisableObjectInteractionInput();
+            PlayerInputController.instance.DisableObjectInteractionInput();
         }
     }
 
@@ -334,7 +342,7 @@ public class UIManager : MonoBehaviour
 
     public void HideCardExtraDescription()
     {
-        if(extraDescriptionManager)
+        if (extraDescriptionManager)
         {
             extraDescriptionManager.HideExtraDescription();
         }

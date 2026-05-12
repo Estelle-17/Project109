@@ -34,7 +34,7 @@ public class RelicRewardHandler : MonoBehaviour
 
     void GetRelic(RelicData newRelicData)
     {
-        RelicManager.instance.AddRelic(newRelicData);
+        RunManager.instance.player.AddRelic(newRelicData);
         //이 카드 선택지를 제공한 NPC오브젝트 제거 및 캔버스 제거
         UIManager.instance.OffRelicDescription();
         Destroy(rootObject);

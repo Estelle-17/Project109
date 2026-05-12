@@ -313,10 +313,10 @@ public class Character : MonoBehaviour
 
         // 1. 시전자(Caster)의 "내가 부여하기 직전" 유물/버프 발동 (ex. 독 부여 시 +1스택)
         if (info.caster != null)
-            info.caster.eventBus?.Invoke<IOnBeforeApplyEffect>(l => l.OnBeforeApplyEffect(ref info));
+            info.caster.eventBus?.Invoke<IOnBeforeGiveEffect>(l => l.OnBeforeGiveEffect(ref info));
 
         // 2. 피격자(Target)의 "내가 받기 직전" 유물/버프 발동 (ex. 인공물: 디버프 무효화)
-        this.eventBus?.Invoke<IOnBeforeApplyEffect>(l => l.OnBeforeApplyEffect(ref info));
+        this.eventBus?.Invoke<IOnBeforeTakeEffect>(l => l.OnBeforeTakeEffect(ref info));
 
         // 3. 무효화(Cancel) 판정 검사
         if (info.effectFlags.HasFlag(EffectFlag.Cancel))
@@ -327,8 +327,8 @@ public class Character : MonoBehaviour
 
         // 5. 부여 직후 파이프라인 (ex. 취약 부여 성공 시 약화도 부여)
         if (info.caster != null)
-            info.caster.eventBus?.Invoke<IOnAfterApplyEffect>(l => l.OnAfterApplyEffect(info));
-        this.eventBus?.Invoke<IOnAfterApplyEffect>(l => l.OnAfterApplyEffect(info));
+            info.caster.eventBus?.Invoke<IOnAfterGiveEffect>(l => l.OnAfterGiveEffect(info));
+        this.eventBus?.Invoke<IOnAfterTakeEffect>(l => l.OnAfterTakeEffect(info));
     }
 
     #endregion

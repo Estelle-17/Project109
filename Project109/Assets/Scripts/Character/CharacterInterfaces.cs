@@ -76,8 +76,10 @@ public interface ICharacterEvent { }
 
 #region 이펙트/버프/디버프 관련 인터페이스 (Effect Interfaces)
 
-    public interface IOnBeforeApplyEffect : ICharacterEvent { void OnBeforeApplyEffect(ref EffectInfo info); }
-    public interface IOnAfterApplyEffect : ICharacterEvent  { void OnAfterApplyEffect(EffectInfo info); }
+    public interface IOnBeforeGiveEffect : ICharacterEvent { void OnBeforeGiveEffect(ref EffectInfo info); }
+    public interface IOnBeforeTakeEffect : ICharacterEvent { void OnBeforeTakeEffect(ref EffectInfo info); }
+    public interface IOnAfterGiveEffect : ICharacterEvent  { void OnAfterGiveEffect(EffectInfo info); }
+    public interface IOnAfterTakeEffect : ICharacterEvent  { void OnAfterTakeEffect(EffectInfo info); }
     public interface IOnBeforeRemoveEffect : ICharacterEvent { void OnBeforeRemoveEffect(EffectBase effect); }
     public interface IOnAfterRemoveEffect : ICharacterEvent  { void OnAfterRemoveEffect(EffectBase effect); }
 

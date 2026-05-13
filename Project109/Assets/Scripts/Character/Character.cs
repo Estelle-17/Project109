@@ -1,5 +1,4 @@
-using EventFlag;
-using EventInfo;
+using EventStructs;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

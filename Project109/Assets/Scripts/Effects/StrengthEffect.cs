@@ -1,6 +1,5 @@
 using UnityEngine;
-using EventInfo;
-using EventFlag;
+using EventStructs;
 
 public class StrengthEffect : EffectBase, IOnBeforeDealDamage
 {

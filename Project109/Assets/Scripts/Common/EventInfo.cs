@@ -1,8 +1,7 @@
-using EventFlag;
 using System.Collections;
 using UnityEngine;
 
-namespace EventInfo
+namespace EventStructs
 {
     public enum DefaultDamageTypeID
     {

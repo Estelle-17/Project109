@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace EventFlag
+namespace EventStructs
 {
     [Flags]
     public enum DamageFlag

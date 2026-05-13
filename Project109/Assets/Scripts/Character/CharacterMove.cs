@@ -1,4 +1,4 @@
-using EventInfo;
+using EventStructs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -46,7 +46,7 @@ public class CharacterMove
         Vector2Int fromCoord = new Vector2Int(currentTile.GetCoord().column, currentTile.GetCoord().row);
         Vector2Int toCoord = new Vector2Int(destinationTile.GetCoord().column, destinationTile.GetCoord().row);
 
-        MoveInfo beforeInfo = new MoveInfo(this.character, fromCoord, toCoord, EventFlag.MoveFlag.Normal);
+        MoveInfo beforeInfo = new MoveInfo(this.character, fromCoord, toCoord, MoveFlag.Normal);
         this.character.eventBus?.Invoke<ICharacterEvent>(c => (c as IOnBeforeMove)?.OnBeforeMove(beforeInfo));
 
         if (beforeInfo.isCanceled)
@@ -91,7 +91,7 @@ public class CharacterMove
 
         // 2. 이동 직후 이벤트 (IOnAfterMove)
         Vector2Int currentCoord = new Vector2Int(currentTile.GetCoord().column, currentTile.GetCoord().row);
-        MoveInfo afterInfo = new MoveInfo(this.character, currentCoord, currentCoord, EventFlag.MoveFlag.Normal);
+        MoveInfo afterInfo = new MoveInfo(this.character, currentCoord, currentCoord, MoveFlag.Normal);
         this.character.eventBus?.Invoke<ICharacterEvent>(c => (c as IOnAfterMove)?.OnAfterMove(afterInfo));
     }
 }

@@ -1,4 +1,4 @@
-using EventInfo;
+using EventStructs;
 using System.Collections.Generic;
 
 public interface ICharacterEvent { }

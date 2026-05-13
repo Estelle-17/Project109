@@ -9,32 +9,36 @@ namespace EventInfo
         Normal = 0,
         Magic,
     }
-    
+
+
     public struct DamageInfo
     {
         public Character caster;
         public Character target;
-        
+
+
         public float originalDamageAmount;
         public float baseDamageAmount;
         public float finalDamageAmount;
         public int damageTypeID;
         public DamageFlag damageFlags;
-        
+
+
         public int armorPiercing;
         public float damageMultiplier;
         public float shieldMultiplier;
         public float healthMultiplier;
 
-        // ?��?지 ?��? ?�보 (Damage breakdown)
+        // 데미지 세부 정보 (Damage breakdown)
         public float shieldDamageAmount;
         public float hpDamageAmount;
-        
-        // 결과 ?�수�?(Result Flags)
+
+        // 결과 플래그 (Result Flags)
+
         public bool isFatal;
         public bool isShieldBroken;
         public bool isBlocked;
-        // ?�이???�리?�컬 ??(미정 ?�소?��?�??�시 주석 처리)
+        // 치명타/회피 등 (추후 구현을 위해 주석 처리)
         // public bool isCritical;
         // public bool isDodged;
 
@@ -51,7 +55,8 @@ namespace EventInfo
         }
     }
 
-    public struct HealInfo 
+    public struct HealInfo
+
     {
         public Character caster;
         public Character target;
@@ -73,11 +78,13 @@ namespace EventInfo
         }
     }
 
-    public struct StaminaInfo 
+    public struct StaminaInfo
+
     {
         public Character caster;
         public Character target;
-        
+
+
         public float originalStaminaAmount;
         public float baseStaminaAmount;
         public float finalStaminaAmount;
@@ -94,12 +101,14 @@ namespace EventInfo
             this.staminaMultiplier = 1.0f;
         }
     }
-    
+
+
     public struct ShieldInfo
     {
         public Character caster;
         public Character target;
-        
+
+
         public float originalShieldAmount;
         public float baseShieldAmount;
         public float finalShieldAmount;
@@ -120,11 +129,13 @@ namespace EventInfo
     public struct CardInfo
     {
         public Character caster;
-        // 격자 게임?��?�??�정 캐릭???�나가 ?�닌, 범위 ???�수 ?��? �?�??�겟팅 고려
+        // 이 스킬(카드)의 타겟인 캐릭터 목록, 주 타겟은 첫번째 요소가 됨
         public System.Collections.Generic.List<Character> targets;
-        public Vector2Int targetPosition; 
-        
-        public object cardData; 
+        public Vector2Int targetPosition;
+
+
+        public object cardData;
+
         public CardFlag cardFlags;
 
         public CardInfo(Character caster, System.Collections.Generic.List<Character> targets, Vector2Int targetPos, object cardData, CardFlag flags = CardFlag.Normal) : this()
@@ -144,8 +155,9 @@ namespace EventInfo
         public Vector2Int toUnscaled;
         public MoveFlag moveFlags;
         public bool isCanceled;
-        
-        // ?�동 거리, ?�?????�의 배수 처리�??�한 multiplier 추�? 가??
+
+        // 이동 거리, 속도 등에 대한 처리를 위해 multiplier를 둠
+
         public float moveMultiplier;
 
         public MoveInfo(Character mover, Vector2Int from, Vector2Int to, MoveFlag flags = MoveFlag.Normal) : this()
@@ -163,7 +175,8 @@ namespace EventInfo
         public Character caster;
         public Character target;
         public EffectBase effect;
-        
+
+
         public int baseStack;
         public float baseDuration;
         public int bonusStack;
@@ -183,7 +196,7 @@ namespace EventInfo
             this.effectFlags = flags;
         }
 
-        // ?�용??최종 결과값을 계산?�는 ?�로?�티
+        // 최종적으로 적용될 프로퍼티
         public int FinalStack => baseStack + bonusStack;
         public float FinalDuration => baseDuration * durationMultiplier;
     }

@@ -7,26 +7,26 @@ namespace EventFlag
     public enum DamageFlag
     {
         Normal = 0,
-        IgnoreArmor = 1 << 0,     // ?�갑/방어??무시
-        IgnoreShield = 1 << 1,    // ?�드 블록 무시 (ex. ?? 관??
-        NoCasterEvents = 1 << 2,  // 공격?�의 콜백 ?�벤???? ?�혈 ?? 무발??
-        NoTargetEvents = 1 << 3,  // ?�격?�의 콜백 ?�벤??가?? ?�격???�과) 무발??
+        IgnoreArmor = 1 << 0,     // 장갑/방어력 무시
+        IgnoreShield = 1 << 1,    // 쉴드 블록 무시 (ex. 관통)
+        NoCasterEvents = 1 << 2,  // 공격자의 콜백 이벤트 (흡혈 등) 무발생
+        NoTargetEvents = 1 << 3,  // 피격자의 콜백 이벤트 (가시 공격효과) 무발생
 
-        // --- ?�의??조합 ?�래�?(Presets) ---
-        Reflected = NoCasterEvents | NoTargetEvents,                      // 가??반사 ?��?지
-        HPLoss = IgnoreShield | NoCasterEvents | NoTargetEvents,          // ?�수 체력 ?�실 (????
+        // --- 임의의 조합 프리셋(Presets) ---
+        Reflected = NoCasterEvents | NoTargetEvents,                      // 가시/반사 데미지
+        HPLoss = IgnoreShield | NoCasterEvents | NoTargetEvents,          // 순수 체력 상실 (직접)
     }
 
     [Flags]
     public enum HealFlag
     {
         Normal = 0,
-        OverHeal = 1 << 0,       // 최�? ?�명?�을 초과?�서 ?�복
-        NoCasterEvents = 1 << 1, // ?�전?�의 ?�복 증�? 버프 ??무시
-        NoTargetEvents = 1 << 2, // ?�?�의 ?�격/?�복 ?�물 ??무시
+        OverHeal = 1 << 0,       // 최대 생명력을 초과해서 회복
+        NoCasterEvents = 1 << 1, // 시전자의 회복 증가 버프 등 무시
+        NoTargetEvents = 1 << 2, // 대상자의 피격/회복 유물 등 무시
 
-        // --- ?�의??조합 ?�래�?---
-        Regen = NoCasterEvents | NoTargetEvents, // ?�반 ?�복???�닌 ?�생/???�복
+        // --- 임의의 조합 프리셋 ---
+        Regen = NoCasterEvents | NoTargetEvents, // 일반 회복이 아닌 재생/지속회복
     }
 
     [Flags]
@@ -37,7 +37,7 @@ namespace EventFlag
         NoCasterEvents = 1 << 1,
         NoTargetEvents = 1 << 2,
 
-        // --- ?�의??조합 ?�래�?---
+        // --- 임의의 조합 프리셋 ---
         Regen = NoCasterEvents | NoTargetEvents,
     }
 
@@ -53,21 +53,21 @@ namespace EventFlag
     public enum CardFlag
     {
         Normal = 0,
-        NoExhaust = 1 << 0,      // 카드가 ?�래 가지�??�는 ?�멸 무시
-        NoDiscard = 1 << 1,      // ?�용 ??묘�?�?가지 ?�음 (?�수 처리??
-        NoCasterEvents = 1 << 2, // 카드 ?�용 관???�벤??발동 ?�함
-        FreeToPlay = 1 << 3,         // 코스???�모 ?�이 ?�용??(?�건 ?�립 ?�래그로 ??
+        NoExhaust = 1 << 0,      // 카드가 원래 가지고 있는 소멸 무시
+        NoDiscard = 1 << 1,      // 사용 후 묘지로 가지 않음 (특수 처리용)
+        NoCasterEvents = 1 << 2, // 카드 사용 관련 이벤트 발동 안함
+        FreeToPlay = 1 << 3,         // 코스트 소모 없이 사용 (조건 성립 플래그로 쓰임)
 
-        // --- ?�의??조합 ?�래�?---
-        AutoPlayed = NoCasterEvents, // 강제 ?�전
+        // --- 임의의 조합 프리셋 ---
+        AutoPlayed = NoCasterEvents, // 강제 시전
     }
 
     [Flags]
     public enum MoveFlag
     {
         Normal = 0,
-        Teleport = 1 << 0,       // ?�동 경로???�정/?�과 무시 (?�간?�동)
-        Forced = 1 << 1,         // 밀치기, ?�기�???강제 ?�동
+        Teleport = 1 << 0,       // 이동 경로의 함정/효과 무시 (순간이동)
+        Forced = 1 << 1,         // 밀치기, 당기기 등 강제 이동
         NoCasterEvents = 1 << 2,
     }
 
@@ -75,9 +75,8 @@ namespace EventFlag
     public enum EffectFlag
     {
         Normal = 0,
-        Unremovable = 1 << 0,    // '?�버???�제' 계열�?지?��?지 ?�는 고유/?�구 버프
-        NoTargetEvents = 1 << 1, // ?�?�의 "버프�?받을 ?? ?��????�벤???�물 ?? 무시
-        Cancel = 1 << 2,         // ?�이?�라???�중 부?��? 취소??
+        Unremovable = 1 << 0,    // '모든 버프 해제' 계열로 지워지지 않는 고유/영구 버프
+        NoTargetEvents = 1 << 1, // 대상자의 "버프를 받을 때" 등의 이벤트/유물 등 무시
+        Cancel = 1 << 2,         // 캐스팅 중인 기술 취소
     }
 }
-

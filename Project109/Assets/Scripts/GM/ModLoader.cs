@@ -4,19 +4,26 @@ using UnityEngine;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-public class ModLoader : MonoBehaviour
+public class ModLoader
 {
     // 로딩된 데이터를 보관할 글로벌 딕셔너리
     // Key: effectName (고유 ID), Value: EffectData
     public Dictionary<string, EffectData> EffectDatabase { get; private set; } = new Dictionary<string, EffectData>();
 
-    public static ModLoader Instance { get; private set; }
-
-    private void Awake()
+    private static ModLoader _instance;
+    public static ModLoader Instance
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new ModLoader();
+            }
+            return _instance;
+        }
     }
+
+    private ModLoader() { }
 
     public void LoadAllMods()
     {

@@ -5,18 +5,16 @@ useItem: &use_items
   itemType:
     type: string
     enum:
-    - Money
+    - Gold
     - MaxHp
     - MaxHpPercent
     - Hp
-    - HpPercent
     - MaxStamina
     - SpecificCard
     - RandomCard
     - SpecificRelic
     - RandomRelic
     - RandomPotion
-    - Gold
     value:
       type: integer
     name:
@@ -27,7 +25,7 @@ getItem: &get_items
   itemType:
     type: string
     enum:
-    - Money
+    - Gold
     - MaxHp
     - MaxHpPercent
     - Hp
@@ -36,12 +34,14 @@ getItem: &get_items
     - SpecificCard
     - CardReward
     - EraseCard
+    - RandomEraseCard
     - UpgradeCard
+    - RandomUpgradeCard
     - SpecificRelic
     - RelicReward
     - RandomRelic
+    - RandomPotion
     - Potion
-    - Gold
     - Battle
     - Event
     value:

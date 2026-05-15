@@ -30,11 +30,6 @@ public class LoadMapHandler : MonoBehaviour
 
     void LoadCurrentNodeDataInMap(bool isLoadingNode)
     {
-        //맵에 남아있는 적들과 NPC, UI들 제거
-        DestroyCurrentSpawnEnemy();
-        DestroyCurrentSpawnNpc();
-        DestroyCurrentSpawnUI();
-
         //다음 노드로 이동하였으니 다음 노드들의 가려진 부분들 중 일부가 보이도록 ExploreMap 업데이트
         GameManager.instance.currentExploreUI.OpenExploreMapNodesBasedOnFloorLength();
         //이전에 이동한 노드를 제외한 나머지 노드 가리기
@@ -51,7 +46,8 @@ public class LoadMapHandler : MonoBehaviour
                     break;
                 case IncountType.Battle:
                     GameManager.instance.currentMapState = MapState.Battle;
-                    SpawnMonsterInBattleNodeData(newIncountNode.battleNodeData);
+                    //SpawnMonsterInBattleNodeData(newIncountNode.battleNodeData);
+                    MapManager.instance.GenerateStage(LocationType.Temple, newIncountNode.battleNodeData);
                     GameItemRewardManager.instance.SpawnRewardBox(GameManager.instance.currentMap.CheckTileMapRewardLocation());
                     break;
                 case IncountType.Elite:
@@ -114,7 +110,7 @@ public class LoadMapHandler : MonoBehaviour
 
     public void SpawnMonsterInBattleNodeData(BattleData nodeData)
     {
-        GameManager.instance.currentMap.UpdateMapVariationFromName(nodeData.battleMapVariationName);
+        GameManager.instance.currentMap.UpdateMapVariationFromName(nodeData.battleLocation);
 
         foreach (string name in nodeData.monsterNames)
         {
@@ -130,7 +126,7 @@ public class LoadMapHandler : MonoBehaviour
                     GameObject newMonster = Instantiate(monsterObject);
                     newMonster.transform.position = GameManager.instance.currentMap.CheckEnemySpawnPoint();
 
-                    GameManager.instance.currentSpawnEnemyList.Add(newMonster);
+                    MapManager.instance.currentSpawnEnemyList.Add(newMonster);
                 }
             }
         }
@@ -149,8 +145,8 @@ public class LoadMapHandler : MonoBehaviour
         newEventNPC.transform.position = GameManager.instance.currentMap.CheckNPCSpawnPoint();
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnNPCList.Add(newEventNPC.gameObject);
-        GameManager.instance.currentSpawnUIList.Add(newEventNPC.eventDescription.gameObject);
+        MapManager.instance.currentSpawnNPCList.Add(newEventNPC.gameObject);
+        MapManager.instance.currentSpawnUIList.Add(newEventNPC.eventDescription.gameObject);
     }
 
     void SpawnShopNPC()
@@ -166,8 +162,8 @@ public class LoadMapHandler : MonoBehaviour
         }
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnNPCList.Add(newShopNPC.gameObject);
-        GameManager.instance.currentSpawnUIList.Add(newShopNPC.GetShopUI().gameObject);
+        MapManager.instance.currentSpawnNPCList.Add(newShopNPC.gameObject);
+        MapManager.instance.currentSpawnUIList.Add(newShopNPC.GetShopUI().gameObject);
     }
 
     void SpawnRestoreNPC()
@@ -182,8 +178,8 @@ public class LoadMapHandler : MonoBehaviour
         }
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnNPCList.Add(newRestoreNPC.gameObject);
-        GameManager.instance.currentSpawnUIList.Add(newRestoreNPC.GetRestoreUI().gameObject);
+        MapManager.instance.currentSpawnNPCList.Add(newRestoreNPC.gameObject);
+        MapManager.instance.currentSpawnUIList.Add(newRestoreNPC.GetRestoreUI().gameObject);
     }
 
     void SpawnRewardNPC()
@@ -194,28 +190,6 @@ public class LoadMapHandler : MonoBehaviour
         GameItemRewardManager.instance.InstantiateItemReward(RewardItemType.Relic,
                                                              RandomRelicPickupType.CommonToUnique, 
                                                              GameManager.instance.currentMap.CheckNPCSpawnPoint());
-    }
-
-    public void DestroyCurrentSpawnEnemy()
-    {
-        foreach (GameObject obj in GameManager.instance.currentSpawnEnemyList)
-        {
-            Destroy(obj);
-        }
-    }
-    public void DestroyCurrentSpawnNpc()
-    {
-        foreach (GameObject obj in GameManager.instance.currentSpawnNPCList)
-        {
-            Destroy(obj);
-        }
-    }
-    public void DestroyCurrentSpawnUI()
-    {
-        foreach (GameObject obj in GameManager.instance.currentSpawnUIList)
-        {
-            Destroy(obj);
-        }
     }
 
     public IEnumerator FadeIn(bool isLoadingNode)

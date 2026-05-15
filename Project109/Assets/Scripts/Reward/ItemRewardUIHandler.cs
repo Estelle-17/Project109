@@ -49,7 +49,7 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
                 cardRewardHandler.rootObject = this.gameObject;
                 cardRewardHandler.gameObject.SetActive(false);
 
-                GameManager.instance.currentSpawnUIList.Add(currentRewardUIObject);
+                MapManager.instance.currentSpawnUIList.Add(currentRewardUIObject);
 
                 itemTexture.gameObject.SetActive(false);
                 itemText.text = "새로운 기억 보상!";

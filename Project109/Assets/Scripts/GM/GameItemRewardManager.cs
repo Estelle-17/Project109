@@ -488,8 +488,8 @@ public class GameItemRewardManager : MonoBehaviour
             rewardNPC.transform.position = spawnPosition;
         }
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnNPCList.Add(rewardNPC.gameObject);
-        GameManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
+        MapManager.instance.currentSpawnNPCList.Add(rewardNPC.gameObject);
+        MapManager.instance.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
     }
 
     public void SpawnRewardBox(Vector3 spawnPosition)
@@ -507,8 +507,8 @@ public class GameItemRewardManager : MonoBehaviour
         }
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        GameManager.instance.currentSpawnNPCList.Add(newRewardBox.gameObject);
-        GameManager.instance.currentSpawnUIList.Add(newRewardBox.GetRewardListUI());
+        MapManager.instance.currentSpawnNPCList.Add(newRewardBox.gameObject);
+        MapManager.instance.currentSpawnUIList.Add(newRewardBox.GetRewardListUI());
     }
 
     public List<ActionCardData> GetCommonCardList() { return commonCardList; }

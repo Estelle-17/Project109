@@ -100,11 +100,11 @@ public class EventHandler : MonoBehaviour
             //선택 시 랜덤으로 사용될 카드, 유물 선택
             if (CardDeckManager.instance.GetCardDeckList().Count > 0)
             {
-                choice.randomLoseCard = CardDeckManager.instance.GetRandomCard();
+                choice.randomLoseCard.Add(CardDeckManager.instance.GetRandomCard());
             }
             if (RelicManager.instance.GetRelicList().Count > 0)
             {
-                choice.randomLoseRelic = RelicManager.instance.GetRandomRelic();
+                choice.randomLoseRelic.Add(RelicManager.instance.GetRandomRelic());
             }
 
             Button button = eventDescription.CreateChoiceButton(choice.description + "\n" + makeEventDescription.MakeChoiceDescription(choice));

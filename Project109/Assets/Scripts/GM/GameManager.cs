@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     //맵 관련 변수
     public string currentMapName;
+    public LocationType currentMapLocation;
     public int currentStageLevel = 0;
     public int currentExploreMapFloor = 0;
     public IncountNode currentIncountNode;
@@ -44,10 +45,7 @@ public class GameManager : MonoBehaviour
 
     public LoadMapHandler loadMapHandler;
 
-    //맵 이동 시 제거할 오브젝트 모음
-    public List<GameObject> currentSpawnEnemyList;
-    public List<GameObject> currentSpawnNPCList;
-    public List<GameObject> currentSpawnUIList;
+
 
     void Start()
     {

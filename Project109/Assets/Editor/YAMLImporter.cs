@@ -312,7 +312,7 @@ public class YAMLImporter
             asset.battleDataName = battleNodeData.battleDataName;
             asset.dataPath = battleNodeData.dataPath;
             asset.battleAppearLevel = battleNodeData.battleAppearLevel;
-            asset.battleMapVariationName = battleNodeData.battleMapVariationName;
+            asset.battleLocation = battleNodeData.battleLocation;
             asset.monsterNames = battleNodeData.monsterNames;
 
             var path = $"Assets/SO/BattleNodes/{battleNodeData.dataPath}.asset";
@@ -331,7 +331,7 @@ public class YAMLImporter
 
             AddressableAssetEntry entry = settings.CreateOrMoveEntry(
                 AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "GameData")
+                CreateOrFindAddressablesGroup(settings, "BattleData")
             );
             entry.address = battleNodeData.dataPath;
             entry.SetLabel("Battle", true);
@@ -586,12 +586,12 @@ public class YAMLImporter
         Debug.Log("YAML import complete.");
     }
 
-    [MenuItem("Tools/Import MapData YAML")]
+    [MenuItem("Tools/Import MapInfo YAML")]
     //[System.Obsolete]
-    public static void ImportMapYAML()
+    public static void ImportMapInfoYAML()
     {
-        string yamlPath = "Assets/Data/MapData.yaml";
-        string schemaPath = "Assets/Data/MapDataSchema.yaml";
+        string yamlPath = "Assets/Data/MapInfo.yaml";
+        string schemaPath = "Assets/Data/MapInfoSchema.yaml";
 
         string yamlText = File.ReadAllText(yamlPath);
         string schemaYamlText = File.ReadAllText(schemaPath);
@@ -626,18 +626,19 @@ public class YAMLImporter
         Debug.Log("YAML validation Success:");
 
         //검증에 성공하면 ScriptableObject 생성
-        var rawData = deserializer.Deserialize<RootMapData>(yamlText);
+        var rawData = deserializer.Deserialize<RootMapInfoData>(yamlText);
 
-        foreach (var mapData in rawData.mapCollection)
+        foreach (var mapData in rawData.mapInfoCollection)
         {
-            var asset = ScriptableObject.CreateInstance<MapData>();
+            var asset = ScriptableObject.CreateInstance<MapDataInfo>();
             asset.mapName = mapData.mapName;
             asset.dataPath = mapData.dataPath;
-            asset.baseLayout = mapData.baseLayout;
-            asset.variations = mapData.variations;
+            asset.appearMonstersDataPath = mapData.appearMonstersDataPath;
+            asset.appearObstaclesDataPath = mapData.appearObstaclesDataPath;
+            asset.appearTrapsDataPath = mapData.appearTrapsDataPath;
 
-            var path = $"Assets/SO/Maps/{mapData.dataPath}.asset";
-            Directory.CreateDirectory("Assets/SO/Maps");
+            var path = $"Assets/SO/Maps/Info/{mapData.dataPath}.asset";
+            Directory.CreateDirectory("Assets/SO/Maps/Info");
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -655,7 +656,7 @@ public class YAMLImporter
                 CreateOrFindAddressablesGroup(settings, "GameData")
             );
             entry.address = mapData.dataPath;
-            entry.SetLabel("Map", true);
+            entry.SetLabel("MapInfo", true);
             Debug.Log("Addressables에 등록 완료: " + entry.address);
         }
 
@@ -733,6 +734,160 @@ public class YAMLImporter
             );
             entry.address = card.path + "_Description";
             entry.SetLabel("Description", true);
+            Debug.Log("Addressables에 등록 완료: " + entry.address);
+        }
+
+        Debug.Log("YAML import complete.");
+    }
+
+    [MenuItem("Tools/Import Obstacle YAML")]
+    //[System.Obsolete]
+    public static void ImportObstacleYAML()
+    {
+        string yamlPath = "Assets/Data/Obstacle.yaml";
+        string schemaPath = "Assets/Data/ObstacleSchema.yaml";
+
+        string yamlText = File.ReadAllText(yamlPath);
+        string schemaYamlText = File.ReadAllText(schemaPath);
+
+        //YAML -> Json으로 변환
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .WithNodeTypeResolver(new NumericTypeResolver())
+            .Build();
+        var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
+
+        var jsonSerializer = new SerializerBuilder()
+            .JsonCompatible()
+            .Build();
+        string jsonText = jsonSerializer.Serialize(yamlObject);
+
+        //YAML Schema -> Json Schema로 변환
+        var schemaYamlObject = deserializer.Deserialize(new StringReader(schemaYamlText));
+        string schemaJsonText = jsonSerializer.Serialize(schemaYamlObject);
+
+        JSchema schema = JSchema.Parse(schemaJsonText);
+
+        JObject jsonObj = JObject.Parse(jsonText);
+        if (!jsonObj.IsValid(schema, out IList<string> errorMessages))
+        {
+            Debug.LogError("❌ YAML validation failed:");
+            foreach (var error in errorMessages)
+                Debug.LogError(error);
+            return;
+        }
+
+        Debug.Log("YAML validation Success:");
+
+        //검증에 성공하면 ScriptableObject 생성
+        var rawData = deserializer.Deserialize<RootObstacleData>(yamlText);
+
+        foreach (var obstacle in rawData.obstacleCollection)
+        {
+            var asset = ScriptableObject.CreateInstance<ObstacleData>();
+            asset.obstacleName = obstacle.obstacleName;
+            asset.objectPath = obstacle.objectPath;
+            asset.dataPath = obstacle.dataPath;
+            asset.hp = obstacle.hp;
+
+            var path = $"Assets/SO/Obstacle/{obstacle.dataPath}.asset";
+            Directory.CreateDirectory("Assets/SO/Obstacle");
+            AssetDatabase.CreateAsset(asset, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            //Addressable에 등록
+            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+            if (settings == null)
+            {
+                Debug.LogError("Addressables 설정이 존재하지 않습니다.");
+                return;
+            }
+
+            AddressableAssetEntry entry = settings.CreateOrMoveEntry(
+                AssetDatabase.AssetPathToGUID(path),
+                CreateOrFindAddressablesGroup(settings, "Obstacle")
+            );
+            entry.address = obstacle.dataPath;
+            entry.SetLabel("Obstacle", true);
+            Debug.Log("Addressables에 등록 완료: " + entry.address);
+        }
+
+        Debug.Log("YAML import complete.");
+    }
+
+    [MenuItem("Tools/Import Trap YAML")]
+    //[System.Obsolete]
+    public static void ImportTrapYAML()
+    {
+        string yamlPath = "Assets/Data/Trap.yaml";
+        string schemaPath = "Assets/Data/TrapSchema.yaml";
+
+        string yamlText = File.ReadAllText(yamlPath);
+        string schemaYamlText = File.ReadAllText(schemaPath);
+
+        //YAML -> Json으로 변환
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .WithNodeTypeResolver(new NumericTypeResolver())
+            .Build();
+        var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
+
+        var jsonSerializer = new SerializerBuilder()
+            .JsonCompatible()
+            .Build();
+        string jsonText = jsonSerializer.Serialize(yamlObject);
+
+        //YAML Schema -> Json Schema로 변환
+        var schemaYamlObject = deserializer.Deserialize(new StringReader(schemaYamlText));
+        string schemaJsonText = jsonSerializer.Serialize(schemaYamlObject);
+
+        JSchema schema = JSchema.Parse(schemaJsonText);
+
+        JObject jsonObj = JObject.Parse(jsonText);
+        if (!jsonObj.IsValid(schema, out IList<string> errorMessages))
+        {
+            Debug.LogError("❌ YAML validation failed:");
+            foreach (var error in errorMessages)
+                Debug.LogError(error);
+            return;
+        }
+
+        Debug.Log("YAML validation Success:");
+
+        //검증에 성공하면 ScriptableObject 생성
+        var rawData = deserializer.Deserialize<RootTrapData>(yamlText);
+
+        foreach (var trap in rawData.trapCollection)
+        {
+            var asset = ScriptableObject.CreateInstance<TrapData>();
+            asset.trapName = trap.trapName;
+            asset.objectPath = trap.objectPath;
+            asset.dataPath = trap.dataPath;
+            asset.hp = trap.hp;
+            asset.damage = trap.damage;
+            asset.attackCount = trap.attackCount;
+
+            var path = $"Assets/SO/Trap/{trap.dataPath}.asset";
+            Directory.CreateDirectory("Assets/SO/Trap");
+            AssetDatabase.CreateAsset(asset, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            //Addressable에 등록
+            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+            if (settings == null)
+            {
+                Debug.LogError("Addressables 설정이 존재하지 않습니다.");
+                return;
+            }
+
+            AddressableAssetEntry entry = settings.CreateOrMoveEntry(
+                AssetDatabase.AssetPathToGUID(path),
+                CreateOrFindAddressablesGroup(settings, "Trap")
+            );
+            entry.address = trap.dataPath;
+            entry.SetLabel("Trap", true);
             Debug.Log("Addressables에 등록 완료: " + entry.address);
         }
 
@@ -818,7 +973,7 @@ public class YAMLImporter
         public string battleDataName { get; set; }
         public string dataPath { get; set; }
         public int battleAppearLevel { get; set; }
-        public string battleMapVariationName { get; set; }
+        public string battleLocation { get; set; }
         public List<string> monsterNames { get; set; }
     }
 
@@ -875,17 +1030,18 @@ public class YAMLImporter
         public List<StartCard> startCards { get; set; }
     }
 
-    public class RootMapData
+    public class RootMapInfoData
     {
-        public List<MapEntry> mapCollection { get; set; }
+        public List<MapInfoEntry> mapInfoCollection  { get; set; }
     }
 
-    public class MapEntry
+    public class MapInfoEntry
     {
         public string mapName { get; set; }
         public string dataPath { get; set; }
-        public List<string> baseLayout { get; set; }
-        public List<MapVariation> variations { get; set; }
+        public List<string> appearMonstersDataPath { get; set; }
+        public List<string> appearObstaclesDataPath { get; set; }
+        public List<string> appearTrapsDataPath { get; set; }
     }
 
     public class RootCardDescriptionData
@@ -900,6 +1056,34 @@ public class YAMLImporter
         public string description { get; set; }
         public List<ExtraDescription> extraDescriptions { get; set; }
         public List<MasteryDescription> masteryDescriptions { get; set; }
+    }
+
+    public class RootObstacleData
+    {
+        public List<ObstacleEntry> obstacleCollection { get; set; }
+    }
+
+    public class ObstacleEntry
+    {
+        public string obstacleName { get; set; }
+        public string objectPath { get; set; }
+        public string dataPath { get; set; }
+        public float hp { get; set; }
+    }
+
+    public class RootTrapData
+    {
+        public List<TrapEntry> trapCollection { get; set; }
+    }
+
+    public class TrapEntry
+    {
+        public string trapName { get; set; }
+        public string objectPath { get; set; }
+        public string dataPath { get; set; }
+        public float hp { get; set; }
+        public float damage { get; set; }
+        public int attackCount { get; set; }
     }
 }
 #endif

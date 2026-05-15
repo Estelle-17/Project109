@@ -12,7 +12,6 @@ public class PlayerMove : MonoBehaviour
     public List<Tile> canMoveTiles;
     [SerializeField] private Tile currentTagetTile;
 
-    public BattleMapManager battleMap;
     public RoutePathfinding routePathfinding;
 
     [SerializeField] public List<Tile> movePath;
@@ -31,14 +30,9 @@ public class PlayerMove : MonoBehaviour
     private void Start()
     {
         currentTile = new Tile();
-        currentTile.SetCoord(5, 1);
+        currentTile.SetCoord(1, 6);
 
-        battleMap = GameObject.FindGameObjectWithTag("BattleMap").GetComponent<BattleMapManager>();
-
-        if(battleMap != null)
-        {
-            routePathfinding = battleMap.transform.GetComponent<RoutePathfinding>();
-        }
+        routePathfinding = GameManager.instance.transform.GetComponent<RoutePathfinding>();
 
         //InputAction Section
         playerInputController = GetComponent<PlayerInputController>();
@@ -66,7 +60,7 @@ public class PlayerMove : MonoBehaviour
     /// </summary>
     public void CheckCanMoveTiles()
     {
-        canMoveTiles = battleMap.CheckPlayerMoveTiles(currentTile, 10);
+        canMoveTiles = MapManager.instance.CheckPlayerMoveTiles(currentTile, 7);
         playerInputController.OnEnable();
     }
 
@@ -132,7 +126,7 @@ public class PlayerMove : MonoBehaviour
 
             //path초기화 후 다시 탐색
             movePath.Clear();
-            movePath = routePathfinding.TilePathfinding(currentTile, currentTagetTile, battleMap.GetTileMap());
+            movePath = routePathfinding.TilePathfinding(currentTile, currentTagetTile, MapManager.instance.GetTileMap());
             StartCoroutine(StartMove());
 
             //플레이어가 이동을 시작했을 경우 함수 실행

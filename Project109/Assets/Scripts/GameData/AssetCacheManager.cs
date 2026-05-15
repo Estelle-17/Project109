@@ -7,6 +7,20 @@ using System;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
+struct StageMapDataBundle : IIdentifiable
+{
+    public string stageName;
+    public List<MapDataSO> battleMapDataList;
+    public List<MapDataSO> eliteMapDataList;
+    public List<MapDataSO> bossMapDataList;
+    public List<MapDataSO> secretMapDataList;
+    public List<MapDataSO> storeMapDataList;
+    public List<MapDataSO> restoreMapDataList;
+
+
+    public string ID => stageName;
+}
+
 public class AssetCacheManager : MonoBehaviour
 {
     public static AssetCacheManager instance { get; private set; }
@@ -33,9 +47,12 @@ public class AssetCacheManager : MonoBehaviour
     public string monsterRewardKey = "Reward";
     public string characterKey = "Character";
     public string mapKey = "Map";
+    public string mapInfoKey = "MapInfo";
     public string modelKey = "Model";
     public string textureKey = "Texture";
     public string descriptionKey = "Description";
+    public string obstacleKey = "Obstacle";
+    public string trapKey = "Trap";
 
     public IList<ActionCardData> cardList;
     private Dictionary<string, ActionCardData> cardDict = new Dictionary<string, ActionCardData>();
@@ -61,8 +78,12 @@ public class AssetCacheManager : MonoBehaviour
     public IList<CharacterData> characterList;
     private Dictionary<string, CharacterData> characterDict = new Dictionary<string, CharacterData>();
 
-    public IList<MapData> mapList;
-    private Dictionary<string, MapData> mapDict = new Dictionary<string, MapData>();
+    public IList<MapDataSO> mapList;
+    private Dictionary<string, MapDataSO> mapDict = new Dictionary<string, MapDataSO>();
+    private Dictionary<string, StageMapDataBundle> stageMapDataDict = new Dictionary<string, StageMapDataBundle>();
+
+    public IList<MapDataInfo> mapInfoList;
+    private Dictionary<string, MapDataInfo> mapInfoDict = new Dictionary<string, MapDataInfo>();
 
     public IList<GameObject> modelList;
     private Dictionary<string, GameObject> modelDict = new Dictionary<string, GameObject>();
@@ -72,6 +93,12 @@ public class AssetCacheManager : MonoBehaviour
 
     public IList<CardDescription> cardDescriptionList;
     private Dictionary<string, CardDescription> cardDescriptionDict = new Dictionary<string, CardDescription>();
+
+    public IList<ObstacleData> obstacleList;
+    private Dictionary<string, ObstacleData> obstacleDict = new Dictionary<string, ObstacleData>();
+
+    public IList<TrapData> trapList;
+    private Dictionary<string, TrapData> trapDict = new Dictionary<string, TrapData>();
 
     private IEnumerator Start()
     {
@@ -143,10 +170,55 @@ public class AssetCacheManager : MonoBehaviour
         }));
 
         //맵 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<MapData>(mapKey, (list, dict) =>
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<MapDataSO>(mapKey, (list, dict) =>
         {
             mapList = list;
             mapDict = dict;
+
+            //맵 데이터를 스테이지별로 분류하여 저장
+            foreach (var mapData in list)
+            {
+                if (!stageMapDataDict.ContainsKey(mapData.stageName))
+                {
+                    stageMapDataDict[mapData.stageName] = new StageMapDataBundle
+                    {
+                        stageName = mapData.stageName,
+                        battleMapDataList = new List<MapDataSO>(),
+                        eliteMapDataList = new List<MapDataSO>(),
+                        bossMapDataList = new List<MapDataSO>(),
+                        secretMapDataList = new List<MapDataSO>(),
+                        storeMapDataList = new List<MapDataSO>(),
+                        restoreMapDataList = new List<MapDataSO>()
+                    };
+                }
+                switch (mapData.incountType)
+                {
+                    case IncountType.Battle:
+                        stageMapDataDict[mapData.stageName].battleMapDataList.Add(mapData);
+                        break;
+                    case IncountType.Elite:
+                        stageMapDataDict[mapData.stageName].eliteMapDataList.Add(mapData);
+                        break;
+                    case IncountType.Boss:
+                        stageMapDataDict[mapData.stageName].bossMapDataList.Add(mapData);
+                        break;
+                    case IncountType.Secret:
+                        stageMapDataDict[mapData.stageName].secretMapDataList.Add(mapData);
+                        break;
+                    case IncountType.Store:
+                        stageMapDataDict[mapData.stageName].storeMapDataList.Add(mapData);
+                        break;
+                    case IncountType.Restore:
+                        stageMapDataDict[mapData.stageName].restoreMapDataList.Add(mapData);
+                        break;
+                }
+            }
+        }));
+
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<MapDataInfo>(mapInfoKey, (list, dict) =>
+        {
+            mapInfoList = list;
+            mapInfoDict = dict;
         }));
 
         //모델링 및 오브젝트 데이터 할당 시작
@@ -168,6 +240,18 @@ public class AssetCacheManager : MonoBehaviour
         {
             cardDescriptionList = list;
             cardDescriptionDict = dict;
+        }));
+
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<ObstacleData>(obstacleKey, (list, dict) =>
+        {
+            obstacleList = list;
+            obstacleDict = dict;
+        }));
+
+        yield return StartCoroutine(LoadAndCacheFromAddressableData<TrapData>(trapKey, (list, dict) =>
+        {
+            trapList = list;
+            trapDict = dict;
         }));
 
         ModManager modManager = GetComponent<ModManager>();
@@ -358,8 +442,11 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetSpecificEvent(string name, out EventData ev) => specificEventDict.TryGetValue(name, out ev);
     public bool TryGetBattle(string name, out BattleData battle) => battleDict.TryGetValue(name, out battle);
     public bool TryGetCharacter(string name, out CharacterData character) => characterDict.TryGetValue(name, out character);
-    public bool TryGetMap(string name, out MapData mapData) => mapDict.TryGetValue(name, out mapData);
+    public bool TryGetMap(string name, out MapDataSO mapData) => mapDict.TryGetValue(name, out mapData);
+    public bool TryGetMapInfo(string name, out MapDataInfo mapDataInfo) => mapInfoDict.TryGetValue(name, out mapDataInfo);
     public bool TryGetModel(string name, out GameObject model) => modelDict.TryGetValue(name, out model);
     public bool TryGetTexture(string name, out Sprite texture) => textureDict.TryGetValue(name, out texture);
     public bool TryGetCardDescription(string name, out CardDescription description) => cardDescriptionDict.TryGetValue(name, out description);
+    public bool TryGetObstacle(string name, out ObstacleData obstacle) => obstacleDict.TryGetValue(name, out obstacle);
+    public bool TryGetTrap(string name, out TrapData trap) => trapDict.TryGetValue(name, out trap);
 }

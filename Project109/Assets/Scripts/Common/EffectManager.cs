@@ -18,7 +18,14 @@ public class EffectManager
 
     public void AddEffect(Character caster, EffectBase effect, int stack = 1, float duration = 0f)
     {
-        var existing = effects.Find(e => e.id == effect.id);
+        EffectBase existing = null;
+        
+        // 독립적인 버프(isIndependent)가 아닐 때만 기존 동일 이름의 버프를 찾아서 스택을 쌓음
+        if (effect.Data == null || !effect.Data.isIndependent)
+        {
+            existing = effects.Find(e => e.Data != null && e.Data.effectName == effect.Data.effectName);
+        }
+
         if (existing != null)
         {
             existing.OnStacked(stack, duration);
@@ -45,7 +52,7 @@ public class EffectManager
     {
         for (int i = effects.Count - 1; i >= 0; i--)
         {
-            if(effects[i].isPermanent) continue;
+            if(effects[i].Data != null && effects[i].Data.isPermanent) continue;
 
             effects[i].elapsedSinceLastTick += deltaTime;
             if (effects[i].elapsedSinceLastTick >= EffectBase.tickInterval)

@@ -1,10 +1,10 @@
-using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class RelicHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
@@ -24,6 +24,8 @@ public class RelicHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         {
             relicImage.sprite = texture;
         }
+
+        relicName.text = relicData.relicName;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -42,7 +44,7 @@ public class RelicHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerExit(PointerEventData eventData)
     {
-       if (UIManager.instance.relicDescription == null || relicData == null)
+        if (UIManager.instance.relicDescription == null || relicData == null)
             return;
 
         UIManager.instance.OffRelicDescription();

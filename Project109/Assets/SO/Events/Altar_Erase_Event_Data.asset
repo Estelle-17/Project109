@@ -30,14 +30,14 @@ MonoBehaviour:
       - itemType: EraseCard
         value: 1
         name: 
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
     - description: "\uC9C0\uB098\uAC04\uB2E4."
       nextStageID: END_PASS_PROCESS
       useItems: []
       getItems: []
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
   - stageID: END_TAKE_PROCESS
     stageDescription: "\uC81C\uB2E8\uC744 \uB9CC\uC9C0\uC790 \uC774\uC0C1\uD55C \uB290\uB08C\uC774
       \uB4E4\uACE0 \uC81C\uB2E8\uC740 \uC21C\uC2DD\uAC04\uC5D0 \uBB34\uB108\uC84C\uC2B5\uB2C8\uB2E4.\n
@@ -48,8 +48,8 @@ MonoBehaviour:
       nextStageID: 
       useItems: []
       getItems: []
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
   - stageID: END_PASS_PROCESS
     stageDescription: "\uC218\uC0C1\uD55C \uBB3C\uAC74\uC744 \uAD73\uC774 \uB9CC\uC9C8
       \uD544\uC694\uB294 \uC5C6\uC8E0."
@@ -58,5 +58,5 @@ MonoBehaviour:
       nextStageID: 
       useItems: []
       getItems: []
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []

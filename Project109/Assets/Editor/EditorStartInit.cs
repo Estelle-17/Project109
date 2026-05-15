@@ -4,7 +4,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 
 [InitializeOnLoad]
-public class EditorStartInit : MonoBehaviour
+public class EditorStartInit : Editor
 {
     static EditorStartInit()
     {
@@ -12,6 +12,8 @@ public class EditorStartInit : MonoBehaviour
         var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(pathOfFirstScene);
         EditorSceneManager.playModeStartScene = sceneAsset;
         Debug.Log($"Set play mode start scene to: {pathOfFirstScene}");
+
+        AddressableAutoRegister.RegisterAllMapData();
     }
 }
 #endif

@@ -35,8 +35,8 @@ MonoBehaviour:
       - itemType: SpecificCard
         value: 1
         name: "\uC695\uC2EC"
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
     - description: "\uBC14\uB2E5\uC758 \uAE08\uD654\uB4E4\uC744 \uC90D\uB294\uB2E4."
       nextStageID: END_PICKUP_GOLD_PROCESS
       useItems: []
@@ -44,8 +44,8 @@ MonoBehaviour:
       - itemType: Gold
         value: 75
         name: 
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
   - stageID: END_TAKE_GOLD_PROCESS
     stageDescription: "\uC81C\uB2E8 \uC704\uC758 \uD669\uAE08\uC744 \uB4E4\uC5B4\uC62C\uB9AC\uC790,
       \uC81C\uB2E8\uC5D0\uC11C \uBCF4\uB77C\uC0C9\uC758 \uC5F0\uAE30\uAC00 \uBE60\uB974\uAC8C
@@ -59,8 +59,8 @@ MonoBehaviour:
       nextStageID: 
       useItems: []
       getItems: []
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
   - stageID: END_PICKUP_GOLD_PROCESS
     stageDescription: "\uD568\uC815\uAC19\uC740 \uBB3C\uAC74\uC744 \uC190\uC27D\uAC8C
       \uB9CC\uC9C0\uC9C0 \uC54A\uB294 \uAC83\uC774 \uC88B\uC544\uBCF4\uC785\uB2C8\uB2E4.\n
@@ -71,5 +71,5 @@ MonoBehaviour:
       nextStageID: 
       useItems: []
       getItems: []
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []

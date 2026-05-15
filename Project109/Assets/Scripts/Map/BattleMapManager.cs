@@ -7,14 +7,14 @@ public class BattleMapManager : MonoBehaviour
 {
     [SerializeField]
     private List<List<Tile>> map;
-    private List<string> baseMapTiles;
-    private List<string> variationLayout;
 
-    private MapData currentMapData;
+    public MapDataSO currentMapData;
 
-    public Queue<(int column, int row)> enemySpawnCoord;
-    public Queue<(int column, int row)> npcSpawnCoord;
-
+    private List<Vector2Int> enemySpawnTiles = new List<Vector2Int>();
+    private List<Vector2Int> playerSpawnTiles = new List<Vector2Int>();
+    private List<Vector2Int> npcSpawnTiles = new List<Vector2Int>();
+    private List<Vector2Int> obstacleSpawnTiles = new List<Vector2Int>();
+    private List<Vector2Int> trapSpawnTiles = new List<Vector2Int>();
     public GameObject prefabTile;
     public int column;
     public int row;
@@ -25,85 +25,105 @@ public class BattleMapManager : MonoBehaviour
 
     public Vector3 CheckTileMapLocationByRowAndColumn(int newColumn, int newRow)
     {
+        if (map == null)
+            return Vector3.zero;
         return map[newColumn][newRow].transform.position;
     }
 
     public Vector3 CheckTileMapCenterLocation()
     {
+        if (map == null)
+            return Vector3.zero;
         return map[centerCoord.column][centerCoord.row].transform.position;
     }
 
     public Vector3 CheckTileMapRewardLocation()
     {
+        if (map == null)
+            return Vector3.zero;
         return map[rewardCoord.column][rewardCoord.row].transform.position;
-    }
-    public Vector3 CheckPlayerSpawnLocation()
-    {
-        return map[playerSpawnCoord.column][playerSpawnCoord.row].transform.position;
     }
 
     public List<List<Tile>> GetTileMap() { return map; }
+
+    public Vector3 CheckPlayerSpawnLocation()
+    {
+        if (playerSpawnTiles.Count == 0)
+        {
+            Debug.LogWarning("No Player Spawn Tiles Available!");
+            return map[centerCoord.column][centerCoord.row].transform.position; ; // 또는 적절한 기본 위치 반환
+        }
+
+        int randomIndex = Random.Range(0, playerSpawnTiles.Count);
+        Vector2Int spawnTile = playerSpawnTiles[randomIndex];
+        playerSpawnTiles.RemoveAt(randomIndex); // 스폰된 타일은 리스트에서 제거하여 중복 스폰 방지
+        map[spawnTile.x][spawnTile.y].tileState = TileState.Trap; // 스폰된 타일을 Full 상태로 변경
+        return map[spawnTile.x][spawnTile.y].transform.position;
+    }
+
     public Vector3 CheckEnemySpawnPoint()
     {
-        if (enemySpawnCoord.Count != 0)
+        if (enemySpawnTiles.Count == 0)
         {
-            (int column, int row) coord = enemySpawnCoord.Peek();
-            enemySpawnCoord.Dequeue();
-            Vector3 pos = map[coord.column][coord.row].transform.position;
+            Debug.LogWarning("No Enemy Spawn Tiles Available!");
+            return map[centerCoord.column][centerCoord.row].transform.position; ; // 또는 적절한 기본 위치 반환
+        }
 
-            return pos;
-        }
-        else
-        {
-            return CheckTileMapCenterLocation();
-        }
+        int randomIndex = Random.Range(0, enemySpawnTiles.Count);
+        Vector2Int spawnTile = enemySpawnTiles[randomIndex];
+        enemySpawnTiles.RemoveAt(randomIndex); // 스폰된 타일은 리스트에서 제거하여 중복 스폰 방지
+        map[spawnTile.x][spawnTile.y].tileState = TileState.Trap; // 스폰된 타일을 Full 상태로 변경
+        return map[spawnTile.x][spawnTile.y].transform.position;
     }
 
     public Vector3 CheckNPCSpawnPoint()
     {
-        if (npcSpawnCoord.Count != 0)
+        if(npcSpawnTiles.Count == 0)
         {
-            (int column, int row) coord = npcSpawnCoord.Peek();
-            npcSpawnCoord.Dequeue();
-            Vector3 pos = map[coord.column][coord.row].transform.position;
+            Debug.LogWarning("No NPC Spawn Tiles Available!");
+            return map[centerCoord.column][centerCoord.row].transform.position; ; // 또는 적절한 기본 위치 반환
+        }
 
-            return pos;
-        }
-        else
+        int randomIndex = Random.Range(0, npcSpawnTiles.Count);
+        Vector2Int spawnTile = npcSpawnTiles[randomIndex];
+        npcSpawnTiles.RemoveAt(randomIndex); // 스폰된 타일은 리스트에서 제거하여 중복 스폰 방지
+        map[spawnTile.x][spawnTile.y].tileState = TileState.Trap; // 스폰된 타일을 Full 상태로 변경
+        return map[spawnTile.x][spawnTile.y].transform.position;
+    }
+
+    //임시 코드
+    public Vector3 CheckTrapSpawnPoint()
+    {
+        if (trapSpawnTiles.Count == 0)
         {
-            Debug.Log("No NPC Spawn Point Available, Return Center Location");
-            return CheckTileMapCenterLocation();
+            Debug.LogWarning("No Trap Spawn Tiles Available!");
+            return map[centerCoord.column][centerCoord.row].transform.position; ; // 또는 적절한 기본 위치 반환
         }
+        int randomIndex = Random.Range(0, trapSpawnTiles.Count);
+        Vector2Int spawnTile = trapSpawnTiles[randomIndex];
+        trapSpawnTiles.RemoveAt(randomIndex); // 스폰된 타일은 리스트에서 제거하여 중복 스폰 방지
+        map[spawnTile.x][spawnTile.y].tileState = TileState.Trap; // 스폰된 타일을 Trap 상태로 변경
+        return map[spawnTile.x][spawnTile.y].transform.position;
+    }
+
+    //임시 코드
+    public Vector3 CheckObstacleSpawnPoint()
+    {
+        if (obstacleSpawnTiles.Count == 0)
+        {
+            Debug.LogWarning("No Obstacle Spawn Tiles Available!");
+            return map[centerCoord.column][centerCoord.row].transform.position; ; // 또는 적절한 기본 위치 반환
+        }
+        int randomIndex = Random.Range(0, obstacleSpawnTiles.Count);
+        Vector2Int spawnTile = obstacleSpawnTiles[randomIndex];
+        obstacleSpawnTiles.RemoveAt(randomIndex); // 스폰된 타일은 리스트에서 제거하여 중복 스폰 방지
+        map[spawnTile.x][spawnTile.y].tileState = TileState.Obstacle; // 스폰된 타일을 Obstacle 상태로 변경
+        return map[spawnTile.x][spawnTile.y].transform.position;
     }
 
     void Start()
     {
-        enemySpawnCoord = new Queue<(int column, int row)>();
-        npcSpawnCoord = new Queue<(int column, int row)>();
-    }
 
-    /// <summary>
-    /// column, row 데이터를 통해 직사각형 타일을 생성해주는 함수
-    /// </summary>
-    public void TileCreate()
-    {
-        int startX = 0;
-        int startZ = 0;
-
-        map = new List<List<Tile>>();
-        for (int columnIndex = 0; columnIndex < column; columnIndex++)
-        {
-            map.Add(new List<Tile>());
-            for(int rowIndex = 0; rowIndex < row; rowIndex++)
-            {
-                Tile tile = GameObject.Instantiate(prefabTile).transform.GetComponent<Tile>();
-                tile.transform.localPosition = transform.position + new Vector3(startX - columnIndex * tilePadding, 0.01f, startZ + rowIndex * tilePadding);
-                tile.transform.parent = transform;
-                tile.SetCoord(columnIndex, rowIndex);
-                //tile.CreateRandomTileObject();  //랜덤한 모양의 타일 오브젝트 생성
-                map[columnIndex].Add(tile);
-            }
-        }
     }
 
     /// <summary>
@@ -111,39 +131,40 @@ public class BattleMapManager : MonoBehaviour
     /// </summary>
     public void TileCreateByMapData()
     {
-        int startX = 0;
-        int startZ = 0; 
+        float startX = currentMapData.gridOffset.x;
+        float startZ = currentMapData.gridOffset.z;
 
         map = new List<List<Tile>>();
-        for (int columnIndex = 0; columnIndex < baseMapTiles.Count; columnIndex++)
+        for (int columnIndex = 0; columnIndex < currentMapData.height; columnIndex++)
         {
             map.Add(new List<Tile>());
-            for (int rowIndex = 0; rowIndex < baseMapTiles[columnIndex].Length; rowIndex++)
+            for (int rowIndex = 0; rowIndex < currentMapData.width; rowIndex++)
             {
                 Tile tile = GameObject.Instantiate(prefabTile).transform.GetComponent<Tile>();
-                tile.transform.localPosition = transform.position + new Vector3(
-                                                        startX - (columnIndex) * tilePadding,
+                tile.transform.localPosition = transform.position + 
+                                               new Vector3(startX + (columnIndex) * tilePadding,
                                                         0.01f,
                                                         startZ + (rowIndex) * tilePadding);
                 tile.transform.parent = transform;
                 tile.SetCoord(columnIndex, rowIndex);
-                if (baseMapTiles[columnIndex][rowIndex] == '1')
-                {
-                    tile.tileState = TileState.Full;
-                }
-                else if (baseMapTiles[columnIndex][rowIndex] == 'R')
-                {
-                    tile.tileState = TileState.Full;
-                    rewardCoord = (columnIndex, rowIndex);
-                }
-                else if (baseMapTiles[columnIndex][rowIndex] == 'S')
-                {
-                    playerSpawnCoord = (columnIndex, rowIndex);
-                }
-                else if (baseMapTiles[columnIndex][rowIndex] == 'C')
-                {
-                    centerCoord = (columnIndex, rowIndex);
-                }
+                //tile.transform.localScale = Vector3.one;
+                //if (baseMapTiles[columnIndex][rowIndex] == '1')
+                //{
+                //    tile.tileState = TileState.Full;
+                //}
+                //else if (baseMapTiles[columnIndex][rowIndex] == 'R')
+                //{
+                //    tile.tileState = TileState.Full;
+                //    rewardCoord = (columnIndex, rowIndex);
+                //}
+                //else if (baseMapTiles[columnIndex][rowIndex] == 'S')
+                //{
+                //    playerSpawnCoord = (columnIndex, rowIndex);
+                //}
+                //else if (baseMapTiles[columnIndex][rowIndex] == 'C')
+                //{
+                //    centerCoord = (columnIndex, rowIndex);
+                //}
                 map[columnIndex].Add(tile);
             }
         }
@@ -154,6 +175,7 @@ public class BattleMapManager : MonoBehaviour
 
         Debug.Log($"Column: {column}, Row: {row}");
 
+        //장애물과 몬스터, NPC 스폰 위치 지정
         ApplyVariationLayout();
 
         SetMapOutsideLine();
@@ -161,35 +183,70 @@ public class BattleMapManager : MonoBehaviour
 
     public void ApplyVariationLayout()
     {
-        enemySpawnCoord.Clear();
-        npcSpawnCoord.Clear();
-        for (int columnIndex = 0; columnIndex < column; columnIndex++)
+        foreach(var cell in currentMapData.cells)
         {
-            for (int rowIndex = 0; rowIndex < row; rowIndex++)
+            switch(cell.cellType)
             {
-                //바리에이션을 보고 장애물 추가
-                if (variationLayout[columnIndex][rowIndex] == 'O')
-                {
-                    map[columnIndex][rowIndex].tileState = TileState.Obstacle;
-                }
-                else if (variationLayout[columnIndex][rowIndex] == 'E') //몬스터 스폰 위치 저장
-                {
-                    enemySpawnCoord.Enqueue((columnIndex, rowIndex));
-                }
-                else if (variationLayout[columnIndex][rowIndex] == 'N') //NPC스폰 위치 저장
-                {
-                    npcSpawnCoord.Enqueue((columnIndex, rowIndex));
-                }
-                else
-                {   
-                    //기본 맵의 벽이 아닐 경우 이동 가능한 타일로 지정
-                    if (map[columnIndex][rowIndex].tileState != TileState.Full)
-                    {
-                        map[columnIndex][rowIndex].tileState = TileState.Empty;
-                    }
-                }
+                case CellType.RandomObstacleMarker:
+                case CellType.FixedObstacle:
+                    map[cell.position.x][cell.position.y].tileState = TileState.Obstacle;
+                    obstacleSpawnTiles.Add(cell.position);
+                    break;
+                case CellType.PlayerSpawn:
+                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
+                    playerSpawnTiles.Add(cell.position);
+                    break;
+                case CellType.EnemySpawn:
+                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
+                    enemySpawnTiles.Add(cell.position);
+                    break;
+                case CellType.NPCSpawn:
+                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
+                    npcSpawnTiles.Add(cell.position);
+                    break;
+                case CellType.RandomTrapMarker:
+                case CellType.FixedTrap:
+                    map[cell.position.x][cell.position.y].tileState = TileState.Trap;
+                    trapSpawnTiles.Add(cell.position);
+                    break;
+                case CellType.Wall:
+                    map[cell.position.x][cell.position.y].tileState = TileState.Full;
+                    break;
+                case CellType.Floor:
+                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
+                    break;
             }
         }
+
+
+
+        //for (int columnIndex = 0; columnIndex < column; columnIndex++)
+        //{
+        //    for (int rowIndex = 0; rowIndex < row; rowIndex++)
+        //    {
+        //        //바리에이션을 보고 장애물 추가
+        //        if (variationLayout[columnIndex][rowIndex] == 'O')
+        //        {
+        //            map[columnIndex][rowIndex].tileState = TileState.Obstacle;
+        //        }
+        //        else if (variationLayout[columnIndex][rowIndex] == 'E') //몬스터 스폰 위치 저장
+        //        {
+        //            enemySpawnCoord.Enqueue((columnIndex, rowIndex));
+        //        }
+        //        else if (variationLayout[columnIndex][rowIndex] == 'N') //NPC스폰 위치 저장
+        //        {
+        //            npcSpawnCoord.Enqueue((columnIndex, rowIndex));
+        //        }
+        //        else
+        //        {   
+        //            //기본 맵의 벽이 아닐 경우 이동 가능한 타일로 지정
+        //            if (map[columnIndex][rowIndex].tileState != TileState.Full)
+        //            {
+        //                map[columnIndex][rowIndex].tileState = TileState.Empty;
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     //이동할 수 있는 타일들의 외각을 표시해주는 함수
@@ -213,10 +270,10 @@ public class BattleMapManager : MonoBehaviour
             for (int rowIndex = 0; rowIndex < row; rowIndex++)
             {
                 //현재 위치가 비어있을 경우
-                if (map[columnIndex][rowIndex].tileState == TileState.Empty)
+                if (map[columnIndex][rowIndex].tileState == TileState.Empty || map[columnIndex][rowIndex].tileState == TileState.Trap)
                 {
                     //상,하,좌,우 순으로 탐색
-                    int[] dirX = { 0, 0, -1, 1 };
+                    int[] dirX = { 0, 0, 1, -1 };
                     int[] dirY = { -1, 1, 0, 0 };
 
                     for (int i = 0; i < 4; i++)
@@ -295,52 +352,32 @@ public class BattleMapManager : MonoBehaviour
     }
 
     //임시 MapTiles생성 함수
-    void UpdateMapData(string stageName, string variationName)
+    void UpdateMapData(string stageName)
     {
         //맵 데이터에서 기본 베이스와 추가 바리에이션을 찾아서 등록 진행
-        MapData mapData;
+        MapDataSO mapData;
         if (AssetCacheManager.instance.TryGetMap(stageName, out mapData))
         {
-            Debug.Log($"Find MapData: {mapData.mapName}");
+            Debug.Log($"Find MapData: {mapData.stageName}");
             currentMapData = mapData;
-            baseMapTiles = mapData.baseLayout;
-            foreach(MapVariation variation in mapData.variations)
-            {
-                if(variation.variationName == variationName)
-                {
-                    variationLayout = variation.obstacleLayout;
-                    break;
-                }
-            }
+            column = mapData.height;
+            row = mapData.width;
+            tilePadding = mapData.cellSize;
         }
         else
         {
             Debug.LogWarning($"Failed to Find MapData");
         }
     }
-    
-    void UpdateMapVariationLayout(string variationName)
-    {
-        foreach (MapVariation variation in currentMapData.variations)
-        {
-            if (variation.variationName == variationName)
-            {
-                variationLayout = variation.obstacleLayout;
-                break;
-            }
-        }
-    }
 
     public void UpdateMapTiles(string stageName, string variationName)
     {
-        UpdateMapData(stageName, variationName);
+        UpdateMapData(stageName);
         TileCreateByMapData();
     }
 
     public void UpdateMapVariationFromName(string variationName)
     {
-        UpdateMapVariationLayout(variationName);
-
         ApplyVariationLayout();
 
         SetMapOutsideLine();
@@ -349,12 +386,12 @@ public class BattleMapManager : MonoBehaviour
     public bool mapCreateTest;
     private void Update()
     {
-        if(mapCreateTest)
-        {
-            mapCreateTest = false;
-            UpdateMapData("LostTemple", "Elite");
-            TileCreateByMapData();
-            //TileCreate();
-        }
+        //if(mapCreateTest)
+        //{
+        //    mapCreateTest = false;
+        //    UpdateMapData("Temple");
+        //    TileCreateByMapData();
+        //    //TileCreate();
+        //}
     }
 }

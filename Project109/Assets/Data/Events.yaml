@@ -15,13 +15,13 @@ eventCollection:
             nextStageID: END_GETMONEY
             useItems:
             getItems:
-              - itemType: Money
+              - itemType: Gold
                 value: !!int 50
                 name:
           - description: 기도한다
             nextStageID: END_GETCARD
             useItems:
-              - itemType: Money
+              - itemType: Gold
                 value: !!int 50
                 name:
             getItems:
@@ -60,13 +60,13 @@ eventCollection:
           nextStageID: END_TEST
           useItems:
           getItems:
-            - itemType: Money
+            - itemType: Gold
               value: !!int 50
               name:
         - description: 재화를 사용하여 카드 획득
           nextStageID: END_TEST
           useItems:
-            - itemType: Money
+            - itemType: Gold
               value: !!int 50
               name:
           getItems:
@@ -80,7 +80,7 @@ eventCollection:
               value: 1
               name:
           getItems:
-            - itemType: Money
+            - itemType: Gold
               value: !!int 100
               name:
         - description: 랜덤한 유물를 소모하여 골드 획득
@@ -90,7 +90,7 @@ eventCollection:
               value: 1
               name:
           getItems:
-            - itemType: Money
+            - itemType: Gold
               value: !!int 100
               name:
         - description: 전투 진행
@@ -139,7 +139,7 @@ eventCollection:
           - description: 받아드린다.
             nextStageID: END_PROCESS
             useItems:
-            - itemType: Money
+            - itemType: Gold
               value: !!int 100
               name:
             getItems:
@@ -280,7 +280,7 @@ eventCollection:
             nextStageID: END_FIND_POTION_PROCESS
             useItems:
             getItems:
-            - itemType: Potion
+            - itemType: RandomPotion
               value: !!int 2
               name:
 

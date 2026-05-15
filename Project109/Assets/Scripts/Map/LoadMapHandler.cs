@@ -1,7 +1,7 @@
-using GameItem.Types;
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
+using GameItem.Types;
 
 public class LoadMapHandler : MonoBehaviour
 {
@@ -30,54 +30,50 @@ public class LoadMapHandler : MonoBehaviour
 
     void LoadCurrentNodeDataInMap(bool isLoadingNode)
     {
-        //맵에 남아있는 적들과 NPC, UI들 제거
-        DestroyCurrentSpawnEnemy();
-        DestroyCurrentSpawnNpc();
-        DestroyCurrentSpawnUI();
-
         //다음 노드로 이동하였으니 다음 노드들의 가려진 부분들 중 일부가 보이도록 ExploreMap 업데이트
-        RunManager.instance.currentExploreUI.OpenExploreMapNodesBasedOnFloorLength();
+        GameManager.instance.currentExploreUI.OpenExploreMapNodesBasedOnFloorLength();
         //이전에 이동한 노드를 제외한 나머지 노드 가리기
-        RunManager.instance.currentExploreUI.CloseBeforeNodes();
+        GameManager.instance.currentExploreUI.CloseBeforeNodes();
 
-        RunManager.instance.currentExploreUI.CloseUI();
+        GameManager.instance.currentExploreUI.CloseUI();
 
-        IncountNode newIncountNode = RunManager.instance.currentIncountNode;
-        if (newIncountNode != null)
+        IncountNode newIncountNode = GameManager.instance.currentIncountNode;
+        if(newIncountNode != null)
         {
             switch (newIncountNode.incountType)
             {
                 case IncountType.None:
                     break;
                 case IncountType.Battle:
-                    RunManager.instance.currentMapState = MapState.Battle;
-                    SpawnMonsterInBattleNodeData(newIncountNode.battleNodeData);
-                    GameItemRewardManager.instance.SpawnRewardBox(RunManager.instance.currentMap.CheckTileMapRewardLocation());
+                    GameManager.instance.currentMapState = MapState.Battle;
+                    //SpawnMonsterInBattleNodeData(newIncountNode.battleNodeData);
+                    MapManager.instance.GenerateStage(LocationType.Temple, newIncountNode.battleNodeData);
+                    GameItemRewardManager.instance.SpawnRewardBox(GameManager.instance.currentMap.CheckTileMapRewardLocation());
                     break;
                 case IncountType.Elite:
-                    RunManager.instance.currentMapState = MapState.Battle;
-                    GameItemRewardManager.instance.SpawnRewardBox(RunManager.instance.currentMap.CheckTileMapRewardLocation());
+                    GameManager.instance.currentMapState = MapState.Battle;
+                    GameItemRewardManager.instance.SpawnRewardBox(GameManager.instance.currentMap.CheckTileMapRewardLocation());
                     break;
                 case IncountType.Boss:
-                    RunManager.instance.currentMapState = MapState.Battle;
-                    GameItemRewardManager.instance.SpawnRewardBox(RunManager.instance.currentMap.CheckTileMapRewardLocation());
+                    GameManager.instance.currentMapState = MapState.Battle;
+                    GameItemRewardManager.instance.SpawnRewardBox(GameManager.instance.currentMap.CheckTileMapRewardLocation());
                     break;
                 case IncountType.Restore:
-                    RunManager.instance.currentMapState = MapState.None;
+                    GameManager.instance.currentMapState = MapState.None;
                     SpawnRestoreNPC();
                     break;
                 case IncountType.Store:
-                    RunManager.instance.currentMapState = MapState.None;
+                    GameManager.instance.currentMapState = MapState.None;
                     SpawnShopNPC();
                     break;
                 case IncountType.SecretBox:
-                    RunManager.instance.currentMapState = MapState.None;
+                    GameManager.instance.currentMapState = MapState.None;
                     SpawnRewardNPC();
                     break;
                 case IncountType.Secret:
-                    if (newIncountNode.eventNodeData != null)
+                    if(newIncountNode.eventNodeData != null)
                     {
-                        RunManager.instance.currentMapState = MapState.Event;
+                        GameManager.instance.currentMapState = MapState.Event;
                         SpawnEventNPC(newIncountNode.eventNodeData, true);
                     }
                     break;
@@ -85,7 +81,7 @@ public class LoadMapHandler : MonoBehaviour
                     break;
             }
 
-            switch (newIncountNode.extraIncountType)
+            switch(newIncountNode.extraIncountType)
             {
                 case ExtraIncountType.None:
                     break;
@@ -100,12 +96,12 @@ public class LoadMapHandler : MonoBehaviour
             }
 
             //플레이어 위치 이동
-            RunManager.instance.player.character.transform.position = RunManager.instance.currentMap.CheckPlayerSpawnLocation();
-            CharacterMove charMove = RunManager.instance.player.character.characterMove;
-            if (charMove != null)
+            GameManager.instance.currentCharacter.transform.position = GameManager.instance.currentMap.CheckPlayerSpawnLocation();
+            PlayerMove playerMove = GameManager.instance.currentCharacter.transform.GetComponent<PlayerMove>();
+            if(playerMove != null)
             {
-                (int column, int row) coord = RunManager.instance.currentMap.playerSpawnCoord;
-                charMove.SetCurrentTile(RunManager.instance.currentMap.GetTileMap()[coord.column][coord.row]);
+                (int column, int row) coord = GameManager.instance.currentMap.playerSpawnCoord;
+                playerMove.SetCurrentTile(GameManager.instance.currentMap.GetTileMap()[coord.column][coord.row]);
             }
         }
 
@@ -114,7 +110,7 @@ public class LoadMapHandler : MonoBehaviour
 
     public void SpawnMonsterInBattleNodeData(BattleData nodeData)
     {
-        RunManager.instance.currentMap.UpdateMapVariationFromName(nodeData.battleMapVariationName);
+        GameManager.instance.currentMap.UpdateMapVariationFromName(nodeData.battleLocation);
 
         foreach (string name in nodeData.monsterNames)
         {
@@ -128,9 +124,9 @@ public class LoadMapHandler : MonoBehaviour
                 {
                     Debug.Log("Monsterprefab Load Success.");
                     GameObject newMonster = Instantiate(monsterObject);
-                    newMonster.transform.position = RunManager.instance.currentMap.CheckEnemySpawnPoint();
+                    newMonster.transform.position = GameManager.instance.currentMap.CheckEnemySpawnPoint();
 
-                    RunManager.instance.currentSpawnEnemyList.Add(newMonster);
+                    MapManager.instance.currentSpawnEnemyList.Add(newMonster);
                 }
             }
         }
@@ -140,82 +136,60 @@ public class LoadMapHandler : MonoBehaviour
     {
         if (isProcessUpdateVariation)
         {
-            RunManager.instance.currentMap.UpdateMapVariationFromName("NPC");
+            GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
         }
 
         EventHandler newEventNPC = Instantiate(eventObjectPrefab).GetComponent<EventHandler>();
         newEventNPC.SetEventData(eventData);    //이벤트 데이터 전달
         newEventNPC.UpdateEventDescription("START");   //선택지 생성. 이벤트의 시작은 특수한 상황을 제외하고 언제나 START로 시작됨
-        newEventNPC.transform.position = RunManager.instance.currentMap.CheckNPCSpawnPoint();
+        newEventNPC.transform.position = GameManager.instance.currentMap.CheckNPCSpawnPoint();
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        RunManager.instance.currentSpawnNPCList.Add(newEventNPC.gameObject);
-        RunManager.instance.currentSpawnUIList.Add(newEventNPC.eventDescription.gameObject);
+        MapManager.instance.currentSpawnNPCList.Add(newEventNPC.gameObject);
+        MapManager.instance.currentSpawnUIList.Add(newEventNPC.eventDescription.gameObject);
     }
 
     void SpawnShopNPC()
     {
-        RunManager.instance.currentMap.UpdateMapVariationFromName("NPC");
+        GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
 
         ShopUIManager newShopNPC = Instantiate(shopObjectPrefab).GetComponent<ShopUIManager>();
         if (newShopNPC != null)
         {
             newShopNPC.AddRandomItems();    //상점에 아이템 추가
             newShopNPC.UpdateShopItems();   //아이템UI로 생성
-            newShopNPC.transform.position = RunManager.instance.currentMap.CheckNPCSpawnPoint();
+            newShopNPC.transform.position = GameManager.instance.currentMap.CheckNPCSpawnPoint();
         }
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        RunManager.instance.currentSpawnNPCList.Add(newShopNPC.gameObject);
-        RunManager.instance.currentSpawnUIList.Add(newShopNPC.GetShopUI().gameObject);
+        MapManager.instance.currentSpawnNPCList.Add(newShopNPC.gameObject);
+        MapManager.instance.currentSpawnUIList.Add(newShopNPC.GetShopUI().gameObject);
     }
 
     void SpawnRestoreNPC()
     {
-        RunManager.instance.currentMap.UpdateMapVariationFromName("NPC");
+        GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
 
         RestoreUIManager newRestoreNPC = Instantiate(restoreObjectPrefab).GetComponent<RestoreUIManager>();
-        if (newRestoreNPC != null)
+        if(newRestoreNPC != null)
         {
             newRestoreNPC.CreateRestoreUI();
-            newRestoreNPC.transform.position = RunManager.instance.currentMap.CheckNPCSpawnPoint();
+            newRestoreNPC.transform.position = GameManager.instance.currentMap.CheckNPCSpawnPoint();
         }
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        RunManager.instance.currentSpawnNPCList.Add(newRestoreNPC.gameObject);
-        RunManager.instance.currentSpawnUIList.Add(newRestoreNPC.GetRestoreUI().gameObject);
+        MapManager.instance.currentSpawnNPCList.Add(newRestoreNPC.gameObject);
+        MapManager.instance.currentSpawnUIList.Add(newRestoreNPC.GetRestoreUI().gameObject);
     }
 
     void SpawnRewardNPC()
     {
-        RunManager.instance.currentMap.UpdateMapVariationFromName("NPC");
+        GameManager.instance.currentMap.UpdateMapVariationFromName("NPC");
 
         //유물 선택지 생성
         GameItemRewardManager.instance.InstantiateItemReward(RewardItemType.Relic,
-                                                             RandomRelicPickupType.CommonToUnique,
-                                                             RunManager.instance.currentMap.CheckNPCSpawnPoint());
-    }
-
-    public void DestroyCurrentSpawnEnemy()
-    {
-        foreach (GameObject obj in RunManager.instance.currentSpawnEnemyList)
-        {
-            Destroy(obj);
-        }
-    }
-    public void DestroyCurrentSpawnNpc()
-    {
-        foreach (GameObject obj in RunManager.instance.currentSpawnNPCList)
-        {
-            Destroy(obj);
-        }
-    }
-    public void DestroyCurrentSpawnUI()
-    {
-        foreach (GameObject obj in RunManager.instance.currentSpawnUIList)
-        {
-            Destroy(obj);
-        }
+                                                             RandomRelicPickupType.CommonToUnique, 
+                                                             GameManager.instance.currentMap.CheckNPCSpawnPoint());
     }
 
     public IEnumerator FadeIn(bool isLoadingNode)
@@ -236,7 +210,7 @@ public class LoadMapHandler : MonoBehaviour
         color.a = 1;
         fadeImage.color = color;
 
-        if (isLoadingNode)
+        if(isLoadingNode)
         {
             LoadCurrentNodeDataInMap(isLoadingNode);
         }

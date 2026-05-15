@@ -35,8 +35,8 @@ MonoBehaviour:
       - itemType: UpgradeCard
         value: 1
         name: 
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
     - description: "\uAC80\uC740\uC0C9 \uC5F0\uAE30\uAC00 \uD750\uB974\uB294 \uBB38\uC73C\uB85C
         \uAC04\uB2E4."
       nextStageID: END_DARK_SMOKE_PROCESS
@@ -48,8 +48,8 @@ MonoBehaviour:
       - itemType: RandomRelic
         value: 1
         name: 
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
   - stageID: END_LESS_LIGHT_PROCESS
     stageDescription: "\uC57D\uD55C \uBE5B\uC774 \uB098\uC624\uB294 \uBB38\uC744
       \uC5F4\uACE0 \uB4E4\uC5B4\uAC00\uC790, \uBE5B\uC774 \uB2F9\uC2E0\uC758 \uBAB8\uC744
@@ -64,8 +64,8 @@ MonoBehaviour:
       nextStageID: 
       useItems: []
       getItems: []
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
   - stageID: END_DARK_SMOKE_PROCESS
     stageDescription: "\uBB38\uC744 \uC5F4\uC790, \uC5B4\uB450\uC6B4 \uC5F0\uAE30\uAC00
       \uB2F9\uC2E0\uC758 \uBAB8\uC744 \uAC10\uC2F8\uAE30 \uC2DC\uC791\uD588\uC73C\uBA70
@@ -79,5 +79,5 @@ MonoBehaviour:
       nextStageID: 
       useItems: []
       getItems: []
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []

@@ -35,8 +35,8 @@ MonoBehaviour:
       - itemType: CardReward
         value: 2
         name: 
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
     - description: "\uD734\uC2DD\uD55C\uB2E4"
       nextStageID: END_REST_PROCESS
       useItems: []
@@ -44,17 +44,17 @@ MonoBehaviour:
       - itemType: Hp
         value: 25
         name: 
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
     - description: "\uCC3B\uC7A5\uC744 \uC0B4\uD3B4\uBCF8\uB2E4"
       nextStageID: END_FIND_POTION_PROCESS
       useItems: []
       getItems:
-      - itemType: Potion
+      - itemType: RandomPotion
         value: 2
         name: 
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
   - stageID: END_TAKE_INFOMATION_PROCESS
     stageDescription: "\uB2F9\uC2E0\uC740 \uB358\uC804, \uAE30\uC5B5, \uC804\uD22C,
       \uC0DD\uD65C \uB4F1 \uB2E4\uC591\uD55C \uC815\uBCF4\uB4E4\uC758 \uC9D1\uD569\uCCB4\uAC00
@@ -66,8 +66,8 @@ MonoBehaviour:
       nextStageID: 
       useItems: []
       getItems: []
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
   - stageID: END_REST_PROCESS
     stageDescription: "\uC815\uBCF4\uC5D0\uB294 \uAD00\uC2EC\uC774 \uC5C6\uB294 \uB2F9\uC2E0\uC740
       \uD3B8\uD55C \uACF3\uC5D0 \uBAB8\uC744 \uB450\uACE0 \uD734\uC2DD\uD569\uB2C8\uB2E4...\n
@@ -78,8 +78,8 @@ MonoBehaviour:
       nextStageID: 
       useItems: []
       getItems: []
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []
   - stageID: END_FIND_POTION_PROCESS
     stageDescription: "\uB2E4\uB978 \uACF3\uC5D0 \uAD00\uC2EC\uC774 \uC0DD\uAE34
       \uB2F9\uC2E0\uC740 \uAD6C\uC11D\uC9C4 \uACF3\uC758 \uCC3B\uC7A5\uC744 \uB4A4\uC838\uBD05\uB2C8\uB2E4.\n
@@ -91,5 +91,5 @@ MonoBehaviour:
       nextStageID: 
       useItems: []
       getItems: []
-      randomLoseCard: {fileID: 0}
-      randomLoseRelic: {fileID: 0}
+      randomLoseCard: []
+      randomLoseRelic: []

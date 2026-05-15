@@ -5,6 +5,7 @@ public enum TileState
     Empty,
     Full,
     CanMove,
+    Trap,
     Obstacle
 }
 
@@ -12,7 +13,9 @@ public class Tile : MonoBehaviour
 {
     [SerializeField]
     private Coord coord;
+    public Vector2Int position; // 그리드 좌표 (x, y)
     public TileState tileState;
+    public CellType cellType;
     public GameObject canMoveAreaTextureObject;
     public GameObject centerTileTextureObject;
 

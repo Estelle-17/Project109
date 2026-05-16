@@ -40,7 +40,7 @@ public class ChoiceDescriptionHandler : MonoBehaviour
                 description += "최대 체력" + useItemData.value + " 감소";
                 break;
             case "MaxHpPercent":
-                description += "최대 체력 " + useItemData.value + "%(" + GameManager.instance.currentCharacter.GetCharacterStat().maxHp / useItemData.value + ") 소모";
+                description += "최대 체력 " + useItemData.value + "%(" + RunManager.instance.player.character.curCharacterStat.maxHealth / useItemData.value + ") 소모";
                 break;
             case "Hp":
                 description += "체력" + useItemData.value + " 소모";
@@ -83,13 +83,13 @@ public class ChoiceDescriptionHandler : MonoBehaviour
                 description += "체력이" + getItemData.value + " 증가합니다.";
                 break;
             case "MaxHpPercent":
-                description += "최대 체력이 " + getItemData.value + "%(" + GameManager.instance.currentCharacter.GetCharacterStat().maxHp / getItemData.value + ") 증가합니다.";
+                description += "최대 체력이 " + getItemData.value + "%(" + RunManager.instance.player.character.curCharacterStat.maxHealth / getItemData.value + ") 증가합니다.";
                 break;
             case "Hp":
                 description += "체력을 " + getItemData.value + " 회복합니다.";
                 break;
             case "HpPercent":
-                description += "체력을 " + getItemData.value + "%(" + GameManager.instance.currentCharacter.GetCharacterStat().maxHp / getItemData.value + ") 회복합니다.";
+                description += "체력을 " + getItemData.value + "%(" + RunManager.instance.player.character.curCharacterStat.maxHealth / getItemData.value + ") 회복합니다.";
                 break;
             case "MaxStamina":
                 description += "최대 스태미나가" + getItemData.value + " 증가합니다.";

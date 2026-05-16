@@ -270,7 +270,7 @@ public class ExploreUI : UIPanelBase
         RunManager.instance.currentIncountNode = ExploreMap[0][0];
         ExploreMap[0][0].IncountNodeCurrentHighlightCircleObject.SetActive(true);
 
-        //GameManager에 현재 ExploreMap 저장
+        //RunManager에 현재 ExploreMap 저장
         RunManager.instance.currentExploreUI = this;
 
         //각 노드끼리 연결하는 Arrow생성

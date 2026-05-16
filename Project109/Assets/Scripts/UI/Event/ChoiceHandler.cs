@@ -57,7 +57,7 @@ public class ChoiceHandler : MonoBehaviour
                 break;
             case "RandomCard":
                 //랜덤한 카드 선택 후 제거
-                CardDeckManager.instance.RemoveCard(choiceData.randomLoseCard.runtimeID);
+                CardDeckManager.instance.RemoveCard(choiceData.randomLoseCard[0].runtimeID);
                 break;
             case "SpecificRelic":
                 RelicData specificRelic = RunManager.instance.player.GetSpecificRelic(item.name);
@@ -67,7 +67,7 @@ public class ChoiceHandler : MonoBehaviour
                 }
                 break;
             case "RandomRelic":
-                RunManager.instance.player.RemoveRelic(choiceData.randomLoseRelic);
+                RunManager.instance.player.RemoveRelic(choiceData.randomLoseRelic[0]);
                 break;
         }
     }

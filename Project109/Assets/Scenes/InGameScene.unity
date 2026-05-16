@@ -5646,7 +5646,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1272209228}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayerMove, Assembly-CSharp
         m_MethodName: CheckCanMoveTiles
         m_Mode: 1
@@ -10609,8 +10609,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1272209226}
-  - component: {fileID: 1272209230}
-  - component: {fileID: 1272209228}
+  - component: {fileID: 1272209232}
   - component: {fileID: 1272209231}
   - component: {fileID: 1272209227}
   m_Layer: 6
@@ -10648,39 +10647,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16973900096216c49b58e1a9b9d0b2a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1272209228
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1272209222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b40e3d36bc154174d92cdee37d81594d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentTile: {fileID: 0}
-  canMoveTiles: []
-  currentTagetTile: {fileID: 0}
-  routePathfinding: {fileID: 0}
-  movePath: []
-  playerSpeed: 50
-  turnSpeed: 600
-  playerInputController: {fileID: 0}
---- !u!114 &1272209230
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1272209222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35a5475086767644ca78c00370a5fef6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardDeckTest: 0
 --- !u!114 &1272209231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10693,6 +10659,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 760bf0a5941326042a73becad7895b94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1272209232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272209222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3493c0c13e6cbd24f8d32a29cf71b1ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Character
+  _characterStat:
+    maxHealth: 0
+    maxStamina: 0
+    staminaRegenPerSecond: 0
+    maxMoveCount: 0
+    maxTilesPerMove: 0
+  _currentState: 0
+  isDead: 0
+  _curHealth: 0
+  _curStamina: 0
+  shield: 0
+  shieldDurationTurns: 1
+  currentTurn: 0
 --- !u!1 &1273197964
 GameObject:
   m_ObjectHideFlags: 0
@@ -12862,7 +12853,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1536112894}
   - component: {fileID: 1536112893}
-  - component: {fileID: 1536112895}
   m_Layer: 0
   m_Name: TouchInputSystem
   m_TagString: Untagged
@@ -12897,19 +12887,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1536112895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1536112892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bba9e4282efbe444aa3b4d863d8e588, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerInputController: {fileID: 0}
 --- !u!1 &1548251269
 GameObject:
   m_ObjectHideFlags: 0
@@ -17553,9 +17530,6 @@ GameObject:
   - component: {fileID: 2077144577}
   - component: {fileID: 2077144579}
   - component: {fileID: 2077144581}
-  - component: {fileID: 2077144583}
-  - component: {fileID: 2077144580}
-  - component: {fileID: 2077144582}
   - component: {fileID: 2077144587}
   - component: {fileID: 2077144588}
   - component: {fileID: 2077144584}
@@ -17581,9 +17555,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentMapState: 0
-  currentCharacter: {fileID: 0}
+  _startingCharacter: {fileID: 1272209232}
   currentMapName: 
-  currentMapLocation: 0
   currentStageLevel: 0
   currentExploreMapFloor: 0
   currentIncountNode: {fileID: 0}
@@ -17591,6 +17564,9 @@ MonoBehaviour:
   currentMap: {fileID: 1052911283}
   currentExploreUI: {fileID: 0}
   loadMapHandler: {fileID: 0}
+  currentSpawnEnemyList: []
+  currentSpawnNPCList: []
+  currentSpawnUIList: []
 --- !u!4 &2077144578
 Transform:
   m_ObjectHideFlags: 0
@@ -17625,18 +17601,6 @@ MonoBehaviour:
   restoreObjectPrefab: {fileID: 3887527566411581826, guid: f72f9f993e0e4c548a7e371ca6f08dc2, type: 3}
   insightObjectPrefab: {fileID: 6522473548749201722, guid: 42f439033f7a09b40aa2ffc4ddd0db22, type: 3}
   rewardMapObjectPrefab: {fileID: 4319029748970545909, guid: 7b76fb9f0a079094a81c9dd8cbe3350e, type: 3}
---- !u!114 &2077144580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2077144576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfe53124c183aef42b3224f9f6d094e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2077144581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17650,37 +17614,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardDeck: []
---- !u!114 &2077144582
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2077144576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9815c557087fa7e4f95851a3097ac8d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inGame_Currency_Gold_Image: {fileID: 1262608642}
-  inGame_Currency_Gold_Text: {fileID: 994521397}
-  inGame_Currency_MemorySharp_Image: {fileID: 1856544520}
-  inGame_Currency_MemorySharp_Text: {fileID: 467216991}
-  relicUIPrefab: {fileID: 6225195064851442074, guid: d29586c2d5bc7a048a5262f2cd432c66, type: 3}
-  relicSpawnTransform: {fileID: 933182133}
---- !u!114 &2077144583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2077144576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 638c4cd69f4923a4099d2a40f68a7bee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  relics: []
 --- !u!114 &2077144584
 MonoBehaviour:
   m_ObjectHideFlags: 0

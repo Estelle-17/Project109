@@ -79,7 +79,7 @@ public class LuaManager
 
     /// <summary>
     /// XLua 내부의 가비지 컬렉션을 수행합니다.
-    /// 어딘가(예: GameManager의 Update)에서 주기적으로 호출해주는 것이 좋습니다.
+    /// 어딘가(예: RunManager의 Update)에서 주기적으로 호출해주는 것이 좋습니다.
     /// </summary>
     public void Tick()
     {

@@ -418,10 +418,10 @@ MonoBehaviour:
     cellType: 3
     fixedId: 
   - position: {x: 9, y: 6}
-    cellType: 5
+    cellType: 3
     fixedId: 
   - position: {x: 9, y: 7}
-    cellType: 5
+    cellType: 3
     fixedId: 
   - position: {x: 9, y: 8}
     cellType: 3
@@ -460,10 +460,10 @@ MonoBehaviour:
     cellType: 3
     fixedId: 
   - position: {x: 10, y: 6}
-    cellType: 5
+    cellType: 3
     fixedId: 
   - position: {x: 10, y: 7}
-    cellType: 5
+    cellType: 3
     fixedId: 
   - position: {x: 10, y: 8}
     cellType: 6

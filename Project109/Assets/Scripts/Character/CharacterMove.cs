@@ -37,6 +37,9 @@ public class CharacterMove
     public void MoveAlongPath(List<Tile> movePath, Tile destinationTile)
     {
         if (movePath == null || movePath.Count == 0) return;
+
+        this.character.curMoveCount--;
+
         this.character.StartCoroutine(StartMoveCoroutine(movePath, destinationTile));
     }
 

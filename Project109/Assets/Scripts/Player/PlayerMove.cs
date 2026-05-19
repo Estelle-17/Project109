@@ -50,7 +50,7 @@ public class PlayerMove
 
     public void CheckCanMoveTiles()
     {
-        canMoveTiles = battleMap.CheckPlayerMoveTiles(characterMove.GetCurrentTile(), characterMove.character.curCharacterStat.maxTilesPerMove);
+        canMoveTiles = battleMap.CheckPlayerMoveTiles(characterMove.GetCurrentTile(), characterMove.character.curTilesPerMove);
     }
 
     /// <summary>
@@ -78,6 +78,12 @@ public class PlayerMove
             // 2. 그 타일이 이동 가능한(CanMove) 타일이라면
             if (targetTile != null && targetTile.tileState == TileState.CanMove)
             {
+                if (characterMove.character.curMoveCount <= 0)
+                {
+                    Debug.Log("이동 횟수가 부족하여 이동할 수 없습니다.");
+                    return;
+                }
+
                 Debug.Log("이동 목표 타일: " + targetTile.GetCoordToString());
 
                 // 경로 탐색 및 실제 이동 명령

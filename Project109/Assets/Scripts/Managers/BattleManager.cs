@@ -120,6 +120,8 @@ public class BattleManager : MonoBehaviour
         currentTurnController = controller;
         controller.controlledCharacter.currentTurn++;
 
+        controller.controlledCharacter.ResetMoveStat();
+
         controller.OnTurnStart();
     }
 

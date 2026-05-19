@@ -39,6 +39,9 @@ public class Character : MonoBehaviour
 
             curHealth = characterStat.maxHealth;
             curStamina = 0f;
+            
+            curMoveCount = characterStat.maxMoveCount;
+            curTilesPerMove = characterStat.maxTilesPerMove;
         }
     }
 
@@ -58,6 +61,14 @@ public class Character : MonoBehaviour
     #endregion
 
     #region CurrentStatValues
+
+    [SerializeField]
+    private int _curMoveCount;
+    public int curMoveCount { get { return _curMoveCount; } set { _curMoveCount = value; } }
+
+    [SerializeField]
+    private int _curTilesPerMove;
+    public int curTilesPerMove { get { return _curTilesPerMove; } set { _curTilesPerMove = value; } }
 
     [SerializeField]
     private CharacterState _currentState = CharacterState.Idle;
@@ -99,8 +110,6 @@ public class Character : MonoBehaviour
 
     #region BattleTick
 
-    private bool staminaFullFired = false;
-
     /// <summary>
     /// BattleManager에서 매 프레임 호출. 배속을 적용해 dt를 받는다.
     /// </summary>
@@ -112,9 +121,8 @@ public class Character : MonoBehaviour
         // 이펙트 틱
         effectManager.Tick(dt);
 
-        if (!staminaFullFired && curStamina >= curCharacterStat.maxStamina)
+        if (curStamina >= curCharacterStat.maxStamina)
         {
-            staminaFullFired = true;
             BattleManager.instance.RequestTurnStart(this);
         }
     }
@@ -125,7 +133,17 @@ public class Character : MonoBehaviour
     public void ResetStamina()
     {
         curStamina = 0;
-        staminaFullFired = false;
+    }
+
+    /// <summary>
+    /// 턴 시작 시 호출하여 이동 관련 스탯 초기화
+    /// </summary>
+    public void ResetMoveStat()
+    {
+        if (curCharacterStat != null)
+        {
+            curMoveCount = curCharacterStat.maxMoveCount;
+        }
     }
 
     #endregion

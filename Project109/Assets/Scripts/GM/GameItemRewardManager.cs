@@ -126,7 +126,7 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
             }
         }
 
-        foreach (RelicData data in AssetCacheManager.instance.relicList)
+        foreach (RelicData data in ModLoader.Instance.RelicDatabase.Values)
         {
             switch (data.rarity) //1~3
             {
@@ -375,7 +375,7 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
         //랜덤한 유물 선택 후 등록
         int pickNumber = Random.Range(1, 101);
 
-        RelicData relicData = ScriptableObject.CreateInstance<RelicData>();
+        RelicData relicData = new RelicData();
 
         //픽업 타입에 따른 확률 조정
         switch (pickupType)

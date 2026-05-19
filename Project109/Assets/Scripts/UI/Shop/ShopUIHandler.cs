@@ -86,7 +86,7 @@ public class ShopUIHandler : UIPanelBase
     {
         Debug.Log($"{relicData.relicName} 유물을 구매합니다.");
 
-        RunManager.instance.player.AddRelic(relicData);
+        RunManager.instance.player.AddRelic(relicData.relicName);
     }
 
     public void OpenUpgradeCardUI()

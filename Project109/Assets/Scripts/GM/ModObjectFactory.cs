@@ -57,11 +57,11 @@ public static class ModObjectFactory
 
         // 2. Lua 로직 테이블 로드
         LuaTable luaLogic = null;
-        if (!string.IsNullOrEmpty(data.scriptName))
+        if (!string.IsNullOrEmpty(data.relicName))
         {
             try
             {
-                object[] results = LuaManager.Instance.luaEnv.DoString($"return require('{data.scriptName}')");
+                object[] results = LuaManager.Instance.luaEnv.DoString($"return require('{data.relicName}')");
                 if (results != null && results.Length > 0)
                 {
                     luaLogic = results[0] as LuaTable;
@@ -69,7 +69,7 @@ public static class ModObjectFactory
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"[ModObjectFactory] '{data.scriptName}' Lua 스크립트 로드 실패:\n{e.Message}");
+                Debug.LogError($"[ModObjectFactory] '{data.relicName}' Lua 스크립트 로드 실패:\n{e.Message}");
             }
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using XLua;
 using EventStructs;
 
-public class RelicBase : IDisposable
+public class RelicBase
 {
     public RelicData Data { get; private set; }
     public int Counter { get; set; }

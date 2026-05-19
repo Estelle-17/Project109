@@ -40,7 +40,6 @@ public class AssetCacheManager : MonoBehaviour
     }
 
     public string cardKey = "Card";
-    public string relicKey = "Relic";
     public string eventKey = "Event";
     public string battleKey = "Battle";
     public string monsterKey = "Monster";
@@ -56,9 +55,6 @@ public class AssetCacheManager : MonoBehaviour
 
     public IList<ActionCardData> cardList;
     private Dictionary<string, ActionCardData> cardDict = new Dictionary<string, ActionCardData>();
-
-    public IList<RelicData> relicList;
-    private Dictionary<string, RelicData> relicDict = new Dictionary<string, RelicData>();
 
     public IList<EventData> eventList;
     private Dictionary<string, EventData> eventDict = new Dictionary<string, EventData>();
@@ -109,12 +105,7 @@ public class AssetCacheManager : MonoBehaviour
             cardDict = dict;
         }));
 
-        //유물 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<RelicData>(relicKey, (list, dict) =>
-        {
-            relicList = list;
-            relicDict = dict;
-        }));
+
 
         //이벤트 데이터 할당 시작
         yield return StartCoroutine(LoadAndCacheFromAddressableData<EventData>(eventKey, (list, dict) =>
@@ -437,7 +428,6 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetCard(string name, out ActionCardData card) => cardDict.TryGetValue(name, out card);
     public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
     public bool TryGetMonsterReward(string name, out MonsterRewardData reward) => monsterRewardDict.TryGetValue(name, out reward);
-    public bool TryGetRelic(string name, out RelicData relic) => relicDict.TryGetValue(name, out relic);
     public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);
     public bool TryGetSpecificEvent(string name, out EventData ev) => specificEventDict.TryGetValue(name, out ev);
     public bool TryGetBattle(string name, out BattleData battle) => battleDict.TryGetValue(name, out battle);

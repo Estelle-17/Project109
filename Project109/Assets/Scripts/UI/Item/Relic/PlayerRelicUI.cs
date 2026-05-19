@@ -13,26 +13,30 @@ public class PlayerRelicUI : MonoBehaviour
     
     private Dictionary<string, GameObject> relicUIObjects = new Dictionary<string, GameObject>();
 
-    public void AddRelicUI(RelicData newRelicData)
+    public void AddRelicUI(RelicBase newRelic)
     {
+        if (newRelic == null || newRelic.Data == null) return;
+        
         if (relicSpawnTransform && relicUIPrefab)
         {
-            RelicHandler relic = Instantiate(relicUIPrefab, relicSpawnTransform).GetComponent<RelicHandler>();
-            relicUIObjects.Add(newRelicData.relicName, relic.gameObject);
+            RelicHandler relicHandler = Instantiate(relicUIPrefab, relicSpawnTransform).GetComponent<RelicHandler>();
+            relicUIObjects.Add(newRelic.Data.relicName, relicHandler.gameObject);
 
-            if (relic)
+            if (relicHandler)
             {
-                relic.UpdateRelicData(newRelicData);
+                relicHandler.UpdateRelicData(newRelic.Data); // Or update it to use RelicBase if RelicHandler supports it
             }
         }
     }
 
-    public void RemoveRelicUI(RelicData relicData)
+    public void RemoveRelicUI(RelicBase relic)
     {
-        if (relicUIObjects.TryGetValue(relicData.relicName, out GameObject relicUIObject))
+        if (relic == null || relic.Data == null) return;
+        
+        if (relicUIObjects.TryGetValue(relic.Data.relicName, out GameObject relicUIObject))
         {
             Destroy(relicUIObject);
-            relicUIObjects.Remove(relicData.relicName);
+            relicUIObjects.Remove(relic.Data.relicName);
         }
     }
 }

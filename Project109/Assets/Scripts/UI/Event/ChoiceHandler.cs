@@ -60,14 +60,14 @@ public class ChoiceHandler : MonoBehaviour
                 CardDeckManager.instance.RemoveCard(choiceData.randomLoseCard[0].runtimeID);
                 break;
             case "SpecificRelic":
-                RelicData specificRelic = RunManager.instance.player.GetSpecificRelic(item.name);
+                RelicBase specificRelic = RunManager.instance.player.GetSpecificRelic(item.name);
                 if (specificRelic != null)
                 {
-                    RunManager.instance.player.RemoveRelic(specificRelic);
+                    RunManager.instance.player.RemoveRelic(specificRelic.Data.relicName);
                 }
                 break;
             case "RandomRelic":
-                RunManager.instance.player.RemoveRelic(choiceData.randomLoseRelic[0]);
+                RunManager.instance.player.RemoveRelic(choiceData.randomLoseRelic[0].relicName);
                 break;
         }
     }
@@ -98,10 +98,9 @@ public class ChoiceHandler : MonoBehaviour
                 //카드 획득 기회를 x번 획득
                 break;
             case "SpecificRelic":
-                RelicData specificRelic;
-                if (AssetCacheManager.instance.TryGetRelic(item.name, out specificRelic))
+                if (ModLoader.Instance.RelicDatabase.TryGetValue(item.name, out RelicData specificRelicData))
                 {
-                    RunManager.instance.player.AddRelic(specificRelic);
+                    RunManager.instance.player.AddRelic(specificRelicData.relicName);
                 }
                 break;
             case "RelicReward":

@@ -64,11 +64,11 @@ public class AddressableDataLoader : MonoBehaviour
             cardList = list;
             cardDict = dict;
         });
-        LoadAndCache<RelicData>(relicKey, (list, dict) =>
-        {
-            relicList = list;
-            relicDict = dict;
-        });
+        // LoadAndCache<RelicData>(relicKey, (list, dict) =>
+        //{
+        // relicList = list;
+        // relicDict = dict;
+        //});
         LoadAndCache<EventData>(eventKey, (list, dict) =>
         {
             eventList = list;

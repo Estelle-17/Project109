@@ -13,7 +13,7 @@ public delegate bool CheckSelectable(
     Player player,
     Character character,
     List<ActionCardData> card,
-    List<RelicData> relic
+    RelicManager relicManager
     );
 
 public class EventHandler : MonoBehaviour, IInteractable
@@ -102,9 +102,9 @@ public class EventHandler : MonoBehaviour, IInteractable
             {
                 choice.randomLoseCard.Add(CardDeckManager.instance.GetRandomCard());
             }
-            if (RunManager.instance.player.relics.Count > 0)
+            if (RunManager.instance.player.relicManager.GetRelics().Count > 0)
             {
-                choice.randomLoseRelic.Add(RunManager.instance.player.GetRandomRelic());
+                choice.randomLoseRelic.Add(RunManager.instance.player.GetRandomRelic().Data);
             }
 
             Button button = eventDescription.CreateChoiceButton(choice.description + "\n" + makeEventDescription.MakeChoiceDescription(choice));
@@ -116,7 +116,7 @@ public class EventHandler : MonoBehaviour, IInteractable
                                                     RunManager.instance.player,
                                                     RunManager.instance.player.character,
                                                     CardDeckManager.instance.GetCardDeckList(),
-                                                    RunManager.instance.player.relics);
+                                                    RunManager.instance.player.relicManager);
                 if (!result)
                 {
                     button.interactable = false;

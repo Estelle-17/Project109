@@ -20,9 +20,9 @@ public class RelicHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         relicData = newRelicData;
 
-        if (AssetCacheManager.instance.TryGetTexture(relicData.texturePath, out Sprite texture))
+        if (relicData.iconSprite != null)
         {
-            relicImage.sprite = texture;
+            relicImage.sprite = relicData.iconSprite;
         }
 
         relicName.text = relicData.relicName;

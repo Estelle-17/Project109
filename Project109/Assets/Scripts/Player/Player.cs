@@ -15,11 +15,8 @@ public class Player
     // 카드 덱 (런 전체에서 유지되는 전체 카드 풀)
     public List<ActionCardData> masterDeck = new();
 
-    // 유물 목록
-    public List<RelicData> relics = new();
-
-    public event Action<RelicData> OnRelicAddedEvent;
-    public event Action<RelicData> OnRelicRemovedEvent;
+    // 유물 관리자
+    public RelicManager relicManager;
 
     public Player(Character character)
     {
@@ -33,6 +30,8 @@ public class Player
         this.playerStat.reward_Card_Count = 3;
         this.playerStat.reward_Relic_Count = 3;
         this.playerStat.mastery_Choice_Count = 3;
+
+        this.relicManager = new RelicManager(this);
     }
 
     public void AddCardToDeck(ActionCardData card)
@@ -47,37 +46,24 @@ public class Player
         masterDeck.Remove(card);
     }
 
-    public void AddRelic(RelicData relicData)
+    // 유물 관련 기능들은 backward compatibility 혹은 편의성을 위해 RelicManager로 위임
+    public void AddRelic(string relicId)
     {
-        RelicData newRelic = UnityEngine.Object.Instantiate(relicData);
-        eventBus.Invoke<IOnAddRelic>(c => c.OnAddRelic(newRelic));
-        relics.Add(newRelic);
-
-        OnRelicAddedEvent?.Invoke(newRelic);
-
-        UnityEngine.Debug.Log($"Relic Added : {newRelic.relicName}");
+        relicManager.AddRelic(relicId);
     }
 
-    public void RemoveRelic(RelicData relicData)
+    public void RemoveRelic(string relicId)
     {
-        if (relics.Remove(relicData))
-        {
-            eventBus.Invoke<IOnRemoveRelic>(c => c.OnRemoveRelic(relicData));
-
-            OnRelicRemovedEvent?.Invoke(relicData);
-
-            UnityEngine.Debug.Log($"Relic Removed : {relicData.relicName}");
-        }
+        relicManager.RemoveRelic(relicId);
     }
 
-    public RelicData GetRandomRelic()
+    public RelicBase GetRandomRelic()
     {
-        if (relics.Count == 0) return null;
-        return relics[UnityEngine.Random.Range(0, relics.Count)];
+        return relicManager.GetRandomRelic();
     }
 
-    public RelicData GetSpecificRelic(string name)
+    public RelicBase GetSpecificRelic(string relicId)
     {
-        return relics.Find(r => r.relicName == name);
+        return relicManager.GetSpecificRelic(relicId);
     }
 }

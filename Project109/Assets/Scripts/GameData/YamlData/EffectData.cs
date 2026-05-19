@@ -12,12 +12,6 @@ public class EffectData : IModAssetResolver
     public bool isIndependent { get; set; } // true일 경우, 중첩(Stack)되지 않고 새로운 인스턴스로 각각 존재합니다.
     public int maxStack { get; set; } = int.MaxValue;
 
-    // 모더가 작성한 Lua 스크립트명 (예: "StrengthEffect")
-    public string scriptName { get; set; }
-
-    // 모더가 제공한 커스텀 아이콘의 상대 경로 (예: "Icons/strength.png")
-    public string imagePath { get; set; }
-
     // 런타임에 imagePath를 통해 디스크에서 직접 읽어온 스프라이트 
     // (YAML 파싱 대상에서 제외하기 위해 [YamlIgnore] 사용)
     [YamlIgnore]
@@ -27,31 +21,35 @@ public class EffectData : IModAssetResolver
     {
         bool isValid = true;
 
-        // 1. 아이콘 스프라이트 링크 (미리 로딩)
-        if (!string.IsNullOrEmpty(imagePath))
+        // 1. 아이콘 스프라이트 링크 (effectName으로 경로 자동 추론)
+        string expectedImagePath = Path.Combine(modDirectory, "Icons", "Effects", effectName + ".png");
+        
+        if (File.Exists(expectedImagePath))
         {
-            string fullImagePath = Path.Combine(modDirectory, imagePath);
-            if (File.Exists(fullImagePath))
+            // 최대 128x128 픽셀로 제한하여 로드
+            this.iconSprite = ImageLoader.LoadCustomSprite(expectedImagePath, 128);
+        }
+        else
+        {
+            // 전용 아이콘이 없을 경우 기본 아이콘(Default.png)으로 대체
+            string defaultImagePath = Path.Combine(modDirectory, "Icons", "Effects", "Default.png");
+            if (File.Exists(defaultImagePath))
             {
-                // ImageLoader를 사용하여 이미지 캐싱
-                this.iconSprite = ImageLoader.LoadCustomSprite(fullImagePath);
+                this.iconSprite = ImageLoader.LoadCustomSprite(defaultImagePath, 128);
             }
             else
             {
-                Debug.LogError($"[EffectData: {effectName}] 아이콘 파일을 찾을 수 없습니다: {fullImagePath}");
-                isValid = false;
+                Debug.LogWarning($"[EffectData: {effectName}] 전용 아이콘 및 기본 아이콘(Default.png)을 찾을 수 없지만 실행을 계속합니다.");
+                // isValid를 false로 만들지 않음으로써 이미지가 없어도 정상적으로 로드되도록 허용
             }
         }
 
-        // 2. 루아 스크립트 존재 여부 검증
-        if (!string.IsNullOrEmpty(scriptName))
+        // 2. 루아 스크립트 존재 여부 검증 (effectName으로 경로 자동 추론)
+        string expectedScriptPath = Path.Combine(modDirectory, "Scripts", "Effects", effectName + ".lua");
+        if (!File.Exists(expectedScriptPath))
         {
-            string expectedScriptPath = Path.Combine(modDirectory, scriptName + ".lua");
-            if (!File.Exists(expectedScriptPath))
-            {
-                Debug.LogError($"[EffectData: {effectName}] 연동할 루아 스크립트 파일을 찾을 수 없습니다: {expectedScriptPath}");
-                isValid = false;
-            }
+            Debug.LogError($"[EffectData: {effectName}] 연동할 루아 스크립트 파일을 찾을 수 없습니다: {expectedScriptPath}");
+            isValid = false;
         }
 
         return isValid;

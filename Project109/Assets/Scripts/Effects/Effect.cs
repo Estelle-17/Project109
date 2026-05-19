@@ -35,7 +35,7 @@ public class EffectBase
         luaOnInit?.Invoke(luaTable, this);
     }
 
-    public virtual void OnAdded(Character caster, Character target, int stack, float duration)
+    public void OnAdded(Character caster, Character target, int stack, float duration)
     {
         this.caster = caster;
         this.target = target;
@@ -45,7 +45,7 @@ public class EffectBase
 
         if (luaTable != null)
         {
-            // 1. Lua 측 OnAdded 기본 로직 실행
+            // 1. Lua 측 OnAdded 실행 (Lua에서 초기값 덮어쓰기 가능)
             var luaOnAdded = luaTable.Get<Action<LuaTable, EffectBase, Character, Character, int, float>>("OnAdded");
             luaOnAdded?.Invoke(luaTable, this, caster, target, stack, duration);
 
@@ -57,35 +57,49 @@ public class EffectBase
         }
     }
 
-    public virtual void OnStacked(int stack, float duration) 
+    public void OnStacked(int stack, float duration) 
     {
-        int maxStack = Data != null ? Data.maxStack : int.MaxValue;
-        currentStack = System.Math.Min(currentStack + stack, maxStack);
-        this.currentDuration = duration;
-
         var luaOnStacked = luaTable?.Get<Action<LuaTable, EffectBase, int, float>>("OnStacked");
-        luaOnStacked?.Invoke(luaTable, this, stack, duration);
+        if (luaOnStacked != null)
+        {
+            // Lua에서 스택 및 지속시간 합산 로직을 직접 제어
+            luaOnStacked.Invoke(luaTable, this, stack, duration);
+        }
+        else
+        {
+            // Lua에 정의되지 않은 경우 기본 동작 (스택 증가, 지속시간 갱신)
+            int maxStack = Data != null ? Data.maxStack : int.MaxValue;
+            currentStack = System.Math.Min(currentStack + stack, maxStack);
+            this.currentDuration = duration;
+        }
     }
 
-    public virtual void OnTick() 
+    public void OnTick() 
     { 
         var luaOnTick = luaTable?.Get<Action<LuaTable, EffectBase>>("OnTick");
         luaOnTick?.Invoke(luaTable, this);
     }
 
-    public virtual void OnTimeOut()
+    public void OnTimeOut()
     {
-        currentStack--;
-        if (currentStack > 0)   
-        {
-            currentDuration = duration;
-        }
-
         var luaOnTimeOut = luaTable?.Get<Action<LuaTable, EffectBase>>("OnTimeOut");
-        luaOnTimeOut?.Invoke(luaTable, this);
+        if (luaOnTimeOut != null)
+        {
+            // 타임아웃 처리를 Lua에 완전 위임
+            luaOnTimeOut.Invoke(luaTable, this);
+        }
+        else
+        {
+            // 기본 동작: 스택 1 감소, 지속시간 초기화
+            currentStack--;
+            if (currentStack > 0)   
+            {
+                currentDuration = duration;
+            }
+        }
     }
 
-    public virtual void OnRemoved()
+    public void OnRemoved()
     {
         if (luaTable != null)
         {

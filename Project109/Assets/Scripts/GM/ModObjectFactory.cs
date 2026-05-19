@@ -21,12 +21,12 @@ public static class ModObjectFactory
 
         // 2. Lua 로직 테이블 로드 (require 사용)
         LuaTable luaLogic = null;
-        if (!string.IsNullOrEmpty(data.scriptName))
+        if (!string.IsNullOrEmpty(data.effectName))
         {
             try
             {
                 // LuaEnv를 통해 스크립트를 실행하여 반환된 테이블을 가져옴
-                object[] results = LuaManager.Instance.luaEnv.DoString($"return require('{data.scriptName}')");
+                object[] results = LuaManager.Instance.luaEnv.DoString($"return require('{data.effectName}')");
                 if (results != null && results.Length > 0)
                 {
                     luaLogic = results[0] as LuaTable;
@@ -34,7 +34,7 @@ public static class ModObjectFactory
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"[ModObjectFactory] '{data.scriptName}' Lua 스크립트 로드 실패:\n{e.Message}");
+                Debug.LogError($"[ModObjectFactory] '{data.effectName}' Lua 스크립트 로드 실패:\n{e.Message}");
             }
         }
 
@@ -48,8 +48,7 @@ public static class ModObjectFactory
     /// </summary>
     public static RelicBase CreateRelic(string relicId, Player owner)
     {
-        /*
-        // 1. 원본 데이터 검색 (주석 해제 후 사용)
+        // 1. 원본 데이터 검색
         if (!ModLoader.Instance.RelicDatabase.TryGetValue(relicId, out RelicData data))
         {
             Debug.LogError($"[ModObjectFactory] '{relicId}' 유물 데이터를 찾을 수 없습니다.");
@@ -76,9 +75,5 @@ public static class ModObjectFactory
 
         // 3. 인스턴스 조립 및 반환 (RelicBase는 owner를 받음)
         return new RelicBase(data, owner, luaLogic);
-        */
-        
-        Debug.LogWarning("[ModObjectFactory] CreateRelic은 아직 ModLoader.RelicDatabase가 구현되지 않아 비활성화 되어있습니다.");
-        return null;
     }
 }

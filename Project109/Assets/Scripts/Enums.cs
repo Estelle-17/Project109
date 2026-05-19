@@ -2,6 +2,22 @@ using UnityEngine;
 
 namespace GameItem.Types
 {
+    public enum CardRarity
+    {
+        Common = 1,
+        Uncommon = 2,
+        Rare = 3,
+        Unique = 4
+    }
+
+    public enum RelicRarity
+    {
+        Common = 1,
+        Rare = 2,
+        Unique = 3,
+        Boss = 4
+    }
+
     public enum RewardItemType
     {
         Card,

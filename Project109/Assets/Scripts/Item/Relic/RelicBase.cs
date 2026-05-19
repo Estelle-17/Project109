@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using XLua;
 using EventStructs;
 
-public class RelicBase
+public class RelicBase : IDescribable
 {
     public RelicData Data { get; private set; }
     public int Counter { get; set; }
@@ -58,4 +58,25 @@ public class RelicBase
         activeProxies.Clear();
         luaLogic?.Dispose();
     }
+
+    /// <summary>
+    /// 현재 Counter 수치를 반영한 효과 설명 텍스트를 반환합니다.
+    /// Lua에 GetDescription 함수가 정의되어 있으면 Lua 결과를,
+    /// 없으면 YAML description의 {Counter} 플레이스홀더를 치환한 값을 반환합니다.
+    /// </summary>
+    public string GetDescription()
+    {
+        var luaFunc = luaLogic?.Get<Func<LuaTable, RelicBase, string>>("GetDescription");
+        if (luaFunc != null)
+            return luaFunc(luaLogic, this);
+
+        return Data?.description
+            ?.Replace("{Counter}", Counter.ToString())
+            ?? string.Empty;
+    }
+
+    /// <summary>
+    /// 유물의 flavorText(lore/풍미 텍스트)를 반환합니다.
+    /// </summary>
+    public string GetFlavorText() => Data?.flavorText ?? string.Empty;
 }

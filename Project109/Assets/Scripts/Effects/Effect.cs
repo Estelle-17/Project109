@@ -8,7 +8,7 @@ public enum EffectType
     Debuff
 }
 
-public class EffectBase
+public class EffectBase : IDescribable
 {
     // Lua 스크립트에서 접근할 수 있도록 getter를 public으로 개방
     public Character caster { get; protected set; }
@@ -120,5 +120,21 @@ public class EffectBase
 
         caster = null;
         target = null;
+    }
+
+    /// <summary>
+    /// 현재 스택 수치를 반영한 효과 설명 텍스트를 반환합니다.
+    /// Lua에 GetDescription 함수가 정의되어 있으면 Lua 결과를,
+    /// 없으면 YAML description의 {stacks} 플레이스홀더를 치환한 값을 반환합니다.
+    /// </summary>
+    public string GetDescription()
+    {
+        var luaFunc = luaTable?.Get<Func<LuaTable, EffectBase, string>>("GetDescription");
+        if (luaFunc != null)
+            return luaFunc(luaTable, this);
+
+        return Data?.description
+            ?.Replace("{stacks}", currentStack.ToString())
+            ?? string.Empty;
     }
 }

@@ -128,18 +128,18 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
 
         foreach (RelicData data in ModLoader.Instance.RelicDatabase.Values)
         {
-            switch (data.rarity) //1~3
+            switch (data.rarity)
             {
-                case 1:
+                case GameItem.Types.RelicRarity.Common:
                     commonRelicList.Add(data);
                     break;
-                case 2:
+                case GameItem.Types.RelicRarity.Rare:
                     rareRelicList.Add(data);
                     break;
-                case 3:
+                case GameItem.Types.RelicRarity.Unique:
                     uniqueRelicList.Add(data);
                     break;
-                case 4:
+                case GameItem.Types.RelicRarity.Boss:
                     bossRelicList.Add(data);
                     break;
             }
@@ -162,7 +162,7 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
     {
         switch (relicData.rarity)
         {
-            case 1:
+            case GameItem.Types.RelicRarity.Common:
                 Debug.Log("Removing common Relic: " + relicData.relicName + ", Count: "+ commonRelicList.Count);
                 foreach (RelicData data in commonRelicList)
                 {
@@ -175,7 +175,7 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
                 commonRelicPicker = new RandomItemPicker<RelicData>(commonRelicList);
                 Debug.Log("commonRelicPicker Count: " + commonRelicPicker.Count());
                 break;
-            case 2:
+            case GameItem.Types.RelicRarity.Rare:
                 Debug.Log("Removing rare Relic: " + relicData.relicName + ", Count: " + rareRelicList.Count);
                 foreach (RelicData data in rareRelicList)
                 {
@@ -188,7 +188,7 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
                 rareRelicPicker = new RandomItemPicker<RelicData>(rareRelicList);
                 Debug.Log("rareRelicPicker Count: " + rareRelicPicker.Count());
                 break;
-            case 3:
+            case GameItem.Types.RelicRarity.Unique:
                 Debug.Log("Removing unique Relic: " + relicData.relicName + ", Count: " + uniqueRelicList.Count);
                 foreach (RelicData data in uniqueRelicList)
                 {
@@ -201,7 +201,7 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
                 uniqueRelicPicker = new RandomItemPicker<RelicData>(uniqueRelicList);
                 Debug.Log("uniqueRelicPicker Count: " + uniqueRelicPicker.Count());
                 break;
-            case 4:
+            case GameItem.Types.RelicRarity.Boss:
                 Debug.Log("Removing boss Relic: " + relicData.relicName + ", Count: " + bossRelicList.Count);
                 foreach (RelicData data in bossRelicList)
                 {
@@ -222,28 +222,28 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
     {
         switch (relicData.rarity)
         {
-            case 1:
+            case GameItem.Types.RelicRarity.Common:
                 if (commonRelicList.Contains(relicData))
                     return;
 
                 commonRelicList.Add(relicData);
                 commonRelicPicker = new RandomItemPicker<RelicData>(commonRelicList);
                 break;
-            case 2:
+            case GameItem.Types.RelicRarity.Rare:
                 if (rareRelicList.Contains(relicData))
                     return;
 
                 rareRelicList.Add(relicData);
                 rareRelicPicker = new RandomItemPicker<RelicData>(rareRelicList);
                 break;
-            case 3:
+            case GameItem.Types.RelicRarity.Unique:
                 if (uniqueRelicList.Contains(relicData))
                     return;
 
                 uniqueRelicList.Add(relicData);
                 uniqueRelicPicker = new RandomItemPicker<RelicData>(uniqueRelicList);
                 break;
-            case 4:
+            case GameItem.Types.RelicRarity.Boss:
                 if (bossRelicList.Contains(relicData))
                     return;
 
@@ -483,15 +483,15 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
     {
         switch(relicData.rarity)
         {
-            case 1:
+            case GameItem.Types.RelicRarity.Common:
                 commonRelicList.Remove(relicData);
                 commonRelicPicker = new RandomItemPicker<RelicData>(commonRelicList);
                 break;
-            case 2:
+            case GameItem.Types.RelicRarity.Rare:
                 rareRelicList.Remove(relicData);
                 rareRelicPicker = new RandomItemPicker<RelicData>(rareRelicList);
                 break;
-            case 3:
+            case GameItem.Types.RelicRarity.Unique:
                 uniqueRelicList.Remove(relicData);
                 uniqueRelicPicker = new RandomItemPicker<RelicData>(uniqueRelicList);
                 break;

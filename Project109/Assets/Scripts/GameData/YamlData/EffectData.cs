@@ -6,6 +6,8 @@ public class EffectData : IModAssetResolver
 {
     // effectName이 고유 식별자(ID) 역할을 겸합니다.
     public string effectName { get; set; }
+    // 효과에 대한 기계적 설명 (예: "적에게 {stacks}의 피해를 입힙니다.")
+    // {stacks} 플레이스홀더로 현재 스택 수치를 동적으로 표현할 수 있습니다.
     public string description { get; set; }
     public EffectType effectType { get; set; }
     public bool isPermanent { get; set; }

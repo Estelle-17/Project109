@@ -83,7 +83,6 @@ namespace EventStructs
         public Character caster;
         public Character target;
 
-
         public float originalStaminaAmount;
         public float baseStaminaAmount;
         public float finalStaminaAmount;
@@ -174,7 +173,6 @@ namespace EventStructs
         public Character caster;
         public Character target;
         public EffectBase effect;
-
 
         public int baseStack;
         public float baseDuration;

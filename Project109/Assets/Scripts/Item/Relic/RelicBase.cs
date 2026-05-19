@@ -60,19 +60,18 @@ public class RelicBase : IDescribable
     }
 
     /// <summary>
-    /// 현재 Counter 수치를 반영한 효과 설명 텍스트를 반환합니다.
-    /// Lua에 GetDescription 함수가 정의되어 있으면 Lua 결과를,
-    /// 없으면 YAML description의 {Counter} 플레이스홀더를 치환한 값을 반환합니다.
+    /// YAML description 템플릿을 Lua에 넘겨 토큰 치환을 위임합니다.
+    /// Lua에 GetDescription이 없으면 템플릿 원문을 반환합니다.
     /// </summary>
     public string GetDescription()
     {
-        var luaFunc = luaLogic?.Get<Func<LuaTable, RelicBase, string>>("GetDescription");
-        if (luaFunc != null)
-            return luaFunc(luaLogic, this);
+        string template = Data?.description ?? string.Empty;
 
-        return Data?.description
-            ?.Replace("{Counter}", Counter.ToString())
-            ?? string.Empty;
+        var luaFunc = luaLogic?.Get<Func<LuaTable, RelicBase, string, string>>("GetDescription");
+        if (luaFunc != null)
+            return luaFunc(luaLogic, this, template);
+
+        return template;
     }
 
     /// <summary>

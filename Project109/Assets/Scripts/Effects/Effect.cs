@@ -123,18 +123,19 @@ public class EffectBase : IDescribable
     }
 
     /// <summary>
-    /// 현재 스택 수치를 반영한 효과 설명 텍스트를 반환합니다.
-    /// Lua에 GetDescription 함수가 정의되어 있으면 Lua 결과를,
-    /// 없으면 YAML description의 {stacks} 플레이스홀더를 치환한 값을 반환합니다.
+    /// YAML description 템플릿을 Lua에 넘겨 토큰 치환을 위임합니다.
+    /// Lua에 GetDescription이 없으면 템플릿 원문을 반환합니다.
     /// </summary>
     public string GetDescription()
     {
-        var luaFunc = luaTable?.Get<Func<LuaTable, EffectBase, string>>("GetDescription");
-        if (luaFunc != null)
-            return luaFunc(luaTable, this);
+        string template = Data?.description ?? string.Empty;
 
-        return Data?.description
-            ?.Replace("{stacks}", currentStack.ToString())
-            ?? string.Empty;
+        var luaFunc = luaTable?.Get<Func<LuaTable, EffectBase, string, string>>("GetDescription");
+        if (luaFunc != null)
+            return luaFunc(luaTable, this, template);
+
+        // Lua GetDescription이 없으면 템플릿 그대로 반환
+        // (동적 값이 없는 단순 효과는 YAML에 토큰 없이 작성하면 됨)
+        return template;
     }
 }

@@ -31,7 +31,7 @@ public class MapDataSO : ScriptableObject, IIdentifiable
         {
             for(int j = 0; j < height; j++)
             {
-                cells.Add(new CellData { position = new Vector2Int(i, j), cellType = CellType.Floor });
+                cells.Add(new CellData(new Vector2Int(i, j)));
             }
         }
     }

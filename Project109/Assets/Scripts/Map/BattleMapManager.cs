@@ -183,70 +183,7 @@ public class BattleMapManager : MonoBehaviour
 
     public void ApplyVariationLayout()
     {
-        foreach(var cell in currentMapData.cells)
-        {
-            switch(cell.cellType)
-            {
-                case CellType.RandomObstacleMarker:
-                case CellType.FixedObstacle:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Obstacle;
-                    obstacleSpawnTiles.Add(cell.position);
-                    break;
-                case CellType.PlayerSpawn:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
-                    playerSpawnTiles.Add(cell.position);
-                    break;
-                case CellType.EnemySpawn:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
-                    enemySpawnTiles.Add(cell.position);
-                    break;
-                case CellType.NPCSpawn:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
-                    npcSpawnTiles.Add(cell.position);
-                    break;
-                case CellType.RandomTrapMarker:
-                case CellType.FixedTrap:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Trap;
-                    trapSpawnTiles.Add(cell.position);
-                    break;
-                case CellType.Wall:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Full;
-                    break;
-                case CellType.Floor:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
-                    break;
-            }
-        }
 
-
-
-        //for (int columnIndex = 0; columnIndex < column; columnIndex++)
-        //{
-        //    for (int rowIndex = 0; rowIndex < row; rowIndex++)
-        //    {
-        //        //바리에이션을 보고 장애물 추가
-        //        if (variationLayout[columnIndex][rowIndex] == 'O')
-        //        {
-        //            map[columnIndex][rowIndex].tileState = TileState.Obstacle;
-        //        }
-        //        else if (variationLayout[columnIndex][rowIndex] == 'E') //몬스터 스폰 위치 저장
-        //        {
-        //            enemySpawnCoord.Enqueue((columnIndex, rowIndex));
-        //        }
-        //        else if (variationLayout[columnIndex][rowIndex] == 'N') //NPC스폰 위치 저장
-        //        {
-        //            npcSpawnCoord.Enqueue((columnIndex, rowIndex));
-        //        }
-        //        else
-        //        {   
-        //            //기본 맵의 벽이 아닐 경우 이동 가능한 타일로 지정
-        //            if (map[columnIndex][rowIndex].tileState != TileState.Full)
-        //            {
-        //                map[columnIndex][rowIndex].tileState = TileState.Empty;
-        //            }
-        //        }
-        //    }
-        //}
     }
 
     //이동할 수 있는 타일들의 외각을 표시해주는 함수

@@ -44,7 +44,7 @@ public class RunManager : MonoBehaviour
     public int currentExploreMapFloor = 0;
     public IncountNode currentIncountNode;
     public IncountNode beforeIncountNode;
-    public BattleMapManager currentMap;
+    public MapManager currentMap;
     public ExploreUI currentExploreUI;
 
     public LoadMapHandler loadMapHandler;

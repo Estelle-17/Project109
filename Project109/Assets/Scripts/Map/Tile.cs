@@ -15,7 +15,6 @@ public class Tile : MonoBehaviour
     private Coord coord;
     public Vector2Int position; // 그리드 좌표 (x, y)
     public TileState tileState;
-    public CellType cellType;
     public GameObject canMoveAreaTextureObject;
     public GameObject centerTileTextureObject;
 

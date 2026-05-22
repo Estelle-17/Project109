@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 using static UnityEngine.Rendering.DebugUI.Table;
 
 public class MapManager : MonoBehaviour
@@ -30,9 +32,8 @@ public class MapManager : MonoBehaviour
     private List<CellData> spawnEnemyCells = new List<CellData>();
     private List<CellData> spawnPlayerCells = new List<CellData>();
     private List<CellData> spawnNPCCells = new List<CellData>();
-    private List<CellData> spawnObstacleCells = new List<CellData>();
-    private List<CellData> spawnTrapCells = new List<CellData>();
     public GameObject prefabTile;
+    public Transform mapSpawnRoot;
     public Transform spawnTileTransform;
     public int mapColumn;
     public int mapRow;
@@ -53,26 +54,72 @@ public class MapManager : MonoBehaviour
 
         //이전의 맵 타일 및 생성된 오브젝트 제거 후 새롭게 맵 데이터 업데이트 및 타일 생성하도록 코딩 진행
         UpdateMapData(mapLocation.ToString());
+
+        foreach(var cell in currentMapData.cells)
+        {
+            if(cell.terrainID != "Empty")
+            {
+                GenerateObjectInMap(cell.terrainID, cell.position);
+            }
+
+            if(cell.objectID != "Empty")
+            {
+                GenerateObjectInMap(cell.objectID, cell.position);
+            }
+
+            switch (cell.eventID)
+            {
+                case "EnemySpawn":
+                    spawnEnemyCells.Add(cell);
+                    break;
+                case "PlayerSpawn":
+                    spawnPlayerCells.Add(cell);
+                    break;
+                case "NPCSpawn":
+                    spawnNPCCells.Add(cell);
+                    break;
+            }
+        }
+
         TileCreateByMapData();
 
-        // 맵 오브젝트 생성
-        if (currentMapData.mapPrefab != null)
-        {
-            Instantiate(currentMapData.mapPrefab, Vector3.zero, Quaternion.identity);
-        }
+        //// 맵 오브젝트 생성
+        //if (currentMapData.mapPrefab != null)
+        //{
+        //    Instantiate(currentMapData.mapPrefab, Vector3.zero, Quaternion.identity);
+        //}
 
         ShuffleList(spawnEnemyCells);
         int spawnEnemyCount = Mathf.Min(spawnEnemyCells.Count, battleData.monsterNames.Count);
         GenerateEnemy(currentMapData, battleData.monsterNames, spawnEnemyCount);
 
-        ShuffleList(spawnTrapCells);
-        Debug.Log($"Spawn Trap Cells: {spawnTrapCells.Count}");
-        GenerateTrap(currentMapData, spawnTrapCells.Count);
+        //ShuffleList(spawnTrapCells);
+        //Debug.Log($"Spawn Trap Cells: {spawnTrapCells.Count}");
+        //GenerateTrap(currentMapData, spawnTrapCells.Count);
 
-        ShuffleList(spawnObstacleCells);
-        Debug.Log($"Spawn Obstacle Cells: {spawnObstacleCells.Count}");
-        GenerateObstacle(currentMapData, spawnObstacleCells.Count);
+        //ShuffleList(spawnObstacleCells);
+        //Debug.Log($"Spawn Obstacle Cells: {spawnObstacleCells.Count}");
+        //GenerateObstacle(currentMapData, spawnObstacleCells.Count);
 
+        SpawnPlayerInMap(currentMapData, spawnPlayerCells.Count);
+
+    }
+
+    private void GenerateObjectInMap(string objectID, Vector2Int pos)
+    {
+        if (AssetCacheManager.instance.TryGetModel(objectID, out GameObject prefab))
+        {
+            GameObject spawned = Instantiate(prefab);
+
+            Vector3 worldPos = new Vector3(
+                        pos.x * currentMapData.cellSize + currentMapData.gridOffset.x,
+                        currentMapData.gridOffset.y,
+                        pos.y * currentMapData.cellSize + currentMapData.gridOffset.z
+                    );
+
+            spawned.transform.position = worldPos;
+            spawned.transform.SetParent(mapSpawnRoot);
+        }
     }
 
     public void GenerateEnemy(MapDataSO mapData, List<string> spawnMonsterList, int spawnCount)
@@ -113,105 +160,122 @@ public class MapManager : MonoBehaviour
         // 예시에서는 NPC 데이터와 프리팹을 탐색하여 생성하는 방식으로 작성
     }
 
-    public void GenerateTrap(MapDataSO mapData, int trapCount)
+    //public void GenerateTrap(MapDataSO mapData, int trapCount)
+    //{
+    //    // 함정 생성 로직 (적 생성과 유사하게 구현)
+    //    for (int i = 0; i < trapCount; i++)
+    //    {
+    //        CellData cell = spawnTrapCells[i];
+
+    //        // 함정 이름 탐색 (고정 ID가 있으면 그것을 사용하고, 그렇지 않으면 맵 데이터에서 무작위로 선택)
+    //        string trapName = "";
+    //        //if (cell.fixedId != null && cell.fixedId != "")
+    //        //{
+    //        //    trapName = cell.fixedId;
+    //        //}
+    //        //else
+    //        //{
+    //            trapName = mapDataInfo.appearTrapsDataPath[Random.Range(0, mapDataInfo.appearTrapsDataPath.Count)];
+    //        //}
+
+    //        Debug.Log($"Check {name}...");
+    //        //캐싱된 데이터에서 함정 데이터 탐색
+    //        if (AssetCacheManager.instance.TryGetTrap(trapName, out var newTrapData))
+    //        {
+    //            Debug.Log($"TrapData {newTrapData.name} Load Success.");
+    //            //함정 데이터에 맞는 프리팹 탐색
+    //            if (AssetCacheManager.instance.TryGetModel(newTrapData.objectPath, out var trapPrefab))
+    //            {
+    //                Debug.Log("Trapprefab Load Success.");
+
+    //                // 셀의 그리드 좌표를 실제 월드 좌표로 변환 (셀 크기 및 오프셋 적용)
+    //                Vector3 worldPos = new Vector3(
+    //                    cell.position.x * mapData.cellSize + mapData.gridOffset.x,
+    //                    mapData.gridOffset.y,
+    //                    cell.position.y * mapData.cellSize + mapData.gridOffset.z
+    //                );
+
+    //                // 함정 생성
+    //                GameObject newTrap = Instantiate(trapPrefab, worldPos, Quaternion.identity);
+
+    //                currentSpawnEtcList.Add(newTrap);
+    //            }
+    //        }
+    //        else
+    //        {
+    //            Debug.LogWarning($"Failed to Find TrapData for {trapName}");
+    //        }
+    //    }
+    //}
+
+    //public void GenerateObstacle(MapDataSO mapData, int obstacleCount)
+    //{
+    //    // 장애물 생성 로직 (적 생성과 유사하게 구현)
+    //    for (int i = 0; i < obstacleCount; i++)
+    //    {
+    //        CellData cell = spawnObstacleCells[i];
+    //        // 장애물 이름 탐색 (고정 ID가 있으면 그것을 사용하고, 그렇지 않으면 맵 데이터에서 무작위로 선택)
+    //        string obstacleName = "";
+    //        //if (cell.fixedId != null && cell.fixedId != "")
+    //        //{
+    //        //    obstacleName = cell.fixedId;
+    //        //}
+    //        //else
+    //        //{
+    //            obstacleName = mapDataInfo.appearObstaclesDataPath[Random.Range(0, mapDataInfo.appearObstaclesDataPath.Count)];
+    //        //}
+    //        Debug.Log($"Check {name}...");
+    //        //캐싱된 데이터에서 장애물 데이터 탐색
+    //        if (AssetCacheManager.instance.TryGetObstacle(obstacleName, out var newObstacleData))
+    //        {
+    //            Debug.Log($"ObstacleData {newObstacleData.name} Load Success.");
+    //            //장애물 데이터에 맞는 프리팹 탐색
+    //            if (AssetCacheManager.instance.TryGetModel(newObstacleData.objectPath, out var obstaclePrefab))
+    //            {
+    //                Debug.Log("Obstacleprefab Load Success.");
+    //                // 셀의 그리드 좌표를 실제 월드 좌표로 변환 (셀 크기 및 오프셋 적용)
+    //                Vector3 worldPos = new Vector3(
+    //                    cell.position.x * mapData.cellSize + mapData.gridOffset.x,
+    //                    mapData.gridOffset.y,
+    //                    cell.position.y * mapData.cellSize + mapData.gridOffset.z
+    //                );
+    //                // 장애물 생성
+    //                GameObject newObstacle = Instantiate(obstaclePrefab, worldPos, Quaternion.identity);
+    //                currentSpawnEtcList.Add(newObstacle);
+    //            }
+    //            else
+    //            {
+    //                Debug.LogWarning($"Failed to Find Obstacle Prefab for {obstacleName}");
+    //            }
+    //        }
+    //        else
+    //        {
+    //            Debug.LogWarning($"Failed to Find ObstacleData for {obstacleName}");
+    //        }
+    //    }
+    //}
+
+    public void SpawnPlayerInMap(MapDataSO mapData, int spawnCount)
     {
-        // 함정 생성 로직 (적 생성과 유사하게 구현)
-        for (int i = 0; i < trapCount; i++)
+        if (spawnPlayerCells.Count == 0)
         {
-            CellData cell = spawnTrapCells[i];
-
-            // 함정 이름 탐색 (고정 ID가 있으면 그것을 사용하고, 그렇지 않으면 맵 데이터에서 무작위로 선택)
-            string trapName = "";
-            if (cell.fixedId != null && cell.fixedId != "")
-            {
-                trapName = cell.fixedId;
-            }
-            else
-            {
-                trapName = mapDataInfo.appearTrapsDataPath[Random.Range(0, mapDataInfo.appearTrapsDataPath.Count)];
-            }
-
-            Debug.Log($"Check {name}...");
-            //캐싱된 데이터에서 함정 데이터 탐색
-            if (AssetCacheManager.instance.TryGetTrap(trapName, out var newTrapData))
-            {
-                Debug.Log($"TrapData {newTrapData.name} Load Success.");
-                //함정 데이터에 맞는 프리팹 탐색
-                if (AssetCacheManager.instance.TryGetModel(newTrapData.objectPath, out var trapPrefab))
-                {
-                    Debug.Log("Trapprefab Load Success.");
-
-                    // 셀의 그리드 좌표를 실제 월드 좌표로 변환 (셀 크기 및 오프셋 적용)
-                    Vector3 worldPos = new Vector3(
-                        cell.position.x * mapData.cellSize + mapData.gridOffset.x,
-                        mapData.gridOffset.y,
-                        cell.position.y * mapData.cellSize + mapData.gridOffset.z
-                    );
-
-                    // 함정 생성
-                    GameObject newTrap = Instantiate(trapPrefab, worldPos, Quaternion.identity);
-
-                    currentSpawnEtcList.Add(newTrap);
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"Failed to Find TrapData for {trapName}");
-            }
+            Debug.LogWarning("No Player Spawn Cells Found in Map Data!");
+            return;
         }
-    }
+        ShuffleList(spawnPlayerCells);
 
-    public void GenerateObstacle(MapDataSO mapData, int obstacleCount)
-    {
-        // 장애물 생성 로직 (적 생성과 유사하게 구현)
-        for (int i = 0; i < obstacleCount; i++)
+        // 셀의 그리드 좌표를 실제 월드 좌표로 변환 (셀 크기 및 오프셋 적용)
+        Vector3 worldPos = new Vector3(
+            spawnPlayerCells[0].position.x * mapData.cellSize + mapData.gridOffset.x,
+            mapData.gridOffset.y,
+            spawnPlayerCells[0].position.y * mapData.cellSize + mapData.gridOffset.z
+        );
+        //플레이어 이동 및 타일 정보 업데이트
+        RunManager.instance.player.character.transform.position = worldPos;
+        if (RunManager.instance.player.character.characterMove != null)
         {
-            CellData cell = spawnObstacleCells[i];
-            // 장애물 이름 탐색 (고정 ID가 있으면 그것을 사용하고, 그렇지 않으면 맵 데이터에서 무작위로 선택)
-            string obstacleName = "";
-            if (cell.fixedId != null && cell.fixedId != "")
-            {
-                obstacleName = cell.fixedId;
-            }
-            else
-            {
-                obstacleName = mapDataInfo.appearObstaclesDataPath[Random.Range(0, mapDataInfo.appearObstaclesDataPath.Count)];
-            }
-            Debug.Log($"Check {name}...");
-            //캐싱된 데이터에서 장애물 데이터 탐색
-            if (AssetCacheManager.instance.TryGetObstacle(obstacleName, out var newObstacleData))
-            {
-                Debug.Log($"ObstacleData {newObstacleData.name} Load Success.");
-                //장애물 데이터에 맞는 프리팹 탐색
-                if (AssetCacheManager.instance.TryGetModel(newObstacleData.objectPath, out var obstaclePrefab))
-                {
-                    Debug.Log("Obstacleprefab Load Success.");
-                    // 셀의 그리드 좌표를 실제 월드 좌표로 변환 (셀 크기 및 오프셋 적용)
-                    Vector3 worldPos = new Vector3(
-                        cell.position.x * mapData.cellSize + mapData.gridOffset.x,
-                        mapData.gridOffset.y,
-                        cell.position.y * mapData.cellSize + mapData.gridOffset.z
-                    );
-                    // 장애물 생성
-                    GameObject newObstacle = Instantiate(obstaclePrefab, worldPos, Quaternion.identity);
-                    currentSpawnEtcList.Add(newObstacle);
-                }
-                else
-                {
-                    Debug.LogWarning($"Failed to Find Obstacle Prefab for {obstacleName}");
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"Failed to Find ObstacleData for {obstacleName}");
-            }
+            RunManager.instance.player.character.characterMove.SetCurrentTile(map[spawnPlayerCells[0].position.x][spawnPlayerCells[0].position.y]);
         }
-    }
-
-    public void GeneratePlayer(MapDataSO mapData, int playerCount)
-    {
-        // 플레이어 생성 로직 (적 생성과 유사하게 구현)
-        // 예시에서는 플레이어 데이터와 프리팹을 탐색하여 생성하는 방식으로 작성
     }
 
     public void TileCreateByMapData()
@@ -250,40 +314,40 @@ public class MapManager : MonoBehaviour
 
     public void ApplyVariationLayout()
     {
-        foreach (var cell in currentMapData.cells)
-        {
-            switch (cell.cellType)
-            {
-                case CellType.RandomObstacleMarker:
-                case CellType.FixedObstacle:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Obstacle;
-                    spawnObstacleCells.Add(cell);
-                    break;
-                case CellType.PlayerSpawn:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
-                    spawnPlayerCells.Add(cell);
-                    break;
-                case CellType.EnemySpawn:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
-                    spawnEnemyCells.Add(cell);
-                    break;
-                case CellType.NPCSpawn:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
-                    spawnNPCCells.Add(cell);
-                    break;
-                case CellType.RandomTrapMarker:
-                case CellType.FixedTrap:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Trap;
-                    spawnTrapCells.Add(cell);
-                    break;
-                case CellType.Wall:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Full;
-                    break;
-                case CellType.Floor:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
-                    break;
-            }
-        }
+    //    foreach (var cell in currentMapData.cells)
+    //    {
+    //        switch (cell.cellType)
+    //        {
+    //            case CellType.RandomObstacleMarker:
+    //            case CellType.FixedObstacle:
+    //                map[cell.position.x][cell.position.y].tileState = TileState.Obstacle;
+    //                spawnObstacleCells.Add(cell);
+    //                break;
+    //            case CellType.PlayerSpawn:
+    //                map[cell.position.x][cell.position.y].tileState = TileState.Empty;
+    //                spawnPlayerCells.Add(cell);
+    //                break;
+    //            case CellType.EnemySpawn:
+    //                map[cell.position.x][cell.position.y].tileState = TileState.Empty;
+    //                spawnEnemyCells.Add(cell);
+    //                break;
+    //            case CellType.NPCSpawn:
+    //                map[cell.position.x][cell.position.y].tileState = TileState.Empty;
+    //                spawnNPCCells.Add(cell);
+    //                break;
+    //            case CellType.RandomTrapMarker:
+    //            case CellType.FixedTrap:
+    //                map[cell.position.x][cell.position.y].tileState = TileState.Trap;
+    //                spawnTrapCells.Add(cell);
+    //                break;
+    //            case CellType.Wall:
+    //                map[cell.position.x][cell.position.y].tileState = TileState.Full;
+    //                break;
+    //            case CellType.Floor:
+    //                map[cell.position.x][cell.position.y].tileState = TileState.Empty;
+    //                break;
+    //        }
+    //    }
     }
 
     //이동할 수 있는 타일들의 외각을 표시해주는 함수

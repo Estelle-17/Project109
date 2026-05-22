@@ -12,7 +12,7 @@ public class PlayerMove
 
     public List<Tile> canMoveTiles;
 
-    public BattleMapManager battleMap;
+    public MapManager battleMap;
     public RoutePathfinding routePathfinding;
 
     public PlayerMove(CharacterMove characterMove)

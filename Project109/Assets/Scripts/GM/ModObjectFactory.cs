@@ -19,27 +19,26 @@ public static class ModObjectFactory
             return null;
         }
 
-        // 2. Lua 로직 테이블 로드 (require 사용)
-        LuaTable luaLogic = null;
-        if (!string.IsNullOrEmpty(data.effectName))
+        // 2. Lua 로직 테이블 인스턴스화 (NewInstance 사용)
+        LuaTable luaInstance = null;
+        if (data.luaPrototype != null)
         {
             try
             {
-                // LuaEnv를 통해 스크립트를 실행하여 반환된 테이블을 가져옴
-                object[] results = LuaManager.Instance.luaEnv.DoString($"return require('{data.effectName}')");
-                if (results != null && results.Length > 0)
+                var newInstanceFunc = LuaManager.Instance.luaEnv.Global.Get<System.Func<LuaTable, LuaTable>>("NewInstance");
+                if (newInstanceFunc != null)
                 {
-                    luaLogic = results[0] as LuaTable;
+                    luaInstance = newInstanceFunc(data.luaPrototype);
                 }
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"[ModObjectFactory] '{data.effectName}' Lua 스크립트 로드 실패:\n{e.Message}");
+                Debug.LogError($"[ModObjectFactory] '{data.effectName}' Lua 인스턴스 생성 실패:\n{e.Message}");
             }
         }
 
         // 3. 인스턴스 조립 및 반환
-        return new EffectBase(data, luaLogic);
+        return new EffectBase(data, luaInstance);
     }
 
     /// <summary>
@@ -55,25 +54,25 @@ public static class ModObjectFactory
             return null;
         }
 
-        // 2. Lua 로직 테이블 로드
-        LuaTable luaLogic = null;
-        if (!string.IsNullOrEmpty(data.relicName))
+        // 2. Lua 로직 테이블 인스턴스화 (NewInstance 사용)
+        LuaTable luaInstance = null;
+        if (data.luaPrototype != null)
         {
             try
             {
-                object[] results = LuaManager.Instance.luaEnv.DoString($"return require('{data.relicName}')");
-                if (results != null && results.Length > 0)
+                var newInstanceFunc = LuaManager.Instance.luaEnv.Global.Get<System.Func<LuaTable, LuaTable>>("NewInstance");
+                if (newInstanceFunc != null)
                 {
-                    luaLogic = results[0] as LuaTable;
+                    luaInstance = newInstanceFunc(data.luaPrototype);
                 }
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"[ModObjectFactory] '{data.relicName}' Lua 스크립트 로드 실패:\n{e.Message}");
+                Debug.LogError($"[ModObjectFactory] '{data.relicName}' Lua 인스턴스 생성 실패:\n{e.Message}");
             }
         }
 
         // 3. 인스턴스 조립 및 반환 (RelicBase는 owner를 받음)
-        return new RelicBase(data, owner, luaLogic);
+        return new RelicBase(data, owner, luaInstance);
     }
 }

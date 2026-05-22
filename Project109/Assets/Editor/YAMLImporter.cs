@@ -107,6 +107,7 @@ public class YAMLImporter
         Debug.Log("YAML import complete.");
     }
 
+    /* 
     [MenuItem("Tools/Import Relic YAML")]
     //[System.Obsolete]
     public static void ImportRelicYAML()
@@ -186,6 +187,7 @@ public class YAMLImporter
 
         Debug.Log("YAML import complete.");
     }
+    */
 
     [MenuItem("Tools/Import Event YAML")]
     //[System.Obsolete]
@@ -927,6 +929,7 @@ public class YAMLImporter
         public List<int> specificProperties { get; set; }
     }
 
+    /*
     public class RootRelicData
     {
         public List<RelicEntry> @relicCollection { get; set; }
@@ -943,6 +946,7 @@ public class YAMLImporter
         public string description { get; set; }
         public string upgradeDescription { get; set; }
     }
+    */
 
     public class RootEventData
     {

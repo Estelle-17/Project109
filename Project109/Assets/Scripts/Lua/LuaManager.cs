@@ -39,6 +39,37 @@ public class LuaManager
         
         // XLua 커스텀 로더 등록
         luaEnv.AddLoader(CustomModLoader);
+
+        // 전역 모딩 헬퍼 함수 주입
+        luaEnv.DoString(@"
+            -- 프로토타입으로부터 개별 인스턴스 테이블 생성 함수
+            function NewInstance(proto)
+                if not proto then return nil end
+                local inst = {}
+                setmetatable(inst, { __index = proto })
+                return inst
+            end
+
+            -- 이펙트 정의 헬퍼 함수
+            function DefineEffect(name)
+                local effect = {}
+                function effect:OnInit(effectBase)
+                    self.base = effectBase
+                end
+                _G[name] = effect -- return 누락 시 폴백용 전역 등록
+                return effect
+            end
+
+            -- 유물 정의 헬퍼 함수
+            function DefineRelic(name)
+                local relic = {}
+                function relic:OnInit(relicBase)
+                    self.base = relicBase
+                end
+                _G[name] = relic -- return 누락 시 폴백용 전역 등록
+                return relic
+            end
+        ");
     }
 
     /// <summary>

@@ -1,18 +1,19 @@
+using EventStructs;
 using System;
 using System.Collections.Generic;
 using XLua;
-using EventStructs;
 
 public class RelicBase : IDescribable
 {
     public RelicData Data { get; private set; }
     public int Counter { get; set; }
 
-    private Player owner;
-    private LuaTable luaLogic;
-    
+    private readonly Player owner;
+    private readonly LuaTable luaLogic;
+
     // 이벤트 구독 해제를 위해 만들어진 프록시 객체들을 담아둘 리스트
-    private List<object> activeProxies = new List<object>();
+
+    private readonly List<object> activeProxies = new();
 
     public RelicBase(RelicData data, Player owner, LuaTable luaLogic)
     {
@@ -48,7 +49,8 @@ public class RelicBase : IDescribable
         {
             LuaEventBinder.UnbindCharacterEvents(owner.character.eventBus, activeProxies);
         }
-        
+
+
         if (owner.eventBus != null)
         {
             LuaEventBinder.UnbindPlayerEvents(owner.eventBus, activeProxies);

@@ -14,7 +14,7 @@ function relic:OnBattleStart()
 
     -- StaminaInfo(caster, target, baseAmount)
     -- 자기 자신이 출처이므로 caster = target = character
-    local info = CS.EventStructs.StaminaInfo(character, character, 40)
+    local info = EventStructs.StaminaInfo(character, character, 40)
     character:TakeStamina(info)
 end
 

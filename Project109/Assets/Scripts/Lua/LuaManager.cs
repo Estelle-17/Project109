@@ -69,6 +69,27 @@ public class LuaManager
                 _G[name] = relic -- return 누락 시 폴백용 전역 등록
                 return relic
             end
+
+            -- 화이트리스트 테이블 생성 및 CS 전역 공간 제거
+            EventStructs = {
+                DamageInfo = CS.EventStructs.DamageInfo,
+                HealInfo = CS.EventStructs.HealInfo,
+                StaminaInfo = CS.EventStructs.StaminaInfo,
+                ShieldInfo = CS.EventStructs.ShieldInfo,
+                CardInfo = CS.EventStructs.CardInfo,
+                MoveInfo = CS.EventStructs.MoveInfo,
+                EffectInfo = CS.EventStructs.EffectInfo,
+
+                DamageFlag = CS.EventStructs.DamageFlag,
+                HealFlag = CS.EventStructs.HealFlag,
+                StaminaFlag = CS.EventStructs.StaminaFlag,
+                ShieldFlag = CS.EventStructs.ShieldFlag,
+                CardFlag = CS.EventStructs.CardFlag,
+                MoveFlag = CS.EventStructs.MoveFlag,
+                EffectFlag = CS.EventStructs.EffectFlag,
+            }
+
+            CS = nil
         ");
     }
 

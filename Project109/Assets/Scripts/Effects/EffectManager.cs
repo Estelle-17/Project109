@@ -7,19 +7,18 @@ public class EffectManager
     public event Action<EffectBase> OnEffectStacked;
     public event Action<EffectBase> OnEffectRemoved;
 
-    private List<EffectBase> effects = new List<EffectBase>();
-
-    private Character target;
+    private readonly List<EffectBase> effects = new();
+    private readonly Character target;
 
     public EffectManager(Character character)
     {
-        this.target = character;
+        target = character;
     }
 
     public void AddEffect(Character caster, EffectBase effect, int stack = 1, float duration = 0f)
     {
         EffectBase existing = null;
-        
+
         // 독립적인 버프(isIndependent)가 아닐 때만 기존 동일 이름의 버프를 찾아서 스택을 쌓음
         if (effect.Data == null || !effect.Data.isIndependent)
         {
@@ -52,7 +51,7 @@ public class EffectManager
     {
         for (int i = effects.Count - 1; i >= 0; i--)
         {
-            if(effects[i].Data != null && effects[i].Data.isPermanent) continue;
+            if (effects[i].Data != null && effects[i].Data.isPermanent) continue;
 
             effects[i].elapsedSinceLastTick += deltaTime;
             if (effects[i].elapsedSinceLastTick >= EffectBase.tickInterval)

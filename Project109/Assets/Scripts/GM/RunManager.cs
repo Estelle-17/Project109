@@ -12,6 +12,8 @@ public class RunManager : MonoBehaviour
 {
     public static RunManager instance { get; private set; }
 
+    public BattleManager battleManager { get; private set; }
+
     private void Awake()
     {
         if (instance == null)
@@ -19,6 +21,7 @@ public class RunManager : MonoBehaviour
             instance = this;
 
             // DontDestroyOnLoad(this.gameObject);
+            battleManager = new BattleManager();
         }
         else
         {
@@ -101,6 +104,14 @@ public class RunManager : MonoBehaviour
 
         //불러온 아이템들 세분화 진행
         GameItemRewardManager.instance.UpdateItemList();
+    }
+
+    private void Update()
+    {
+        if (currentMapState == MapState.Battle)
+        {
+            battleManager?.Update(Time.deltaTime);
+        }
     }
 
     public void InitRun()

@@ -10,32 +10,8 @@ public enum BattleState
     BattleEnd,
 }
 
-public class BattleManager : MonoBehaviour
+public class BattleManager
 {
-    private static BattleManager _instance;
-    public static BattleManager instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                var go = new GameObject("BattleManager");
-                _instance = go.AddComponent<BattleManager>();
-            }
-            return _instance;
-        }
-    }
-
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        _instance = this;
-    }
-
     #region Battle State
 
     public BattleState battleState { get; private set; } = BattleState.None;
@@ -51,6 +27,9 @@ public class BattleManager : MonoBehaviour
 
     public void InitBattle(List<ICharacterController> players, List<ICharacterController> enemies)
     {
+        // 이전 전투 잔여 데이터 강제 정리
+        ClearBattle();
+
         playerTeam = new List<ICharacterController>(players);
         enemyTeam = new List<ICharacterController>(enemies);
 
@@ -90,17 +69,17 @@ public class BattleManager : MonoBehaviour
         combatant.controlledCharacter.OnCharacterDied += OnCharacterDied;
     }
 
-    private void Update()
+    public void Update(float dt)
     {
         if (battleState != BattleState.Combat) return;
 
-        float dt = Time.deltaTime * battleTimeScale;
+        float scaledDt = dt * battleTimeScale;
 
         // 플레이어 팀 먼저 틱 (동시 MAX 시 플레이어 우선)
         foreach (var combatant in playerTeam)
-            combatant.controlledCharacter.BattleTick(dt);
+            combatant.controlledCharacter.BattleTick(scaledDt);
         foreach (var combatant in enemyTeam)
-            combatant.controlledCharacter.BattleTick(dt);
+            combatant.controlledCharacter.BattleTick(scaledDt);
     }
 
     public void RequestTurnStart(Character character)
@@ -135,6 +114,7 @@ public class BattleManager : MonoBehaviour
         currentTurnController.OnTurnEnd();
 
         currentTurnController.controlledCharacter.ResetStamina();
+        currentTurnController.controlledCharacter.UpdateShieldDuration(); // 턴 종료 시 실드 지속 시간 업데이트
 
         currentTurnController = null;
         battleState = BattleState.Combat;
@@ -183,6 +163,19 @@ public class BattleManager : MonoBehaviour
             combatant.controlledCharacter.eventBus.Invoke<IOnBattleEnd>(a => a.OnBattleEnd());
             combatant.controlledCharacter.OnCharacterDied -= OnCharacterDied;
         }
+
+        playerTeam.Clear();
+        enemyTeam.Clear();
+        currentTurnController = null;
+    }
+
+    /// <summary>
+    /// 전투 종료 및 매니저 상태 완전 초기화
+    /// </summary>
+    public void ClearBattle()
+    {
+        CleanupCombatants();
+        battleState = BattleState.None;
     }
 
     #endregion

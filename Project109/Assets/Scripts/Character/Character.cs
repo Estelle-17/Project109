@@ -13,6 +13,7 @@ public enum CharacterState
     Die
 }
 
+
 public class Character : MonoBehaviour
 {
     #region CharacterStat
@@ -39,7 +40,7 @@ public class Character : MonoBehaviour
 
             curHealth = characterStat.maxHealth;
             curStamina = 0f;
-            
+
             curMoveCount = characterStat.maxMoveCount;
             curTilesPerMove = characterStat.maxTilesPerMove;
         }
@@ -85,6 +86,7 @@ public class Character : MonoBehaviour
         }
     }
 
+
     public bool isDead = false;
 
     [SerializeField]
@@ -123,7 +125,7 @@ public class Character : MonoBehaviour
 
         if (curStamina >= curCharacterStat.maxStamina)
         {
-            BattleManager.instance.RequestTurnStart(this);
+            RunManager.instance.battleManager.RequestTurnStart(this);
         }
     }
 
@@ -167,7 +169,7 @@ public class Character : MonoBehaviour
 
         float finalDamage = info.baseDamageAmount * info.damageMultiplier;
         info.finalDamageAmount = finalDamage;
-        
+
         info.shieldDamageAmount = 0f;
         info.hpDamageAmount = 0f;
 
@@ -182,13 +184,14 @@ public class Character : MonoBehaviour
                 if (shield <= 0f)
                 {
                     shield = 0f;
+                    shieldDurationTurns = 0; // 실드가 파괴되었으므로 지속 턴 수 리셋
                     info.isShieldBroken = true;
                     OnCharacterShieldChanged?.Invoke(this);
 
                     // 실드 파괴 즉시 이벤트 발생
                     if (!info.damageFlags.HasFlag(DamageFlag.NoCasterEvents) && info.caster != null)
                         info.caster.eventBus?.Invoke<IOnBreakShield>(l => l.OnBreakShield(info));
-                    
+
                     if (!info.damageFlags.HasFlag(DamageFlag.NoTargetEvents))
                         this.eventBus?.Invoke<IOnShieldBroken>(l => l.OnShieldBroken(info));
                 }
@@ -270,7 +273,7 @@ public class Character : MonoBehaviour
         this.eventBus?.Invoke<IOnBeforeTakeStamina>(l => l.OnBeforeTakeStamina(ref info));
 
         float gainAmount = info.baseStaminaAmount * info.staminaMultiplier;
-        
+
         if (info.staminaFlags.HasFlag(StaminaFlag.OverStamina))
         {
             curStamina += gainAmount;
@@ -322,6 +325,24 @@ public class Character : MonoBehaviour
         if (info.caster != null)
             info.caster.eventBus?.Invoke<IOnAfterGiveShield>(l => l.OnAfterGiveShield(info));
         this.eventBus?.Invoke<IOnAfterTakeShield>(l => l.OnAfterTakeShield(info));
+    }
+
+    /// <summary>
+    /// 턴 종료 시 호출하여 실드 지속 시간을 1 감소시킵니다.
+    /// 0 이하가 되면 실드 값을 0으로 만들고 지속 시간을 0으로 리셋합니다.
+    /// </summary>
+    public void UpdateShieldDuration()
+    {
+        if (shield > 0f)
+        {
+            shieldDurationTurns--;
+            if (shieldDurationTurns <= 0)
+            {
+                shield = 0f;
+                shieldDurationTurns = 0; // 실드가 만료되었으므로 지속 턴 수 리셋
+                OnCharacterShieldChanged?.Invoke(this);
+            }
+        }
     }
 
     public void TakeEffect(EffectInfo info)

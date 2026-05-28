@@ -31,9 +31,6 @@ public class AddressableDataLoader : MonoBehaviour
     public string characterKey = "Character";
     public string modelKey = "Model";
 
-    public IList<ActionCardData> cardList;
-    private Dictionary<string, ActionCardData> cardDict = new Dictionary<string, ActionCardData>();
-
     public IList<RelicData> relicList;
     private Dictionary<string, RelicData> relicDict = new Dictionary<string, RelicData>();
 
@@ -59,16 +56,6 @@ public class AddressableDataLoader : MonoBehaviour
 
     void LoadAllData()
     {
-        LoadAndCache<ActionCardData>(cardKey, (list, dict) =>
-        {
-            cardList = list;
-            cardDict = dict;
-        });
-        // LoadAndCache<RelicData>(relicKey, (list, dict) =>
-        //{
-        // relicList = list;
-        // relicDict = dict;
-        //});
         LoadAndCache<EventData>(eventKey, (list, dict) =>
         {
             eventList = list;
@@ -157,7 +144,7 @@ public class AddressableDataLoader : MonoBehaviour
         };
     }
 
-    public bool TryGetCard(string name, out ActionCardData card) => cardDict.TryGetValue(name, out card);
+
     public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
     public bool TryGetRelic(string name, out RelicData relic) => relicDict.TryGetValue(name, out relic);
     public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);

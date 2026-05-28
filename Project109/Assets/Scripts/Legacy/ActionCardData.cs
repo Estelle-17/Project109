@@ -1,3 +1,4 @@
+#if false
 using UnityEngine;
 using System.Collections.Generic;
 using GameItem.Types;
@@ -31,3 +32,4 @@ public class ActionCardData : ScriptableObject, IIdentifiable
     public string ID => path;
     public int runtimeID;
 }
+#endif

@@ -1,5 +1,7 @@
+#if false
 using UnityEngine;
 using System.Collections.Generic;
+using System.Uri;
 using System;
 using System.Linq;
 using GameItem.Types;
@@ -145,3 +147,4 @@ public class CardDeckManager : MonoBehaviour
         return newCard;
     }
 }
+#endif

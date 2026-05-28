@@ -53,8 +53,6 @@ public class AssetCacheManager : MonoBehaviour
     public string obstacleKey = "Obstacle";
     public string trapKey = "Trap";
 
-    public IList<ActionCardData> cardList;
-    private Dictionary<string, ActionCardData> cardDict = new Dictionary<string, ActionCardData>();
 
     public IList<EventData> eventList;
     private Dictionary<string, EventData> eventDict = new Dictionary<string, EventData>();
@@ -98,13 +96,6 @@ public class AssetCacheManager : MonoBehaviour
 
     private IEnumerator Start()
     {
-        //카드 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<ActionCardData>(cardKey, (list, dict) =>
-        {
-            cardList = list;
-            cardDict = dict;
-        }));
-
 
 
         //이벤트 데이터 할당 시작
@@ -254,6 +245,9 @@ public class AssetCacheManager : MonoBehaviour
         {
             Debug.LogWarning("Cannot find ModManager.");
         }
+
+        // YAML 기반 모드 로드 (이펙트, 유물, 카드 데이터 데이터베이스 구축)
+        ModLoader.Instance.LoadAllMods();
 
         Debug.Log("All Data Load is Complete.");
 
@@ -425,7 +419,7 @@ public class AssetCacheManager : MonoBehaviour
         }
     }
 
-    public bool TryGetCard(string name, out ActionCardData card) => cardDict.TryGetValue(name, out card);
+
     public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
     public bool TryGetMonsterReward(string name, out MonsterRewardData reward) => monsterRewardDict.TryGetValue(name, out reward);
     public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);

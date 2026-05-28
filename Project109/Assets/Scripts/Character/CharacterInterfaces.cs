@@ -67,9 +67,9 @@ public interface ICharacterEvent { }
     public interface IOnAfterUseCard : ICharacterEvent  { void OnAfterUseCard(CardInfo info); }
     public interface IOnTryUseCard : ICharacterEvent { void OnTryUseCard(CardInfo info); }
     public interface IOnDiscardCard : ICharacterEvent { void OnDiscardCard(CardInfo info); }
-    public interface IOnDrawCard : ICharacterEvent { void OnDrawCard(ActionCardData cardData); }
+    public interface IOnDrawCard : ICharacterEvent { void OnDrawCard(CardBase cardData); }
     public interface IOnExhaustCard : ICharacterEvent { void OnExhaustCard(CardInfo info); }
-    public interface IOnShuffleDeck : ICharacterEvent { void OnShuffleDeck(List<ActionCardData> deck); }
+    public interface IOnShuffleDeck : ICharacterEvent { void OnShuffleDeck(List<CardBase> deck); }
     public interface IOnEraseCard : ICharacterEvent { void OnEraseCard(CardInfo info); }
 
 #endregion

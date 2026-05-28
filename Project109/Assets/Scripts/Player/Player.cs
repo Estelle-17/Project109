@@ -13,7 +13,8 @@ public class Player
     public EventBus<IPlayerEvent> eventBus = new EventBus<IPlayerEvent>();
 
     // 카드 덱 (런 전체에서 유지되는 전체 카드 풀)
-    public List<ActionCardData> masterDeck = new();
+    public PlayerDeck deck { get; private set; }
+    public List<CardBase> masterDeck => deck.GetCards();
 
     // 유물 관리자
     public RelicManager relicManager;
@@ -22,6 +23,7 @@ public class Player
     {
         this.character = character;
         this.playerStat = new PlayerStat();
+        this.deck = new PlayerDeck(this);
 
         // 초기 스탯 세팅
         this.playerStat.inGame_Currency_Gold = 0;
@@ -34,16 +36,14 @@ public class Player
         this.relicManager = new RelicManager(this);
     }
 
-    public void AddCardToDeck(ActionCardData card)
+    public void AddCardToDeck(CardBase card)
     {
-        eventBus.Invoke<IOnAddCard>(c => c.OnAddCard(card));    
-        masterDeck.Add(card);
+        deck.AddCard(card);
     }
 
-    public void RemoveCardFromDeck(ActionCardData card)
+    public void RemoveCardFromDeck(CardBase card)
     {
-        eventBus.Invoke<IOnRemoveCard>(c => c.OnRemoveCard(card));
-        masterDeck.Remove(card);
+        deck.RemoveCard(card);
     }
 
     // 유물 관련 기능들은 backward compatibility 혹은 편의성을 위해 RelicManager로 위임

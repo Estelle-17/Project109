@@ -2,17 +2,20 @@ using EventStructs;
 
 public interface IPlayerEvent {}
 
-#region ?좊Ъ 愿???명꽣?섏씠??
+#region ?좊Ъ 愿€???명꽣?섏씠??
 public interface IOnAddRelic : IPlayerEvent { void OnAddRelic(RelicData relicData); }
 public interface IOnRemoveRelic : IPlayerEvent { void OnRemoveRelic(RelicData relicData); }
 #endregion
 
-#region 移대뱶 愿???명꽣?섏씠??
-public interface IOnAddCard : IPlayerEvent { void OnAddCard(ActionCardData cardData); }
-public interface IOnRemoveCard : IPlayerEvent { void OnRemoveCard(ActionCardData cardData); }
+#region 移대뱶 愿€???명꽣?섏씠??
+public interface IOnAddCard : IPlayerEvent { void OnAddCard(CardBase cardData); }
+public interface IOnRemoveCard : IPlayerEvent { void OnRemoveCard(CardBase cardData); }
+public interface IOnCardUpgrade : IPlayerEvent { void OnCardUpgrade(CardBase cardData); }
+public interface IOnCardEvolve : IPlayerEvent { void OnCardEvolve(CardBase cardData); }
+public interface IOnCardsRefreshed : IPlayerEvent { void OnCardsRefreshed(); }
 #endregion
 
-#region ?ы솕 愿???명꽣?섏씠??
+#region ?ы솕 愿€???명꽣?섏씠??
 public interface IOnAddGold : IPlayerEvent { void OnAddGold(int gold); }
 public interface IOnRemoveGold : IPlayerEvent { void OnRemoveGold(int gold); }
 

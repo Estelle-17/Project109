@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 public class EffectManager
 {
-    public event Action<EffectBase> OnEffectAdded;
-    public event Action<EffectBase> OnEffectStacked;
-    public event Action<EffectBase> OnEffectRemoved;
+    public event Action<Effect> OnEffectAdded;
+    public event Action<Effect> OnEffectStacked;
+    public event Action<Effect> OnEffectRemoved;
 
-    private readonly List<EffectBase> effects = new();
+    private readonly List<Effect> effects = new();
     private readonly Character target;
 
     public EffectManager(Character character)
@@ -15,9 +15,9 @@ public class EffectManager
         target = character;
     }
 
-    public void AddEffect(Character caster, EffectBase effect, int stack = 1, float duration = 0f)
+    public void AddEffect(Character caster, Effect effect, int stack = 1, float duration = 0f)
     {
-        EffectBase existing = null;
+        Effect existing = null;
 
         // 독립적인 버프(isIndependent)가 아닐 때만 기존 동일 이름의 버프를 찾아서 스택을 쌓음
         if (effect.Data == null || !effect.Data.isIndependent)
@@ -38,7 +38,7 @@ public class EffectManager
         }
     }
 
-    public void RemoveEffect(EffectBase effect)
+    public void RemoveEffect(Effect effect)
     {
         if (effects.Remove(effect))
         {
@@ -54,10 +54,10 @@ public class EffectManager
             if (effects[i].Data != null && effects[i].Data.isPermanent) continue;
 
             effects[i].elapsedSinceLastTick += deltaTime;
-            if (effects[i].elapsedSinceLastTick >= EffectBase.tickInterval)
+            if (effects[i].elapsedSinceLastTick >= Effect.tickInterval)
             {
                 effects[i].OnTick();
-                effects[i].elapsedSinceLastTick -= EffectBase.tickInterval;
+                effects[i].elapsedSinceLastTick -= Effect.tickInterval;
             }
 
             effects[i].currentDuration -= deltaTime;
@@ -66,7 +66,7 @@ public class EffectManager
                 effects[i].OnTimeOut();
                 if (effects[i].currentStack <= 0)
                 {
-                    EffectBase removedEffect = effects[i];
+                    Effect removedEffect = effects[i];
                     removedEffect.OnRemoved();
                     effects.RemoveAt(i);
                     OnEffectRemoved?.Invoke(removedEffect);

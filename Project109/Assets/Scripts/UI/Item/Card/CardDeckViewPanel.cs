@@ -4,7 +4,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Script Execution Order를 통해 CardDeckManager를 이 클래스보다 먼저 실행되도록 변경됨
 /// </summary>
-public class CardDeckViewManager : UIPanelBase
+public class CardDeckViewPanel : UIPanelBase, IOnAddCard, IOnRemoveCard, IOnCardUpgrade, IOnCardsRefreshed
 {
     public Transform contentTransform;
 
@@ -12,21 +12,20 @@ public class CardDeckViewManager : UIPanelBase
 
     private void OnEnable()
     {
-        if (CardDeckManager.instance != null)
+        if (RunManager.instance != null && RunManager.instance.player != null)
         {
-            CardDeckManager.instance.RequestAllCardRefresh();
+            RunManager.instance.player.deck.RequestAllCardRefresh();
         }
     }
 
     private void Awake()
     {
-        if (CardDeckManager.instance != null)
+        if (RunManager.instance != null && RunManager.instance.player != null)
         {
-            CardDeckManager.instance.OnCardAdded += HandleCardAdded;
-            CardDeckManager.instance.OnCardRemoved += HandleCardRemoved;
-            CardDeckManager.instance.OnCardsRefreshed += RefreshAllCardUIs;
-            CardDeckManager.instance.OnCardUpgrade += HandleCardUpgrade;
-            CardDeckManager.instance.OnCardEvolve += HandleCardEvolve;
+            RunManager.instance.player.eventBus.Add<IOnAddCard>(this);
+            RunManager.instance.player.eventBus.Add<IOnRemoveCard>(this);
+            RunManager.instance.player.eventBus.Add<IOnCardUpgrade>(this);
+            RunManager.instance.player.eventBus.Add<IOnCardsRefreshed>(this);
 
             gameObject.SetActive(false);
 
@@ -34,12 +33,20 @@ public class CardDeckViewManager : UIPanelBase
         }
         else
         {
-            Debug.LogWarning("CardDeckManager.instance is null!");
+            Debug.LogWarning("Player event bus is null!");
         }
     }
 
     private void OnDestroy()
     {
+        if (RunManager.instance != null && RunManager.instance.player != null)
+        {
+            RunManager.instance.player.eventBus.Remove<IOnAddCard>(this);
+            RunManager.instance.player.eventBus.Remove<IOnRemoveCard>(this);
+            RunManager.instance.player.eventBus.Remove<IOnCardUpgrade>(this);
+            RunManager.instance.player.eventBus.Remove<IOnCardsRefreshed>(this);
+        }
+
         foreach(GameObject uiObject in activeCardUIs.Values)
         {
             if(ObjectPoolManager.instance != null)
@@ -54,7 +61,27 @@ public class CardDeckViewManager : UIPanelBase
         activeCardUIs.Clear();
     }
 
-    private void HandleCardAdded(ActionCardData card)
+    public void OnAddCard(Card card)
+    {
+        HandleCardAdded(card);
+    }
+
+    public void OnRemoveCard(Card card)
+    {
+        HandleCardRemoved(card.runtimeID);
+    }
+
+    public void OnCardUpgrade(Card card)
+    {
+        HandleCardUpgrade(card.runtimeID);
+    }
+
+    public void OnCardsRefreshed()
+    {
+        RefreshAllCardUIs();
+    }
+
+    private void HandleCardAdded(Card card)
     {
         if(ObjectPoolManager.instance == null)
         {
@@ -62,11 +89,11 @@ public class CardDeckViewManager : UIPanelBase
             return;
         }
 
-        ActionCardHandler cardUI = ObjectPoolManager.instance.GetCardUI(contentTransform).GetComponent<ActionCardHandler>();
+        CardUI cardUI = ObjectPoolManager.instance.GetCardUI(contentTransform).GetComponent<CardUI>();
         
         if(cardUI != null && contentTransform != null)
         {
-            cardUI.UpdateActionCardData(card);
+            cardUI.UpdateCardInstance(card);
             AddCardClickEvent(cardUI);
 
             activeCardUIs.Add(card.runtimeID, cardUI.gameObject);
@@ -75,7 +102,10 @@ public class CardDeckViewManager : UIPanelBase
         }
         else
         {
-            ObjectPoolManager.instance.ReturnCardUI(cardUI.gameObject);
+            if (cardUI != null)
+            {
+                ObjectPoolManager.instance.ReturnCardUI(cardUI.gameObject);
+            }
         }
 
         Debug.Log("HandleCardAdded is end");
@@ -92,7 +122,6 @@ public class CardDeckViewManager : UIPanelBase
             else
             {
                 Destroy(cardUIObject);
-
             }
             activeCardUIs.Remove(runtimeID);      
         }
@@ -102,22 +131,10 @@ public class CardDeckViewManager : UIPanelBase
     {
         if (activeCardUIs.TryGetValue(runtimeID, out GameObject cardUIObject))
         {
-            ActionCardHandler cardHandler = cardUIObject.GetComponent<ActionCardHandler>();
-            if(cardHandler != null)
+            CardUI cardUI = cardUIObject.GetComponent<CardUI>();
+            if(cardUI != null)
             {
-                cardHandler.UpgradeCard();
-            }
-        }
-    }
-
-    private void HandleCardEvolve(int runtimeID)
-    {
-        if (activeCardUIs.TryGetValue(runtimeID, out GameObject cardUIObject))
-        {
-            ActionCardHandler cardHandler = cardUIObject.GetComponent<ActionCardHandler>();
-            if (cardHandler != null)
-            {
-                cardHandler.EvolveCard();
+                cardUI.UpgradeCard();
             }
         }
     }
@@ -134,31 +151,33 @@ public class CardDeckViewManager : UIPanelBase
             {
                 Destroy(cardUIObject);
             }
-
         }
         activeCardUIs.Clear();
 
-        if(CardDeckManager.instance != null)
+        if (RunManager.instance != null && RunManager.instance.player != null)
         {
-            foreach (ActionCardData card in CardDeckManager.instance.GetCardDeckList())
+            foreach (Card card in RunManager.instance.player.deck.GetCards())
             {
                 HandleCardAdded(card);
             }
         }
     }
 
-    void AddCardClickEvent(ActionCardHandler cardHandler)
+    void AddCardClickEvent(CardUI cardUI)
     {
         //이전에 등록했던 클릭 이벤트 제거
-        cardHandler.OnCardClick.RemoveAllListeners();
+        cardUI.OnCardClick.RemoveAllListeners();
 
         //카드가 눌리면 카드 데이터를 전달과 동시에 함수 실행
-        ActionCardData cardData = cardHandler.GetCardData();
-        cardHandler.OnCardClick.AddListener(() => CardCheck(cardData));
+        Card cardInstance = cardUI.GetCardInstance();
+        cardUI.OnCardClick.AddListener(() => CardCheck(cardInstance));
     }
 
-    void CardCheck(ActionCardData newData)
+    void CardCheck(Card card)
     {
-        UIManager.instance.cardCheckHandler.OnCardCheckUI(newData);
+        if (card != null)
+        {
+            UIManager.instance.cardCheckHandler.OnCardCheckUI(card);
+        }
     }
 }

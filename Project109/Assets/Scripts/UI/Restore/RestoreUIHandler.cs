@@ -32,8 +32,8 @@ public class RestoreUIHandler : UIPanelBase
         if (eraseCardUIPrefab == null)
             return;
 
-        EraseCardDeckManager eraseCardDeckManager = Instantiate(eraseCardUIPrefab).GetComponent<EraseCardDeckManager>();
-        eraseCardDeckManager.SetEraseCardCount(1);
+        EraseCardDeckPanel eraseCardDeckPanel = Instantiate(eraseCardUIPrefab).GetComponent<EraseCardDeckPanel>();
+        eraseCardDeckPanel.SetEraseCardCount(1);
         gameObject.SetActive(false);
     }
 

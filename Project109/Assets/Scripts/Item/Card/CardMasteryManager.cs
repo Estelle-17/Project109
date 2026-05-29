@@ -1,11 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using Card.Types;
+using CardTypes;
 
 /// <summary>
 /// 숙련도 업그레이드 UI 생성 및 경험치 정산 규칙을 연동하는 브릿지 클래스.
-/// 실제 카드 숙련도 상태 데이터는 각 CardBase 인스턴스가 소유합니다.
+/// 실제 카드 숙련도 상태 데이터는 각 Card 인스턴스가 소유합니다.
 /// </summary>
 public class CardMasteryManager : MonoBehaviour
 {
@@ -28,30 +28,27 @@ public class CardMasteryManager : MonoBehaviour
 
     void Start()
     {
-        // 더 이상 매니저 내부에 개별 카드 숙련도 목록을 유지하지 않습니다. (CardBase로 단일화)
+        // 더 이상 매니저 내부에 개별 카드 숙련도 목록을 유지하지 않습니다. (Card로 단일화)
     }
 
-    public CardMasteryStat GetCardMasteryStat(CardBase card)
-    {
-        return card?.masteryStat;
-    }
+    // CardMasteryStat은 Card에 인라인화됨 — card.hasMastery, card.masteryLevel 등 직접 접근
     
-    public Dictionary<string, int> GetCardMasteryUpgrades(CardBase card)
+    public Dictionary<string, int> GetCardMasteryUpgrades(Card card)
     {
-        return card?.activeMasteryUpgrades ?? new Dictionary<string, int>();
+        return card?.masteryUpgrades ?? new Dictionary<string, int>();
     }
 
-    public int GetCurrentMasteryUpgradeLevel(CardBase card, string masteryID)
+    public int GetCurrentMasteryUpgradeLevel(Card card, string masteryID)
     {
         return card?.GetMasteryLevel(masteryID) ?? 0;
     }
 
-    public void AddMastery(CardBase card, string masteryID)
+    public void AddMastery(Card card, string masteryID)
     {
         card?.AddMastery(masteryID);
     }
 
-    public void ProcessMasteryUpgrade(CardBase card)
+    public void ProcessMasteryUpgrade(Card card)
     {
         if (masteryUpgradeUIPrefab == null)
         {
@@ -60,7 +57,7 @@ public class CardMasteryManager : MonoBehaviour
         }
 
         GameObject uiObj = Instantiate(masteryUpgradeUIPrefab);
-        MasteryUpgradeUIHandler uiHandler = uiObj.GetComponent<MasteryUpgradeUIHandler>();
+        CardMasteryUpgradePanel uiHandler = uiObj.GetComponent<CardMasteryUpgradePanel>();
         if (uiHandler != null)
         {
             uiHandler.UIActive();
@@ -68,11 +65,11 @@ public class CardMasteryManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("MasteryUpgradeUIHandler component not found on masteryUpgradeUIPrefab.");
+            Debug.LogError("CardMasteryUpgradePanel component not found on masteryUpgradeUIPrefab.");
         }
     }
 
-    public void ReportAction(CardMasteryType triggerType, float amount, CardBase card)
+    public void ReportAction(CardMasteryType triggerType, float amount, Card card)
     {
         if (card == null) return;
 

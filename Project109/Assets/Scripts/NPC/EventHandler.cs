@@ -12,7 +12,7 @@ public delegate bool CheckSelectable(
     Choice_UseItem item,
     Player player,
     Character character,
-    List<ActionCardData> card,
+    List<Card> card,
     RelicManager relicManager
     );
 
@@ -98,13 +98,16 @@ public class EventHandler : MonoBehaviour, IInteractable
         foreach (Choice_Data choice in stageData.choices)
         {
             //선택 시 랜덤으로 사용될 카드, 유물 선택
-            if (CardDeckManager.instance.GetCardDeckList().Count > 0)
+            if (RunManager.instance != null && RunManager.instance.player != null)
             {
-                choice.randomLoseCard.Add(CardDeckManager.instance.GetRandomCard());
-            }
-            if (RunManager.instance.player.relicManager.GetRelics().Count > 0)
-            {
-                choice.randomLoseRelic.Add(RunManager.instance.player.GetRandomRelic().Data);
+                if (RunManager.instance.player.deck.GetCards().Count > 0)
+                {
+                    choice.randomLoseCard.Add(RunManager.instance.player.deck.GetRandomCard());
+                }
+                if (RunManager.instance.player.relicManager.GetRelics().Count > 0)
+                {
+                    choice.randomLoseRelic.Add(RunManager.instance.player.GetRandomRelic().Data);
+                }
             }
 
             Button button = eventDescription.CreateChoiceButton(choice.description + "\n" + makeEventDescription.MakeChoiceDescription(choice));
@@ -112,14 +115,17 @@ public class EventHandler : MonoBehaviour, IInteractable
             //각 선택지에서 소비되는 스탯들을 비교하여 현재 선택지를 선택할 수 있는지 확인
             foreach (Choice_UseItem item in choice.useItems)
             {
-                bool result = isChoiceCanSelectable(item,
-                                                    RunManager.instance.player,
-                                                    RunManager.instance.player.character,
-                                                    CardDeckManager.instance.GetCardDeckList(),
-                                                    RunManager.instance.player.relicManager);
-                if (!result)
+                if (RunManager.instance != null && RunManager.instance.player != null)
                 {
-                    button.interactable = false;
+                    bool result = isChoiceCanSelectable(item,
+                                                        RunManager.instance.player,
+                                                        RunManager.instance.player.character,
+                                                        RunManager.instance.player.deck.GetCards(),
+                                                        RunManager.instance.player.relicManager);
+                    if (!result)
+                    {
+                        button.interactable = false;
+                    }
                 }
             }
 

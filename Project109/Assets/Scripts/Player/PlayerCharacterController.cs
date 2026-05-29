@@ -26,7 +26,7 @@ public class PlayerCharacterController : ICharacterController
 
     // 현재 플레이어 조작 상태
     public PlayerControlState controlState { get; private set; } = PlayerControlState.Normal;
-    private CardBase activeCardForTargeting;
+    private Card activeCardForTargeting;
 
     #region References
 
@@ -68,8 +68,13 @@ public class PlayerCharacterController : ICharacterController
 
     public void OnBattleStart()
     {
-        // masterDeck 에서 drawPile 복사 후 셔플
-        battleDeck.InitDeck(player.masterDeck);
+        // masterDeck의 카드들을 복제(Clone)하여 전투용 덱 빌드
+        List<Card> clonedDeck = new List<Card>();
+        foreach (var card in player.masterDeck)
+        {
+            clonedDeck.Add(card.Clone(controlledCharacter));
+        }
+        battleDeck.InitDeck(clonedDeck);
     }
 
     public void OnTurnStart()
@@ -127,7 +132,7 @@ public class PlayerCharacterController : ICharacterController
     /// <summary>
     /// 카드를 실제로 사용하는 파이프라인
     /// </summary>
-    public void UseCard(CardBase card, List<Character> targets, Vector2Int targetPosition)
+    public void UseCard(Card card, List<Character> targets, Vector2Int targetPosition)
     {
         // 1. 이벤트 버스로 전송할 Payload 생성
         CardInfo info = new CardInfo(controlledCharacter, targets, targetPosition, card, CardFlag.Normal);
@@ -168,7 +173,7 @@ public class PlayerCharacterController : ICharacterController
     /// <summary>
     /// 카드 시전 시도 (지정형 카드는 타겟팅 모드로 진입)
     /// </summary>
-    public void TryUseCard(CardBase card)
+    public void TryUseCard(Card card)
     {
         if (card == null) return;
 

@@ -67,9 +67,9 @@ public interface ICharacterEvent { }
     public interface IOnAfterUseCard : ICharacterEvent  { void OnAfterUseCard(CardInfo info); }
     public interface IOnTryUseCard : ICharacterEvent { void OnTryUseCard(CardInfo info); }
     public interface IOnDiscardCard : ICharacterEvent { void OnDiscardCard(CardInfo info); }
-    public interface IOnDrawCard : ICharacterEvent { void OnDrawCard(CardBase cardData); }
+    public interface IOnDrawCard : ICharacterEvent { void OnDrawCard(Card cardData); }
     public interface IOnExhaustCard : ICharacterEvent { void OnExhaustCard(CardInfo info); }
-    public interface IOnShuffleDeck : ICharacterEvent { void OnShuffleDeck(List<CardBase> deck); }
+    public interface IOnShuffleDeck : ICharacterEvent { void OnShuffleDeck(List<Card> deck); }
     public interface IOnEraseCard : ICharacterEvent { void OnEraseCard(CardInfo info); }
 
 #endregion
@@ -80,7 +80,7 @@ public interface ICharacterEvent { }
     public interface IOnBeforeTakeEffect : ICharacterEvent { void OnBeforeTakeEffect(ref EffectInfo info); }
     public interface IOnAfterGiveEffect : ICharacterEvent  { void OnAfterGiveEffect(EffectInfo info); }
     public interface IOnAfterTakeEffect : ICharacterEvent  { void OnAfterTakeEffect(EffectInfo info); }
-    public interface IOnBeforeRemoveEffect : ICharacterEvent { void OnBeforeRemoveEffect(EffectBase effect); }
-    public interface IOnAfterRemoveEffect : ICharacterEvent  { void OnAfterRemoveEffect(EffectBase effect); }
+    public interface IOnBeforeRemoveEffect : ICharacterEvent { void OnBeforeRemoveEffect(Effect effect); }
+    public interface IOnAfterRemoveEffect : ICharacterEvent  { void OnAfterRemoveEffect(Effect effect); }
 
 #endregion

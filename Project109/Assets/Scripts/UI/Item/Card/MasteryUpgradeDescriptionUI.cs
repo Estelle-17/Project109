@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class MasteryUpgradeCheckDescription : MonoBehaviour
+public class MasteryUpgradeDescriptionUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI descriptionText;
 

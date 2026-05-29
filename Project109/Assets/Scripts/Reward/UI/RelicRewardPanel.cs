@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameItem.Types;
 
-public class RelicRewardHandler : MonoBehaviour
+public class RelicRewardPanel : MonoBehaviour
 {
     public GameObject rootObject;
     public GameObject relicObjectPrefab;
@@ -18,7 +18,7 @@ public class RelicRewardHandler : MonoBehaviour
         for (int count = 0; count < rewardRelicCount; count++)
         {
             //유물UI 생성
-            RelicHandler relic = Instantiate(relicObjectPrefab, relicSpawnTransform).GetComponent<RelicHandler>();
+            RelicUI relic = Instantiate(relicObjectPrefab, relicSpawnTransform).GetComponent<RelicUI>();
 
             if (relic == null)
                 continue;

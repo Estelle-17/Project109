@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class ShopUIHandler : UIPanelBase
+public class ShopPanel : UIPanelBase
 {
     public GameObject cardCollection;
     public GameObject relicCollection;
@@ -13,8 +13,8 @@ public class ShopUIHandler : UIPanelBase
     public GameObject potionPrefab;
     public GameObject upgradeCardUIPrefab;
 
-    public List<ActionCardHandler> cardList;
-    public List<RelicHandler> relicList;
+    public List<CardUI> cardList;
+    public List<RelicUI> relicList;
     public List<GameObject> potionList;
 
     public Button eraseCardButton;
@@ -34,13 +34,13 @@ public class ShopUIHandler : UIPanelBase
         cardNumber = Mathf.Clamp(cardNumber, 0, 6);
         for(int i = 0; i < cardNumber; i++)
         {
-            cardList.Add(GameObject.Instantiate(cardPrefab, cardCollection.transform).GetComponent<ActionCardHandler>());
+            cardList.Add(GameObject.Instantiate(cardPrefab, cardCollection.transform).GetComponent<CardUI>());
         }
 
         relicNumber = Mathf.Clamp(relicNumber, 0, 3);
         for (int i = 0; i < relicNumber; i++)
         {
-            relicList.Add(GameObject.Instantiate(relicPrefab, relicCollection.transform).GetComponent<RelicHandler>());
+            relicList.Add(GameObject.Instantiate(relicPrefab, relicCollection.transform).GetComponent<RelicUI>());
         }
 
         potionNumber = Mathf.Clamp(potionNumber, 0, 3);
@@ -50,14 +50,14 @@ public class ShopUIHandler : UIPanelBase
         }
     }
 
-    public void UpdateCardList(List<ActionCardData> cardData)
+    public void UpdateCardList(List<CardData> cardData)
     {
         int cardCount = Mathf.Clamp(cardData.Count, 0, cardList.Count); //상점의 카드 수만큼 데이터를 불러와 등록
 
         for(int i = 0; i < cardCount; i++)
         {
-            ActionCardData currentCardData = cardData[i];
-            cardList[i].UpdateActionCardData(currentCardData);
+            CardData currentCardData = cardData[i];
+            cardList[i].UpdateCardData(currentCardData);
             cardList[i].OnCardClick.AddListener(() => PurchaseCard(currentCardData));
         }
     }
@@ -74,12 +74,15 @@ public class ShopUIHandler : UIPanelBase
         }
     }
 
-    void PurchaseCard(ActionCardData cardData)
+    void PurchaseCard(CardData cardData)
     {
         Debug.Log($"{cardData.cardName} 행동 카드를 구매합니다.");
 
         //덱에 카드 추가하는 로직 구현
-        CardDeckManager.instance.AddCard(cardData);
+        if (RunManager.instance != null && RunManager.instance.player != null)
+        {
+            RunManager.instance.player.deck.AddCard(cardData);
+        }
     }
 
     void PurchaseRelic(RelicData relicData)
@@ -91,7 +94,7 @@ public class ShopUIHandler : UIPanelBase
 
     public void OpenUpgradeCardUI()
     {
-        UpgradeCardHandler upgradeCardUI = Instantiate(upgradeCardUIPrefab).GetComponent<UpgradeCardHandler>();
+        CardUpgradePanel upgradeCardUI = Instantiate(upgradeCardUIPrefab).GetComponent<CardUpgradePanel>();
         Debug.Log("Card Upgrade is Process!");
     }
 }

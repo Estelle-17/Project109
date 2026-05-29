@@ -11,7 +11,7 @@ using XLua;
 public class PlayerDeck
 {
     private readonly Player owner;
-    private readonly List<CardBase> cards = new();
+    private readonly List<Card> cards = new();
     private int nextRuntimeID = 0;
 
     public PlayerDeck(Player owner)
@@ -22,17 +22,17 @@ public class PlayerDeck
     /// <summary>
     /// 현재 덱에 보관된 카드 리스트를 반환합니다.
     /// </summary>
-    public List<CardBase> GetCards()
+    public List<Card> GetCards()
     {
-        return new List<CardBase>(cards);
+        return new List<Card>(cards);
     }
 
     /// <summary>
     /// 새로운 카드 데이터를 마스터 덱에 추가합니다.
     /// </summary>
-    public CardBase AddCard(CardData cardData)
+    public Card AddCard(CardData cardData)
     {
-        CardBase newCard = CreateNewCard(cardData);
+        Card newCard = CreateNewCard(cardData);
         cards.Add(newCard);
         
         owner.eventBus.Invoke<IOnAddCard>(c => c.OnAddCard(newCard));
@@ -42,7 +42,7 @@ public class PlayerDeck
     /// <summary>
     /// 기존 카드 인스턴스를 마스터 덱에 추가합니다.
     /// </summary>
-    public void AddCard(CardBase card)
+    public void AddCard(Card card)
     {
         cards.Add(card);
         owner.eventBus.Invoke<IOnAddCard>(c => c.OnAddCard(card));
@@ -53,7 +53,7 @@ public class PlayerDeck
     /// </summary>
     public void RemoveCard(int runtimeID)
     {
-        CardBase cardToRemove = cards.FirstOrDefault(c => c.runtimeID == runtimeID);
+        Card cardToRemove = cards.FirstOrDefault(c => c.runtimeID == runtimeID);
         if (cardToRemove != null)
         {
             if (cards.Remove(cardToRemove))
@@ -67,7 +67,7 @@ public class PlayerDeck
     /// <summary>
     /// 기존 카드 인스턴스를 마스터 덱에서 제거합니다.
     /// </summary>
-    public void RemoveCard(CardBase card)
+    public void RemoveCard(Card card)
     {
         if (cards.Remove(card))
         {
@@ -81,7 +81,7 @@ public class PlayerDeck
     /// </summary>
     public void UpgradeCard(int runtimeID)
     {
-        CardBase cardToUpgrade = cards.FirstOrDefault(c => c.runtimeID == runtimeID);
+        Card cardToUpgrade = cards.FirstOrDefault(c => c.runtimeID == runtimeID);
         if (cardToUpgrade != null && cardToUpgrade.cardData != null && cardToUpgrade.cardData.isUpgradable)
         {
             string upgradedName = cardToUpgrade.cardData.upgradedCardName;
@@ -89,20 +89,20 @@ public class PlayerDeck
             {
                 if (ModLoader.Instance.CardDatabase.TryGetValue(upgradedName, out CardData upgradeCardData))
                 {
-                    CardBase newCard = CreateNewCard(upgradeCardData, runtimeID);
+                    Card newCard = CreateNewCard(upgradeCardData, runtimeID);
                     
                     // 기존 마스터리 정보 보존
-                    if (cardToUpgrade.masteryStat != null && newCard.masteryStat != null)
+                    if (cardToUpgrade.hasMastery)
                     {
-                        newCard.currentMasteryPoint = cardToUpgrade.currentMasteryPoint;
+                        newCard.currentMasteryXP = cardToUpgrade.currentMasteryXP;
                         newCard.masteryLevel = cardToUpgrade.masteryLevel;
                     }
                     
-                    if (cardToUpgrade.activeMasteryUpgrades != null)
+                    if (cardToUpgrade.masteryUpgrades != null)
                     {
-                        foreach (var kvp in cardToUpgrade.activeMasteryUpgrades)
+                        foreach (var kvp in cardToUpgrade.masteryUpgrades)
                         {
-                            newCard.activeMasteryUpgrades[kvp.Key] = kvp.Value;
+                            newCard.masteryUpgrades[kvp.Key] = kvp.Value;
                         }
                     }
 
@@ -133,9 +133,9 @@ public class PlayerDeck
 
     /// <summary>
     /// 카드에 마스터리 업그레이드를 적용하고 IOnCardMasteryUpgrade 이벤트를 발행합니다.
-    /// MasteryChoiceHandler에서 card.AddMastery()를 직접 호출하는 대신 이 메서드를 사용합니다.
+    /// MasteryChoiceItem에서 card.AddMastery()를 직접 호출하는 대신 이 메서드를 사용합니다.
     /// </summary>
-    public void ApplyMastery(CardBase card, string masteryId)
+    public void ApplyMastery(Card card, string masteryId)
     {
         if (card == null || !cards.Contains(card)) return;
 
@@ -146,7 +146,7 @@ public class PlayerDeck
     /// <summary>
     /// 덱에서 랜덤하게 한 장의 카드를 가져옵니다.
     /// </summary>
-    public CardBase GetRandomCard()
+    public Card GetRandomCard()
     {
         if (cards.Count == 0) return null;
         return cards[UnityEngine.Random.Range(0, cards.Count)];
@@ -155,7 +155,7 @@ public class PlayerDeck
     /// <summary>
     /// 지정된 이름(식별자)의 카드를 가져옵니다.
     /// </summary>
-    public CardBase GetSpecificCard(string name)
+    public Card GetSpecificCard(string name)
     {
         return cards.FirstOrDefault(c => c.cardData != null && c.cardData.cardName == name);
     }
@@ -163,7 +163,7 @@ public class PlayerDeck
     /// <summary>
     /// 지정된 ID(경로)의 카드를 가져옵니다.
     /// </summary>
-    public CardBase GetCardByID(string id)
+    public Card GetCardByID(string id)
     {
         return cards.FirstOrDefault(c => c.cardData != null && c.cardData.cardName == id);
     }
@@ -176,7 +176,7 @@ public class PlayerDeck
         owner.eventBus.Invoke<IOnCardsRefreshed>(c => c.OnCardsRefreshed());
     }
 
-    private CardBase CreateNewCard(CardData cardData, int? customRuntimeID = null)
+    private Card CreateNewCard(CardData cardData, int? customRuntimeID = null)
     {
         LuaTable luaInstance = null;
         if (cardData.luaPrototype != null)
@@ -196,7 +196,7 @@ public class PlayerDeck
         }
 
         int id = customRuntimeID ?? nextRuntimeID++;
-        CardBase newCard = new CardBase(cardData, owner.character, luaInstance, id);
+        Card newCard = new Card(cardData, owner.character, luaInstance, id);
         return newCard;
     }
 }

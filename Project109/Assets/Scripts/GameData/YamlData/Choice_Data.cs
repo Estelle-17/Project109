@@ -9,6 +9,6 @@ public class Choice_Data
     public List<Choice_UseItem> useItems;
     public List<Choice_GetItem> getItems;
 
-    public List<CardBase> randomLoseCard;
+    public List<Card> randomLoseCard;
     public List<RelicData> randomLoseRelic;
 }

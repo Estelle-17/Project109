@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UpgradeMasteryCardCheckHandler : MonoBehaviour
+public class CardMasteryUpgradeDetailView : MonoBehaviour
 {
-    private ActionCardData selectedCardData;
+    private Card selectedCardInstance;
 
-    [SerializeField] private MasteryPointHandler currentMasteryPointUI;
+    [SerializeField] private MasteryPointUI currentMasteryPointUI;
 
     public Button upgradeCardButton;
 
@@ -16,14 +16,14 @@ public class UpgradeMasteryCardCheckHandler : MonoBehaviour
     }
 
     //클릭한 카드 데이터를 확인하고 화면 상에 보여줌
-    public void OnCardCheckUI(ActionCardData newCardData)
+    public void OnCardCheckUI(Card card)
     {
-        if (currentMasteryPointUI == null)
+        if (currentMasteryPointUI == null || card == null)
             return;
 
-        selectedCardData = Instantiate(newCardData);
+        selectedCardInstance = card;
 
-        currentMasteryPointUI.PreviewUpgradeMasteryPointUI(selectedCardData.path,
+        currentMasteryPointUI.PreviewUpgradeMasteryPointUI(selectedCardInstance,
                                                            RunManager.instance.player.playerStat.Upgrade_MasteryPoint_Value);
 
         gameObject.SetActive(true);
@@ -31,19 +31,11 @@ public class UpgradeMasteryCardCheckHandler : MonoBehaviour
 
     public void StartUpgradeCards()
     {
-        CardMasteryManager.instance.ReportAction(Card.Types.CardMasteryType.UpgradeCard,
-                                                 RunManager.instance.player.playerStat.Upgrade_MasteryPoint_Value,
-                                                 selectedCardData);
-        UIManager.instance.HideCardExtraDescription();
+        if (selectedCardInstance != null)
+        {
+            selectedCardInstance.AddMasteryPoint(RunManager.instance.player.playerStat.Upgrade_MasteryPoint_Value);
+        }
         transform.root.gameObject.SetActive(false);
         Destroy(transform.root.gameObject);
-    }
-
-    private void OnDestroy()
-    {
-        if (selectedCardData != null)
-        {
-            Destroy(selectedCardData);
-        }
     }
 }

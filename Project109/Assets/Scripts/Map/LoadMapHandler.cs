@@ -101,6 +101,9 @@ public class LoadMapHandler : MonoBehaviour
             {
                 (int column, int row) coord = RunManager.instance.currentMap.playerSpawnCoord;
                 RunManager.instance.player.character.characterMove.SetCurrentTile(RunManager.instance.currentMap.GetTileMap()[coord.column][coord.row]);
+                
+                // 플레이어 초기 방향 설정 (Up) 및 3D 회전 업데이트
+                RunManager.instance.player.character.characterMove.SetFacingDirection(LookDirection.Up);
             }
         }
 

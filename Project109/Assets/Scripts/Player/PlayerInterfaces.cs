@@ -8,10 +8,11 @@ public interface IOnRemoveRelic : IPlayerEvent { void OnRemoveRelic(RelicData re
 #endregion
 
 #region 移대뱶 愿€???명꽣?섏씠??
-public interface IOnAddCard : IPlayerEvent { void OnAddCard(CardBase cardData); }
-public interface IOnRemoveCard : IPlayerEvent { void OnRemoveCard(CardBase cardData); }
-public interface IOnCardUpgrade : IPlayerEvent { void OnCardUpgrade(CardBase cardData); }
-public interface IOnCardEvolve : IPlayerEvent { void OnCardEvolve(CardBase cardData); }
+public interface IOnAddCard : IPlayerEvent { void OnAddCard(Card cardData); }
+public interface IOnRemoveCard : IPlayerEvent { void OnRemoveCard(Card cardData); }
+public interface IOnCardUpgrade : IPlayerEvent { void OnCardUpgrade(Card cardData); }
+// 마스터리 레벨업 이벤트 (upgrade와 다른 시스템)
+public interface IOnCardMasteryUpgrade : IPlayerEvent { void OnCardMasteryUpgrade(Card card, string masteryId); }
 public interface IOnCardsRefreshed : IPlayerEvent { void OnCardsRefreshed(); }
 #endregion
 

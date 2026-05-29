@@ -3,9 +3,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MasteryChoiceHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class MasteryChoiceItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    private ActionCardData selectedCardData;
+    private Card selectedCard;
     private string selectedMasteryPath;
 
     [SerializeField] private TextMeshProUGUI nameText;
@@ -17,20 +17,25 @@ public class MasteryChoiceHandler : MonoBehaviour, IPointerEnterHandler, IPointe
 
     }
 
-    public void SetChoice(ActionCardData newCardData, MasteryDescription newMastreyDescription)
+    public void SetChoice(Card newCard, string masteryId)
     {
-        selectedCardData = newCardData;
+        selectedCard = newCard;
 
-        selectedMasteryPath = newMastreyDescription.path;
-        nameText.SetText(newMastreyDescription.name);
-        descriptionText.SetText(newMastreyDescription.description);
+        selectedMasteryPath = masteryId;
+        // masteryId를 이름으로 표시 (추후 로컬라이즈 키 또는 Lua에서 표시명 제공 가능)
+        nameText.SetText(masteryId);
+        // 설명은 현재 masteryId를 표시 (추후 CardData.masteryNames에서 표시명 조회)
+        descriptionText.SetText(masteryId);
     }
 
     public void StartMasteryUpgradeCard()
     {
-        CardMasteryManager.instance.AddMastery(selectedCardData.ID, selectedMasteryPath);
+        // 직접 호출 대신 PlayerDeck.ApplyMastery()를 경유해야 IOnCardMasteryUpgrade 이벤트가 발행됩니다.
+        if (RunManager.instance?.player?.deck != null)
+        {
+            RunManager.instance.player.deck.ApplyMastery(selectedCard, selectedMasteryPath);
+        }
 
-        UIManager.instance.HideCardExtraDescription();
         transform.root.gameObject.SetActive(false);
         Destroy(transform.root.gameObject);
     }

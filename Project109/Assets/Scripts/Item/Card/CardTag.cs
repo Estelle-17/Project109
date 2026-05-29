@@ -5,7 +5,7 @@ using XLua;
 public class CardTag
 {
     // 이 태그가 부착된 대상 카드
-    public CardBase targetCard { get; private set; }
+    public Card targetCard { get; private set; }
 
     // 카드를 소유한 캐릭터
     public Character owner => targetCard?.owner;
@@ -26,14 +26,14 @@ public class CardTag
     /// 카드 인스턴스에 태그가 장착될 때 호출됩니다.
     /// Lua 측의 OnInit을 실행하고 캐릭터 이벤트 버스에 바인딩합니다.
     /// </summary>
-    public void OnAttached(CardBase card)
+    public void OnAttached(Card card)
     {
         this.targetCard = card;
 
         if (luaTable != null)
         {
             // 1. Lua 측 OnInit 실행 (태그 자체 초기화)
-            var luaOnInit = luaTable.Get<Action<LuaTable, CardTag, CardBase>>("OnInit");
+            var luaOnInit = luaTable.Get<Action<LuaTable, CardTag, Card>>("OnInit");
             luaOnInit?.Invoke(luaTable, this, card);
 
             // 2. 캐릭터 이벤트 버스 자동 바인딩

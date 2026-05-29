@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class EraseCardDeckManager : UIPanelBase
+public class EraseCardDeckPanel : UIPanelBase
 {
     public Transform contentTransform;
 
@@ -15,7 +15,7 @@ public class EraseCardDeckManager : UIPanelBase
 
     private void Awake()
     {
-        if (CardDeckManager.instance != null)
+        if (RunManager.instance != null && RunManager.instance.player != null)
         {
             UIActive();
             RefreshAllCardUIs();
@@ -23,7 +23,7 @@ public class EraseCardDeckManager : UIPanelBase
         }
         else
         {
-            Debug.LogWarning("CardDeckManager.instance is null!");
+            Debug.LogWarning("Player is null!");
         }
     }
 
@@ -43,7 +43,7 @@ public class EraseCardDeckManager : UIPanelBase
         activeCardUIs.Clear();
     }
 
-    private void HandleCardAdded(ActionCardData card)
+    private void HandleCardAdded(Card card)
     {
         if (ObjectPoolManager.instance == null)
         {
@@ -51,11 +51,11 @@ public class EraseCardDeckManager : UIPanelBase
             return;
         }
 
-        ActionCardHandler cardUI = ObjectPoolManager.instance.GetCardUI(contentTransform).GetComponent<ActionCardHandler>();
+        CardUI cardUI = ObjectPoolManager.instance.GetCardUI(contentTransform).GetComponent<CardUI>();
 
         if (cardUI != null && contentTransform != null)
         {
-            cardUI.UpdateActionCardData(card);
+            cardUI.UpdateCardInstance(card);
             AddCardClickEvent(cardUI);
 
             activeCardUIs.Add(card.runtimeID, cardUI.gameObject);
@@ -64,7 +64,10 @@ public class EraseCardDeckManager : UIPanelBase
         }
         else
         {
-            ObjectPoolManager.instance.ReturnCardUI(cardUI.gameObject);
+            if (cardUI != null)
+            {
+                ObjectPoolManager.instance.ReturnCardUI(cardUI.gameObject);
+            }
         }
 
         Debug.Log("HandleCardAdded is end");
@@ -82,13 +85,12 @@ public class EraseCardDeckManager : UIPanelBase
             {
                 Destroy(cardUIObject);
             }
-
         }
         activeCardUIs.Clear();
 
-        if (CardDeckManager.instance != null)
+        if (RunManager.instance != null && RunManager.instance.player != null)
         {
-            foreach (ActionCardData card in CardDeckManager.instance.GetCardDeckList())
+            foreach (Card card in RunManager.instance.player.deck.GetCards())
             {
                 HandleCardAdded(card);
             }
@@ -100,41 +102,42 @@ public class EraseCardDeckManager : UIPanelBase
         eraseCardCount = count;
     }
 
-    void AddCardClickEvent(ActionCardHandler cardHandler)
+    void AddCardClickEvent(CardUI cardUI)
     {
         //이전에 등록했던 클릭 이벤트 제거
-        cardHandler.OnCardClick.RemoveAllListeners();
+        cardUI.OnCardClick.RemoveAllListeners();
 
         //카드가 눌리면 카드 데이터를 전달과 동시에 함수 실행
-        ActionCardData cardData = cardHandler.GetCardData();
-        cardHandler.OnCardClick.AddListener(() => AddEraseCard(cardHandler));
+        cardUI.OnCardClick.AddListener(() => AddEraseCard(cardUI));
     }
 
-    void AddEraseCard(ActionCardHandler newCardHandler)
+    void AddEraseCard(CardUI newCardUI)
     {
+        int cardRuntimeID = newCardUI.GetCardInstance().runtimeID;
+
         //이미 선택된 카드가 한번 더 선택되었을 경우 지울 카드 리스트에서 제거
-        if (eraseCardIDs.Contains(newCardHandler.GetCardData().runtimeID))
+        if (eraseCardIDs.Contains(cardRuntimeID))
         {
-            eraseCardIDs.Remove(newCardHandler.GetCardData().runtimeID);
-            newCardHandler.bIsCardHighlight = true;
-            newCardHandler.OffSelectHighlight(); //선택이 해제되었음을 알리기 위한 하이라이트 비활성화
+            eraseCardIDs.Remove(cardRuntimeID);
+            newCardUI.bIsCardHighlight = true;
+            newCardUI.OffSelectHighlight(); //선택이 해제되었음을 알리기 위한 하이라이트 비활성화
         }
         else if(eraseCardIDs.Count < eraseCardCount)
         {
-            eraseCardIDs.Add(newCardHandler.GetCardData().runtimeID);   //지울 카드를 리스트에 저장
-            newCardHandler.bIsCardHighlight = false;
-            newCardHandler.OnSelectHighlight(); //선택됬음을 알리기 위한 하이라이트 활성화
+            eraseCardIDs.Add(cardRuntimeID);   //지울 카드를 리스트에 저장
+            newCardUI.bIsCardHighlight = false;
+            newCardUI.OnSelectHighlight(); //선택됬음을 알리기 위한 하이라이트 활성화
         }
     }
 
     public void StartEraseCards()
     {
-        if(eraseCardIDs.Count == eraseCardCount) 
+        if(eraseCardIDs.Count == eraseCardCount && RunManager.instance != null && RunManager.instance.player != null) 
         {
             Debug.Log($"선택된 카드를 제거합니다.");
             foreach (int cardID in eraseCardIDs)
             {
-                CardDeckManager.instance.RemoveCard(cardID);
+                RunManager.instance.player.deck.RemoveCard(cardID);
             }
 
             //카드 제거 후 UI 제거

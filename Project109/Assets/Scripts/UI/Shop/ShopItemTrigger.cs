@@ -13,8 +13,8 @@ public class ShopItemTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExit
 {
     public ShopItems ShopItemType;
 
-    public ActionCardHandler cardHandler;
-    public RelicHandler relicHandler;
+    public CardUI cardHandler;
+    public RelicUI relicHandler;
     //포션 데이터 나중에 추가
 
     void Start()

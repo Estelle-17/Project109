@@ -49,18 +49,24 @@ public class ChoiceHandler : MonoBehaviour
                 //value값만큼 플레이어 체력 차감
                 break;
             case "SpecificCard":
-                ActionCardData specificCard = CardDeckManager.instance.GetSpecificCard(item.name);
-                if (specificCard != null)
+                if (RunManager.instance != null && RunManager.instance.player != null)
                 {
-                    CardDeckManager.instance.RemoveCard(specificCard.runtimeID);
+                    Card specificCard = RunManager.instance.player.deck.GetSpecificCard(item.name);
+                    if (specificCard != null)
+                    {
+                        RunManager.instance.player.deck.RemoveCard(specificCard.runtimeID);
+                    }
                 }
                 break;
             case "RandomCard":
                 //랜덤한 카드 선택 후 제거
-                CardDeckManager.instance.RemoveCard(choiceData.randomLoseCard[0].runtimeID);
+                if (RunManager.instance != null && RunManager.instance.player != null && choiceData.randomLoseCard.Count > 0)
+                {
+                    RunManager.instance.player.deck.RemoveCard(choiceData.randomLoseCard[0].runtimeID);
+                }
                 break;
             case "SpecificRelic":
-                RelicBase specificRelic = RunManager.instance.player.GetSpecificRelic(item.name);
+                Relic specificRelic = RunManager.instance.player.GetSpecificRelic(item.name);
                 if (specificRelic != null)
                 {
                     RunManager.instance.player.RemoveRelic(specificRelic.Data.relicName);
@@ -88,10 +94,12 @@ public class ChoiceHandler : MonoBehaviour
                 //value값만큼 플레이어 체력 증가
                 break;
             case "SpecificCard":
-                ActionCardData specificCard;
-                if (AssetCacheManager.instance.TryGetCard(item.name, out specificCard))
+                if (RunManager.instance != null && RunManager.instance.player != null)
                 {
-                    CardDeckManager.instance.AddCard(specificCard);
+                    if (ModLoader.Instance.CardDatabase.TryGetValue(item.name, out CardData specificCard))
+                    {
+                        RunManager.instance.player.deck.AddCard(specificCard);
+                    }
                 }
                 break;
             case "CardReward":
@@ -108,8 +116,7 @@ public class ChoiceHandler : MonoBehaviour
                 break;
             case "Battle":
                 //전투 진행
-                BattleData battleData;
-                if (AssetCacheManager.instance.TryGetBattle(item.name, out battleData))
+                if (AssetCacheManager.instance.TryGetBattle(item.name, out BattleData battleData))
                 {
                     RunManager.instance.loadMapHandler.SpawnMonsterInBattleNodeData(battleData);
                 }

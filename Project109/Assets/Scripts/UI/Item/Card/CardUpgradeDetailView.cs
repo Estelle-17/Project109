@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UpgradeCardCheckHandler : MonoBehaviour
+public class CardUpgradeDetailView : MonoBehaviour
 {
-    private ActionCardData currentCardData;
-    private ActionCardData selectedUpgradeCardData;
+    private Card currentCardInstance;
+    private CardData selectedUpgradeCardData;
 
-    [SerializeField] private ActionCardHandler currentCard;
-    [SerializeField] private ActionCardHandler upgradeCard;
+    [SerializeField] private CardUI currentCard;
+    [SerializeField] private CardUI upgradeCard;
 
     public Button upgradeCardButton;
 
@@ -18,21 +18,22 @@ public class UpgradeCardCheckHandler : MonoBehaviour
     }
 
     //클릭한 카드 데이터를 확인하고 화면 상에 보여줌
-    public void OnCardCheckUI(ActionCardData newCardData)
+    public void OnCardCheckUI(Card card)
     {
-        if (currentCard == null || upgradeCard == null)
+        if (currentCard == null || upgradeCard == null || card == null || card.cardData == null)
             return;
 
-        currentCardData = newCardData;
+        currentCardInstance = card;
 
-        currentCard.UpdateActionCardData(newCardData);
+        currentCard.UpdateCardInstance(card);
         currentCard.bIsCardHighlight = false;
 
-        if (AssetCacheManager.instance.TryGetCard(newCardData.upgradeCardPath, out ActionCardData upgradeCardData))
+        string upgradeName = card.cardData.upgradedCardName;
+        if (!string.IsNullOrEmpty(upgradeName) && ModLoader.Instance.CardDatabase.TryGetValue(upgradeName, out CardData upgradeCardData))
         {
             selectedUpgradeCardData = upgradeCardData;
 
-            upgradeCard.UpdateActionCardData(selectedUpgradeCardData);
+            upgradeCard.UpdateCardData(selectedUpgradeCardData);
             upgradeCard.bIsCardHighlight = false;
         }
 
@@ -41,17 +42,11 @@ public class UpgradeCardCheckHandler : MonoBehaviour
 
     public void StartUpgradeCards()
     {
-        CardDeckManager.instance.UpgradeCard(currentCardData.runtimeID);
-        UIManager.instance.HideCardExtraDescription();
+        if (currentCardInstance != null && RunManager.instance != null && RunManager.instance.player != null)
+        {
+            RunManager.instance.player.deck.UpgradeCard(currentCardInstance.runtimeID);
+        }
         transform.root.gameObject.SetActive(false);
         Destroy(transform.root.gameObject);
-    }
-
-    private void OnDestroy()
-    {
-        if (selectedUpgradeCardData != null)
-        {
-            //Destroy(selectedUpgradeCardData);
-        }
     }
 }

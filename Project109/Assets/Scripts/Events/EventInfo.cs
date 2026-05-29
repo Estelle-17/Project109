@@ -187,7 +187,7 @@ namespace EventStructs
     {
         public Character caster;
         public Character target;
-        public EffectBase effect;
+        public Effect effect;
 
         public int baseStack;
         public float baseDuration;
@@ -196,7 +196,7 @@ namespace EventStructs
 
         public EffectFlag effectFlags;
 
-        public EffectInfo(Character caster, Character target, EffectBase effect, int stack = 1, float duration = 0f, EffectFlag flags = EffectFlag.Normal) : this()
+        public EffectInfo(Character caster, Character target, Effect effect, int stack = 1, float duration = 0f, EffectFlag flags = EffectFlag.Normal) : this()
         {
             this.caster = caster;
             this.target = target;

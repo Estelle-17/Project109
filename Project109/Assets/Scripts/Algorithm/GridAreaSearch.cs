@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
-using Card.Types;
+using CardTypes;
 
 public class GridAreaSearch
 {

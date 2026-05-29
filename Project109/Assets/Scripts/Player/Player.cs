@@ -14,7 +14,7 @@ public class Player
 
     // 카드 덱 (런 전체에서 유지되는 전체 카드 풀)
     public PlayerDeck deck { get; private set; }
-    public List<CardBase> masterDeck => deck.GetCards();
+    public List<Card> masterDeck => deck.GetCards();
 
     // 유물 관리자
     public RelicManager relicManager;
@@ -36,12 +36,12 @@ public class Player
         this.relicManager = new RelicManager(this);
     }
 
-    public void AddCardToDeck(CardBase card)
+    public void AddCardToDeck(Card card)
     {
         deck.AddCard(card);
     }
 
-    public void RemoveCardFromDeck(CardBase card)
+    public void RemoveCardFromDeck(Card card)
     {
         deck.RemoveCard(card);
     }
@@ -57,12 +57,12 @@ public class Player
         relicManager.RemoveRelic(relicId);
     }
 
-    public RelicBase GetRandomRelic()
+    public Relic GetRandomRelic()
     {
         return relicManager.GetRandomRelic();
     }
 
-    public RelicBase GetSpecificRelic(string relicId)
+    public Relic GetSpecificRelic(string relicId)
     {
         return relicManager.GetSpecificRelic(relicId);
     }

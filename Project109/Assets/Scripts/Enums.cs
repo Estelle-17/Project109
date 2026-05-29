@@ -54,7 +54,7 @@ namespace GameItem.Types
     }
 }
 
-namespace Card.Types
+namespace CardTypes
 {
     public enum EffectType  //효과 타입
     {

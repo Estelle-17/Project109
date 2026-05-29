@@ -8,9 +8,9 @@ using XLua;
 public static class ModObjectFactory
 {
     /// <summary>
-    /// 이펙트 ID를 기반으로 EffectBase 인스턴스를 생성합니다.
+    /// 이펙트 ID를 기반으로 Effect 인스턴스를 생성합니다.
     /// </summary>
-    public static EffectBase CreateEffect(string effectId)
+    public static Effect CreateEffect(string effectId)
     {
         // 1. 원본 데이터 검색
         if (!ModLoader.Instance.EffectDatabase.TryGetValue(effectId, out EffectData data))
@@ -38,14 +38,14 @@ public static class ModObjectFactory
         }
 
         // 3. 인스턴스 조립 및 반환
-        return new EffectBase(data, luaInstance);
+        return new Effect(data, luaInstance);
     }
 
     /// <summary>
-    /// 유물 ID를 기반으로 RelicBase 인스턴스를 생성합니다.
+    /// 유물 ID를 기반으로 Relic 인스턴스를 생성합니다.
     /// (추후 ModLoader에 RelicDatabase가 추가되었다고 가정)
     /// </summary>
-    public static RelicBase CreateRelic(string relicId, Player owner)
+    public static Relic CreateRelic(string relicId, Player owner)
     {
         // 1. 원본 데이터 검색
         if (!ModLoader.Instance.RelicDatabase.TryGetValue(relicId, out RelicData data))
@@ -72,7 +72,7 @@ public static class ModObjectFactory
             }
         }
 
-        // 3. 인스턴스 조립 및 반환 (RelicBase는 owner를 받음)
-        return new RelicBase(data, owner, luaInstance);
+        // 3. 인스턴스 조립 및 반환 (Relic는 owner를 받음)
+        return new Relic(data, owner, luaInstance);
     }
 }

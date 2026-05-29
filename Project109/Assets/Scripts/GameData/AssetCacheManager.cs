@@ -49,7 +49,6 @@ public class AssetCacheManager : MonoBehaviour
     public string mapInfoKey = "MapInfo";
     public string modelKey = "Model";
     public string textureKey = "Texture";
-    public string descriptionKey = "Description";
     public string obstacleKey = "Obstacle";
     public string trapKey = "Trap";
 
@@ -85,8 +84,7 @@ public class AssetCacheManager : MonoBehaviour
     public IList<Sprite> textureList;
     private Dictionary<string, Sprite> textureDict = new Dictionary<string, Sprite>();
 
-    public IList<CardDescription> cardDescriptionList;
-    private Dictionary<string, CardDescription> cardDescriptionDict = new Dictionary<string, CardDescription>();
+
 
     public IList<ObstacleData> obstacleList;
     private Dictionary<string, ObstacleData> obstacleDict = new Dictionary<string, ObstacleData>();
@@ -217,12 +215,6 @@ public class AssetCacheManager : MonoBehaviour
             textureDict = dict;
         }));
 
-        //카드 Description 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<CardDescription>(descriptionKey, (list, dict) =>
-        {
-            cardDescriptionList = list;
-            cardDescriptionDict = dict;
-        }));
 
         yield return StartCoroutine(LoadAndCacheFromAddressableData<ObstacleData>(obstacleKey, (list, dict) =>
         {
@@ -430,7 +422,6 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetMapInfo(string name, out MapDataInfo mapDataInfo) => mapInfoDict.TryGetValue(name, out mapDataInfo);
     public bool TryGetModel(string name, out GameObject model) => modelDict.TryGetValue(name, out model);
     public bool TryGetTexture(string name, out Sprite texture) => textureDict.TryGetValue(name, out texture);
-    public bool TryGetCardDescription(string name, out CardDescription description) => cardDescriptionDict.TryGetValue(name, out description);
     public bool TryGetObstacle(string name, out ObstacleData obstacle) => obstacleDict.TryGetValue(name, out obstacle);
     public bool TryGetTrap(string name, out TrapData trap) => trapDict.TryGetValue(name, out trap);
 }

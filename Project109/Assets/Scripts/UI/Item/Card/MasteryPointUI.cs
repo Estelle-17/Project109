@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MasteryPointHandler : MonoBehaviour
+public class MasteryPointUI : MonoBehaviour
 {
     [SerializeField] private Image masteryPointBar;
     [SerializeField] private TextMeshProUGUI nameText;
@@ -11,54 +11,50 @@ public class MasteryPointHandler : MonoBehaviour
 
     private int maxMasteryPoint;
 
-    public void SetMasteryDescription(ActionCardData cardData, int maxPoint)
-    {
-        //마스터리 설명 UI 업데이트
 
+    public void SetMasteryDescription(CardData cardData, int maxPoint)
+    {
         valueText.SetText("0 / " + maxPoint);
         descriptionText.SetText(SetMasteryDescription(cardData.cardType));
         masteryPointBar.fillAmount = 0f;
-
-        UpdateMasteryPointUI(cardData.path);
     }
 
-    public void UpdateMasteryPointUI(string cardID)
+    public void SetMasteryDescription(Card card, int maxPoint)
     {
-        //마스터리 포인트 UI 업데이트
-        if(!CardMasteryManager.instance)
-        {
-            Debug.LogWarning("CardMasteryManager.instance is null!");
-            return;
-        }
+        if (card == null || card.cardData == null) return;
+        valueText.SetText("0 / " + maxPoint);
+        descriptionText.SetText(SetMasteryDescription(card.cardData.cardType));
+        masteryPointBar.fillAmount = 0f;
 
-        CardMasteryStat masteryStat = CardMasteryManager.instance.GetCardMasteryStat(cardID);
-        if(masteryStat != null)
+        if (card.hasMastery)
         {
-            valueText.SetText(masteryStat.current_mastery_value + " / " + masteryStat.max_mastery_value);
-            float fillAmount = masteryStat.max_mastery_value > 0 ? masteryStat.current_mastery_value / masteryStat.max_mastery_value : 0f;
+            valueText.SetText(card.currentMasteryXP + " / " + card.maxMasteryXP);
+            float fillAmount = card.maxMasteryXP > 0 ? card.currentMasteryXP / card.maxMasteryXP : 0f;
             masteryPointBar.fillAmount = Mathf.Clamp01(fillAmount);
         }
     }
 
-    public void PreviewUpgradeMasteryPointUI(string cardID, int increaseMasteryPoint)
+    public void UpdateMasteryPointUI(Card card)
     {
-        //마스터리 포인트 UI 업데이트
-        if (!CardMasteryManager.instance)
-        {
-            Debug.LogWarning("CardMasteryManager.instance is null!");
-            return;
-        }
+        if (card == null || !card.hasMastery) return;
 
-        CardMasteryStat masteryStat = CardMasteryManager.instance.GetCardMasteryStat(cardID);
-        if (masteryStat != null)
-        {
-            valueText.SetText(masteryStat.current_mastery_value + " + " +
-                "<color=#00EB00>" + increaseMasteryPoint + "</color>" +
-                " / " +masteryStat.max_mastery_value);
+        valueText.SetText(card.currentMasteryXP + " / " + card.maxMasteryXP);
+        float fillAmount = card.maxMasteryXP > 0
+            ? card.currentMasteryXP / card.maxMasteryXP : 0f;
+        masteryPointBar.fillAmount = Mathf.Clamp01(fillAmount);
+    }
 
-            float fillAmount = masteryStat.max_mastery_value > 0 ? masteryStat.current_mastery_value / masteryStat.max_mastery_value : 0f;
-            masteryPointBar.fillAmount = Mathf.Clamp01(fillAmount);
-        }
+    public void PreviewUpgradeMasteryPointUI(Card card, int increaseMasteryPoint)
+    {
+        if (card == null || !card.hasMastery) return;
+
+        valueText.SetText(card.currentMasteryXP + " + " +
+            "<color=#00EB00>" + increaseMasteryPoint + "</color>" +
+            " / " + card.maxMasteryXP);
+
+        float fillAmount = card.maxMasteryXP > 0
+            ? card.currentMasteryXP / card.maxMasteryXP : 0f;
+        masteryPointBar.fillAmount = Mathf.Clamp01(fillAmount);
     }
 
     public string SetMasteryDescription(string cardType)

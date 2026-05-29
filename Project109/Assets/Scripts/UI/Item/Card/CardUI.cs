@@ -8,9 +8,10 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    [SerializeField] private ActionCardData cardData;
+    [SerializeField] private CardData cardData;
+    private Card cardInstance;
 
     //private CardEffect currentCardEffect;   //현재 카드효과
     [SerializeField] private CardDescriptionHandler cardDescriptionHandler;
@@ -22,14 +23,12 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public Image cardImage;  //카드 데이터에 맞는 이미지
 
     public GameObject selectHighlightObject;    //선택을 알려주는 하이라이트 UI
-    public GameObject extraDescriptionSpawnPos;      //추가 설명UI 스폰 위치
 
     public EffectAreaCheckButton effectAreaCheckButton; //공격 범위 확인용 버튼
 
     public UnityEvent OnCardClick;  //클릭 시 호출될 이벤트(다양한 변수들도 쉽게 호출하기 위해 UnityEvent 사용)
 
     public bool bIsCardHighlight;
-    public bool bAlwaysShowExtraDescription;
     public bool bShowEffectAreaUI;
 
     void Start()
@@ -37,89 +36,93 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         selectHighlightObject.SetActive(false);
     }
 
-    public void UpdateActionCardData(ActionCardData newCardData)
+    public void UpdateCardData(CardData newCardData)
     {
-        if(newCardData == null)
+        if (newCardData == null)
         {
             Debug.LogWarning("New Card Data is null!");
             return;
         }
         cardData = newCardData;
+        cardInstance = null;
 
         cardName.text = cardData.cardName;
 
         UpdateCardDescription();
 
-        if (AssetCacheManager.instance.TryGetTexture(cardData.texturePath, out Sprite texture))
+        if (cardData.cardSprite != null)
         {
-            cardImage.sprite = texture;
+            cardImage.sprite = cardData.cardSprite;
+        }
+    }
+
+    public void UpdateCardInstance(Card newCardInstance)
+    {
+        if (newCardInstance == null)
+        {
+            Debug.LogWarning("New Card Instance is null!");
+            return;
+        }
+        cardInstance = newCardInstance;
+        cardData = cardInstance.cardData;
+
+        // masteryLevel > 0이면 ★ 접두사 표시
+        string displayName = cardData.cardName;
+        if (cardInstance.masteryLevel > 0)
+            displayName = "\u2605" + displayName;
+        cardName.text = displayName;
+
+        UpdateCardDescription();
+
+        if (cardData.cardSprite != null)
+        {
+            cardImage.sprite = cardData.cardSprite;
         }
     }
 
     public void UpgradeCard()
     {
-        if(cardData == null)
+        if (cardData == null)
             return;
 
-        if(AssetCacheManager.instance.TryGetCard(cardData.upgradeCardPath, out ActionCardData upgradeCardData))
+        string upgradeName = cardData.upgradedCardName;
+        if (!string.IsNullOrEmpty(upgradeName) && ModLoader.Instance.CardDatabase.TryGetValue(upgradeName, out CardData upgradeCardData))
         {
-            cardData = Instantiate(upgradeCardData);
-
+            cardData = upgradeCardData;
             cardName.text = cardData.cardName;
-
             UpdateCardDescription();
 
-            if (AssetCacheManager.instance.TryGetTexture(cardData.texturePath, out Sprite texture))
+            if (cardData.cardSprite != null)
             {
-                cardImage.sprite = texture;
+                cardImage.sprite = cardData.cardSprite;
             }
         }
         else
         {
             Debug.LogWarning("Failed to Upgrade Card!");
         }
-
-        //UpdateCardDescription();
-    }
-
-    //저장된 카드 데이터로 진화 후의 카드 변경
-    public void EvolveCard()
-    {
-        if (cardData == null)
-            return;
-
-        cardName.SetText("★" + cardName.text);
-
-        UpdateCardDescription();
     }
 
     public void UpdateCardDescription()
     {
-        if (AssetCacheManager.instance.TryGetCardDescription(cardData.path, out CardDescription description))
+        if (cardInstance != null)
         {
-            cardDescription.SetText(description.description);
+            cardDescription.SetText(cardInstance.GetDescription());
+            return;
         }
-        else 
-        { 
-            Debug.LogWarning("Card description not found for path: " + cardData.path);
-        }
+
+        // CardDescription SO 제거 — CardData.description 직접 사용
+        cardDescription.SetText(cardData.description ?? string.Empty);
     }
 
-    public void UpdateExtraDescription()
-    {
-        if (cardData != null)
-            UIManager.instance.UpdateCardExtraDescription(cardData, extraDescriptionSpawnPos.transform);
-    }
-
-    public ActionCardData GetCardData()
+    public CardData GetCardData()
     {
         return cardData;
     }
 
-    public void ShowCardExtraDescription()
+    public Card GetCardInstance()
     {
-        if (cardData != null && UIManager.instance != null)
-            UIManager.instance.UpdateCardExtraDescription(cardData, extraDescriptionSpawnPos.transform, transform.localScale);
+        return cardInstance;
     }
 
     public void OnSelectHighlight()
@@ -142,11 +145,8 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if (bIsCardHighlight)
             OnSelectHighlight();       //카드 하이라이트on
 
-        //extraDescriptionManager.ShowExtraDescription();    //추가 설명 UI 보여주기
-        ShowCardExtraDescription();
-
         //카드 범위 세팅 진행
-        if(bShowEffectAreaUI)
+        if (bShowEffectAreaUI && cardData != null)
         {
             Debug.Log("Show Effect Area UI");
             UIManager.instance.UpdateEffectAreaUI(cardData);
@@ -157,10 +157,6 @@ public class ActionCardHandler : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
         if (bIsCardHighlight)
             OffSelectHighlight();       //카드 하이라이트off
-
-        if(!bAlwaysShowExtraDescription)
-            UIManager.instance.HideCardExtraDescription();
-        //extraDescriptionManager.HideExtraDescription();    //추가 설명 UI 보여주기
 
         if (bShowEffectAreaUI)
         {

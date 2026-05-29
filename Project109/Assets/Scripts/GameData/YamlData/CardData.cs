@@ -50,6 +50,10 @@ public class CardData : IModAssetResolver
     // 예: { "preserve_mastery": ["Preserve"] } → 해당 마스터리 획득 시 Preserve 태그 부착
     public Dictionary<string, List<string>> masteryTags { get; set; } = new();
 
+    // 마스터리 항목별 표시 이름 (CardDescription SO에서 편입)
+    // 예: { "power_up": "파워 업", "cost_reduce": "코스트 감소" }
+    public Dictionary<string, string> masteryNames { get; set; } = new();
+
     // 런타임에 cardName을 통해 자동으로 로드되는 리소스들 (YAML 파싱에서 제외)
     [YamlIgnore]
     public Sprite cardSprite { get; set; }

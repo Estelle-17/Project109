@@ -101,6 +101,22 @@ public class MapManager : MonoBehaviour
                     // 적 생성
                     GameObject newMonster = Instantiate(monsterPrefab, worldPos, Quaternion.identity);
 
+                    // 적 캐릭터의 방향을 Down으로 설정하고 3D 회전 업데이트
+                    Character enemyCharacter = newMonster.GetComponent<Character>();
+                    if (enemyCharacter == null)
+                    {
+                        var controller = newMonster.GetComponent<ICharacterController>();
+                        if (controller != null)
+                        {
+                            enemyCharacter = controller.controlledCharacter;
+                        }
+                    }
+
+                    if (enemyCharacter != null && enemyCharacter.characterMove != null)
+                    {
+                        enemyCharacter.characterMove.SetFacingDirection(LookDirection.Down);
+                    }
+
                     currentSpawnEnemyList.Add(newMonster);
                 }
             }

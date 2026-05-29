@@ -4,7 +4,7 @@ using System.Linq;
 using GameItem.Types;
 using XLua;
 
-public class CardBase : IDescribable
+public class Card : IDescribable
 {
     // 정적 카드 데이터 템플릿
     public CardData cardData { get; private set; }
@@ -28,23 +28,17 @@ public class CardBase : IDescribable
     // 전투 중 임시로 생성된 카드인지 여부
     public bool isTemporary { get; set; }
 
-    // 현재 누적 숙련도 포인트 및 상세 스탯
-    public CardMasteryStat masteryStat { get; private set; }
+    // 숙련도 상태 (CardMasteryStat 인라인화)
+    public int masteryLevel { get; set; }
+    public float currentMasteryXP { get; set; }
+    public float maxMasteryXP { get; private set; }
+    public float masteryXPIncreasePerLevel { get; private set; }
 
-    public float currentMasteryPoint 
-    { 
-        get => masteryStat != null ? masteryStat.current_mastery_value : 0f; 
-        set { if (masteryStat != null) masteryStat.current_mastery_value = value; }
-    }
-
-    public int masteryLevel 
-    { 
-        get => masteryStat != null ? masteryStat.mastery_level : 0; 
-        set { if (masteryStat != null) masteryStat.mastery_level = value; }
-    }
+    // 마스터리 시스템이 활성화된 카드인지 여부 (maxMasteryXP > 0)
+    public bool hasMastery => maxMasteryXP > 0;
 
     // 이 카드 인스턴스가 획득한 세부 마스터리 업그레이드 현황 (마스터리ID -> 강화횟수)
-    public Dictionary<string, int> activeMasteryUpgrades { get; private set; } = new Dictionary<string, int>();
+    public Dictionary<string, int> masteryUpgrades { get; private set; } = new Dictionary<string, int>();
 
     // 이 인스턴스에 붙은 태그 이름 목록 (예: "Preserve", "Vanguard")
     public HashSet<string> tagNames { get; private set; } = new HashSet<string>();
@@ -58,7 +52,7 @@ public class CardBase : IDescribable
     private readonly LuaTable luaTable;
     private readonly List<object> activeProxies = new List<object>();
 
-    public CardBase(CardData data, Character owner, LuaTable luaLogic, int runtimeID)
+    public Card(CardData data, Character owner, LuaTable luaLogic, int runtimeID)
     {
         this.cardData = data;
         this.owner = owner;
@@ -72,17 +66,14 @@ public class CardBase : IDescribable
         // 초기 마스터리 스탯 설정
         if (data != null && data.maxMasteryPoint > 0)
         {
-            this.masteryStat = new CardMasteryStat
-            {
-                mastery_level = 0,
-                max_mastery_value = data.maxMasteryPoint,
-                current_mastery_value = 0,
-                mastery_increaseValue_on_level = data.maxMasteryPoint / 2.0f
-            };
+            this.masteryLevel = 0;
+            this.maxMasteryXP = data.maxMasteryPoint;
+            this.currentMasteryXP = 0;
+            this.masteryXPIncreasePerLevel = data.maxMasteryPoint / 2.0f;
         }
 
         // 1. Lua 측 OnInit 함수 호출 (초기화)
-        var luaOnInit = luaTable?.Get<Action<LuaTable, CardBase, Character>>("OnInit");
+        var luaOnInit = luaTable?.Get<Action<LuaTable, Card, Character>>("OnInit");
         luaOnInit?.Invoke(luaTable, this, owner);
 
         // 2. 캐릭터 이벤트 자동 바인딩
@@ -91,6 +82,7 @@ public class CardBase : IDescribable
             LuaEventBinder.BindCharacterEvents(luaTable, owner.eventBus, activeProxies);
         }
     }
+
 
     public void Dispose()
     {
@@ -105,7 +97,7 @@ public class CardBase : IDescribable
         }
 
         // 2. Lua 측 OnRemoved 함수 호출
-        var luaOnRemoved = luaTable?.Get<Action<LuaTable, CardBase, Character>>("OnRemoved");
+        var luaOnRemoved = luaTable?.Get<Action<LuaTable, Card, Character>>("OnRemoved");
         luaOnRemoved?.Invoke(luaTable, this, owner);
 
         // 3. 캐릭터 이벤트 버스 구독 해제
@@ -122,7 +114,7 @@ public class CardBase : IDescribable
     /// <summary>
     /// 카드 인스턴스를 마스터리 및 태그 상태를 포함하여 깊은 복사(Deep Copy)합니다.
     /// </summary>
-    public CardBase Clone(Character newOwner = null)
+    public Card Clone(Character newOwner = null)
     {
         // 1. 새로운 Lua 인스턴스 생성
         LuaTable luaInstance = null;
@@ -138,31 +130,28 @@ public class CardBase : IDescribable
             }
             catch (System.Exception e)
             {
-                UnityEngine.Debug.LogError($"[CardBase.Clone] '{cardData.cardName}' Lua 인스턴스 생성 실패:\n{e.Message}");
+                UnityEngine.Debug.LogError($"[Card.Clone] '{cardData.cardName}' Lua 인스턴스 생성 실패:\n{e.Message}");
             }
         }
 
-        // 2. CardBase 인스턴스 생성
-        CardBase clonedCard = new CardBase(cardData, newOwner ?? this.owner, luaInstance, this.runtimeID);
+        // 2. Card 인스턴스 생성
+        Card clonedCard = new Card(cardData, newOwner ?? this.owner, luaInstance, this.runtimeID);
 
         // 3. 마스터리 통계 정보 복사
-        if (this.masteryStat != null)
+        if (this.hasMastery)
         {
-            clonedCard.masteryStat = new CardMasteryStat
-            {
-                mastery_level = this.masteryStat.mastery_level,
-                max_mastery_value = this.masteryStat.max_mastery_value,
-                current_mastery_value = this.masteryStat.current_mastery_value,
-                mastery_increaseValue_on_level = this.masteryStat.mastery_increaseValue_on_level
-            };
+            clonedCard.masteryLevel = this.masteryLevel;
+            clonedCard.maxMasteryXP = this.maxMasteryXP;
+            clonedCard.currentMasteryXP = this.currentMasteryXP;
+            clonedCard.masteryXPIncreasePerLevel = this.masteryXPIncreasePerLevel;
         }
 
         // 4. 습득한 마스터리 업그레이드 현황 복사
-        if (this.activeMasteryUpgrades != null)
+        if (this.masteryUpgrades != null)
         {
-            foreach (var kvp in this.activeMasteryUpgrades)
+            foreach (var kvp in this.masteryUpgrades)
             {
-                clonedCard.activeMasteryUpgrades[kvp.Key] = kvp.Value;
+                clonedCard.masteryUpgrades[kvp.Key] = kvp.Value;
             }
         }
 
@@ -198,9 +187,9 @@ public class CardBase : IDescribable
             val = baseVal;
         }
 
-        if (activeMasteryUpgrades != null)
+        if (masteryUpgrades != null)
         {
-            foreach (var upgrade in activeMasteryUpgrades)
+            foreach (var upgrade in masteryUpgrades)
             {
                 string masteryId = upgrade.Key;
                 int level = upgrade.Value;
@@ -222,7 +211,7 @@ public class CardBase : IDescribable
     /// </summary>
     public int GetMasteryLevel(string masteryId)
     {
-        if (activeMasteryUpgrades != null && activeMasteryUpgrades.TryGetValue(masteryId, out int level))
+        if (masteryUpgrades != null && masteryUpgrades.TryGetValue(masteryId, out int level))
         {
             return level;
         }
@@ -236,7 +225,7 @@ public class CardBase : IDescribable
     {
         string template = cardData?.description ?? string.Empty;
 
-        var luaFunc = luaTable?.Get<Func<LuaTable, CardBase, string, string>>("GetDescription");
+        var luaFunc = luaTable?.Get<Func<LuaTable, Card, string, string>>("GetDescription");
         if (luaFunc != null)
             return luaFunc(luaTable, this, template);
 
@@ -248,12 +237,12 @@ public class CardBase : IDescribable
     /// </summary>
     public void AddMasteryPoint(float amount)
     {
-        if (masteryStat == null) return;
+        if (!hasMastery) return;
 
-        masteryStat.current_mastery_value += amount;
-        UnityEngine.Debug.Log($"Added {amount} mastery points to card {cardData?.cardName}. Current: {masteryStat.current_mastery_value}/{masteryStat.max_mastery_value}");
+        currentMasteryXP += amount;
+        UnityEngine.Debug.Log($"Added {amount} mastery points to card {cardData?.cardName}. Current: {currentMasteryXP}/{maxMasteryXP}");
 
-        if (masteryStat.current_mastery_value >= masteryStat.max_mastery_value)
+        if (currentMasteryXP >= maxMasteryXP)
         {
             TriggerMasteryUpgradeUI();
         }
@@ -272,26 +261,25 @@ public class CardBase : IDescribable
     /// </summary>
     public void AddMastery(string masteryID)
     {
-        if (activeMasteryUpgrades == null)
+        if (masteryUpgrades == null)
         {
-            activeMasteryUpgrades = new Dictionary<string, int>();
+            masteryUpgrades = new Dictionary<string, int>();
         }
 
-        if (!activeMasteryUpgrades.ContainsKey(masteryID))
+        if (!masteryUpgrades.ContainsKey(masteryID))
         {
-            activeMasteryUpgrades.Add(masteryID, 1);
+            masteryUpgrades.Add(masteryID, 1);
         }
         else
         {
-            activeMasteryUpgrades[masteryID]++;
+            masteryUpgrades[masteryID]++;
         }
 
-        if (masteryStat != null)
+        if (hasMastery)
         {
-            masteryStat.mastery_level++;
-            masteryStat.current_mastery_value = UnityEngine.Mathf.Max(0f, masteryStat.current_mastery_value - masteryStat.max_mastery_value);
-            masteryStat.max_mastery_value += masteryStat.mastery_increaseValue_on_level;
-            this.masteryLevel = masteryStat.mastery_level;
+            masteryLevel++;
+            currentMasteryXP = UnityEngine.Mathf.Max(0f, currentMasteryXP - maxMasteryXP);
+            maxMasteryXP += masteryXPIncreasePerLevel;
         }
 
         // 1. 코스트 재계산: masteryUpgrades에 "cost" 키가 있으면 currentCost를 갱신

@@ -2,7 +2,7 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
-using Card.Types;
+using CardTypes;
 
 public enum TileType
 {

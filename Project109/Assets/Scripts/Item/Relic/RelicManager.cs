@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 public class RelicManager
 {
-    public event Action<RelicBase> OnRelicAddedEvent;
-    public event Action<RelicBase> OnRelicRemovedEvent;
+    public event Action<Relic> OnRelicAddedEvent;
+    public event Action<Relic> OnRelicRemovedEvent;
 
-    private List<RelicBase> relics = new List<RelicBase>();
+    private List<Relic> relics = new List<Relic>();
     private Player owner;
 
     public RelicManager(Player owner)
@@ -16,7 +16,7 @@ public class RelicManager
 
     public void AddRelic(string relicId)
     {
-        RelicBase relic = ModObjectFactory.CreateRelic(relicId, owner);
+        Relic relic = ModObjectFactory.CreateRelic(relicId, owner);
         if (relic != null)
         {
             relics.Add(relic);
@@ -31,7 +31,7 @@ public class RelicManager
 
     public void RemoveRelic(string relicId)
     {
-        RelicBase relic = relics.Find(r => r.Data != null && r.Data.relicName == relicId);
+        Relic relic = relics.Find(r => r.Data != null && r.Data.relicName == relicId);
         if (relic != null)
         {
             relics.Remove(relic);
@@ -42,18 +42,18 @@ public class RelicManager
         }
     }
 
-    public RelicBase GetRandomRelic()
+    public Relic GetRandomRelic()
     {
         if (relics.Count == 0) return null;
         return relics[UnityEngine.Random.Range(0, relics.Count)];
     }
 
-    public RelicBase GetSpecificRelic(string relicId)
+    public Relic GetSpecificRelic(string relicId)
     {
         return relics.Find(r => r.Data != null && r.Data.relicName == relicId);
     }
     
-    public IReadOnlyList<RelicBase> GetRelics()
+    public IReadOnlyList<Relic> GetRelics()
     {
         return relics;
     }

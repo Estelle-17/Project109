@@ -1,11 +1,11 @@
+using GameItem.Types;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using GameItem.Types;
 
-public class CardRewardHandler : UIPanelBase
+public class CardRewardPanel : UIPanelBase
 {
-    [SerializeField] private List<ActionCardHandler> cardList;
+    [SerializeField] private List<CardUI> cardList;
 
     public GameObject rootObject;
     public GameObject cardObjectPrefab;
@@ -22,14 +22,14 @@ public class CardRewardHandler : UIPanelBase
 
         for (int count = 0; count < rewardCardCount; count++)
         {
-            ActionCardHandler card = Instantiate(cardObjectPrefab, cardSpawnTransform).GetComponent<ActionCardHandler>();
+            CardUI card = Instantiate(cardObjectPrefab, cardSpawnTransform).GetComponent<CardUI>();
 
-            if(card == null)
+            if (card == null)
                 continue;
 
-            ActionCardData cardData = GameItemRewardManager.instance.GetRandomCardDataByPickupType(pickupType);
+            CardData cardData = GameItemRewardManager.instance.GetRandomCardDataByPickupType(pickupType);
 
-            card.UpdateActionCardData(cardData);
+            card.UpdateCardData(cardData);
             card.bShowEffectAreaUI = true;
 
             card.OnCardClick.AddListener(() => GetCard(cardData));
@@ -37,14 +37,15 @@ public class CardRewardHandler : UIPanelBase
     }
 
 
-    void GetCard(ActionCardData newCardData)
+    void GetCard(CardData newCardData)
     {
-        CardDeckManager.instance.AddCard(newCardData);
-        UIManager.instance.HideCardExtraDescription();
+        if (RunManager.instance != null && RunManager.instance.player != null)
+        {
+            RunManager.instance.player.deck.AddCard(newCardData);
+        }
         UIManager.instance.ReactivateTempDeactiveUIPanel();
         //이 카드 선택지를 제공한 NPC오브젝트 제거 및 캔버스 제거
         Destroy(rootObject);
         Destroy(gameObject);
     }
-    
 }

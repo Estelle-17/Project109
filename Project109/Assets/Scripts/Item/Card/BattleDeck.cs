@@ -12,10 +12,10 @@ public class BattleDeck
     private readonly Character owner;
 
     // 전투 중 카드 더미
-    public List<CardBase> drawPile { get; } = new();
-    public List<CardBase> hand { get; } = new();
-    public List<CardBase> discardPile { get; } = new();
-    public List<CardBase> exhaustPile { get; } = new();
+    public List<Card> drawPile { get; } = new();
+    public List<Card> hand { get; } = new();
+    public List<Card> discardPile { get; } = new();
+    public List<Card> exhaustPile { get; } = new();
 
     public BattleDeck(Character owner)
     {
@@ -25,7 +25,7 @@ public class BattleDeck
     /// <summary>
     /// 전투 시작 시 덱 상태 초기화
     /// </summary>
-    public void InitDeck(List<CardBase> masterDeck)
+    public void InitDeck(List<Card> masterDeck)
     {
         drawPile.Clear();
         drawPile.AddRange(masterDeck);
@@ -111,7 +111,7 @@ public class BattleDeck
     /// <summary>
     /// 손패에서 특정 카드를 제거합니다. (단순 제거용)
     /// </summary>
-    public bool RemoveFromHand(CardBase card)
+    public bool RemoveFromHand(Card card)
     {
         return hand.Remove(card);
     }
@@ -119,7 +119,7 @@ public class BattleDeck
     /// <summary>
     /// 특정 카드를 소거(Erase)하여 손패에서 제거하고 이벤트를 발생시킵니다.
     /// </summary>
-    public void EraseCard(CardBase card, CardInfo info)
+    public void EraseCard(Card card, CardInfo info)
     {
         owner?.eventBus.Invoke<IOnEraseCard>(c => c.OnEraseCard(info));
         hand.Remove(card);
@@ -128,7 +128,7 @@ public class BattleDeck
     /// <summary>
     /// 특정 카드를 버림패 더미에 추가합니다.
     /// </summary>
-    public void DiscardCard(CardBase card, CardInfo info)
+    public void DiscardCard(Card card, CardInfo info)
     {
         owner?.eventBus.Invoke<IOnDiscardCard>(c => c.OnDiscardCard(info));
         discardPile.Add(card);
@@ -137,7 +137,7 @@ public class BattleDeck
     /// <summary>
     /// 특정 카드를 소멸패 더미에 추가합니다.
     /// </summary>
-    public void ExhaustCard(CardBase card, CardInfo info)
+    public void ExhaustCard(Card card, CardInfo info)
     {
         owner?.eventBus.Invoke<IOnExhaustCard>(c => c.OnExhaustCard(info));
         exhaustPile.Add(card);

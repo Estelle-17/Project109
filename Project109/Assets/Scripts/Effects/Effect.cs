@@ -8,7 +8,7 @@ public enum EffectType
     Debuff
 }
 
-public class EffectBase : IDescribable
+public class Effect : IDescribable
 {
     // Lua 스크립트에서 접근할 수 있도록 getter를 public으로 개방
     public Character caster { get; protected set; }
@@ -25,13 +25,13 @@ public class EffectBase : IDescribable
     private List<object> activeProxies = new List<object>();
 
     // 데이터 기반(모딩) 이펙트용 단일 생성자
-    public EffectBase(EffectData data, LuaTable luaLogic)
+    public Effect(EffectData data, LuaTable luaLogic)
     {
         this.Data = data;
         this.luaTable = luaLogic;
 
         // 추가적인 Lua 자체 초기화 호출
-        var luaOnInit = luaTable?.Get<Action<LuaTable, EffectBase>>("OnInit");
+        var luaOnInit = luaTable?.Get<Action<LuaTable, Effect>>("OnInit");
         luaOnInit?.Invoke(luaTable, this);
     }
 
@@ -46,7 +46,7 @@ public class EffectBase : IDescribable
         if (luaTable != null)
         {
             // 1. Lua 측 OnAdded 실행 (Lua에서 초기값 덮어쓰기 가능)
-            var luaOnAdded = luaTable.Get<Action<LuaTable, EffectBase, Character, Character, int, float>>("OnAdded");
+            var luaOnAdded = luaTable.Get<Action<LuaTable, Effect, Character, Character, int, float>>("OnAdded");
             luaOnAdded?.Invoke(luaTable, this, caster, target, stack, duration);
 
             // 2. 캐릭터 이벤트 버스 자동 바인딩
@@ -59,7 +59,7 @@ public class EffectBase : IDescribable
 
     public void OnStacked(int stack, float duration) 
     {
-        var luaOnStacked = luaTable?.Get<Action<LuaTable, EffectBase, int, float>>("OnStacked");
+        var luaOnStacked = luaTable?.Get<Action<LuaTable, Effect, int, float>>("OnStacked");
         if (luaOnStacked != null)
         {
             // Lua에서 스택 및 지속시간 합산 로직을 직접 제어
@@ -76,13 +76,13 @@ public class EffectBase : IDescribable
 
     public void OnTick() 
     { 
-        var luaOnTick = luaTable?.Get<Action<LuaTable, EffectBase>>("OnTick");
+        var luaOnTick = luaTable?.Get<Action<LuaTable, Effect>>("OnTick");
         luaOnTick?.Invoke(luaTable, this);
     }
 
     public void OnTimeOut()
     {
-        var luaOnTimeOut = luaTable?.Get<Action<LuaTable, EffectBase>>("OnTimeOut");
+        var luaOnTimeOut = luaTable?.Get<Action<LuaTable, Effect>>("OnTimeOut");
         if (luaOnTimeOut != null)
         {
             // 타임아웃 처리를 Lua에 완전 위임
@@ -104,7 +104,7 @@ public class EffectBase : IDescribable
         if (luaTable != null)
         {
             // 1. Lua 측 OnRemoved 실행
-            var luaOnRemoved = luaTable.Get<Action<LuaTable, EffectBase>>("OnRemoved");
+            var luaOnRemoved = luaTable.Get<Action<LuaTable, Effect>>("OnRemoved");
             luaOnRemoved?.Invoke(luaTable, this);
 
             // 2. 이벤트 버스 구독 해제
@@ -130,7 +130,7 @@ public class EffectBase : IDescribable
     {
         string template = Data?.description ?? string.Empty;
 
-        var luaFunc = luaTable?.Get<Func<LuaTable, EffectBase, string, string>>("GetDescription");
+        var luaFunc = luaTable?.Get<Func<LuaTable, Effect, string, string>>("GetDescription");
         if (luaFunc != null)
             return luaFunc(luaTable, this, template);
 

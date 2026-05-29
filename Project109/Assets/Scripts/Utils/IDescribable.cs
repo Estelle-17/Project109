@@ -1,6 +1,6 @@
 /// <summary>
 /// 인게임에서 설명 텍스트를 제공할 수 있는 객체를 나타내는 인터페이스.
-/// RelicBase, EffectBase, CardBase 등이 구현합니다.
+/// Relic, Effect, Card 등이 구현합니다.
 /// </summary>
 public interface IDescribable
 {

@@ -1,12 +1,10 @@
 #if UNITY_EDITOR
-using Codice.CM.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Unity.VisualScripting.YamlDotNet.Serialization.NodeDeserializers;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
@@ -571,82 +569,7 @@ public class YAMLImporter
         Debug.Log("YAML import complete.");
     }
 
-    [MenuItem("Tools/Import CardDescription YAML")]
-    //[System.Obsolete]
-    public static void ImportCardDescriptionYAML()
-    {
-        string yamlPath = "Assets/Data/CardDescription.yaml";
-        string schemaPath = "Assets/Data/CardDescriptionSchema.yaml";
 
-        string yamlText = File.ReadAllText(yamlPath);
-        string schemaYamlText = File.ReadAllText(schemaPath);
-
-        //YAML -> Json으로 변환
-        var deserializer = new DeserializerBuilder()
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .WithNodeTypeResolver(new NumericTypeResolver())
-            .Build();
-        var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
-
-        var jsonSerializer = new SerializerBuilder()
-            .JsonCompatible()
-            .Build();
-        string jsonText = jsonSerializer.Serialize(yamlObject);
-
-        //YAML Schema -> Json Schema로 변환
-        var schemaYamlObject = deserializer.Deserialize(new StringReader(schemaYamlText));
-        string schemaJsonText = jsonSerializer.Serialize(schemaYamlObject);
-
-        JSchema schema = JSchema.Parse(schemaJsonText);
-
-        JObject jsonObj = JObject.Parse(jsonText);
-        if (!jsonObj.IsValid(schema, out IList<string> errorMessages))
-        {
-            Debug.LogError("❌ YAML validation failed:");
-            foreach (var error in errorMessages)
-                Debug.LogError(error);
-            return;
-        }
-
-        Debug.Log("YAML validation Success:");
-
-        //검증에 성공하면 ScriptableObject 생성
-        var rawData = deserializer.Deserialize<RootCardDescriptionData>(yamlText);
-
-        foreach (var card in rawData.cardDescriptionCollection)
-        {
-            var asset = ScriptableObject.CreateInstance<CardDescription>();
-            asset.path = card.path;
-            asset.cardName = card.cardName;
-            asset.description = card.description;
-            asset.extraDescriptions = card.extraDescriptions;
-            asset.masteryDescriptions = card.masteryDescriptions;
-
-            var path = $"Assets/SO/Description/{card.path + "_Description"}.asset";
-            Directory.CreateDirectory("Assets/SO/Description");
-            AssetDatabase.CreateAsset(asset, path);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            //Addressable에 등록
-            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
-            if (settings == null)
-            {
-                Debug.LogError("Addressables 설정이 존재하지 않습니다.");
-                return;
-            }
-
-            AddressableAssetEntry entry = settings.CreateOrMoveEntry(
-                AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "Description")
-            );
-            entry.address = card.path + "_Description";
-            entry.SetLabel("Description", true);
-            Debug.Log("Addressables에 등록 완료: " + entry.address);
-        }
-
-        Debug.Log("YAML import complete.");
-    }
 
     [MenuItem("Tools/Import Obstacle YAML")]
     //[System.Obsolete]
@@ -927,19 +850,7 @@ public class YAMLImporter
         public List<string> appearTrapsDataPath { get; set; }
     }
 
-    public class RootCardDescriptionData
-    {
-        public List<CardDescriptionEntry> cardDescriptionCollection { get; set; }
-    }
 
-    public class CardDescriptionEntry
-    {
-        public string path { get; set; }
-        public string cardName { get; set; }
-        public string description { get; set; }
-        public List<ExtraDescription> extraDescriptions { get; set; }
-        public List<MasteryDescription> masteryDescriptions { get; set; }
-    }
 
     public class RootObstacleData
     {

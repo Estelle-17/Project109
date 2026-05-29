@@ -44,7 +44,7 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
                 break;
             case ItemRewardUIType.Card:
                 currentRewardUIObject = Instantiate(cardRewardUIPrefab);
-                CardRewardHandler cardRewardHandler = currentRewardUIObject.GetComponent<CardRewardHandler>();
+                CardRewardPanel cardRewardHandler = currentRewardUIObject.GetComponent<CardRewardPanel>();
                 cardRewardHandler.SettingCards(cardType, RunManager.instance.player.playerStat.reward_Card_Count);    //보여줄 아이템의 수는 상황에 따라 변경 가능
                 cardRewardHandler.rootObject = this.gameObject;
                 cardRewardHandler.gameObject.SetActive(false);
@@ -85,7 +85,7 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
                 break;
             case ItemRewardUIType.Card:
                 UIManager.instance.TempDeactivateCurrentActiveUIPanel();
-                currentRewardUIObject.GetComponent<CardRewardHandler>().UIActive();
+                currentRewardUIObject.GetComponent<CardRewardPanel>().UIActive();
                 break;
             case ItemRewardUIType.Relic:
                 RunManager.instance.player.AddRelic(rewardRelicData.relicName);

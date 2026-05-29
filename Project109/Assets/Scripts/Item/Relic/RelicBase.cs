@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using XLua;
 
-public class RelicBase : IDescribable
+public class Relic : IDescribable
 {
     public RelicData Data { get; private set; }
     public int Counter { get; set; }
@@ -15,14 +15,14 @@ public class RelicBase : IDescribable
 
     private readonly List<object> activeProxies = new();
 
-    public RelicBase(RelicData data, Player owner, LuaTable luaLogic)
+    public Relic(RelicData data, Player owner, LuaTable luaLogic)
     {
         this.Data = data;
         this.owner = owner;
         this.luaLogic = luaLogic;
 
         // 1. Lua 측 OnInit 함수 호출 (초기화, 카운터 세팅 등)
-        var luaOnInit = luaLogic.Get<Action<LuaTable, RelicBase, Player>>("OnInit");
+        var luaOnInit = luaLogic.Get<Action<LuaTable, Relic, Player>>("OnInit");
         luaOnInit?.Invoke(luaLogic, this, owner);
 
         // 2. 캐릭터 이벤트 (전투, 체력, 이동 등) 자동 바인딩
@@ -41,7 +41,7 @@ public class RelicBase : IDescribable
     public void Dispose()
     {
         // 1. Lua 측 OnRemoved 함수 호출 (유물이 파괴되거나 게임오버 시)
-        var luaOnRemoved = luaLogic.Get<Action<LuaTable, RelicBase, Player>>("OnRemoved");
+        var luaOnRemoved = luaLogic.Get<Action<LuaTable, Relic, Player>>("OnRemoved");
         luaOnRemoved?.Invoke(luaLogic, this, owner);
 
         // 2. 이벤트 버스 구독 해제
@@ -69,7 +69,7 @@ public class RelicBase : IDescribable
     {
         string template = Data?.description ?? string.Empty;
 
-        var luaFunc = luaLogic?.Get<Func<LuaTable, RelicBase, string, string>>("GetDescription");
+        var luaFunc = luaLogic?.Get<Func<LuaTable, Relic, string, string>>("GetDescription");
         if (luaFunc != null)
             return luaFunc(luaLogic, this, template);
 

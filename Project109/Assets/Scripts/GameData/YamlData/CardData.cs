@@ -37,9 +37,18 @@ public class CardData : IModAssetResolver
     // 카드 효과 템플릿 설명 (동적 토큰 지원 가능)
     public string description { get; set; }
 
-    // 대안 B: 기본 수치 및 마스터리 업그레이드 수치 정의
+    // 기본 수치 및 마스터리 업그레이드 수치 정의
+    // masteryUpgrades: masteryId → { valueKey → 강화량 }
     public Dictionary<string, float> baseValues { get; set; } = new();
     public Dictionary<string, Dictionary<string, float>> masteryUpgrades { get; set; } = new();
+
+    // 각 마스터리 항목의 최대 선택 횟수 (0 또는 키 없음 = 무제한)
+    // 예: { "power_up": 3 }  → "power_up" 마스터리는 최대 3번만 선택 가능
+    public Dictionary<string, int> masteryMaxUpgrades { get; set; } = new();
+
+    // 마스터리 획득 시 카드에 추가되는 태그 목록
+    // 예: { "preserve_mastery": ["Preserve"] } → 해당 마스터리 획득 시 Preserve 태그 부착
+    public Dictionary<string, List<string>> masteryTags { get; set; } = new();
 
     // 런타임에 cardName을 통해 자동으로 로드되는 리소스들 (YAML 파싱에서 제외)
     [YamlIgnore]
@@ -48,41 +57,6 @@ public class CardData : IModAssetResolver
     [YamlIgnore]
     public LuaTable luaPrototype { get; set; }
 
-    /// <summary>
-    /// 현재 적용된 마스터리 업그레이드 레벨에 따라 최종 수치를 계산하여 반환합니다.
-    /// </summary>
-    public float GetEffectiveValue(string valueKey)
-    {
-        float val = 0;
-        if (baseValues != null && baseValues.TryGetValue(valueKey, out float baseVal))
-        {
-            val = baseVal;
-        }
-
-        // CardMasteryManager에서 현재 카드의 업그레이드 목록(Dictionary<masteryId, level>)을 가져옵니다.
-
-        if (CardMasteryManager.instance != null)
-        {
-            var activeUpgrades = CardMasteryManager.instance.GetCardMasteryUpgrades(this.cardName);
-            if (activeUpgrades != null)
-            {
-                foreach (var upgrade in activeUpgrades)
-                {
-                    string masteryId = upgrade.Key;
-                    int level = upgrade.Value;
-
-                    if (masteryUpgrades != null && masteryUpgrades.TryGetValue(masteryId, out var modifierDict))
-                    {
-                        if (modifierDict != null && modifierDict.TryGetValue(valueKey, out float modifier))
-                        {
-                            val += modifier * level;
-                        }
-                    }
-                }
-            }
-        }
-        return val;
-    }
 
     public bool ResolveAndValidate(string modDirectory)
     {

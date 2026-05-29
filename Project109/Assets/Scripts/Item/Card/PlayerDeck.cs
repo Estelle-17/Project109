@@ -85,30 +85,62 @@ public class PlayerDeck
         if (cardToUpgrade != null && cardToUpgrade.cardData != null && cardToUpgrade.cardData.isUpgradable)
         {
             string upgradedName = cardToUpgrade.cardData.upgradedCardName;
-            if (!string.IsNullOrEmpty(upgradedName) && AssetCacheManager.instance != null)
+            if (!string.IsNullOrEmpty(upgradedName))
             {
-                // ActionCardData 캐시와 연동하여 임시 매핑
-                if (AssetCacheManager.instance.TryGetCard(upgradedName, out ActionCardData newCardData))
+                if (ModLoader.Instance.CardDatabase.TryGetValue(upgradedName, out CardData upgradeCardData))
                 {
-                    // 추후 YAML CardData 로드가 완성되면 완전히 CardData 기반으로 교환 예정.
+                    CardBase newCard = CreateNewCard(upgradeCardData, runtimeID);
+                    
+                    // 기존 마스터리 정보 보존
+                    if (cardToUpgrade.masteryStat != null && newCard.masteryStat != null)
+                    {
+                        newCard.currentMasteryPoint = cardToUpgrade.currentMasteryPoint;
+                        newCard.masteryLevel = cardToUpgrade.masteryLevel;
+                    }
+                    
+                    if (cardToUpgrade.activeMasteryUpgrades != null)
+                    {
+                        foreach (var kvp in cardToUpgrade.activeMasteryUpgrades)
+                        {
+                            newCard.activeMasteryUpgrades[kvp.Key] = kvp.Value;
+                        }
+                    }
+
+                    // 마스터리로 붙은 태그도 보존 (AddTag를 통해 C# 및 Lua 로직 바인딩)
+                    if (cardToUpgrade.tagNames != null)
+                    {
+                        foreach (var tag in cardToUpgrade.tagNames)
+                        {
+                            newCard.AddTag(tag);
+                        }
+                    }
+
+
+                    int index = cards.IndexOf(cardToUpgrade);
+                    if (index >= 0)
+                    {
+                        cards[index] = newCard;
+                        cardToUpgrade.Dispose();
+                    }
+
+                    owner.eventBus.Invoke<IOnCardUpgrade>(c => c.OnCardUpgrade(newCard));
                 }
             }
-
-            owner.eventBus.Invoke<IOnCardUpgrade>(c => c.OnCardUpgrade(cardToUpgrade));
         }
+
+        RequestAllCardRefresh();
     }
 
     /// <summary>
-    /// 특정 카드를 영구 진화시킵니다.
+    /// 카드에 마스터리 업그레이드를 적용하고 IOnCardMasteryUpgrade 이벤트를 발행합니다.
+    /// MasteryChoiceHandler에서 card.AddMastery()를 직접 호출하는 대신 이 메서드를 사용합니다.
     /// </summary>
-    public void EvolveCard(int runtimeID, EvolveType type)
+    public void ApplyMastery(CardBase card, string masteryId)
     {
-        CardBase cardToEvolve = cards.FirstOrDefault(c => c.runtimeID == runtimeID);
-        if (cardToEvolve != null)
-        {
-            // 진화 데이터 설정
-            owner.eventBus.Invoke<IOnCardEvolve>(c => c.OnCardEvolve(cardToEvolve));
-        }
+        if (card == null || !cards.Contains(card)) return;
+
+        card.AddMastery(masteryId);
+        owner.eventBus.Invoke<IOnCardMasteryUpgrade>(c => c.OnCardMasteryUpgrade(card, masteryId));
     }
 
     /// <summary>
@@ -129,6 +161,14 @@ public class PlayerDeck
     }
 
     /// <summary>
+    /// 지정된 ID(경로)의 카드를 가져옵니다.
+    /// </summary>
+    public CardBase GetCardByID(string id)
+    {
+        return cards.FirstOrDefault(c => c.cardData != null && c.cardData.cardName == id);
+    }
+
+    /// <summary>
     /// 모든 카드 변경 이벤트(새고고침)를 강제 호출합니다.
     /// </summary>
     public void RequestAllCardRefresh()
@@ -136,7 +176,7 @@ public class PlayerDeck
         owner.eventBus.Invoke<IOnCardsRefreshed>(c => c.OnCardsRefreshed());
     }
 
-    private CardBase CreateNewCard(CardData cardData)
+    private CardBase CreateNewCard(CardData cardData, int? customRuntimeID = null)
     {
         LuaTable luaInstance = null;
         if (cardData.luaPrototype != null)
@@ -155,7 +195,8 @@ public class PlayerDeck
             }
         }
 
-        CardBase newCard = new CardBase(cardData, owner.character, luaInstance, nextRuntimeID++);
+        int id = customRuntimeID ?? nextRuntimeID++;
+        CardBase newCard = new CardBase(cardData, owner.character, luaInstance, id);
         return newCard;
     }
 }

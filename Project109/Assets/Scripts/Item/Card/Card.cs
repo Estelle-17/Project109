@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using GameItem.Types;
 using XLua;
 
 public class CardBase : IDescribable
@@ -19,17 +21,37 @@ public class CardBase : IDescribable
     // 전투 중 실시간 변동이 반영되는 카드 비용 (기본값: Data.stamina)
     public int currentCost { get; set; }
 
+    // 하위 호환성 및 Lua 모딩용 프록시 프로퍼티
+    public string cardName => cardData != null ? cardData.cardName : string.Empty;
+    public string path => cardData != null ? cardData.cardName : string.Empty;
+
     // 전투 중 임시로 생성된 카드인지 여부
     public bool isTemporary { get; set; }
 
-    // 현재 누적 숙련도 포인트
-    public float currentMasteryPoint { get; set; }
+    // 현재 누적 숙련도 포인트 및 상세 스탯
+    public CardMasteryStat masteryStat { get; private set; }
 
-    // 현재 마스터리 레벨
-    public int masteryLevel { get; set; }
+    public float currentMasteryPoint 
+    { 
+        get => masteryStat != null ? masteryStat.current_mastery_value : 0f; 
+        set { if (masteryStat != null) masteryStat.current_mastery_value = value; }
+    }
+
+    public int masteryLevel 
+    { 
+        get => masteryStat != null ? masteryStat.mastery_level : 0; 
+        set { if (masteryStat != null) masteryStat.mastery_level = value; }
+    }
 
     // 이 카드 인스턴스가 획득한 세부 마스터리 업그레이드 현황 (마스터리ID -> 강화횟수)
     public Dictionary<string, int> activeMasteryUpgrades { get; private set; } = new Dictionary<string, int>();
+
+    // 이 인스턴스에 붙은 태그 이름 목록 (예: "Preserve", "Vanguard")
+    public HashSet<string> tagNames { get; private set; } = new HashSet<string>();
+
+    // 이 카드 인스턴스에 장착된 태그(동작 포함) 목록
+    public List<CardTag> attachedTags { get; private set; } = new List<CardTag>();
+
 
     #endregion
 
@@ -47,6 +69,18 @@ public class CardBase : IDescribable
 
         this.currentCost = data != null ? data.stamina : 0;
 
+        // 초기 마스터리 스탯 설정
+        if (data != null && data.maxMasteryPoint > 0)
+        {
+            this.masteryStat = new CardMasteryStat
+            {
+                mastery_level = 0,
+                max_mastery_value = data.maxMasteryPoint,
+                current_mastery_value = 0,
+                mastery_increaseValue_on_level = data.maxMasteryPoint / 2.0f
+            };
+        }
+
         // 1. Lua 측 OnInit 함수 호출 (초기화)
         var luaOnInit = luaTable?.Get<Action<LuaTable, CardBase, Character>>("OnInit");
         luaOnInit?.Invoke(luaTable, this, owner);
@@ -60,19 +94,95 @@ public class CardBase : IDescribable
 
     public void Dispose()
     {
-        // 1. Lua 측 OnRemoved 함수 호출
+        // 1. 장착된 모든 카드 태그 정리
+        if (attachedTags != null)
+        {
+            foreach (var tag in attachedTags)
+            {
+                tag.OnDetached();
+            }
+            attachedTags.Clear();
+        }
+
+        // 2. Lua 측 OnRemoved 함수 호출
         var luaOnRemoved = luaTable?.Get<Action<LuaTable, CardBase, Character>>("OnRemoved");
         luaOnRemoved?.Invoke(luaTable, this, owner);
 
-        // 2. 캐릭터 이벤트 버스 구독 해제
+        // 3. 캐릭터 이벤트 버스 구독 해제
         if (owner != null && owner.eventBus != null)
         {
             LuaEventBinder.UnbindCharacterEvents(owner.eventBus, activeProxies);
         }
 
-        // 3. 리소스 정리
+        // 4. 리소스 정리
         activeProxies.Clear();
         luaTable?.Dispose();
+    }
+
+    /// <summary>
+    /// 카드 인스턴스를 마스터리 및 태그 상태를 포함하여 깊은 복사(Deep Copy)합니다.
+    /// </summary>
+    public CardBase Clone(Character newOwner = null)
+    {
+        // 1. 새로운 Lua 인스턴스 생성
+        LuaTable luaInstance = null;
+        if (cardData != null && cardData.luaPrototype != null)
+        {
+            try
+            {
+                var newInstanceFunc = LuaManager.Instance?.luaEnv.Global.Get<Func<LuaTable, LuaTable>>("NewInstance");
+                if (newInstanceFunc != null)
+                {
+                    luaInstance = newInstanceFunc(cardData.luaPrototype);
+                }
+            }
+            catch (System.Exception e)
+            {
+                UnityEngine.Debug.LogError($"[CardBase.Clone] '{cardData.cardName}' Lua 인스턴스 생성 실패:\n{e.Message}");
+            }
+        }
+
+        // 2. CardBase 인스턴스 생성
+        CardBase clonedCard = new CardBase(cardData, newOwner ?? this.owner, luaInstance, this.runtimeID);
+
+        // 3. 마스터리 통계 정보 복사
+        if (this.masteryStat != null)
+        {
+            clonedCard.masteryStat = new CardMasteryStat
+            {
+                mastery_level = this.masteryStat.mastery_level,
+                max_mastery_value = this.masteryStat.max_mastery_value,
+                current_mastery_value = this.masteryStat.current_mastery_value,
+                mastery_increaseValue_on_level = this.masteryStat.mastery_increaseValue_on_level
+            };
+        }
+
+        // 4. 습득한 마스터리 업그레이드 현황 복사
+        if (this.activeMasteryUpgrades != null)
+        {
+            foreach (var kvp in this.activeMasteryUpgrades)
+            {
+                clonedCard.activeMasteryUpgrades[kvp.Key] = kvp.Value;
+            }
+        }
+
+        // 5. 붙어 있던 태그 복사 (AddTag를 통해 C# 및 Lua 로직 바인딩)
+        if (this.tagNames != null)
+        {
+            foreach (var tagName in this.tagNames)
+            {
+                clonedCard.AddTag(tagName);
+            }
+        }
+
+        // 6. 비용(currentCost) 복원
+        float costMod = clonedCard.GetEffectiveValue("cost");
+        clonedCard.currentCost = UnityEngine.Mathf.Max(0, (cardData != null ? cardData.stamina : 0) + (int)costMod);
+
+        // 7. 기타 플래그 복사
+        clonedCard.isTemporary = this.isTemporary;
+
+        return clonedCard;
     }
 
     /// <summary>
@@ -131,5 +241,153 @@ public class CardBase : IDescribable
             return luaFunc(luaTable, this, template);
 
         return template;
+    }
+
+    /// <summary>
+    /// 카드 인스턴스에 숙련도 경험치(포인트)를 추가하고 레벨업 여부를 판단합니다.
+    /// </summary>
+    public void AddMasteryPoint(float amount)
+    {
+        if (masteryStat == null) return;
+
+        masteryStat.current_mastery_value += amount;
+        UnityEngine.Debug.Log($"Added {amount} mastery points to card {cardData?.cardName}. Current: {masteryStat.current_mastery_value}/{masteryStat.max_mastery_value}");
+
+        if (masteryStat.current_mastery_value >= masteryStat.max_mastery_value)
+        {
+            TriggerMasteryUpgradeUI();
+        }
+    }
+
+    private void TriggerMasteryUpgradeUI()
+    {
+        if (CardMasteryManager.instance != null)
+        {
+            CardMasteryManager.instance.ProcessMasteryUpgrade(this);
+        }
+    }
+
+    /// <summary>
+    /// 특정 마스터리 업그레이드를 인스턴스에 추가하고 스탯을 갱신합니다.
+    /// </summary>
+    public void AddMastery(string masteryID)
+    {
+        if (activeMasteryUpgrades == null)
+        {
+            activeMasteryUpgrades = new Dictionary<string, int>();
+        }
+
+        if (!activeMasteryUpgrades.ContainsKey(masteryID))
+        {
+            activeMasteryUpgrades.Add(masteryID, 1);
+        }
+        else
+        {
+            activeMasteryUpgrades[masteryID]++;
+        }
+
+        if (masteryStat != null)
+        {
+            masteryStat.mastery_level++;
+            masteryStat.current_mastery_value = UnityEngine.Mathf.Max(0f, masteryStat.current_mastery_value - masteryStat.max_mastery_value);
+            masteryStat.max_mastery_value += masteryStat.mastery_increaseValue_on_level;
+            this.masteryLevel = masteryStat.mastery_level;
+        }
+
+        // 1. 코스트 재계산: masteryUpgrades에 "cost" 키가 있으면 currentCost를 갱신
+        //    YAML 예시: mastery_cost_reduce: { cost: -1 }  → 선택 시마다 코스트 1 감소
+        float costMod = GetEffectiveValue("cost");
+        if (costMod != 0 && cardData != null)
+        {
+            currentCost = UnityEngine.Mathf.Max(0, cardData.stamina + (int)costMod);
+        }
+
+        // 2. 태그 적용: masteryTags에 정의된 태그를 기반으로 동적 태그를 부착
+        //    YAML 예시: mastery_preserve: tags: ["Preserve"] -> Preserve.lua 태그 부착
+        if (cardData?.masteryTags != null &&
+            cardData.masteryTags.TryGetValue(masteryID, out var tags))
+        {
+            foreach (var tag in tags)
+            {
+                AddTag(tag);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 이 카드 인스턴스에 특정 태그가 부착되어 있는지 조회합니다.
+    /// Lua에서도 card:HasTag("Preserve") 형태로 호출 가능합니다.
+    /// </summary>
+    public bool HasTag(string tagName)
+    {
+        return tagNames != null && tagNames.Contains(tagName);
+    }
+
+    /// <summary>
+    /// 카드 인스턴스에 새로운 태그를 부착합니다.
+    /// </summary>
+    public void AddTag(string tagName)
+    {
+        if (LuaManager.Instance == null) return;
+
+        // LuaManager를 통해 온디맨드로 프로토타입 획득
+        var proto = LuaManager.Instance.GetCardTagPrototype(tagName);
+        if (proto == null) return;
+
+        // NewInstance 헬퍼를 통해 인스턴스화
+        var newInstanceFunc = LuaManager.Instance.luaEnv.Global.Get<Func<LuaTable, LuaTable>>("NewInstance");
+        LuaTable luaInstance = newInstanceFunc?.Invoke(proto);
+
+        if (luaInstance != null)
+        {
+            CardTag cardTag = new CardTag(tagName, luaInstance);
+            attachedTags.Add(cardTag);
+            cardTag.OnAttached(this);
+
+            // 빠른 조회를 위해 tagNames 해시셋에도 이름 저장
+            tagNames.Add(tagName);
+        }
+    }
+
+    /// <summary>
+    /// 카드 인스턴스에서 태그를 제거합니다.
+    /// </summary>
+    public void RemoveTag(CardTag cardTag)
+    {
+        if (cardTag == null) return;
+
+        if (attachedTags.Remove(cardTag))
+        {
+            tagNames.Remove(cardTag.tagName);
+            cardTag.OnDetached();
+        }
+    }
+
+    /// <summary>
+    /// 인스턴스의 기존 마스터리 레벨을 고려하여 선택 가능한 무작위 마스터리 ID 목록을 반환합니다.
+    /// CardData.masteryUpgrades에 정의된 마스터리 중 최대 횟수에 도달하지 않은 것만 반환합니다.
+    /// </summary>
+    public List<string> GetRandomMasteryOption(int optionCount)
+    {
+        List<string> available = new List<string>();
+
+        if (cardData?.masteryUpgrades == null) return available;
+
+        foreach (var masteryId in cardData.masteryUpgrades.Keys)
+        {
+            int current = GetMasteryLevel(masteryId);
+
+            // masteryMaxUpgrades에 항목이 없거나 0이면 무제한
+            bool hasLimit = cardData.masteryMaxUpgrades != null &&
+                            cardData.masteryMaxUpgrades.TryGetValue(masteryId, out int maxCount) &&
+                            maxCount > 0;
+
+            if (!hasLimit || current < cardData.masteryMaxUpgrades[masteryId])
+            {
+                available.Add(masteryId);
+            }
+        }
+
+        return available.OrderBy(x => UnityEngine.Random.value).Take(optionCount).ToList();
     }
 }

@@ -24,6 +24,9 @@ public class LuaManager
     // 외부(ModLoader 등)에서 동적으로 추가해줄 루아 스크립트 검색 경로들
     private List<string> searchPaths = new List<string>();
 
+    // Key: tagName, Value: 프로토타입 LuaTable
+    private Dictionary<string, LuaTable> cardTagPrototypes = new Dictionary<string, LuaTable>();
+
     // 생성자 (접근 제어자를 private으로 막아 외부 생성을 방지)
     private LuaManager()
     {
@@ -70,6 +73,17 @@ public class LuaManager
                 return relic
             end
 
+            -- 카드 태그 정의 헬퍼 함수
+            function DefineCardTag(name)
+                local cardTag = {}
+                function cardTag:OnInit(tagBase, card)
+                    self.base = tagBase
+                    self.card = card
+                end
+                _G[name] = cardTag -- return 누락 시 폴백용 전역 등록
+                return cardTag
+            end
+
             -- 화이트리스트 테이블 생성 및 CS 전역 공간 제거
             EventStructs = {
                 DamageInfo = CS.EventStructs.DamageInfo,
@@ -87,6 +101,8 @@ public class LuaManager
                 CardFlag = CS.EventStructs.CardFlag,
                 MoveFlag = CS.EventStructs.MoveFlag,
                 EffectFlag = CS.EventStructs.EffectFlag,
+                
+                CardTag = CS.CardTag,
             }
 
             CS = nil
@@ -136,6 +152,80 @@ public class LuaManager
     public void Tick()
     {
         luaEnv?.Tick();
+    }
+
+    /// <summary>
+    /// 모드가 등록한 경로들에서 카드 태그 스크립트(CardTags/{tagName}.lua)를 검색하여 캐싱 및 반환합니다.
+    /// </summary>
+    public LuaTable GetCardTagPrototype(string tagName)
+    {
+        if (cardTagPrototypes.TryGetValue(tagName, out var proto))
+        {
+            return proto;
+        }
+
+        string scriptFileName = tagName + ".lua";
+        byte[] scriptBytes = null;
+
+        foreach (string searchPath in searchPaths)
+        {
+            if (Directory.Exists(searchPath))
+            {
+                string[] files = Directory.GetFiles(searchPath, scriptFileName, SearchOption.AllDirectories);
+                if (files.Length > 0)
+                {
+                    try
+                    {
+                        scriptBytes = File.ReadAllBytes(files[0]);
+                        break;
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogError($"[LuaManager] 카드 태그 파일 읽기 실패 ({files[0]}): {ex.Message}");
+                    }
+                }
+            }
+        }
+
+        if (scriptBytes != null)
+        {
+            try
+            {
+                object[] results = luaEnv.DoString(scriptBytes, tagName);
+                LuaTable resultProto = null;
+                if (results != null && results.Length > 0)
+                {
+                    resultProto = results[0] as LuaTable;
+                }
+
+                if (resultProto == null)
+                {
+                    resultProto = luaEnv.Global.Get<LuaTable>(tagName);
+                }
+
+                if (resultProto != null)
+                {
+                    cardTagPrototypes[tagName] = resultProto;
+                    return resultProto;
+                }
+                else
+                {
+                    Debug.LogError($"[LuaManager] 카드 태그 {tagName} 로드 실패: 리턴된 루아 테이블이 없습니다.");
+                }
+
+                luaEnv.Global.Set<string, object>(tagName, null);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[LuaManager] 카드 태그 {tagName} 루아 컴파일 구문 오류:\n{e.Message}");
+            }
+        }
+        else
+        {
+            Debug.LogError($"[LuaManager] 카드 태그 {tagName}.lua 파일을 찾을 수 없습니다.");
+        }
+
+        return null;
     }
 
     /// <summary>

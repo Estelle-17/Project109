@@ -124,7 +124,7 @@ namespace EventStructs
         }
     }
 
-    public struct CardInfo
+    public class CardInfo
     {
         public Character caster;
         // 이 스킬(카드)의 타겟인 캐릭터 목록, 주 타겟은 첫번째 요소가 됨
@@ -136,13 +136,28 @@ namespace EventStructs
 
         public CardFlag cardFlags;
 
-        public CardInfo(Character caster, System.Collections.Generic.List<Character> targets, Vector2Int targetPos, object cardData, CardFlag flags = CardFlag.Normal) : this()
+        public CardInfo(Character caster, System.Collections.Generic.List<Character> targets, Vector2Int targetPos, object cardData, CardFlag flags = CardFlag.Normal)
         {
             this.caster = caster;
             this.targets = targets;
             this.targetPosition = targetPos;
             this.cardData = cardData;
             this.cardFlags = flags;
+        }
+
+        public void AddFlag(CardFlag flag)
+        {
+            this.cardFlags |= flag;
+        }
+
+        public void RemoveFlag(CardFlag flag)
+        {
+            this.cardFlags &= ~flag;
+        }
+
+        public bool HasFlag(CardFlag flag)
+        {
+            return this.cardFlags.HasFlag(flag);
         }
     }
 

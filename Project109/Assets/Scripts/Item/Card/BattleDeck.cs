@@ -86,11 +86,26 @@ public class BattleDeck
         for (int i = hand.Count - 1; i >= 0; i--)
         {
             var card = hand[i];
-            CardInfo info = new CardInfo(owner, new List<Character>(), Vector2Int.zero, card, CardFlag.Normal);
+
+            // 카드 자체의 마스터리 등으로 Preserve 기능이 켜져 있는지 확인하여 기본 플래그로 설정
+            CardFlag initialFlags = CardFlag.Normal;
+            if (card != null && card.HasTag("Preserve"))
+            {
+                initialFlags |= CardFlag.NoDiscard;
+            }
+
+            CardInfo info = new CardInfo(owner, new List<Character>(), Vector2Int.zero, card, initialFlags);
             owner?.eventBus.Invoke<IOnDiscardCard>(c => c.OnDiscardCard(info));
+
+            // NoDiscard 플래그가 세팅되어 있다면 버리지 않고 보존
+            if (info.cardFlags.HasFlag(CardFlag.NoDiscard))
+            {
+                continue;
+            }
+
             discardPile.Add(card);
+            hand.RemoveAt(i);
         }
-        hand.Clear();
     }
 
     /// <summary>

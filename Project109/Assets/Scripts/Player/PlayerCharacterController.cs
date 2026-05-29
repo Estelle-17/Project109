@@ -1,6 +1,14 @@
 using EventStructs;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
+public enum PlayerControlState
+{
+    Normal,
+    Move,
+    TargetSelection
+}
 
 /// <summary>
 /// 전투 중 플레이어 캐릭터의 턴을 제어하는 컨트롤러.
@@ -16,23 +24,24 @@ public class PlayerCharacterController : ICharacterController
 
     #endregion
 
+    // 현재 플레이어 조작 상태
+    public PlayerControlState controlState { get; private set; } = PlayerControlState.Normal;
+    private CardBase activeCardForTargeting;
+
     #region References
 
-    private Player player;
+    private readonly Player player;
 
     [SerializeField]
     private SOCharacterStatData playerStatDataSO;
 
-    private PlayerMove playerMove;
+    private readonly PlayerMove playerMove;
 
     #endregion
 
-    #region Card Piles (전투 중 카드 더미)
+    #region Battle Deck (전투 중 카드 덱 관리)
 
-    private List<ActionCardData> drawPile = new();
-    private List<ActionCardData> hand = new();
-    private List<ActionCardData> discardPile = new();
-    private List<ActionCardData> exhaustPile = new();
+    public BattleDeck battleDeck { get; private set; }
 
     [SerializeField] private int drawCount = 5;
 
@@ -42,6 +51,8 @@ public class PlayerCharacterController : ICharacterController
     {
         this.player = player;
         this._controlledCharacter = player.character;
+
+        this.battleDeck = new BattleDeck(this._controlledCharacter);
 
         // PlayerMove 초기화
         CharacterMove charMove = this._controlledCharacter.characterMove;
@@ -58,11 +69,7 @@ public class PlayerCharacterController : ICharacterController
     public void OnBattleStart()
     {
         // masterDeck 에서 drawPile 복사 후 셔플
-        drawPile = new List<ActionCardData>(player.masterDeck);
-        ShuffleDeck(drawPile);
-        hand.Clear();
-        discardPile.Clear();
-        exhaustPile.Clear();
+        battleDeck.InitDeck(player.masterDeck);
     }
 
     public void OnTurnStart()
@@ -71,16 +78,20 @@ public class PlayerCharacterController : ICharacterController
         controlledCharacter.eventBus.Invoke<IOnTurnStart>(a => a.OnTurnStart());
 
         // 2. 카드 드로우
-        DrawCards(drawCount);
+        battleDeck.DrawCards(drawCount);
 
         // 3. UI 갱신
         // TODO: 턴 시작 UI 처리
 
-        // 4. 이동 활성화
-        if (playerMove != null)
+        // 4. 이동 활성화 (이동 상태는 필요할 때 켬)
+
+        // 5. 전역 클릭 및 취소 이벤트 구독
+        if (PlayerInputController.instance != null)
         {
-            playerMove.EnableMove();
+            PlayerInputController.instance.OnTouchClickEvent += HandleGlobalClick;
+            PlayerInputController.instance.OnCancelEvent += CancelCurrentState;
         }
+        controlState = PlayerControlState.Normal;
     }
 
     public void OnTurnEnd()
@@ -89,18 +100,21 @@ public class PlayerCharacterController : ICharacterController
         controlledCharacter.eventBus.Invoke<IOnTurnEnd>(a => a.OnTurnEnd());
 
         // 2. 손패 → 묘지 이동
-        discardPile.AddRange(hand);
-        hand.Clear();
+        battleDeck.DiscardHand();
 
         // 3. 이동 비활성화
-        if (playerMove != null)
-        {
-            playerMove.ClearCanMoveTiles();
-            playerMove.DisableMove();
-        }
+        playerMove?.ClearCanMoveTiles();
 
         // 4. UI 정리
         // TODO: 턴 종료 UI 처리
+
+        // 5. 이벤트 구독 해제
+        if (PlayerInputController.instance != null)
+        {
+            PlayerInputController.instance.OnTouchClickEvent -= HandleGlobalClick;
+            PlayerInputController.instance.OnCancelEvent -= CancelCurrentState;
+        }
+        controlState = PlayerControlState.Normal;
     }
 
     public void OnDie()
@@ -110,43 +124,10 @@ public class PlayerCharacterController : ICharacterController
 
     #region Card Operations
 
-    private void DrawCards(int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            if (drawPile.Count == 0)
-            {
-                // 뽑을 카드가 없으면 묘지 → 드로우파일로 셔플
-                if (discardPile.Count == 0) return;
-                drawPile.AddRange(discardPile);
-                discardPile.Clear();
-                ShuffleDeck(drawPile);
-            }
-
-            var card = drawPile[0];
-            drawPile.RemoveAt(0);
-
-            controlledCharacter.eventBus.Invoke<IOnDrawCard>(c => c.OnDrawCard(card));
-
-            hand.Add(card);
-        }
-    }
-
-    private void ShuffleDeck(List<ActionCardData> deck)
-    {
-        controlledCharacter.eventBus.Invoke<IOnShuffleDeck>(c => c.OnShuffleDeck(deck));
-
-        for (int i = deck.Count - 1; i > 0; i--)
-        {
-            int j = Random.Range(0, i + 1);
-            (deck[i], deck[j]) = (deck[j], deck[i]);
-        }
-    }
-
     /// <summary>
     /// 카드를 실제로 사용하는 파이프라인
     /// </summary>
-    public void UseCard(ActionCardData card, List<Character> targets, Vector2Int targetPosition)
+    public void UseCard(CardBase card, List<Character> targets, Vector2Int targetPosition)
     {
         // 1. 이벤트 버스로 전송할 Payload 생성
         CardInfo info = new CardInfo(controlledCharacter, targets, targetPosition, card, CardFlag.Normal);
@@ -160,29 +141,185 @@ public class PlayerCharacterController : ICharacterController
 
         // 4. 리소스 소모 및 손패/묘지 처리
 
-        hand.Remove(card);
+        battleDeck.RemoveFromHand(card);
 
         // 카드가 소모되는 특수 상태(NoDiscard)가 아니면 버리기 혹은 소멸로 이동
 
         if (!info.cardFlags.HasFlag(CardFlag.NoDiscard))
         {
-            // 임시로 카드 자체 속성에 isExhaust 가 있다고 가정. (현재는 강제 discard 처리)
-            bool isExhaustCard = false;
-
+            // 카드 마스터리 태그 등으로 Destroy 또는 Single_use(소멸)가 부착되어 있는지 체크
+            bool isExhaustCard = card != null && (card.HasTag("Destroy") || card.HasTag("Single_use"));
 
             if (!info.cardFlags.HasFlag(CardFlag.NoExhaust) && isExhaustCard)
             {
-                exhaustPile.Add(card);
+                battleDeck.ExhaustCard(card, info);
             }
             else
             {
-                discardPile.Add(card);
+                battleDeck.DiscardCard(card, info);
             }
         }
 
         // 5. 사용 직후 발동 처리 (IOnAfterUseCard)
 
         controlledCharacter.eventBus.Invoke<IOnAfterUseCard>(c => c.OnAfterUseCard(info));
+    }
+
+    /// <summary>
+    /// 카드 시전 시도 (지정형 카드는 타겟팅 모드로 진입)
+    /// </summary>
+    public void TryUseCard(CardBase card)
+    {
+        if (card == null) return;
+
+        // 사용 시도 이벤트 발동 (IOnTryUseCard)
+        CardInfo tryInfo = new CardInfo(controlledCharacter, new List<Character>(), Vector2Int.zero, card, CardFlag.Normal);
+        controlledCharacter.eventBus.Invoke<IOnTryUseCard>(c => c.OnTryUseCard(tryInfo));
+
+        string typeLower = card.cardData?.targetType?.ToLower() ?? "";
+        if (typeLower == "target" || typeLower == "area" || typeLower == "tile")
+        {
+            controlState = PlayerControlState.TargetSelection;
+            activeCardForTargeting = card;
+
+            if (UIManager.instance != null)
+            {
+                UIManager.instance.UpdateEffectAreaUI(card);
+            }
+
+            Debug.Log($"[TargetSelection] {card.cardData?.cardName} 카드의 대상을 지정해 주세요.");
+        }
+        else
+        {
+            // 즉시 시전 카드 (Self, All 등)
+            List<Character> targets = new();
+            Vector2Int casterPos = Vector2Int.zero;
+
+            if (controlledCharacter.characterMove != null && controlledCharacter.characterMove.GetCurrentTile() != null)
+            {
+                var coord = controlledCharacter.characterMove.GetCurrentTile().GetCoord();
+                casterPos = new Vector2Int(coord.column, coord.row);
+            }
+
+            UseCard(card, targets, casterPos);
+        }
+    }
+
+    /// <summary>
+    /// 현재 조작 상태(이동 모드 또는 타겟 모드) 취소
+    /// </summary>
+    public void CancelCurrentState()
+    {
+        if (controlState == PlayerControlState.Normal) return;
+
+        Debug.Log($"[PlayerCharacterController] 조작 취소. 이전 상태: {controlState}");
+
+        if (controlState == PlayerControlState.TargetSelection)
+        {
+            activeCardForTargeting = null;
+            if (UIManager.instance != null)
+            {
+                UIManager.instance.ClearEffectAreaTiles();
+            }
+        }
+        else if (controlState == PlayerControlState.Move)
+        {
+            playerMove?.ClearCanMoveTiles();
+        }
+
+        controlState = PlayerControlState.Normal;
+    }
+
+    /// <summary>
+    /// 이동/타겟팅 모드를 활성화하기 위한 상태 전이 메서드
+    /// </summary>
+    public void EnablePlayerMove()
+    {
+        if (playerMove != null)
+        {
+            playerMove.CheckCanMoveTiles();
+            controlState = PlayerControlState.Move;
+        }
+    }
+
+    private void HandleGlobalClick(Vector2 pos)
+    {
+        if (controlledCharacter == null || controlledCharacter.currentState != CharacterState.Idle)
+        {
+            return;
+        }
+
+        Ray ray = Camera.main.ScreenPointToRay(pos);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            if (!hit.transform.TryGetComponent<Tile>(out var targetTile))
+            {
+                targetTile = hit.transform.root.GetComponentInChildren<Tile>();
+            }
+
+            if (targetTile != null)
+            {
+                switch (controlState)
+                {
+                    case PlayerControlState.Normal:
+                        // 일반 모드: 클릭 시 해당 타일 방향으로 회전
+                        controlledCharacter.characterMove?.LookAtTile(targetTile);
+                        Debug.Log("바라보기 회전: " + controlledCharacter.characterMove?.facingDirection);
+                        break;
+
+                    case PlayerControlState.Move:
+                        // 이동 모드: playerMove에게 이동 지시
+                        if (playerMove != null)
+                        {
+                            playerMove.ExecuteMoveToTile(targetTile);
+                            playerMove.ClearCanMoveTiles();
+                        }
+                        controlState = PlayerControlState.Normal;
+                        break;
+
+                    case PlayerControlState.TargetSelection:
+                        // 타겟팅 모드: 사거리 유효성 검사 후 최종 시전
+                        if (activeCardForTargeting != null)
+                        {
+                            Tile currentTile = controlledCharacter.characterMove?.GetCurrentTile();
+                            if (currentTile != null)
+                            {
+                                int distance = GetDistanceBetweenTiles(currentTile, targetTile);
+                                int minDistance = activeCardForTargeting.cardData.targetMinDistance;
+                                int maxDistance = activeCardForTargeting.cardData.targetMaxDistance;
+
+                                if (distance >= minDistance && distance <= maxDistance)
+                                {
+                                    List<Character> targets = new();
+                                    Vector2Int targetPos = new Vector2Int(targetTile.GetCoord().column, targetTile.GetCoord().row);
+
+                                    UseCard(activeCardForTargeting, targets, targetPos);
+
+                                    activeCardForTargeting = null;
+                                    if (UIManager.instance != null)
+                                    {
+                                        UIManager.instance.ClearEffectAreaTiles();
+                                    }
+                                    controlState = PlayerControlState.Normal;
+                                }
+                                else
+                                {
+                                    Debug.LogWarning("사거리를 벗어난 타겟 타일입니다.");
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    private int GetDistanceBetweenTiles(Tile t1, Tile t2)
+    {
+        if (t1 == null || t2 == null) return int.MaxValue;
+        var coord1 = t1.GetCoord();
+        var coord2 = t2.GetCoord();
+        return Mathf.Abs(coord1.column - coord2.column) + Mathf.Abs(coord1.row - coord2.row);
     }
 
     #endregion

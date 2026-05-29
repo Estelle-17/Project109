@@ -12,9 +12,23 @@ public class PlayerInputController : MonoBehaviour
     public event Action<Vector2> OnTouchStartEvent;
     public event Action<Vector2> OnTouchDragEvent;
     public event Action<Vector2> OnTouchClickEvent;
+    public event Action OnCancelEvent; // 우클릭 및 ESC 취소 이벤트
 
     private Vector2 startTouchPos;
     private Vector2 lastTouchPos;
+
+    private void Update()
+    {
+        // 마우스 우클릭 혹은 ESC(취소) 입력 감지
+        if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
+        {
+            OnCancelEvent?.Invoke();
+        }
+        else if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            OnCancelEvent?.Invoke();
+        }
+    }
 
     private void Awake()
     {

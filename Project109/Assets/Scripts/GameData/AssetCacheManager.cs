@@ -1,13 +1,13 @@
-using UnityEngine;
-using System.IO;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using YamlDotNet.Serialization;
-using System;
+using System.IO;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using YamlDotNet.Serialization;
 
-struct StageMapDataBundle : IIdentifiable
+public struct StageMapDataBundle : IIdentifiable
 {
     public string stageName;
     public List<MapDataSO> battleMapDataList;
@@ -178,9 +178,11 @@ public class AssetCacheManager : MonoBehaviour
             //맵 데이터를 스테이지별로 분류하여 저장
             foreach (var mapData in list)
             {
-                if (!stageMapDataDict.ContainsKey(mapData.stageName))
+                Debug.Log($"mapData : {mapData.stageName}");
+                if (!stageMapDataDict.ContainsKey(mapData.locationType.ToString()))
                 {
-                    stageMapDataDict[mapData.stageName] = new StageMapDataBundle
+                    Debug.Log($"stageMapData 추가 : {mapData.locationType.ToString()}");
+                    stageMapDataDict[mapData.locationType.ToString()] = new StageMapDataBundle
                     {
                         stageName = mapData.stageName,
                         battleMapDataList = new List<MapDataSO>(),
@@ -194,22 +196,22 @@ public class AssetCacheManager : MonoBehaviour
                 switch (mapData.incountType)
                 {
                     case IncountType.Battle:
-                        stageMapDataDict[mapData.stageName].battleMapDataList.Add(mapData);
+                        stageMapDataDict[mapData.locationType.ToString()].battleMapDataList.Add(mapData);
                         break;
                     case IncountType.Elite:
-                        stageMapDataDict[mapData.stageName].eliteMapDataList.Add(mapData);
+                        stageMapDataDict[mapData.locationType.ToString()].eliteMapDataList.Add(mapData);
                         break;
                     case IncountType.Boss:
-                        stageMapDataDict[mapData.stageName].bossMapDataList.Add(mapData);
+                        stageMapDataDict[mapData.locationType.ToString()].bossMapDataList.Add(mapData);
                         break;
                     case IncountType.Secret:
-                        stageMapDataDict[mapData.stageName].secretMapDataList.Add(mapData);
+                        stageMapDataDict[mapData.locationType.ToString()].secretMapDataList.Add(mapData);
                         break;
                     case IncountType.Store:
-                        stageMapDataDict[mapData.stageName].storeMapDataList.Add(mapData);
+                        stageMapDataDict[mapData.locationType.ToString()].storeMapDataList.Add(mapData);
                         break;
                     case IncountType.Restore:
-                        stageMapDataDict[mapData.stageName].restoreMapDataList.Add(mapData);
+                        stageMapDataDict[mapData.locationType.ToString()].restoreMapDataList.Add(mapData);
                         break;
                 }
             }
@@ -274,7 +276,7 @@ public class AssetCacheManager : MonoBehaviour
 
     public IEnumerator LoadAllAssetsFromBundle(string key, string bundlePath)
     {
-        if(!File.Exists(bundlePath))
+        if (!File.Exists(bundlePath))
         {
             Debug.Log($"번들 파일을 찾을 수 없습니다. {bundlePath}");
             yield break;
@@ -444,6 +446,7 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetCharacter(string name, out CharacterData character) => characterDict.TryGetValue(name, out character);
     public bool TryGetMap(string name, out MapDataSO mapData) => mapDict.TryGetValue(name, out mapData);
     public bool TryGetMapInfo(string name, out MapDataInfo mapDataInfo) => mapInfoDict.TryGetValue(name, out mapDataInfo);
+    public bool TryGetStageMapData(string name, out StageMapDataBundle stageMapData) => stageMapDataDict.TryGetValue(name, out stageMapData);
     public bool TryGetModel(string name, out GameObject model) => modelDict.TryGetValue(name, out model);
     public bool TryGetTexture(string name, out Sprite texture) => textureDict.TryGetValue(name, out texture);
     public bool TryGetCardDescription(string name, out CardDescription description) => cardDescriptionDict.TryGetValue(name, out description);

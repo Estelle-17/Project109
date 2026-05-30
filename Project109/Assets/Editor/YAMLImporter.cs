@@ -314,6 +314,7 @@ public class YAMLImporter
             asset.battleAppearLevel = battleNodeData.battleAppearLevel;
             asset.battleLocation = battleNodeData.battleLocation;
             asset.monsterNames = battleNodeData.monsterNames;
+            asset.rewards = battleNodeData.rewards;
 
             var path = $"Assets/SO/BattleNodes/{battleNodeData.dataPath}.asset";
             Directory.CreateDirectory("Assets/SO/Battles");
@@ -971,6 +972,7 @@ public class YAMLImporter
         public int battleAppearLevel { get; set; }
         public string battleLocation { get; set; }
         public List<string> monsterNames { get; set; }
+        public List<RewardItem> rewards { get; set; }
     }
 
     public class RootMonsterData
@@ -1024,7 +1026,7 @@ public class YAMLImporter
 
     public class RootMapInfoData
     {
-        public List<MapInfoEntry> mapInfoCollection  { get; set; }
+        public List<MapInfoEntry> mapInfoCollection { get; set; }
     }
 
     public class MapInfoEntry

@@ -31,7 +31,7 @@ public class TileNode : IComparable<TileNode>
     }
 }
 
-public class RoutePathfinding : MonoBehaviour
+public class RoutePathfinding
 {
     TileNode[,] tileNodeMap;
 

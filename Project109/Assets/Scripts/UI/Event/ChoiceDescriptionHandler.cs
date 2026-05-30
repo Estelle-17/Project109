@@ -52,14 +52,14 @@ public class ChoiceDescriptionHandler : MonoBehaviour
                 description += useItemData.name + " 제거";
                 break;
             case "RandomCard":
-                if(choiceData.randomLoseCard != null && choiceData.randomLoseCard.Count > 0)
+                if (choiceData.randomLoseCard != null && choiceData.randomLoseCard.Count > 0)
                     description += choiceData.randomLoseCard[0].cardName + " 제거";
                 break;
             case "SpecificRelic":
                 description += useItemData.name + " 제거";
                 break;
             case "RandomRelic":
-                if (choiceData.randomLoseRelic != null && choiceData.randomLoseRelic.Count  > 0)
+                if (choiceData.randomLoseRelic != null && choiceData.randomLoseRelic.Count > 0)
                     description += choiceData.randomLoseRelic[0].relicName + " 제거";
                 break;
             case "RandomPotion":
@@ -104,7 +104,8 @@ public class ChoiceDescriptionHandler : MonoBehaviour
                 description += "카드를 " + getItemData.value + " 번 제거합니다.";
                 break;
             case "RandomEraseCard":
-                description += choiceData.randomLoseCard[0].cardName + " 카드를 제거합니다.";
+                if (choiceData.randomLoseCard != null && choiceData.randomLoseCard.Count > 0)
+                    description += choiceData.randomLoseCard[0].cardName + " 카드를 제거합니다.";
                 break;
             case "UpgradeCard":
                 description += "강화를 " + getItemData.value + " 번 진행합니다.";
@@ -119,7 +120,8 @@ public class ChoiceDescriptionHandler : MonoBehaviour
                 description += "유물 보상을" + getItemData.value + "번 획득합니다.";
                 break;
             case "RandomRelic":
-                description += choiceData.randomLoseRelic[0].relicName + "을 획득합니다.";
+                if (choiceData.randomLoseRelic != null && choiceData.randomLoseRelic.Count > 0)
+                    description += choiceData.randomLoseRelic[0].relicName + "을 획득합니다.";
                 break;
             case "Potion":
                 description += getItemData.name + "을 획득합니다.";

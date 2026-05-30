@@ -7,7 +7,7 @@ public class OpenUIWhenClicked : MonoBehaviour
 
     public void ActiveObject()
     {
-        if (specificUIObject != null && RunManager.instance.currentMapState == requiredMapState)
+        if (specificUIObject != null && MapManager.instance.currentMapState == requiredMapState)
         {
             UIPanelBase uiPanelBase = specificUIObject.GetComponent<UIPanelBase>();
             if (uiPanelBase != null)

@@ -78,7 +78,7 @@ public class BattleMapManager : MonoBehaviour
 
     public Vector3 CheckNPCSpawnPoint()
     {
-        if(npcSpawnTiles.Count == 0)
+        if (npcSpawnTiles.Count == 0)
         {
             Debug.LogWarning("No NPC Spawn Tiles Available!");
             return map[centerCoord.column][centerCoord.row].transform.position; ; // 또는 적절한 기본 위치 반환
@@ -141,7 +141,7 @@ public class BattleMapManager : MonoBehaviour
             for (int rowIndex = 0; rowIndex < currentMapData.width; rowIndex++)
             {
                 Tile tile = GameObject.Instantiate(prefabTile).transform.GetComponent<Tile>();
-                tile.transform.localPosition = transform.position + 
+                tile.transform.localPosition = transform.position +
                                                new Vector3(startX + (columnIndex) * tilePadding,
                                                         0.01f,
                                                         startZ + (rowIndex) * tilePadding);
@@ -177,64 +177,11 @@ public class BattleMapManager : MonoBehaviour
 
         //장애물과 몬스터, NPC 스폰 위치 지정
         ApplyVariationLayout();
-
-        SetMapOutsideLine();
     }
 
     public void ApplyVariationLayout()
     {
 
-    }
-
-    //이동할 수 있는 타일들의 외각을 표시해주는 함수
-    public void SetMapOutsideLine()
-    {
-        //현재 외각선 초기화
-        for (int columnIndex = 0; columnIndex < column; columnIndex++)
-        {
-            for (int rowIndex = 0; rowIndex < row; rowIndex++)
-            {
-                foreach(GameObject obj  in map[columnIndex][rowIndex].tileBaseTextureObjects)
-                {
-                    obj.SetActive(false);
-                }
-            }
-        }
-
-        //이후 장애물과 맵의 끝 부분을 탐색하여 외각선 생성
-        for (int columnIndex = 0; columnIndex < column; columnIndex++)
-        {
-            for (int rowIndex = 0; rowIndex < row; rowIndex++)
-            {
-                //현재 위치가 비어있을 경우
-                if (map[columnIndex][rowIndex].tileState == TileState.Empty || map[columnIndex][rowIndex].tileState == TileState.Trap)
-                {
-                    //상,하,좌,우 순으로 탐색
-                    int[] dirX = { 0, 0, 1, -1 };
-                    int[] dirY = { -1, 1, 0, 0 };
-
-                    for (int i = 0; i < 4; i++)
-                    {
-                        int x = columnIndex + dirX[i];
-                        int y = rowIndex + dirY[i];
-
-                        //맵의 범위 내에 있는 경우
-                        if (x < column && x >= 0 && y < row && y >= 0)
-                        {
-                            //탐색된 위치가 이동 불가능한 위치일 때
-                            if (map[x][y].tileState == TileState.Full || map[x][y].tileState == TileState.Obstacle)
-                            {
-                                map[columnIndex][rowIndex].tileBaseTextureObjects[i].SetActive(true);
-                            }
-                        }
-                        else
-                        {
-                            map[columnIndex][rowIndex].tileBaseTextureObjects[i].SetActive(true);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /// <summary>
@@ -243,7 +190,7 @@ public class BattleMapManager : MonoBehaviour
     public List<Tile> CheckPlayerMoveTiles(Tile moveStart, int canMoveDistance)
     {
         List<Tile> checkList = new List<Tile>();
-        
+
         Queue<Tile> checkNextTiles = new Queue<Tile>();
         Queue<Tile> checkCurrentTiles = new Queue<Tile>();
         checkCurrentTiles.Enqueue(moveStart);
@@ -316,8 +263,6 @@ public class BattleMapManager : MonoBehaviour
     public void UpdateMapVariationFromName(string variationName)
     {
         ApplyVariationLayout();
-
-        SetMapOutsideLine();
     }
 
     public bool mapCreateTest;

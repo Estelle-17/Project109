@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using System.Collections.Generic;
 using System.IO;
@@ -5,7 +6,6 @@ using UnityEditor;
 using UnityEngine;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
-using Newtonsoft.Json.Linq;
 
 public class MapPainterEditor : EditorWindow
 {
@@ -53,9 +53,9 @@ public class MapPainterEditor : EditorWindow
     }
     // 에디터 창이 닫힐 때 구독 해제
     private void OnDisable()
-    { 
+    {
         SceneView.duringSceneGui -= OnSceneGUI;
-        if(previewRoot != null) DestroyImmediate(previewRoot);
+        if (previewRoot != null) DestroyImmediate(previewRoot);
         spawnedPreviews.Clear();
     }
 
@@ -136,7 +136,7 @@ public class MapPainterEditor : EditorWindow
         // A. 기본 하드코딩 데이터 (필수 요소들)
         currentTerrainPalette = new List<string> { "Empty" };
         currentObjectPalette = new List<string> { "Empty" };
-        currentEventPalette = new List<string> { "Empty", "PlayerSpawn", "EnemySpawn" , "BossSpawn", "Block" };
+        currentEventPalette = new List<string> { "Empty", "PlayerSpawn", "EnemySpawn", "BossSpawn", "NPCSpawn", "Block", "Trap" };
 
         // 지정된 폴더가 없으면 생성
         if (!AssetDatabase.IsValidFolder(TERRAIN_FOLDER)) Directory.CreateDirectory(TERRAIN_FOLDER);

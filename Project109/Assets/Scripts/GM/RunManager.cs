@@ -1,13 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum MapState
-{
-    None,
-    Battle,
-    Event
-}
-
+[RequireComponent(typeof(LoadMapHandler))]
 public class RunManager : MonoBehaviour
 {
     public static RunManager instance { get; private set; }
@@ -25,9 +19,6 @@ public class RunManager : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
-    //현재 맵 진행 상태
-    public MapState currentMapState;
 
     [SerializeField]
     private Character _startingCharacter;
@@ -59,8 +50,6 @@ public class RunManager : MonoBehaviour
 
     void Start()
     {
-        currentMapState = MapState.None;
-
         loadMapHandler = GetComponent<LoadMapHandler>();
         currentMapName = "LostTemple";
 

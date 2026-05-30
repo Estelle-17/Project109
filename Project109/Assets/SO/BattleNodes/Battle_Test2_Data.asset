@@ -20,3 +20,8 @@ MonoBehaviour:
   - Monster_test1Monster_Data
   - Monster_testMonster_Data
   - Monster_testMonster_Data
+  rewards:
+  - name: Gold
+    value: 50
+  - name: Card
+    value: 1

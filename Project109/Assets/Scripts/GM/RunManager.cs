@@ -98,7 +98,7 @@ public class RunManager : MonoBehaviour
 
     private void Update()
     {
-        if (currentMapState == MapState.Battle)
+        if (currentMap.currentMapState == MapState.Battle)
         {
             battleManager?.Update(Time.deltaTime);
         }

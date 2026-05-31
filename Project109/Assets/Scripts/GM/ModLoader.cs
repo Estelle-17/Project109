@@ -10,6 +10,12 @@ public class ModLoader
     // Key: effectName (고유 ID), Value: EffectData
     public Dictionary<string, EffectData> EffectDatabase { get; private set; } = new Dictionary<string, EffectData>();
 
+    // Key: relicName (고유 ID), Value: RelicData
+    public Dictionary<string, RelicData> RelicDatabase { get; private set; } = new Dictionary<string, RelicData>();
+
+    // Key: cardName (고유 ID), Value: CardData
+    public Dictionary<string, CardData> CardDatabase { get; private set; } = new Dictionary<string, CardData>();
+
     private static ModLoader _instance;
     public static ModLoader Instance
     {
@@ -28,6 +34,8 @@ public class ModLoader
     public void LoadAllMods()
     {
         EffectDatabase.Clear();
+        RelicDatabase.Clear();
+        CardDatabase.Clear();
 
         // 1. 바닐라(Core) 모드 로딩
         // 경로: Assets/StreamingAssets/Mods/Core
@@ -51,7 +59,9 @@ public class ModLoader
             Directory.CreateDirectory(userModsPath);
         }
 
-        Debug.Log($"[ModLoader] 총 {EffectDatabase.Count}개의 이펙트 데이터가 로드되었습니다.");
+
+
+        Debug.Log($"[ModLoader] 총 {EffectDatabase.Count}개의 이펙트 데이터, {RelicDatabase.Count}개의 유물 데이터, {CardDatabase.Count}개의 카드 데이터가 로드되었습니다.");
     }
 
     private void LoadModDirectory(string modDir)
@@ -77,9 +87,19 @@ public class ModLoader
             LoadEffectsFromPath(effectsPath, modDir);
         }
 
-        // 추후 추가될 데이터들 (예: Relics, Cards 등)
-        // string relicsPath = Path.Combine(modDir, "YAML", "Relics");
-        // if (Directory.Exists(relicsPath)) LoadRelicsFromPath(relicsPath, modDir);
+        // [유물(Relic) 로딩]
+        string relicsPath = Path.Combine(modDir, "YAML", "Relics");
+        if (Directory.Exists(relicsPath))
+        {
+            LoadRelicsFromPath(relicsPath, modDir);
+        }
+
+        // [카드(Card) 로딩]
+        string cardsPath = Path.Combine(modDir, "YAML", "Cards");
+        if (Directory.Exists(cardsPath))
+        {
+            LoadCardsFromPath(cardsPath, modDir);
+        }
     }
 
     private void LoadEffectsFromPath(string dataPath, string modRootPath)
@@ -111,6 +131,73 @@ public class ModLoader
                     else
                     {
                         Debug.LogWarning($"[ModLoader] 무결성 검증 실패로 이펙트가 무시되었습니다: {file}");
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[ModLoader] YAML 파싱 에러 ({file}):\n{e.Message}");
+            }
+        }
+    }
+    private void LoadRelicsFromPath(string dataPath, string modRootPath)
+    {
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+
+        string[] yamlFiles = Directory.GetFiles(dataPath, "*.yaml", SearchOption.AllDirectories);
+
+        foreach (string file in yamlFiles)
+        {
+            string yamlContent = File.ReadAllText(file);
+            try
+            {
+                RelicData relicData = deserializer.Deserialize<RelicData>(yamlContent);
+
+                if (relicData != null)
+                {
+                    if (relicData.ResolveAndValidate(modRootPath))
+                    {
+                        RelicDatabase[relicData.relicName] = relicData;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[ModLoader] 무결성 검증 실패로 유물이 무시되었습니다: {file}");
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[ModLoader] YAML 파싱 에러 ({file}):\n{e.Message}");
+            }
+        }
+    }
+
+    private void LoadCardsFromPath(string dataPath, string modRootPath)
+    {
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+
+        string[] yamlFiles = Directory.GetFiles(dataPath, "*.yaml", SearchOption.AllDirectories);
+
+        foreach (string file in yamlFiles)
+        {
+            string yamlContent = File.ReadAllText(file);
+            try
+            {
+                CardData cardData = deserializer.Deserialize<CardData>(yamlContent);
+
+                if (cardData != null)
+                {
+                    if (cardData.ResolveAndValidate(modRootPath))
+                    {
+                        CardDatabase[cardData.cardName] = cardData;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[ModLoader] 무결성 검증 실패로 카드가 무시되었습니다: {file}");
                     }
                 }
             }

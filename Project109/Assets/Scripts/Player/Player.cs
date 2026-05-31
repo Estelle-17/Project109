@@ -13,18 +13,17 @@ public class Player
     public EventBus<IPlayerEvent> eventBus = new EventBus<IPlayerEvent>();
 
     // 카드 덱 (런 전체에서 유지되는 전체 카드 풀)
-    public List<ActionCardData> masterDeck = new();
+    public PlayerDeck deck { get; private set; }
+    public List<Card> masterDeck => deck.GetCards();
 
-    // 유물 목록
-    public List<RelicData> relics = new();
-
-    public event Action<RelicData> OnRelicAddedEvent;
-    public event Action<RelicData> OnRelicRemovedEvent;
+    // 유물 관리자
+    public RelicManager relicManager;
 
     public Player(Character character)
     {
         this.character = character;
         this.playerStat = new PlayerStat();
+        this.deck = new PlayerDeck(this);
 
         // 초기 스탯 세팅
         this.playerStat.inGame_Currency_Gold = 0;
@@ -33,51 +32,38 @@ public class Player
         this.playerStat.reward_Card_Count = 3;
         this.playerStat.reward_Relic_Count = 3;
         this.playerStat.mastery_Choice_Count = 3;
+
+        this.relicManager = new RelicManager(this);
     }
 
-    public void AddCardToDeck(ActionCardData card)
+    public void AddCardToDeck(Card card)
     {
-        eventBus.Invoke<IOnAddCard>(c => c.OnAddCard(card));    
-        masterDeck.Add(card);
+        deck.AddCard(card);
     }
 
-    public void RemoveCardFromDeck(ActionCardData card)
+    public void RemoveCardFromDeck(Card card)
     {
-        eventBus.Invoke<IOnRemoveCard>(c => c.OnRemoveCard(card));
-        masterDeck.Remove(card);
+        deck.RemoveCard(card);
     }
 
-    public void AddRelic(RelicData relicData)
+    // 유물 관련 기능들은 backward compatibility 혹은 편의성을 위해 RelicManager로 위임
+    public void AddRelic(string relicId)
     {
-        RelicData newRelic = UnityEngine.Object.Instantiate(relicData);
-        eventBus.Invoke<IOnAddRelic>(c => c.OnAddRelic(newRelic));
-        relics.Add(newRelic);
-
-        OnRelicAddedEvent?.Invoke(newRelic);
-
-        UnityEngine.Debug.Log($"Relic Added : {newRelic.relicName}");
+        relicManager.AddRelic(relicId);
     }
 
-    public void RemoveRelic(RelicData relicData)
+    public void RemoveRelic(string relicId)
     {
-        if (relics.Remove(relicData))
-        {
-            eventBus.Invoke<IOnRemoveRelic>(c => c.OnRemoveRelic(relicData));
-
-            OnRelicRemovedEvent?.Invoke(relicData);
-
-            UnityEngine.Debug.Log($"Relic Removed : {relicData.relicName}");
-        }
+        relicManager.RemoveRelic(relicId);
     }
 
-    public RelicData GetRandomRelic()
+    public Relic GetRandomRelic()
     {
-        if (relics.Count == 0) return null;
-        return relics[UnityEngine.Random.Range(0, relics.Count)];
+        return relicManager.GetRandomRelic();
     }
 
-    public RelicData GetSpecificRelic(string name)
+    public Relic GetSpecificRelic(string relicId)
     {
-        return relics.Find(r => r.relicName == name);
+        return relicManager.GetSpecificRelic(relicId);
     }
 }

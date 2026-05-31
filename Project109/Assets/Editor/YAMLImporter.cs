@@ -1,12 +1,10 @@
 #if UNITY_EDITOR
-using Codice.CM.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Unity.VisualScripting.YamlDotNet.Serialization.NodeDeserializers;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
@@ -17,96 +15,8 @@ using YamlDotNet.Serialization.NamingConventions;
 
 public class YAMLImporter
 {
-    [MenuItem("Tools/Import Card YAML")]
-    //[System.Obsolete]
-    public static void ImportCardYAML()
-    {
-        string yamlPath = "Assets/Data/ActionCards.yaml";
-        string schemaPath = "Assets/Data/ActionCardSchema.yaml";
 
-        string yamlText = File.ReadAllText(yamlPath);
-        string schemaYamlText = File.ReadAllText(schemaPath);
-
-        //YAML -> Json으로 변환
-        var deserializer = new DeserializerBuilder()
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .WithNodeTypeResolver(new NumericTypeResolver())
-            .Build();
-        var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
-
-        var jsonSerializer = new SerializerBuilder()
-            .JsonCompatible()
-            .Build();
-        string jsonText = jsonSerializer.Serialize(yamlObject);
-
-        //YAML Schema -> Json Schema로 변환
-        var schemaYamlObject = deserializer.Deserialize(new StringReader(schemaYamlText));
-        string schemaJsonText = jsonSerializer.Serialize(schemaYamlObject);
-
-        JSchema schema = JSchema.Parse(schemaJsonText);
-
-        JObject jsonObj = JObject.Parse(jsonText);
-        if (!jsonObj.IsValid(schema, out IList<string> errorMessages))
-        {
-            Debug.LogError("❌ YAML validation failed:");
-            foreach (var error in errorMessages)
-                Debug.LogError(error);
-            return;
-        }
-
-        Debug.Log("YAML validation Success:");
-
-        //검증에 성공하면 ScriptableObject 생성
-        var rawData = deserializer.Deserialize<RootData>(yamlText);
-
-        foreach (var card in rawData.@cardCollection)
-        {
-            var asset = ScriptableObject.CreateInstance<ActionCardData>();
-            asset.path = card.path;
-            asset.className = card.className;
-            asset.cardName = card.cardName;
-            asset.bIsUpgradeCard = card.bIsUpgradeCard;
-            asset.rarity = card.rarity;
-            asset.stamina = card.stamina;
-            asset.cardType = card.CardType;
-            asset.targetType = card.TargetType;
-            asset.targetMinDistance = card.targetMinDistance;
-            asset.targetMaxDistance = card.targetMaxDistance;
-            asset.additionalEffectAreaList = card.additionalEffectAreaList;
-            asset.amountList = card.amountList;
-            asset.maxMasteryPoint = card.maxMasteryPoint;
-            asset.texturePath = card.texturePath;
-            asset.upgradeCardPath = card.upgradeCardPath;
-            asset.specificProperties = card.specificProperties;
-
-            asset.isUpgrade = false;
-
-            var path = $"Assets/SO/Cards/{"Card_" + card.path}.asset";
-            Directory.CreateDirectory("Assets/SO/Cards");
-            AssetDatabase.CreateAsset(asset, path);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            //Addressable에 등록
-            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
-            if (settings == null)
-            {
-                Debug.LogError("Addressables 설정이 존재하지 않습니다.");
-                return;
-            }
-
-            AddressableAssetEntry entry = settings.CreateOrMoveEntry(
-                AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "GameData")
-            );
-            entry.address = "Card_" + card.path;
-            entry.SetLabel("Card", true);
-            Debug.Log("Addressables에 등록 완료: " + entry.address);
-        }
-
-        Debug.Log("YAML import complete.");
-    }
-
+    /* 
     [MenuItem("Tools/Import Relic YAML")]
     //[System.Obsolete]
     public static void ImportRelicYAML()
@@ -186,6 +96,7 @@ public class YAMLImporter
 
         Debug.Log("YAML import complete.");
     }
+    */
 
     [MenuItem("Tools/Import Event YAML")]
     //[System.Obsolete]
@@ -553,7 +464,6 @@ public class YAMLImporter
             asset.description = characterData.description;
             asset.characterStat = characterData.characterStat;
             asset.startRelic = characterData.startRelic;
-            asset.startCards = characterData.startCards;
 
             //asset.characterObject = (GameObject)AssetDatabase.LoadAssetAtPath(CharacterData.modelingPath, typeof(GameObject));
 
@@ -660,82 +570,7 @@ public class YAMLImporter
         Debug.Log("YAML import complete.");
     }
 
-    [MenuItem("Tools/Import CardDescription YAML")]
-    //[System.Obsolete]
-    public static void ImportCardDescriptionYAML()
-    {
-        string yamlPath = "Assets/Data/CardDescription.yaml";
-        string schemaPath = "Assets/Data/CardDescriptionSchema.yaml";
 
-        string yamlText = File.ReadAllText(yamlPath);
-        string schemaYamlText = File.ReadAllText(schemaPath);
-
-        //YAML -> Json으로 변환
-        var deserializer = new DeserializerBuilder()
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .WithNodeTypeResolver(new NumericTypeResolver())
-            .Build();
-        var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
-
-        var jsonSerializer = new SerializerBuilder()
-            .JsonCompatible()
-            .Build();
-        string jsonText = jsonSerializer.Serialize(yamlObject);
-
-        //YAML Schema -> Json Schema로 변환
-        var schemaYamlObject = deserializer.Deserialize(new StringReader(schemaYamlText));
-        string schemaJsonText = jsonSerializer.Serialize(schemaYamlObject);
-
-        JSchema schema = JSchema.Parse(schemaJsonText);
-
-        JObject jsonObj = JObject.Parse(jsonText);
-        if (!jsonObj.IsValid(schema, out IList<string> errorMessages))
-        {
-            Debug.LogError("❌ YAML validation failed:");
-            foreach (var error in errorMessages)
-                Debug.LogError(error);
-            return;
-        }
-
-        Debug.Log("YAML validation Success:");
-
-        //검증에 성공하면 ScriptableObject 생성
-        var rawData = deserializer.Deserialize<RootCardDescriptionData>(yamlText);
-
-        foreach (var card in rawData.cardDescriptionCollection)
-        {
-            var asset = ScriptableObject.CreateInstance<CardDescription>();
-            asset.path = card.path;
-            asset.cardName = card.cardName;
-            asset.description = card.description;
-            asset.extraDescriptions = card.extraDescriptions;
-            asset.masteryDescriptions = card.masteryDescriptions;
-
-            var path = $"Assets/SO/Description/{card.path + "_Description"}.asset";
-            Directory.CreateDirectory("Assets/SO/Description");
-            AssetDatabase.CreateAsset(asset, path);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            //Addressable에 등록
-            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
-            if (settings == null)
-            {
-                Debug.LogError("Addressables 설정이 존재하지 않습니다.");
-                return;
-            }
-
-            AddressableAssetEntry entry = settings.CreateOrMoveEntry(
-                AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "Description")
-            );
-            entry.address = card.path + "_Description";
-            entry.SetLabel("Description", true);
-            Debug.Log("Addressables에 등록 완료: " + entry.address);
-        }
-
-        Debug.Log("YAML import complete.");
-    }
 
     [MenuItem("Tools/Import Obstacle YAML")]
     //[System.Obsolete]
@@ -903,31 +738,8 @@ public class YAMLImporter
     }
 
     // Matching C# classes
-    public class RootData
-    {
-        public List<CardEntry> @cardCollection { get; set; }
-    }
 
-    public class CardEntry
-    {
-        public string path { get; set; }
-        public string className { get; set; }
-        public string cardName { get; set; }
-        public bool bIsUpgradeCard { get; set; }
-        public int rarity { get; set; }
-        public int stamina { get; set; }
-        public string CardType { get; set; }
-        public string TargetType { get; set; }
-        public int targetMinDistance { get; set; }
-        public int targetMaxDistance { get; set; }
-        public List<EffectArea> additionalEffectAreaList { get; set; }
-        public List<int> amountList { get; set; }
-        public int maxMasteryPoint { get; set; }
-        public string texturePath { get; set; }
-        public string upgradeCardPath { get; set; }
-        public List<int> specificProperties { get; set; }
-    }
-
+    /*
     public class RootRelicData
     {
         public List<RelicEntry> @relicCollection { get; set; }
@@ -944,6 +756,7 @@ public class YAMLImporter
         public string description { get; set; }
         public string upgradeDescription { get; set; }
     }
+    */
 
     public class RootEventData
     {
@@ -1021,7 +834,8 @@ public class YAMLImporter
         public string description { get; set; }
         public CharacterStat characterStat { get; set; }
         public List<string> startRelic { get; set; }
-        public List<StartCard> startCards { get; set; }
+        // startCardIds는 CharacterData(ScriptableObject)에서 직접 편집합니다.
+        public List<string> startCardIds { get; set; }
     }
 
     public class RootMapInfoData
@@ -1038,19 +852,7 @@ public class YAMLImporter
         public List<string> appearTrapsDataPath { get; set; }
     }
 
-    public class RootCardDescriptionData
-    {
-        public List<CardDescriptionEntry> cardDescriptionCollection { get; set; }
-    }
 
-    public class CardDescriptionEntry
-    {
-        public string path { get; set; }
-        public string cardName { get; set; }
-        public string description { get; set; }
-        public List<ExtraDescription> extraDescriptions { get; set; }
-        public List<MasteryDescription> masteryDescriptions { get; set; }
-    }
 
     public class RootObstacleData
     {

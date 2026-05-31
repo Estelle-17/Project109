@@ -6,6 +6,8 @@ public class RunManager : MonoBehaviour
 {
     public static RunManager instance { get; private set; }
 
+    public BattleManager battleManager { get; private set; }
+
     private void Awake()
     {
         if (instance == null)
@@ -13,6 +15,7 @@ public class RunManager : MonoBehaviour
             instance = this;
 
             // DontDestroyOnLoad(this.gameObject);
+            battleManager = new();
         }
         else
         {
@@ -60,20 +63,21 @@ public class RunManager : MonoBehaviour
         CharacterData characterData;
 
         AssetCacheManager.instance.TryGetCharacter("전투광", out characterData);
-        if (characterData != null && CardDeckManager.instance != null)
+        if (characterData != null)
         {
             playerCharacterController.controlledCharacter.InitializeStat(characterData.characterStat);
-            foreach (StartCard cards in characterData.startCards)
+            foreach (string cardId in characterData.startCardIds)
             {
-                AssetCacheManager.instance.TryGetCard(cards.cardName, out ActionCardData cardData);
-
-                for (int i = 0; i < cards.number; i++)
+                if (ModLoader.Instance.CardDatabase.TryGetValue(cardId, out CardData cardData))
                 {
-                    ActionCardData tempCardData = cardData;
-                    CardDeckManager.instance.AddCard(tempCardData);
+                    player.deck.AddCard(cardData);
+                }
+                else
+                {
+                    Debug.LogWarning($"[RunManager] '{cardId}' 카드가 CardDatabase에 존재하지 않습니다.");
                 }
             }
-            CardDeckManager.instance.RequestAllCardRefresh();
+            player.deck.RequestAllCardRefresh();
         }
         else
         {
@@ -90,6 +94,14 @@ public class RunManager : MonoBehaviour
 
         //불러온 아이템들 세분화 진행
         GameItemRewardManager.instance.UpdateItemList();
+    }
+
+    private void Update()
+    {
+        if (currentMapState == MapState.Battle)
+        {
+            battleManager?.Update(Time.deltaTime);
+        }
     }
 
     public void InitRun()

@@ -139,6 +139,9 @@ public static class LuaEventBinder
         BindPlayer<IOnRemoveRelic>(luaTable, eventBus, activeProxies);
         BindPlayer<IOnAddCard>(luaTable, eventBus, activeProxies);
         BindPlayer<IOnRemoveCard>(luaTable, eventBus, activeProxies);
+        BindPlayer<IOnCardUpgrade>(luaTable, eventBus, activeProxies);
+        BindPlayer<IOnCardMasteryUpgrade>(luaTable, eventBus, activeProxies);
+        BindPlayer<IOnCardsRefreshed>(luaTable, eventBus, activeProxies);
         BindPlayer<IOnAddGold>(luaTable, eventBus, activeProxies);
         BindPlayer<IOnRemoveGold>(luaTable, eventBus, activeProxies);
         BindPlayer<IOnAddMemorySharp>(luaTable, eventBus, activeProxies);
@@ -155,6 +158,9 @@ public static class LuaEventBinder
             else if (proxy is IOnRemoveRelic p2) eventBus.Remove<IOnRemoveRelic>(p2);
             else if (proxy is IOnAddCard p3) eventBus.Remove<IOnAddCard>(p3);
             else if (proxy is IOnRemoveCard p4) eventBus.Remove<IOnRemoveCard>(p4);
+            else if (proxy is IOnCardUpgrade p9) eventBus.Remove<IOnCardUpgrade>(p9);
+            else if (proxy is IOnCardMasteryUpgrade p10) eventBus.Remove<IOnCardMasteryUpgrade>(p10);
+            else if (proxy is IOnCardsRefreshed p11) eventBus.Remove<IOnCardsRefreshed>(p11);
             else if (proxy is IOnAddGold p5) eventBus.Remove<IOnAddGold>(p5);
             else if (proxy is IOnRemoveGold p6) eventBus.Remove<IOnRemoveGold>(p6);
             else if (proxy is IOnAddMemorySharp p7) eventBus.Remove<IOnAddMemorySharp>(p7);

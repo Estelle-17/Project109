@@ -44,7 +44,7 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
                 break;
             case ItemRewardUIType.Card:
                 currentRewardUIObject = Instantiate(cardRewardUIPrefab);
-                CardRewardHandler cardRewardHandler = currentRewardUIObject.GetComponent<CardRewardHandler>();
+                CardRewardPanel cardRewardHandler = currentRewardUIObject.GetComponent<CardRewardPanel>();
                 cardRewardHandler.SettingCards(cardType, RunManager.instance.player.playerStat.reward_Card_Count);    //보여줄 아이템의 수는 상황에 따라 변경 가능
                 cardRewardHandler.rootObject = this.gameObject;
                 cardRewardHandler.gameObject.SetActive(false);
@@ -57,14 +57,14 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
             case ItemRewardUIType.Relic:    //단일 유물 획득 보상
                 rewardRelicData = GameItemRewardManager.instance.GetRandomRelicDataByPickupType(reilcType);
 
-                if (AssetCacheManager.instance.TryGetTexture(rewardRelicData.texturePath, out Sprite texture))
-                {
-                    itemTexture.sprite = texture;
-                }
-                else
-                {
-                    Debug.LogWarning($"[ItemRewardUIHandler] 유물 텍스처 로드 실패: {rewardRelicData.texturePath}");
-                }
+                // if (AssetCacheManager.instance.TryGetTexture(rewardRelicData.texturePath, out Sprite texture))
+                // {
+                //     itemTexture.sprite = texture;
+                // }
+                // else
+                // {
+                //     Debug.LogWarning($"[ItemRewardUIHandler] 유물 텍스처 로드 실패: {rewardRelicData.texturePath}");
+                // }
                 itemText.text = $"{rewardRelicData.relicName}";
                 break;
         }
@@ -85,10 +85,10 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
                 break;
             case ItemRewardUIType.Card:
                 UIManager.instance.TempDeactivateCurrentActiveUIPanel();
-                currentRewardUIObject.GetComponent<CardRewardHandler>().UIActive();
+                currentRewardUIObject.GetComponent<CardRewardPanel>().UIActive();
                 break;
             case ItemRewardUIType.Relic:
-                RunManager.instance.player.AddRelic(rewardRelicData);
+                RunManager.instance.player.AddRelic(rewardRelicData.relicName);
                 //이 유물 선택지를 제공한 UI 제거
                 UIManager.instance.OffRelicDescription();
                 break;

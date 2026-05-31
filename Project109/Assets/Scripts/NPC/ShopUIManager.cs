@@ -6,12 +6,12 @@ using GameItem.Types;
 public class ShopUIManager : MonoBehaviour, IInteractable
 {
     public GameObject shopUICanvasPrefab;
-    ShopUIHandler shopUI;
+    ShopPanel shopUI;
 
     public int cardCount;
     public int relicCount;
 
-    public List<ActionCardData> actionCards;
+    public List<CardData> actionCards;
     public List<RelicData> relics;
     //이후 포션 추가 예정
 
@@ -79,7 +79,7 @@ public class ShopUIManager : MonoBehaviour, IInteractable
             return;
         }
 
-        shopUI = GameObject.Instantiate(shopUICanvasPrefab).GetComponent<ShopUIHandler>();
+        shopUI = GameObject.Instantiate(shopUICanvasPrefab).GetComponent<ShopPanel>();
         shopUI.CreateStoreItemCollections(actionCards.Count, relics.Count, 3);
         shopUI.UpdateCardList(actionCards);
         shopUI.UpdateRelicList(relics);
@@ -87,7 +87,7 @@ public class ShopUIManager : MonoBehaviour, IInteractable
         shopUI.gameObject.SetActive(false);
     }
 
-    public ShopUIHandler GetShopUI()
+    public ShopPanel GetShopUI()
     {
         return shopUI;
     }

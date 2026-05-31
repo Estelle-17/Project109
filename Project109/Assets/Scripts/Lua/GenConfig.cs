@@ -11,10 +11,11 @@ public static class GenConfig
     {
         typeof(PlayerStat),
         typeof(CharacterStat),
-        typeof(ActionCardData),
+        typeof(CardData),
+        typeof(Card),
         typeof(RelicData),
         typeof(Choice_UseItem),
-        typeof(EffectBase),
+        typeof(Effect),
         typeof(EventStructs.DamageInfo),
         typeof(EventStructs.HealInfo),
         typeof(EventStructs.StaminaInfo),
@@ -22,6 +23,7 @@ public static class GenConfig
         typeof(EventStructs.CardInfo),
         typeof(EventStructs.MoveInfo),
         typeof(EventStructs.EffectInfo),
+        typeof(CardTag),
         typeof(EventStructs.DamageFlag),
         typeof(EventStructs.HealFlag),
         typeof(EventStructs.StaminaFlag),
@@ -30,7 +32,8 @@ public static class GenConfig
         typeof(EventStructs.MoveFlag),
         typeof(EventStructs.EffectFlag),
 
-        typeof(List<ActionCardData>),
+        typeof(List<CardData>),
+        typeof(List<Card>),
         typeof(List<RelicData>),
 
         typeof(List<int>),

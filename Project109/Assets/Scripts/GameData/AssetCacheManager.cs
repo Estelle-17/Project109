@@ -40,7 +40,6 @@ public class AssetCacheManager : MonoBehaviour
     }
 
     public string cardKey = "Card";
-    public string relicKey = "Relic";
     public string eventKey = "Event";
     public string battleKey = "Battle";
     public string monsterKey = "Monster";
@@ -50,15 +49,9 @@ public class AssetCacheManager : MonoBehaviour
     public string mapInfoKey = "MapInfo";
     public string modelKey = "Model";
     public string textureKey = "Texture";
-    public string descriptionKey = "Description";
     public string obstacleKey = "Obstacle";
     public string trapKey = "Trap";
 
-    public IList<ActionCardData> cardList;
-    private Dictionary<string, ActionCardData> cardDict = new Dictionary<string, ActionCardData>();
-
-    public IList<RelicData> relicList;
-    private Dictionary<string, RelicData> relicDict = new Dictionary<string, RelicData>();
 
     public IList<EventData> eventList;
     private Dictionary<string, EventData> eventDict = new Dictionary<string, EventData>();
@@ -91,8 +84,7 @@ public class AssetCacheManager : MonoBehaviour
     public IList<Sprite> textureList;
     private Dictionary<string, Sprite> textureDict = new Dictionary<string, Sprite>();
 
-    public IList<CardDescription> cardDescriptionList;
-    private Dictionary<string, CardDescription> cardDescriptionDict = new Dictionary<string, CardDescription>();
+
 
     public IList<ObstacleData> obstacleList;
     private Dictionary<string, ObstacleData> obstacleDict = new Dictionary<string, ObstacleData>();
@@ -102,19 +94,7 @@ public class AssetCacheManager : MonoBehaviour
 
     private IEnumerator Start()
     {
-        //카드 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<ActionCardData>(cardKey, (list, dict) =>
-        {
-            cardList = list;
-            cardDict = dict;
-        }));
 
-        //유물 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<RelicData>(relicKey, (list, dict) =>
-        {
-            relicList = list;
-            relicDict = dict;
-        }));
 
         //이벤트 데이터 할당 시작
         yield return StartCoroutine(LoadAndCacheFromAddressableData<EventData>(eventKey, (list, dict) =>
@@ -237,12 +217,6 @@ public class AssetCacheManager : MonoBehaviour
             textureDict = dict;
         }));
 
-        //카드 Description 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<CardDescription>(descriptionKey, (list, dict) =>
-        {
-            cardDescriptionList = list;
-            cardDescriptionDict = dict;
-        }));
 
         yield return StartCoroutine(LoadAndCacheFromAddressableData<ObstacleData>(obstacleKey, (list, dict) =>
         {
@@ -265,6 +239,9 @@ public class AssetCacheManager : MonoBehaviour
         {
             Debug.LogWarning("Cannot find ModManager.");
         }
+
+        // YAML 기반 모드 로드 (이펙트, 유물, 카드 데이터 데이터베이스 구축)
+        ModLoader.Instance.LoadAllMods();
 
         Debug.Log("All Data Load is Complete.");
 
@@ -436,10 +413,9 @@ public class AssetCacheManager : MonoBehaviour
         }
     }
 
-    public bool TryGetCard(string name, out ActionCardData card) => cardDict.TryGetValue(name, out card);
+
     public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
     public bool TryGetMonsterReward(string name, out MonsterRewardData reward) => monsterRewardDict.TryGetValue(name, out reward);
-    public bool TryGetRelic(string name, out RelicData relic) => relicDict.TryGetValue(name, out relic);
     public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);
     public bool TryGetSpecificEvent(string name, out EventData ev) => specificEventDict.TryGetValue(name, out ev);
     public bool TryGetBattle(string name, out BattleData battle) => battleDict.TryGetValue(name, out battle);
@@ -449,7 +425,6 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetStageMapData(string name, out StageMapDataBundle stageMapData) => stageMapDataDict.TryGetValue(name, out stageMapData);
     public bool TryGetModel(string name, out GameObject model) => modelDict.TryGetValue(name, out model);
     public bool TryGetTexture(string name, out Sprite texture) => textureDict.TryGetValue(name, out texture);
-    public bool TryGetCardDescription(string name, out CardDescription description) => cardDescriptionDict.TryGetValue(name, out description);
     public bool TryGetObstacle(string name, out ObstacleData obstacle) => obstacleDict.TryGetValue(name, out obstacle);
     public bool TryGetTrap(string name, out TrapData trap) => trapDict.TryGetValue(name, out trap);
 }

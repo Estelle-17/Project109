@@ -15,4 +15,11 @@ function effect:OnBeforeDealDamage(damageInfo)
     return damageInfo
 end
 
+-- 3. YAML description 템플릿을 받아 현재 스택 수치로 토큰을 치환합니다.
+-- 필요하다면 currentStack을 가공한 값(예: math.floor(stack / 2))을 넣는 것도 가능합니다.
+function effect:GetDescription(effectBase, template)
+    local stack = effectBase.currentStack
+    return (template:gsub("{stacks}", tostring(stack)))
+end
+
 return effect

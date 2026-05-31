@@ -1,4 +1,4 @@
-function IsChoiceCanSelectable(item, Player, Character, Card, Relic)
+function IsChoiceCanSelectable(item, Player, Character, Card, RelicManager)
     print('ItemType :', item.itemType)
     if item.itemType == "Money" then
         if Player.inGame_Currency_Gold >= item.value then
@@ -18,14 +18,15 @@ function IsChoiceCanSelectable(item, Player, Character, Card, Relic)
             return true
         end
     elseif item.itemType == "SpecificCard" then
-        for i = 0, Card.Count do
+        for i = 0, Card.Count - 1 do
             if Card[i].cardName == item.name then
                 return true
             end
         end
     elseif item.itemType == "SpecificRelic" then
-        for i = 0, Relic.Count do
-            if Relic[i].relicName == item.name then
+        local relics = RelicManager:GetRelics()
+        for i = 0, relics.Count - 1 do
+            if relics[i].Data.relicName == item.name then
                 return true
             end
         end
@@ -34,7 +35,8 @@ function IsChoiceCanSelectable(item, Player, Character, Card, Relic)
             return true;
         end
     elseif item.itemType == "RandomRelic" then
-        if Relic.Count ~= 0 then
+        local relics = RelicManager:GetRelics()
+        if relics.Count ~= 0 then
             return true;
         end
     end

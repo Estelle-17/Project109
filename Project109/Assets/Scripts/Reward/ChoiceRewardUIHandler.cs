@@ -19,14 +19,14 @@ public class ChoiceRewardUIHandler : MonoBehaviour, IInteractable
         {
             case RewardItemType.Card:
                 currentRewardUIObject = Instantiate(cardRewardPrefab);
-                CardRewardHandler cardRewardHandler = currentRewardUIObject.GetComponent<CardRewardHandler>();
+                CardRewardPanel cardRewardHandler = currentRewardUIObject.GetComponent<CardRewardPanel>();
                 cardRewardHandler.SettingCards(cardType, RunManager.instance.player.playerStat.reward_Card_Count);    //보여줄 아이템의 수는 상황에 따라 변경 가능
                 cardRewardHandler.rootObject = this.gameObject;
                 DisableRewardUI();
                 break;
             case RewardItemType.Relic:
                 currentRewardUIObject = Instantiate(relicRewardPrefab);
-                RelicRewardHandler relicRewardHandler = currentRewardUIObject.GetComponent<RelicRewardHandler>();
+                RelicRewardPanel relicRewardHandler = currentRewardUIObject.GetComponent<RelicRewardPanel>();
                 relicRewardHandler.SettingRelics(reilcType, RunManager.instance.player.playerStat.reward_Card_Count);    //보여줄 아이템의 수는 상황에 따라 변경 가능
                 relicRewardHandler.rootObject = this.gameObject;
                 DisableRewardUI();

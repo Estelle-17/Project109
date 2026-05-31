@@ -1,4 +1,4 @@
-using Card.Types;
+using CardTypes;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -35,14 +35,12 @@ public class UIManager : MonoBehaviour
     RectTransform relicDescriptionTransform;
     public TextMeshProUGUI relicDescriptionText;
 
-    //카드 추가 설명 관련 변수
-    public EffectAreaManager effectAreaManager;
-    public ExtraDescriptionManager extraDescriptionManager;
-
     //카드 상세 확인 관련 변수
-    public CardCheckHandler cardCheckHandler;
+    public CardDetailPanel cardCheckHandler;
+
 
     //카드 범위 확인 관련 변수
+    public EffectAreaManager effectAreaManager;
     public EffectAreaTile effectAreaTile;
     public EffectAreaTile AdditionalEffectAreaTile;
 
@@ -240,7 +238,8 @@ public class UIManager : MonoBehaviour
 
     #region 카드 범위확인 UI
 
-    public void UpdateEffectAreaUI(ActionCardData newCardData)
+
+    public void UpdateEffectAreaUI(CardData newCardData)
     {
         UIManager.instance.ClearEffectAreaTiles();
 
@@ -257,6 +256,14 @@ public class UIManager : MonoBehaviour
                                                                Mathf.Abs(newCardData.targetMaxDistance - newCardData.targetMinDistance),
                                                                additionalEffectArea.distance,
                                                                TileType.AdditionalEffectTile);
+        }
+    }
+
+    public void UpdateEffectAreaUI(Card card)
+    {
+        if (card != null && card.cardData != null)
+        {
+            UpdateEffectAreaUI(card.cardData);
         }
     }
 
@@ -291,68 +298,6 @@ public class UIManager : MonoBehaviour
             return;
 
         AdditionalEffectAreaTile.SetTileFromShapeGenerator(shapeName, shapeLength, radius, type);
-    }
-
-    #endregion
-
-    #region 카드 추가 설명UI
-
-    public void UpdateCardExtraDescription(ActionCardData cardData, Transform spawnPos)
-    {
-        InstantiateCardExtraDescription(cardData, spawnPos);
-    }
-
-    public void UpdateCardExtraDescription(ActionCardData cardData, Transform spawnPos, Vector3 newLocalScale)
-    {
-        extraDescriptionManager.transform.localScale = newLocalScale;
-
-        InstantiateCardExtraDescription(cardData, spawnPos);
-    }
-
-    private void InstantiateCardExtraDescription(ActionCardData cardData, Transform spawnPos)
-    {
-        extraDescriptionManager.transform.position = spawnPos.position;
-
-        if (cardData.maxMasteryPoint > 0)
-        {
-            Debug.Log("Set Mastery Point Description");
-            extraDescriptionManager.SetMasteryPointDescription(cardData, cardData.maxMasteryPoint);
-        }
-        else
-        {
-            extraDescriptionManager.ClearMasteryPointDescription();
-        }
-
-        if (AssetCacheManager.instance.TryGetCardDescription(cardData.path, out CardDescription description))
-        {
-            if (extraDescriptionManager)
-            {
-                extraDescriptionManager.SetExtraDescription(description.extraDescriptions);
-            }
-        }
-        else
-        {
-            if (extraDescriptionManager)
-            {
-                extraDescriptionManager.ClearExtraDescription();
-            }
-            Debug.LogWarning("Card description not found for path: " + cardData.path);
-        }
-    }
-
-    public void HideCardExtraDescription()
-    {
-        if (extraDescriptionManager)
-        {
-            extraDescriptionManager.HideExtraDescription();
-        }
-    }
-    public void ShowCardExtraDescription()
-    {
-        if (extraDescriptionManager)
-        {
-            extraDescriptionManager.ShowExtraDescription();
-        }
     }
 
     #endregion

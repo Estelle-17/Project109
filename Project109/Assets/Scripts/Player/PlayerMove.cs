@@ -26,26 +26,8 @@ public class PlayerMove
         {
             this.routePathfinding = this.battleMap.transform.GetComponent<RoutePathfinding>();
         }
-    }
 
-    public void EnableMove()
-    {
-        CheckCanMoveTiles();
-
-        if (PlayerInputController.instance != null)
-        {
-            PlayerInputController.instance.OnTouchClickEvent += OnTargetTileClicked;
-        }
-    }
-
-    public void DisableMove()
-    {
-        if (PlayerInputController.instance != null)
-        {
-            PlayerInputController.instance.OnTouchClickEvent -= OnTargetTileClicked;
-        }
-
-        ClearCanMoveTiles();
+        // 입력 이벤트 바인딩 제거 (PlayerCharacterController에서 중앙 관리)
     }
 
     public void CheckCanMoveTiles()
@@ -76,26 +58,32 @@ public class PlayerMove
         }
     }
 
-    private void OnTargetTileClicked(Vector2 pos)
+    /// <summary>
+    /// 외부(PlayerCharacterController)에서 이동 모드일 때 클릭된 타일을 전달받아 이동을 실행합니다.
+    /// </summary>
+    public void ExecuteMoveToTile(Tile targetTile)
     {
-        Ray ray = Camera.main.ScreenPointToRay(pos);
-
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        // 캐릭터가 Idle 상태가 아닌 경우 무시
+        if (characterMove.character.currentState != CharacterState.Idle)
         {
-            Tile targetTile = hit.transform.GetComponent<Tile>();
+            return;
+        }
 
-            // 1. 클릭한 오브젝트가 타일이고
-            // 2. 그 타일이 이동 가능한(CanMove) 타일이라면
-            if (targetTile != null && targetTile.tileState == TileState.CanMove)
+        if (targetTile != null)
+        {
+            if (targetTile.tileState == TileState.CanMove)
             {
+                if (characterMove.character.curMoveCount <= 0)
+                {
+                    Debug.Log("이동 횟수가 부족하여 이동할 수 없습니다.");
+                    return;
+                }
+
                 Debug.Log("이동 목표 타일: " + targetTile.GetCoordToString());
 
                 // 경로 탐색 및 실제 이동 명령
                 List<Tile> movePath = routePathfinding.TilePathfinding(characterMove.GetCurrentTile(), targetTile, battleMap.currentGameMap.GetTileMap());
                 characterMove.MoveAlongPath(movePath, targetTile);
-
-                // 이동 명령을 내렸으므로 더 이상 입력을 받지 않도록 해제
-                DisableMove();
             }
         }
     }

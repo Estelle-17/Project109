@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -5646,9 +5646,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2077144576}
         m_TargetAssemblyTypeName: PlayerMove, Assembly-CSharp
-        m_MethodName: CheckCanMoveTiles
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6277,7 +6277,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &779056174
 Transform:
   m_ObjectHideFlags: 0
@@ -7371,37 +7371,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!1 &942821751
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 942821752}
-  m_Layer: 0
-  m_Name: MapTiles
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &942821752
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 942821751}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &944406110
 GameObject:
   m_ObjectHideFlags: 0
@@ -8567,8 +8536,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1052911281}
-  - component: {fileID: 1052911283}
-  - component: {fileID: 1052911282}
   m_Layer: 9
   m_Name: BattleMapManager
   m_TagString: BattleMap
@@ -8591,36 +8558,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 779056174}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1052911282
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1052911280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb8f4605bd80d8e4a9644027ef39c07f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1052911283
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1052911280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e14604eab864445478f624360c54be59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentMapData: {fileID: 0}
-  prefabTile: {fileID: 9030737010763321247, guid: 8a634b971f20e384c8b4097adceb9201, type: 3}
-  column: 0
-  row: 0
-  tilePadding: 0
-  mapCreateTest: 1
 --- !u!1 &1055431458
 GameObject:
   m_ObjectHideFlags: 0
@@ -10611,7 +10548,6 @@ GameObject:
   - component: {fileID: 1272209226}
   - component: {fileID: 1272209232}
   - component: {fileID: 1272209231}
-  - component: {fileID: 1272209227}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -10635,18 +10571,6 @@ Transform:
   - {fileID: 1815676627750215574}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1272209227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1272209222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16973900096216c49b58e1a9b9d0b2a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1272209231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12159,6 +12083,133 @@ RectTransform:
   m_AnchoredPosition: {x: 50, y: -50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1455482856
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1455482859}
+  - component: {fileID: 1455482858}
+  - component: {fileID: 1455482857}
+  m_Layer: 9
+  m_Name: Directional Light (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1455482857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455482856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_CustomShadowLayers: 0
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 1
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
+--- !u!108 &1455482858
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455482856}
+  m_Enabled: 1
+  serializedVersion: 12
+  m_Type: 1
+  m_Color: {r: 0.3537736, g: 0.77228194, b: 1, a: 1}
+  m_Intensity: 0.5
+  m_Range: 10
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize2D: {x: 10, y: 10}
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 1
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 5000
+  m_UseColorTemperature: 1
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_LightUnit: 1
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
+--- !u!4 &1455482859
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455482856}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
+  m_LocalPosition: {x: 69.70001, y: -0.099998474, z: 49.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &1475280669
 GameObject:
   m_ObjectHideFlags: 0
@@ -12852,7 +12903,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1536112894}
-  - component: {fileID: 1536112893}
+  - component: {fileID: 1536112897}
+  - component: {fileID: 1536112896}
+  - component: {fileID: 1536112895}
   m_Layer: 0
   m_Name: TouchInputSystem
   m_TagString: Untagged
@@ -12860,18 +12913,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1536112893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1536112892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16973900096216c49b58e1a9b9d0b2a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1536112894
 Transform:
   m_ObjectHideFlags: 0
@@ -12887,6 +12928,42 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1536112895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536112892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45d63db11b2c8034ea73e7e991511307, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionController
+--- !u!114 &1536112896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536112892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f975a3b951f6905489b29513836f2a62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraController
+--- !u!114 &1536112897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536112892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16973900096216c49b58e1a9b9d0b2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputController
 --- !u!1 &1548251269
 GameObject:
   m_ObjectHideFlags: 0
@@ -17554,14 +17631,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff88fc520a8ea274f969cfcc1091e74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMapState: 0
   _startingCharacter: {fileID: 1272209232}
   currentMapName: 
   currentStageLevel: 0
   currentExploreMapFloor: 0
   currentIncountNode: {fileID: 0}
   beforeIncountNode: {fileID: 0}
-  currentMap: {fileID: 1052911283}
+  currentMap: {fileID: 0}
   currentExploreUI: {fileID: 0}
   loadMapHandler: {fileID: 0}
   currentSpawnEnemyList: []
@@ -17596,11 +17672,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeImage: {fileID: 235991326}
   dataLoader: {fileID: 0}
-  eventObjectPrefab: {fileID: 4545089466341251758, guid: 200fabb5e5b172b4e86a4d26d0de9ffc, type: 3}
-  shopObjectPrefab: {fileID: 7780705817486354265, guid: 4e38a3d73e95a8a4892238876921134d, type: 3}
-  restoreObjectPrefab: {fileID: 3887527566411581826, guid: f72f9f993e0e4c548a7e371ca6f08dc2, type: 3}
-  insightObjectPrefab: {fileID: 6522473548749201722, guid: 42f439033f7a09b40aa2ffc4ddd0db22, type: 3}
-  rewardMapObjectPrefab: {fileID: 4319029748970545909, guid: 7b76fb9f0a079094a81c9dd8cbe3350e, type: 3}
 --- !u!114 &2077144581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17666,15 +17737,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapManager
   currentMapData: {fileID: 0}
+  currentMapState: 0
   mapDataInfo: {fileID: 0}
-  prefabTile: {fileID: 9030737010763321247, guid: 8a634b971f20e384c8b4097adceb9201, type: 3}
-  spawnTileTransform: {fileID: 942821752}
-  mapColumn: 0
-  mapRow: 0
+  currentGameMap: {fileID: 0}
+  mapSpawnRootPrefab: {fileID: 1523703071106812780, guid: 332f1c148c6f40d44b1e69a0bbe5d127, type: 3}
   currentSpawnEnemyList: []
   currentSpawnNPCList: []
   currentSpawnUIList: []
   currentSpawnEtcList: []
+  eventObjectPrefab: {fileID: 4545089466341251758, guid: 200fabb5e5b172b4e86a4d26d0de9ffc, type: 3}
+  shopObjectPrefab: {fileID: 7780705817486354265, guid: 4e38a3d73e95a8a4892238876921134d, type: 3}
+  restoreObjectPrefab: {fileID: 3887527566411581826, guid: f72f9f993e0e4c548a7e371ca6f08dc2, type: 3}
+  insightObjectPrefab: {fileID: 0}
+  rewardMapObjectPrefab: {fileID: 6760759336903052133, guid: d62462cc67174b44b8cfcfa414fe50df, type: 3}
   mapCreateTest: 1
 --- !u!114 &2077144588
 MonoBehaviour:
@@ -17685,9 +17760,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2077144576}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb8f4605bd80d8e4a9644027ef39c07f, type: 3}
+  m_Script: {fileID: 11500000, guid: db4a2d365de48e64abc8b0aef18f36a8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RoutePathfinding
+  m_EditorClassIdentifier: Assembly-CSharp::GameMap
+  prefabTile: {fileID: 9030737010763321247, guid: 8a634b971f20e384c8b4097adceb9201, type: 3}
+  moveRangeIndicatorPrefab: {fileID: 0}
+  mapColumn: 0
+  mapRow: 0
 --- !u!1 &2081569538
 GameObject:
   m_ObjectHideFlags: 0
@@ -21744,4 +21823,4 @@ SceneRoots:
   - {fileID: 1197522861}
   - {fileID: 682794007}
   - {fileID: 478926645}
-  - {fileID: 942821752}
+  - {fileID: 1455482859}

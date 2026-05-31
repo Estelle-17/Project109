@@ -12,7 +12,7 @@ public class PlayerMove
 
     public List<Tile> canMoveTiles;
 
-    public BattleMapManager battleMap;
+    public MapManager battleMap;
     public RoutePathfinding routePathfinding;
 
     public PlayerMove(CharacterMove characterMove)
@@ -32,7 +32,12 @@ public class PlayerMove
 
     public void CheckCanMoveTiles()
     {
-        canMoveTiles = battleMap.CheckPlayerMoveTiles(characterMove.GetCurrentTile(), characterMove.character.curTilesPerMove);
+        canMoveTiles = battleMap.CheckPlayerMoveTiles(characterMove.GetCurrentTile(), characterMove.character.curCharacterStat.maxTilesPerMove);
+
+        if (battleMap != null && battleMap.currentGameMap != null && battleMap.currentGameMap.GetMoveRangeIndicator() != null)
+        {
+            battleMap.currentGameMap.GetMoveRangeIndicator().ShowWalkableTiles(canMoveTiles, battleMap.currentGameMap.GetTileMap());
+        }
     }
 
     /// <summary>
@@ -46,6 +51,11 @@ public class PlayerMove
             canMoveTiles[index].ChangeEffect();
         }
         canMoveTiles.Clear();
+
+        if (battleMap != null && battleMap.currentGameMap != null && battleMap.currentGameMap.GetMoveRangeIndicator() != null)
+        {
+            battleMap.currentGameMap.GetMoveRangeIndicator().ClearAllTiles(battleMap.currentGameMap.GetTileMap());
+        }
     }
 
     /// <summary>
@@ -72,7 +82,7 @@ public class PlayerMove
                 Debug.Log("이동 목표 타일: " + targetTile.GetCoordToString());
 
                 // 경로 탐색 및 실제 이동 명령
-                List<Tile> movePath = routePathfinding.TilePathfinding(characterMove.GetCurrentTile(), targetTile, battleMap.GetTileMap());
+                List<Tile> movePath = routePathfinding.TilePathfinding(characterMove.GetCurrentTile(), targetTile, battleMap.currentGameMap.GetTileMap());
                 characterMove.MoveAlongPath(movePath, targetTile);
             }
         }

@@ -11,8 +11,6 @@ public class MapDataSO : ScriptableObject, IIdentifiable
     public LocationType locationType; // 맵의 위치 유형 (예: 항구, 던전, 사원, 랜덤)
     public IncountType incountType; //어디 노드에서 사용되는 데이터인지 구분하기 위한 변수
 
-    public GameObject mapPrefab; //맵 프리팹
-
     [Header("Grid Settings")]
     public int width; // 맵의 가로 크기
     public int height; // 맵의 세로 크기
@@ -31,7 +29,7 @@ public class MapDataSO : ScriptableObject, IIdentifiable
         {
             for(int j = 0; j < height; j++)
             {
-                cells.Add(new CellData { position = new Vector2Int(i, j), cellType = CellType.Floor });
+                cells.Add(new CellData(new Vector2Int(i, j)));
             }
         }
     }

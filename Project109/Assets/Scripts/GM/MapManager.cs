@@ -1,7 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 using static UnityEngine.Rendering.DebugUI.Table;
+
+public enum MapState
+{
+    None,
+    Battle,
+    Secret
+}
 
 public class MapManager : MonoBehaviour
 {
@@ -21,21 +30,17 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    private List<List<Tile>> map;
+    public RoutePathfinding routePathfinding;
 
     public MapDataSO currentMapData;
+    public MapState currentMapState;
     public MapDataInfo mapDataInfo;
+    public GameMap currentGameMap;
 
     private List<CellData> spawnEnemyCells = new List<CellData>();
     private List<CellData> spawnPlayerCells = new List<CellData>();
     private List<CellData> spawnNPCCells = new List<CellData>();
-    private List<CellData> spawnObstacleCells = new List<CellData>();
-    private List<CellData> spawnTrapCells = new List<CellData>();
-    public GameObject prefabTile;
-    public Transform spawnTileTransform;
-    public int mapColumn;
-    public int mapRow;
+    public GameObject mapSpawnRootPrefab;
 
     //맵 이동 시 제거할 오브젝트 모음
     public List<GameObject> currentSpawnEnemyList;
@@ -43,36 +48,96 @@ public class MapManager : MonoBehaviour
     public List<GameObject> currentSpawnUIList;
     public List<GameObject> currentSpawnEtcList;
 
-    public List<List<Tile>> GetTileMap() { return map; }
+    //NPC 프리팹(모델링은 Addressables에서 탐색 후 생성)
+    [SerializeField] private GameObject eventObjectPrefab;
+    [SerializeField] private GameObject shopObjectPrefab;
+    [SerializeField] private GameObject restoreObjectPrefab;
+    [SerializeField] private GameObject insightObjectPrefab;
+    [SerializeField] private GameObject rewardMapObjectPrefab;
+
+    private void Start()
+    {
+        routePathfinding = new RoutePathfinding();
+    }
 
     // 이 함수는 노드에 진입할 때 호출됩니다.
-    public void GenerateStage(LocationType mapLocation, BattleData battleData)
+    public void GenerateStage(LocationType mapLocation, IncountType incountType, BattleData battleData = null)
     {
         //플레이어를 제외한 생성된 모든 요소 제거
         ClearStage();
 
         //이전의 맵 타일 및 생성된 오브젝트 제거 후 새롭게 맵 데이터 업데이트 및 타일 생성하도록 코딩 진행
-        UpdateMapData(mapLocation.ToString());
-        TileCreateByMapData();
+        UpdateMapData(mapLocation.ToString(), incountType);
 
-        // 맵 오브젝트 생성
-        if (currentMapData.mapPrefab != null)
+        currentGameMap = Instantiate(mapSpawnRootPrefab).GetComponent<GameMap>();
+
+        spawnEnemyCells.Clear();
+        spawnPlayerCells.Clear();
+        spawnNPCCells.Clear();
+
+        foreach (var cell in currentMapData.cells)
         {
-            Instantiate(currentMapData.mapPrefab, Vector3.zero, Quaternion.identity);
+            if (cell.terrainID != "Empty")
+            {
+                GenerateObjectInMap(cell.terrainID, cell.position);
+            }
+
+            if (cell.objectID != "Empty")
+            {
+                GenerateObjectInMap(cell.objectID, cell.position);
+            }
+
+            switch (cell.eventID)
+            {
+                case "EnemySpawn":
+                    spawnEnemyCells.Add(cell);
+                    break;
+                case "PlayerSpawn":
+                    spawnPlayerCells.Add(cell);
+                    break;
+                case "NPCSpawn":
+                    spawnNPCCells.Add(cell);
+                    break;
+            }
         }
 
-        ShuffleList(spawnEnemyCells);
-        int spawnEnemyCount = Mathf.Min(spawnEnemyCells.Count, battleData.monsterNames.Count);
-        GenerateEnemy(currentMapData, battleData.monsterNames, spawnEnemyCount);
+        currentGameMap.TileCreateByMapData(currentMapData);
 
-        ShuffleList(spawnTrapCells);
-        Debug.Log($"Spawn Trap Cells: {spawnTrapCells.Count}");
-        GenerateTrap(currentMapData, spawnTrapCells.Count);
+        if (battleData != null && battleData.monsterNames != null && (incountType == IncountType.Battle || incountType == IncountType.Elite || incountType == IncountType.Boss))
+        {
+            ShuffleList(spawnEnemyCells);
+            int spawnEnemyCount = Mathf.Min(spawnEnemyCells.Count, battleData.monsterNames.Count);
+            GenerateEnemy(currentMapData, battleData.monsterNames, spawnEnemyCount);
+        }
 
-        ShuffleList(spawnObstacleCells);
-        Debug.Log($"Spawn Obstacle Cells: {spawnObstacleCells.Count}");
-        GenerateObstacle(currentMapData, spawnObstacleCells.Count);
+        SpawnPlayerInMap(currentMapData, spawnPlayerCells.Count);
 
+        if (incountType == IncountType.Store || incountType == IncountType.Restore || incountType == IncountType.Secret || incountType == IncountType.SecretBox)
+        {
+            EventData eventData = null;
+            if (incountType == IncountType.Secret && RunManager.instance.currentIncountNode != null)
+            {
+                eventData = RunManager.instance.currentIncountNode.eventNodeData;
+            }
+            GenerateNPC(currentMapData, incountType, eventData);
+        }
+    }
+
+    private void GenerateObjectInMap(string objectID, Vector2Int pos)
+    {
+        if (AssetCacheManager.instance.TryGetModel(objectID, out GameObject prefab))
+        {
+            GameObject spawned = Instantiate(prefab);
+
+            Vector3 worldPos = new Vector3(
+                        pos.x * currentMapData.cellSize + currentMapData.gridOffset.x,
+                        currentMapData.gridOffset.y,
+                        pos.y * currentMapData.cellSize + currentMapData.gridOffset.z
+                    );
+
+            spawned.transform.position = worldPos;
+            spawned.transform.SetParent(currentGameMap.transform);
+        }
     }
 
     public void GenerateEnemy(MapDataSO mapData, List<string> spawnMonsterList, int spawnCount)
@@ -123,247 +188,182 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public void GenerateNPC(MapDataSO mapData, int npcCount)
+    public void GenerateNPC(MapDataSO mapData, IncountType incountType, EventData eventData = null)
     {
-        // NPC 생성 로직 (적 생성과 유사하게 구현)
-        // 예시에서는 NPC 데이터와 프리팹을 탐색하여 생성하는 방식으로 작성
-    }
-
-    public void GenerateTrap(MapDataSO mapData, int trapCount)
-    {
-        // 함정 생성 로직 (적 생성과 유사하게 구현)
-        for (int i = 0; i < trapCount; i++)
+        if (spawnNPCCells.Count == 0)
         {
-            CellData cell = spawnTrapCells[i];
-
-            // 함정 이름 탐색 (고정 ID가 있으면 그것을 사용하고, 그렇지 않으면 맵 데이터에서 무작위로 선택)
-            string trapName = "";
-            if (cell.fixedId != null && cell.fixedId != "")
-            {
-                trapName = cell.fixedId;
-            }
-            else
-            {
-                trapName = mapDataInfo.appearTrapsDataPath[Random.Range(0, mapDataInfo.appearTrapsDataPath.Count)];
-            }
-
-            Debug.Log($"Check {name}...");
-            //캐싱된 데이터에서 함정 데이터 탐색
-            if (AssetCacheManager.instance.TryGetTrap(trapName, out var newTrapData))
-            {
-                Debug.Log($"TrapData {newTrapData.name} Load Success.");
-                //함정 데이터에 맞는 프리팹 탐색
-                if (AssetCacheManager.instance.TryGetModel(newTrapData.objectPath, out var trapPrefab))
-                {
-                    Debug.Log("Trapprefab Load Success.");
-
-                    // 셀의 그리드 좌표를 실제 월드 좌표로 변환 (셀 크기 및 오프셋 적용)
-                    Vector3 worldPos = new Vector3(
-                        cell.position.x * mapData.cellSize + mapData.gridOffset.x,
-                        mapData.gridOffset.y,
-                        cell.position.y * mapData.cellSize + mapData.gridOffset.z
-                    );
-
-                    // 함정 생성
-                    GameObject newTrap = Instantiate(trapPrefab, worldPos, Quaternion.identity);
-
-                    currentSpawnEtcList.Add(newTrap);
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"Failed to Find TrapData for {trapName}");
-            }
-        }
-    }
-
-    public void GenerateObstacle(MapDataSO mapData, int obstacleCount)
-    {
-        // 장애물 생성 로직 (적 생성과 유사하게 구현)
-        for (int i = 0; i < obstacleCount; i++)
-        {
-            CellData cell = spawnObstacleCells[i];
-            // 장애물 이름 탐색 (고정 ID가 있으면 그것을 사용하고, 그렇지 않으면 맵 데이터에서 무작위로 선택)
-            string obstacleName = "";
-            if (cell.fixedId != null && cell.fixedId != "")
-            {
-                obstacleName = cell.fixedId;
-            }
-            else
-            {
-                obstacleName = mapDataInfo.appearObstaclesDataPath[Random.Range(0, mapDataInfo.appearObstaclesDataPath.Count)];
-            }
-            Debug.Log($"Check {name}...");
-            //캐싱된 데이터에서 장애물 데이터 탐색
-            if (AssetCacheManager.instance.TryGetObstacle(obstacleName, out var newObstacleData))
-            {
-                Debug.Log($"ObstacleData {newObstacleData.name} Load Success.");
-                //장애물 데이터에 맞는 프리팹 탐색
-                if (AssetCacheManager.instance.TryGetModel(newObstacleData.objectPath, out var obstaclePrefab))
-                {
-                    Debug.Log("Obstacleprefab Load Success.");
-                    // 셀의 그리드 좌표를 실제 월드 좌표로 변환 (셀 크기 및 오프셋 적용)
-                    Vector3 worldPos = new Vector3(
-                        cell.position.x * mapData.cellSize + mapData.gridOffset.x,
-                        mapData.gridOffset.y,
-                        cell.position.y * mapData.cellSize + mapData.gridOffset.z
-                    );
-                    // 장애물 생성
-                    GameObject newObstacle = Instantiate(obstaclePrefab, worldPos, Quaternion.identity);
-                    currentSpawnEtcList.Add(newObstacle);
-                }
-                else
-                {
-                    Debug.LogWarning($"Failed to Find Obstacle Prefab for {obstacleName}");
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"Failed to Find ObstacleData for {obstacleName}");
-            }
-        }
-    }
-
-    public void GeneratePlayer(MapDataSO mapData, int playerCount)
-    {
-        // 플레이어 생성 로직 (적 생성과 유사하게 구현)
-        // 예시에서는 플레이어 데이터와 프리팹을 탐색하여 생성하는 방식으로 작성
-    }
-
-    public void TileCreateByMapData()
-    {
-        float startX = currentMapData.gridOffset.x;
-        float startZ = currentMapData.gridOffset.z;
-
-        map = new List<List<Tile>>();
-        for (int columnIndex = 0; columnIndex < currentMapData.height; columnIndex++)
-        {
-            map.Add(new List<Tile>());
-            for (int rowIndex = 0; rowIndex < currentMapData.width; rowIndex++)
-            {
-                Tile tile = Instantiate(prefabTile, spawnTileTransform).GetComponent<Tile>();
-                tile.transform.localPosition = transform.position +
-                                               new Vector3(startX + (columnIndex) * currentMapData.cellSize,
-                                                        0.01f,
-                                                        startZ + (rowIndex) * currentMapData.cellSize);
-                tile.SetCoord(columnIndex, rowIndex);
-                //}
-                map[columnIndex].Add(tile);
-            }
+            Debug.LogWarning("No NPC Spawn Cells Found in Map Data!");
+            return;
         }
 
-        //맵 크기 저장
-        mapColumn = map.Count;
-        mapRow = map[0].Count;
+        CellData cell = spawnNPCCells[0];
+        spawnNPCCells.RemoveAt(0);
 
-        Debug.Log($"MapManager Column: {mapColumn}, Row: {mapRow}");
+        Vector3 worldPos = new Vector3(
+            cell.position.x * mapData.cellSize + mapData.gridOffset.x,
+            mapData.gridOffset.y,
+            cell.position.y * mapData.cellSize + mapData.gridOffset.z
+        );
 
-        //장애물과 몬스터, NPC 스폰 위치 지정
-        ApplyVariationLayout();
+        GameObject npcObj = null;
+        GameObject uiObj = null;
 
-        SetMapOutsideLine();
-    }
-
-    public void ApplyVariationLayout()
-    {
-        foreach (var cell in currentMapData.cells)
+        switch (incountType)
         {
-            switch (cell.cellType)
-            {
-                case CellType.RandomObstacleMarker:
-                case CellType.FixedObstacle:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Obstacle;
-                    spawnObstacleCells.Add(cell);
-                    break;
-                case CellType.PlayerSpawn:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
-                    spawnPlayerCells.Add(cell);
-                    break;
-                case CellType.EnemySpawn:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
-                    spawnEnemyCells.Add(cell);
-                    break;
-                case CellType.NPCSpawn:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
-                    spawnNPCCells.Add(cell);
-                    break;
-                case CellType.RandomTrapMarker:
-                case CellType.FixedTrap:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Trap;
-                    spawnTrapCells.Add(cell);
-                    break;
-                case CellType.Wall:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Full;
-                    break;
-                case CellType.Floor:
-                    map[cell.position.x][cell.position.y].tileState = TileState.Empty;
-                    break;
-            }
-        }
-    }
-
-    //이동할 수 있는 타일들의 외각을 표시해주는 함수
-    public void SetMapOutsideLine()
-    {
-        //현재 외각선 초기화
-        for (int columnIndex = 0; columnIndex < mapColumn; columnIndex++)
-        {
-            for (int rowIndex = 0; rowIndex < mapRow; rowIndex++)
-            {
-                foreach (GameObject obj in map[columnIndex][rowIndex].tileBaseTextureObjects)
+            case IncountType.Restore:
+                if (restoreObjectPrefab != null)
                 {
-                    obj.SetActive(false);
-                }
-            }
-        }
-
-        //이후 장애물과 맵의 끝 부분을 탐색하여 외각선 생성
-        for (int columnIndex = 0; columnIndex < mapColumn; columnIndex++)
-        {
-            for (int rowIndex = 0; rowIndex < mapRow; rowIndex++)
-            {
-                //현재 위치가 비어있을 경우
-                if (map[columnIndex][rowIndex].tileState == TileState.Empty || map[columnIndex][rowIndex].tileState == TileState.Trap)
-                {
-                    //상,하,좌,우 순으로 탐색
-                    int[] dirX = { 0, 0, 1, -1 };
-                    int[] dirY = { -1, 1, 0, 0 };
-
-                    for (int i = 0; i < 4; i++)
+                    RestoreUIManager newRestoreNPC = Instantiate(restoreObjectPrefab, worldPos, Quaternion.identity).GetComponent<RestoreUIManager>();
+                    if (newRestoreNPC != null)
                     {
-                        int x = columnIndex + dirX[i];
-                        int y = rowIndex + dirY[i];
-
-                        //맵의 범위 내에 있는 경우
-                        if (x < mapColumn && x >= 0 && y < mapRow && y >= 0)
-                        {
-                            //탐색된 위치가 이동 불가능한 위치일 때
-                            if (map[x][y].tileState == TileState.Full || map[x][y].tileState == TileState.Obstacle)
-                            {
-                                map[columnIndex][rowIndex].tileBaseTextureObjects[i].SetActive(true);
-                            }
-                        }
-                        else
-                        {
-                            map[columnIndex][rowIndex].tileBaseTextureObjects[i].SetActive(true);
-                        }
+                        newRestoreNPC.CreateRestoreUI();
+                        npcObj = newRestoreNPC.gameObject;
+                        uiObj = newRestoreNPC.GetRestoreUI() != null ? newRestoreNPC.GetRestoreUI().gameObject : null;
                     }
                 }
-            }
+                break;
+            case IncountType.Store:
+                if (shopObjectPrefab != null)
+                {
+                    ShopUIManager newShopNPC = Instantiate(shopObjectPrefab, worldPos, Quaternion.identity).GetComponent<ShopUIManager>();
+                    if (newShopNPC != null)
+                    {
+                        newShopNPC.AddRandomItems();
+                        newShopNPC.UpdateShopItems();
+                        npcObj = newShopNPC.gameObject;
+                        uiObj = newShopNPC.GetShopUI() != null ? newShopNPC.GetShopUI().gameObject : null;
+                    }
+                }
+                break;
+            case IncountType.SecretBox:
+                if (rewardMapObjectPrefab != null)
+                {
+                    ChoiceRewardUIHandler newRewardNPC = Instantiate(rewardMapObjectPrefab, worldPos, Quaternion.identity).GetComponent<ChoiceRewardUIHandler>();
+                    if (newRewardNPC != null)
+                    {
+                        //newRewardNPC.SetReward(RewardItemType.Relic, RandomCardPickupType.Common, RandomRelicPickupType.CommonToUnique, 0);
+                        npcObj = newRewardNPC.gameObject;
+                        uiObj = newRewardNPC.GetRewardUI();
+                    }
+                }
+                break;
+            case IncountType.Secret:
+                if (eventObjectPrefab != null)
+                {
+                    EventHandler newEventNPC = Instantiate(eventObjectPrefab, worldPos, Quaternion.identity).GetComponent<EventHandler>();
+                    if (newEventNPC != null)
+                    {
+                        if (eventData != null)
+                        {
+                            newEventNPC.SetEventData(eventData);
+                            newEventNPC.UpdateEventDescription("START");
+                        }
+                        npcObj = newEventNPC.gameObject;
+                        uiObj = newEventNPC.eventDescription != null ? newEventNPC.eventDescription.gameObject : null;
+                    }
+                }
+                break;
+        }
+
+        if (npcObj != null)
+        {
+            currentSpawnNPCList.Add(npcObj);
+        }
+        if (uiObj != null)
+        {
+            currentSpawnUIList.Add(uiObj);
         }
     }
 
-    void UpdateMapData(string stageName)
+    public void SpawnPlayerInMap(MapDataSO mapData, int spawnCount)
+    {
+        if (spawnPlayerCells.Count == 0)
+        {
+            Debug.LogWarning("No Player Spawn Cells Found in Map Data!");
+            return;
+        }
+        ShuffleList(spawnPlayerCells);
+
+        // 셀의 그리드 좌표를 실제 월드 좌표로 변환 (셀 크기 및 오프셋 적용)
+        Vector3 worldPos = new Vector3(
+            spawnPlayerCells[0].position.x * mapData.cellSize + mapData.gridOffset.x,
+            mapData.gridOffset.y,
+            spawnPlayerCells[0].position.y * mapData.cellSize + mapData.gridOffset.z
+        );
+        //플레이어 이동 및 타일 정보 업데이트
+        RunManager.instance.player.character.transform.position = worldPos;
+        if (RunManager.instance.player.character.characterMove != null)
+        {
+            RunManager.instance.player.character.characterMove.SetCurrentTile(currentGameMap.GetTileMap()[spawnPlayerCells[0].position.x][spawnPlayerCells[0].position.y]);
+        }
+    }
+
+    void UpdateMapData(string stageName, IncountType incountType)
     {
         //맵 데이터에서 기본 베이스와 추가 바리에이션을 찾아서 등록 진행
-        if (AssetCacheManager.instance.TryGetMap(stageName, out MapDataSO mapData))
+        if (AssetCacheManager.instance.TryGetStageMapData(stageName, out StageMapDataBundle stageMapData))
         {
-            Debug.Log($"Find MapData: {mapData.stageName}");
-            currentMapData = mapData;
-            mapColumn = mapData.height;
-            mapRow = mapData.width;
 
-            if(AssetCacheManager.instance.TryGetMapInfo(stageName, out var mapDataInfo))
+            // Fallback: 기본적으로 전투 맵을 할당해두어 에셋이 없는 경우에 대비합니다.
+            if (stageMapData.battleMapDataList != null && stageMapData.battleMapDataList.Count > 0)
+            {
+                currentMapData = stageMapData.battleMapDataList[0];
+            }
+
+            switch (incountType)
+            {
+                case IncountType.Battle:
+                    if (stageMapData.battleMapDataList != null && stageMapData.battleMapDataList.Count > 0)
+                    {
+                        currentMapData = stageMapData.battleMapDataList[Random.Range(0, stageMapData.battleMapDataList.Count)];
+                        Debug.Log($"ChooseBattleMapData: {currentMapData.stageName}");
+                    }
+                    break;
+                case IncountType.Elite:
+                    if (stageMapData.eliteMapDataList != null && stageMapData.eliteMapDataList.Count > 0)
+                    {
+                        currentMapData = stageMapData.eliteMapDataList[Random.Range(0, stageMapData.eliteMapDataList.Count)];
+                        Debug.Log($"ChooseEliteMapData: {currentMapData.stageName}");
+                    }
+                    break;
+                case IncountType.Boss:
+                    if (stageMapData.bossMapDataList != null && stageMapData.bossMapDataList.Count > 0)
+                    {
+                        currentMapData = stageMapData.bossMapDataList[Random.Range(0, stageMapData.bossMapDataList.Count)];
+                        Debug.Log($"ChooseBossMapData: {currentMapData.stageName}");
+                    }
+                    break;
+                case IncountType.Secret:
+                    if (stageMapData.secretMapDataList != null && stageMapData.secretMapDataList.Count > 0)
+                    {
+                        currentMapData = stageMapData.secretMapDataList[Random.Range(0, stageMapData.secretMapDataList.Count)];
+                        Debug.Log($"ChooseSecretMapData: {currentMapData.stageName}");
+                    }
+                    break;
+                case IncountType.Store:
+                    if (stageMapData.storeMapDataList != null && stageMapData.storeMapDataList.Count > 0)
+                    {
+                        currentMapData = stageMapData.storeMapDataList[Random.Range(0, stageMapData.storeMapDataList.Count)];
+                        Debug.Log($"ChooseStoreMapData: {currentMapData.stageName}");
+                    }
+                    break;
+                case IncountType.Restore:
+                    if (stageMapData.restoreMapDataList != null && stageMapData.restoreMapDataList.Count > 0)
+                    {
+                        currentMapData = stageMapData.restoreMapDataList[Random.Range(0, stageMapData.restoreMapDataList.Count)];
+                        Debug.Log($"ChooseRestoreMapData: {currentMapData.stageName}");
+                    }
+                    break;
+                case IncountType.SecretBox:
+                    if (stageMapData.secretMapDataList != null && stageMapData.secretMapDataList.Count > 0)
+                    {
+                        currentMapData = stageMapData.secretMapDataList[Random.Range(0, stageMapData.secretMapDataList.Count)];
+                        Debug.Log($"ChooseSecretBoxMapData (using Secret): {currentMapData.stageName}");
+                    }
+                    break;
+            }
+
+            if (AssetCacheManager.instance.TryGetMapInfo(stageName, out var mapDataInfo))
             {
                 this.mapDataInfo = mapDataInfo;
             }
@@ -378,21 +378,17 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public void UpdateMapVariationFromName(string variationName)
-    {
-        ApplyVariationLayout();
-
-        SetMapOutsideLine();
-    }
-
     public bool mapCreateTest;
     private void Update()
     {
         if (mapCreateTest)
         {
             mapCreateTest = false;
-            UpdateMapData("Temple");
-            TileCreateByMapData();
+            if (AssetCacheManager.instance.TryGetBattle("Battle_Test_Data", out BattleData battleData))
+            {
+                currentMapState = MapState.Battle;
+                GenerateStage(LocationType.Temple, IncountType.Battle, battleData);
+            }
         }
     }
 
@@ -435,20 +431,10 @@ public class MapManager : MonoBehaviour
         }
         currentSpawnEtcList.Clear();
 
-        //현재 씬에 존재하는 맵 타일 제거
-        if (map != null)
+        if (currentGameMap != null)
         {
-            foreach (var column in map)
-            {
-                foreach (var tile in column)
-                {
-                    if (tile != null)
-                    {
-                        Destroy(tile.gameObject);
-                    }
-                }
-            }
-            map.Clear();
+            Destroy(currentGameMap.gameObject);
+            currentGameMap = null;
         }
     }
 
@@ -472,6 +458,8 @@ public class MapManager : MonoBehaviour
         Queue<Tile> checkCurrentTiles = new Queue<Tile>();
         checkCurrentTiles.Enqueue(moveStart);
 
+        List<List<Tile>> map = currentGameMap.GetTileMap();
+
         int column = map.Count;
         int row = map[0].Count;
 
@@ -493,7 +481,7 @@ public class MapManager : MonoBehaviour
                     //맵을 넘어가는 경우 제외
                     if (x >= column || y >= row || x < 0 || y < 0)
                         continue;
-                        
+
 
                     //플레이어 위치 혹은 갈 수 없는 경우 제외
                     if (map[x][y].GetCoord().column == moveStart.GetCoord().column && map[x][y].GetCoord().row == moveStart.GetCoord().row ||

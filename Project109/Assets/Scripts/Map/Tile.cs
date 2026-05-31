@@ -15,19 +15,18 @@ public class Tile : MonoBehaviour
     private Coord coord;
     public Vector2Int position; // 그리드 좌표 (x, y)
     public TileState tileState;
-    public CellType cellType;
     public GameObject canMoveAreaTextureObject;
-    public GameObject centerTileTextureObject;
-
-    public GameObject[] tileBaseTextureObjects; //상,하,좌,우 순으로 등록
-
-    public GameObject tileObjectPrefab;
-    public GameObject crackTileObjectPrefab;
 
     private void Start()
     {
-        canMoveAreaTextureObject = transform.GetChild(0).gameObject;
-        canMoveAreaTextureObject.SetActive(false);
+        if (transform.childCount > 0)
+        {
+            canMoveAreaTextureObject = transform.GetChild(0).gameObject;
+            if (canMoveAreaTextureObject != null)
+            {
+                canMoveAreaTextureObject.SetActive(false);
+            }
+        }
     }
 
     public void SetCoord(int column, int row)
@@ -50,28 +49,16 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void ChangeEffect()
     {
-        if(tileState == TileState.CanMove)
+        if (canMoveAreaTextureObject != null)
         {
-            canMoveAreaTextureObject.SetActive(true);
-        }
-        else
-        {
-            canMoveAreaTextureObject.SetActive(false);
-        }
-    }
-
-    public void CreateRandomTileObject()
-    {
-        if (tileObjectPrefab == null || crackTileObjectPrefab == null)
-            return;
-
-        if (Random.Range(0, 100) % 2 == 0)
-        {
-            Instantiate(tileObjectPrefab, transform);
-        }
-        else
-        {
-            Instantiate(crackTileObjectPrefab, transform);
+            if (tileState == TileState.CanMove)
+            {
+                canMoveAreaTextureObject.SetActive(true);
+            }
+            else
+            {
+                canMoveAreaTextureObject.SetActive(false);
+            }
         }
     }
 }

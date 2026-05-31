@@ -18,3 +18,8 @@ MonoBehaviour:
   battleLocation: Temple
   monsterNames:
   - Monster_testMonster_Data
+  rewards:
+  - name: Gold
+    value: 50
+  - name: Card
+    value: 1

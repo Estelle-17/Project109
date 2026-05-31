@@ -15,597 +15,792 @@ MonoBehaviour:
   stageName: Map_Temple_Battle_1
   locationType: 2
   incountType: 5
-  mapPrefab: {fileID: 0}
   width: 14
   height: 14
   cellSize: 10.2
   gridOffset: {x: 0, y: 0, z: 0}
   cells:
   - position: {x: 0, y: 0}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 0, y: 1}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 0, y: 2}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 0, y: 3}
-    cellType: 2
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 0, y: 4}
-    cellType: 2
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 0, y: 5}
-    cellType: 2
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: PlayerSpawn
   - position: {x: 0, y: 6}
-    cellType: 2
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: PlayerSpawn
   - position: {x: 0, y: 7}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: PlayerSpawn
   - position: {x: 0, y: 8}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 0, y: 9}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 0, y: 10}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 0, y: 11}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 0, y: 12}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 0, y: 13}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 1, y: 0}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 1, y: 1}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 1, y: 2}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 1, y: 3}
-    cellType: 2
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 1, y: 4}
-    cellType: 2
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 1, y: 5}
-    cellType: 2
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: PlayerSpawn
   - position: {x: 1, y: 6}
-    cellType: 2
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: PlayerSpawn
   - position: {x: 1, y: 7}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: PlayerSpawn
   - position: {x: 1, y: 8}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 1, y: 9}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 1, y: 10}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 1, y: 11}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 1, y: 12}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 1, y: 13}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 2, y: 0}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 2, y: 1}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 2, y: 2}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 2, y: 3}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 2, y: 4}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 2, y: 5}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: PlayerSpawn
   - position: {x: 2, y: 6}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: PlayerSpawn
   - position: {x: 2, y: 7}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: PlayerSpawn
   - position: {x: 2, y: 8}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 2, y: 9}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 2, y: 10}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 2, y: 11}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 2, y: 12}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 2, y: 13}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 3, y: 0}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 3, y: 1}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 3, y: 2}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 3, y: 3}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 3, y: 4}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 3, y: 5}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Trap_Temple_Spike
+    eventID: Trap
   - position: {x: 3, y: 6}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Trap_Temple_Spike
+    eventID: Trap
   - position: {x: 3, y: 7}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Trap_Temple_Spike
+    eventID: Trap
   - position: {x: 3, y: 8}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 3, y: 9}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 3, y: 10}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 3, y: 11}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 3, y: 12}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 3, y: 13}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 4, y: 0}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 4, y: 1}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 4, y: 2}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 4, y: 3}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 4, y: 4}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 4, y: 5}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Trap_Temple_Spike
+    eventID: Trap
   - position: {x: 4, y: 6}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Obstacle_Temple_Pillar
+    eventID: Block
   - position: {x: 4, y: 7}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Trap_Temple_Spike
+    eventID: Trap
   - position: {x: 4, y: 8}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 4, y: 9}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 4, y: 10}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 4, y: 11}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 4, y: 12}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 4, y: 13}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 5, y: 0}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 5, y: 1}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 5, y: 2}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 5, y: 3}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 5, y: 4}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 5, y: 5}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Trap_Temple_Spike
+    eventID: Trap
   - position: {x: 5, y: 6}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Trap_Temple_Spike
+    eventID: Trap
   - position: {x: 5, y: 7}
-    cellType: 8
-    fixedId: Obstacle_Temple_Pillar_Data
+    terrainID: Terrain_Temple_Floor
+    objectID: Trap_Temple_Spike
+    eventID: Trap
   - position: {x: 5, y: 8}
-    cellType: 8
-    fixedId: Obstacle_Temple_Pillar_Data
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 5, y: 9}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 5, y: 10}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 5, y: 11}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 5, y: 12}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 5, y: 13}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 6, y: 0}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 6, y: 1}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 6, y: 2}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 6, y: 3}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 6, y: 4}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 6, y: 5}
-    cellType: 7
-    fixedId: Trap_Temple_Spike_Data
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 6, y: 6}
-    cellType: 7
-    fixedId: Trap_Temple_Spike_Data
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 6, y: 7}
-    cellType: 8
-    fixedId: Obstacle_Temple_Pillar_Data
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 6, y: 8}
-    cellType: 8
-    fixedId: Obstacle_Temple_Pillar_Data
+    terrainID: Terrain_Temple_Floor
+    objectID: Obstacle_Temple_Pillar
+    eventID: Block
   - position: {x: 6, y: 9}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Obstacle_Temple_Pillar
+    eventID: Block
   - position: {x: 6, y: 10}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 6, y: 11}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 6, y: 12}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 6, y: 13}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 7, y: 0}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 7, y: 1}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 7, y: 2}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 7, y: 3}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 7, y: 4}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 7, y: 5}
-    cellType: 7
-    fixedId: Trap_Temple_Spike_Data
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 7, y: 6}
-    cellType: 7
-    fixedId: Trap_Temple_Spike_Data
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 7, y: 7}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 7, y: 8}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Obstacle_Temple_Pillar
+    eventID: Block
   - position: {x: 7, y: 9}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Obstacle_Temple_Pillar
+    eventID: Block
   - position: {x: 7, y: 10}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 7, y: 11}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 7, y: 12}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 7, y: 13}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 8, y: 0}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 8, y: 1}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 8, y: 2}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 8, y: 3}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 8, y: 4}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 8, y: 5}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: NPCSpawn
   - position: {x: 8, y: 6}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 8, y: 7}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 8, y: 8}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Obstacle_Temple_Pillar
+    eventID: Block
   - position: {x: 8, y: 9}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Obstacle_Temple_Pillar
+    eventID: Block
   - position: {x: 8, y: 10}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 8, y: 11}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 8, y: 12}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 8, y: 13}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 9, y: 0}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 9, y: 1}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 9, y: 2}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 9, y: 3}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 9, y: 4}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 9, y: 5}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 9, y: 6}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 9, y: 7}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 9, y: 8}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 9, y: 9}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 9, y: 10}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 9, y: 11}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 9, y: 12}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 9, y: 13}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 10, y: 0}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 10, y: 1}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 10, y: 2}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 10, y: 3}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 10, y: 4}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 10, y: 5}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 10, y: 6}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 10, y: 7}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 10, y: 8}
-    cellType: 6
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 10, y: 9}
-    cellType: 6
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 10, y: 10}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 10, y: 11}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: EnemySpawn
   - position: {x: 10, y: 12}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 10, y: 13}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 0}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 1}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 2}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 3}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 4}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 5}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 6}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 7}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 8}
-    cellType: 6
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 9}
-    cellType: 6
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 10}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 11}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 12}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 11, y: 13}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 0}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 1}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 2}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 3}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 4}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 5}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 6}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 7}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 8}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 9}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 10}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 11}
-    cellType: 3
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 12}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 12, y: 13}
-    cellType: 0
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 0}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 1}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 2}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 3}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 4}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 5}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 6}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 7}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 8}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 9}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 10}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 11}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 12}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty
   - position: {x: 13, y: 13}
-    cellType: 1
-    fixedId: 
+    terrainID: Terrain_Temple_Floor
+    objectID: Empty
+    eventID: Empty

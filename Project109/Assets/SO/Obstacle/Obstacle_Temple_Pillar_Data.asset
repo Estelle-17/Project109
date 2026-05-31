@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Obstacle_Temple_Pillar_Data
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleData
   obstacleName: "\uB3CC \uAE30\uB465"
-  objectPath: Obstacle_Temple_Pillar_Prefab
+  objectPath: Obstacle_Temple_Pillar
   dataPath: Obstacle_Temple_Pillar_Data
   hp: 3

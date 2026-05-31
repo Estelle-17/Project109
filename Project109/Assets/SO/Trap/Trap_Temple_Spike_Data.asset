@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Trap_Temple_Spike_Data
   m_EditorClassIdentifier: Assembly-CSharp::TrapData
   trapName: "\uAC00\uC2DC \uBC1C\uD310"
-  objectPath: Trap_Temple_Spike_Prefab
+  objectPath: Trap_Temple_Spike
   dataPath: Trap_Temple_Spike_Data
   hp: 3
   damage: 10

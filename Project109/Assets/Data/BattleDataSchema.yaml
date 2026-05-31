@@ -1,5 +1,14 @@
 # string이 아닌 int, float, bool형식은 !!int와 같이 변수의 타입을 강제 지정해주어야 문제가 안생김
 $schema:  "https://json-schema.org/draft/2020-12/schema"
+reward: &reward
+  type: object
+  name:
+    type: string
+  count:
+    type: integer #0: 무제한
+  required:
+    - name
+    - value
 
 type: object
 properties:
@@ -22,10 +31,15 @@ properties:
           type: array
           item:
             type: string
+        rewards:
+          type: array
+          item:
+            <<: *reward
       required:
         - battleDataName
         - battleAppearLevel
         - battleLocation
         - monsterNames
+        - rewards
 required:
   - battleMonsterCollection    

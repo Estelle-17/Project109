@@ -69,12 +69,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Card
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 40b7f70c36cc09946976d86964dbff4f
-    m_Address: Map_Stage_1
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Map
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 50f8a85c19aa31742b0c74ac2544e469
     m_Address: Card_Rumbling
     m_ReadOnly: 0

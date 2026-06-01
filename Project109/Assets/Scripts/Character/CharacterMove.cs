@@ -125,7 +125,7 @@ public class CharacterMove
             return;
         }
 
-        if (MapManager.instance != null && MapManager.instance.currentMapState == MapState.Battle)
+        if (RunManager.instance != null && RunManager.instance.currentMap != null && RunManager.instance.currentMap.currentMapState == MapState.Battle)
         {
             this.character.curMoveCount--;
         }

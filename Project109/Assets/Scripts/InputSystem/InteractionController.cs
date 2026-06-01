@@ -13,7 +13,7 @@ public class InteractionController : MonoBehaviour
     private void HandleTouchClick(Vector2 screenPos)
     {
         // 비 전투 탐색 상황에서는 PlayerExploreController가 상호작용과 이동을 직접 처리하므로 동작을 차단합니다.
-        if (MapManager.instance != null && MapManager.instance.currentMapState != MapState.Battle)
+        if (RunManager.instance != null && RunManager.instance.currentMap != null && RunManager.instance.currentMap.currentMapState != MapState.Battle)
         {
             return;
         }

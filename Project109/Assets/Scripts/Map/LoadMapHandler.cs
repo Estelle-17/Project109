@@ -35,42 +35,39 @@ public class LoadMapHandler : MonoBehaviour
         IncountNode newIncountNode = RunManager.instance.currentIncountNode;
         if(newIncountNode != null)
         {
+            var mapManager = RunManager.instance.currentMap;
+            var playerChar = RunManager.instance.player.character;
+            var mapPrefabs = RunManager.instance.MapPrefabs;
+
             switch (newIncountNode.incountType)
             {
                 case IncountType.None:
                     break;
                 case IncountType.Battle:
-                    MapManager.instance.currentMapState = MapState.Battle;
-                    MapManager.instance.GenerateStage(LocationType.Temple, IncountType.Battle, newIncountNode.battleNodeData);
+                    mapManager.GenerateStage(LocationType.Temple, IncountType.Battle, playerChar, mapPrefabs, null, newIncountNode.battleNodeData);
                     //GameItemRewardManager.instance.SpawnRewardBox(RunManager.instance.currentMap.CheckTileMapRewardLocation());
                     break;
                 case IncountType.Elite:
-                    MapManager.instance.currentMapState = MapState.Battle;
-                    MapManager.instance.GenerateStage(LocationType.Temple, IncountType.Elite, newIncountNode.battleNodeData);
+                    mapManager.GenerateStage(LocationType.Temple, IncountType.Elite, playerChar, mapPrefabs, null, newIncountNode.battleNodeData);
                     //GameItemRewardManager.instance.SpawnRewardBox(RunManager.instance.currentMap.CheckTileMapRewardLocation());
                     break;
                 case IncountType.Boss:
-                    MapManager.instance.currentMapState = MapState.Battle;
-                    MapManager.instance.GenerateStage(LocationType.Temple, IncountType.Boss, newIncountNode.battleNodeData);
+                    mapManager.GenerateStage(LocationType.Temple, IncountType.Boss, playerChar, mapPrefabs, null, newIncountNode.battleNodeData);
                     //GameItemRewardManager.instance.SpawnRewardBox(RunManager.instance.currentMap.CheckTileMapRewardLocation());
                     break;
                 case IncountType.Restore:
-                    MapManager.instance.currentMapState = MapState.None;
-                    MapManager.instance.GenerateStage(LocationType.Temple, IncountType.Restore);
+                    mapManager.GenerateStage(LocationType.Temple, IncountType.Restore, playerChar, mapPrefabs);
                     break;
                 case IncountType.Store:
-                    MapManager.instance.currentMapState = MapState.None;
-                    MapManager.instance.GenerateStage(LocationType.Temple, IncountType.Store);
+                    mapManager.GenerateStage(LocationType.Temple, IncountType.Store, playerChar, mapPrefabs);
                     break;
                 case IncountType.SecretBox:
-                    MapManager.instance.currentMapState = MapState.None;
-                    MapManager.instance.GenerateStage(LocationType.Temple, IncountType.SecretBox);
+                    mapManager.GenerateStage(LocationType.Temple, IncountType.SecretBox, playerChar, mapPrefabs);
                     break;
                 case IncountType.Secret:
                     if(newIncountNode.eventNodeData != null)
                     {
-                        MapManager.instance.currentMapState = MapState.Secret;
-                        MapManager.instance.GenerateStage(LocationType.Temple, IncountType.Secret);
+                        mapManager.GenerateStage(LocationType.Temple, IncountType.Secret, playerChar, mapPrefabs, newIncountNode.eventNodeData);
                     }
                     break;
                 default:
@@ -84,12 +81,15 @@ public class LoadMapHandler : MonoBehaviour
                 case ExtraIncountType.Insight:
                     if (newIncountNode.eventNodeData != null)
                     {
-                        MapManager.instance.GenerateNPC(MapManager.instance.currentMapData, IncountType.Secret, newIncountNode.eventNodeData);
+                        mapManager.GenerateNPC(mapManager.currentMapData, IncountType.Secret, mapPrefabs, newIncountNode.eventNodeData);
                     }
                     break;
                 case ExtraIncountType.ShineWell:
                     break;
             }
+
+            // 맵 생성이 끝난 후 RunManager에게 상태 전이 알림
+            RunManager.instance.OnMapStateChanged(mapManager.currentMapState);
         }
 
         StartCoroutine(FadeOut(isLoadingNode));

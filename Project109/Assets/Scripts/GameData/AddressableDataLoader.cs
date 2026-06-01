@@ -145,7 +145,7 @@ public class AddressableDataLoader : MonoBehaviour
     }
 
 
-    public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
+    // public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
     public bool TryGetRelic(string name, out RelicData relic) => relicDict.TryGetValue(name, out relic);
     public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);
     public bool TryGetBattleNode(string name, out BattleData battleNode) => battleDict.TryGetValue(name, out battleNode);

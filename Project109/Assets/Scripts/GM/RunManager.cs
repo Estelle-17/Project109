@@ -16,6 +16,7 @@ public class RunManager : MonoBehaviour
 
             // DontDestroyOnLoad(this.gameObject);
             battleManager = new();
+            currentMap = new MapManager();
         }
         else
         {
@@ -35,6 +36,10 @@ public class RunManager : MonoBehaviour
     private ICharacterController _activePlayerController;
     public ICharacterController activePlayerController => _activePlayerController;
 
+    [Header("Map Settings")]
+    [SerializeField] private MapPrefabs mapPrefabs;
+    public MapPrefabs MapPrefabs => mapPrefabs;
+
     [Header("Map")]
     //맵 관련 변수
     public string currentMapName;
@@ -46,11 +51,6 @@ public class RunManager : MonoBehaviour
     public ExploreUI currentExploreUI;
 
     public LoadMapHandler loadMapHandler;
-
-    //맵 이동 시 제거할 오브젝트 모음
-    public List<GameObject> currentSpawnEnemyList;
-    public List<GameObject> currentSpawnNPCList;
-    public List<GameObject> currentSpawnUIList;
 
     [Header("Temp")]
     public PlayerStat testPlayerStat;

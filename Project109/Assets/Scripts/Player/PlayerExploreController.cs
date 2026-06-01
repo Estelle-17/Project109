@@ -50,7 +50,7 @@ public class PlayerExploreController : ICharacterController
         if (UnityEngine.EventSystems.EventSystem.current != null && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
 
         // 현재 전투 맵 상태가 Battle인 경우 탐색 조작은 동작하지 않음
-        if (MapManager.instance == null || MapManager.instance.currentMapState == MapState.Battle) return;
+        if (RunManager.instance == null || RunManager.instance.currentMap == null || RunManager.instance.currentMap.currentMapState == MapState.Battle) return;
 
         // 플레이어 캐릭터 상태가 Idle 또는 Move(이동 중 경로 변경 허용)가 아니면 조작 무시
         if (controlledCharacter == null || (controlledCharacter.currentState != CharacterState.Idle && controlledCharacter.currentState != CharacterState.Move)) return;
@@ -100,7 +100,7 @@ public class PlayerExploreController : ICharacterController
         Tile startTile = characterMove.GetCurrentTile();
         if (startTile == null || startTile == targetTile) return;
 
-        var tileMap = MapManager.instance.currentGameMap?.GetTileMap();
+        var tileMap = RunManager.instance.currentMap?.currentGameMap?.GetTileMap();
         if (tileMap == null) return;
 
         // 자유 길찾기 수행
@@ -129,7 +129,7 @@ public class PlayerExploreController : ICharacterController
         Tile startTile = characterMove.GetCurrentTile();
         if (startTile == null) return;
 
-        var tileMap = MapManager.instance.currentGameMap?.GetTileMap();
+        var tileMap = RunManager.instance.currentMap?.currentGameMap?.GetTileMap();
         if (tileMap == null) return;
 
         // 상호작용 대상과 가장 가까운 타일을 NPC가 위치한 타일로 간주
@@ -222,7 +222,7 @@ public class PlayerExploreController : ICharacterController
             }
         }
 
-        RoutePathfinding pathfinder = MapManager.instance != null ? MapManager.instance.routePathfinding : null;
+        RoutePathfinding pathfinder = (RunManager.instance != null && RunManager.instance.currentMap != null) ? RunManager.instance.currentMap.routePathfinding : null;
         List<Tile> path = null;
         if (pathfinder != null)
         {

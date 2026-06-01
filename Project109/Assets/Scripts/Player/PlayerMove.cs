@@ -24,7 +24,7 @@ public class PlayerMove
 
         if (this.battleMap != null)
         {
-            this.routePathfinding = this.battleMap.transform.GetComponent<RoutePathfinding>();
+            this.routePathfinding = this.battleMap.routePathfinding;
         }
 
         // 입력 이벤트 바인딩 제거 (PlayerBattleController에서 중앙 관리)

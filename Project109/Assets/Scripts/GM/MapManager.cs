@@ -12,25 +12,20 @@ public enum MapState
     Secret
 }
 
-public class MapManager : MonoBehaviour
+[System.Serializable]
+public struct MapPrefabs
 {
-    public static MapManager instance { get; private set; }
+    public GameObject mapSpawnRootPrefab;
+    public GameObject eventObjectPrefab;
+    public GameObject shopObjectPrefab;
+    public GameObject restoreObjectPrefab;
+    public GameObject insightObjectPrefab;
+    public GameObject rewardMapObjectPrefab;
+}
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-
-            DontDestroyOnLoad(this.gameObject);
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
-    }
-
-    public RoutePathfinding routePathfinding;
+public class MapManager
+{
+    public RoutePathfinding routePathfinding = new();
 
     public MapDataSO currentMapData;
     public MapState currentMapState;
@@ -40,28 +35,19 @@ public class MapManager : MonoBehaviour
     private List<CellData> spawnEnemyCells = new List<CellData>();
     private List<CellData> spawnPlayerCells = new List<CellData>();
     private List<CellData> spawnNPCCells = new List<CellData>();
-    public GameObject mapSpawnRootPrefab;
 
     //맵 이동 시 제거할 오브젝트 모음
-    public List<GameObject> currentSpawnEnemyList;
-    public List<GameObject> currentSpawnNPCList;
-    public List<GameObject> currentSpawnUIList;
-    public List<GameObject> currentSpawnEtcList;
+    public List<GameObject> currentSpawnEnemyList = new List<GameObject>();
+    public List<GameObject> currentSpawnNPCList = new List<GameObject>();
+    public List<GameObject> currentSpawnUIList = new List<GameObject>();
+    public List<GameObject> currentSpawnEtcList = new List<GameObject>();
 
-    //NPC 프리팹(모델링은 Addressables에서 탐색 후 생성)
-    [SerializeField] private GameObject eventObjectPrefab;
-    [SerializeField] private GameObject shopObjectPrefab;
-    [SerializeField] private GameObject restoreObjectPrefab;
-    [SerializeField] private GameObject insightObjectPrefab;
-    [SerializeField] private GameObject rewardMapObjectPrefab;
-
-    private void Start()
+    public MapManager()
     {
-        routePathfinding = new RoutePathfinding();
     }
 
     // 이 함수는 노드에 진입할 때 호출됩니다.
-    public void GenerateStage(LocationType mapLocation, IncountType incountType, BattleData battleData = null)
+    public void GenerateStage(LocationType mapLocation, IncountType incountType, Character playerCharacter, MapPrefabs prefabs, EventData secretEventData = null, BattleData battleData = null)
     {
         //플레이어를 제외한 생성된 모든 요소 제거
         ClearStage();
@@ -69,7 +55,7 @@ public class MapManager : MonoBehaviour
         //이전의 맵 타일 및 생성된 오브젝트 제거 후 새롭게 맵 데이터 업데이트 및 타일 생성하도록 코딩 진행
         UpdateMapData(mapLocation.ToString(), incountType);
 
-        currentGameMap = Instantiate(mapSpawnRootPrefab).GetComponent<GameMap>();
+        currentGameMap = UnityEngine.Object.Instantiate(prefabs.mapSpawnRootPrefab).GetComponent<GameMap>();
 
         spawnEnemyCells.Clear();
         spawnPlayerCells.Clear();
@@ -110,21 +96,30 @@ public class MapManager : MonoBehaviour
             GenerateEnemy(currentMapData, battleData.monsterNames, spawnEnemyCount);
         }
 
-        SpawnPlayerInMap(currentMapData, spawnPlayerCells.Count);
+        SpawnPlayerInMap(currentMapData, playerCharacter, spawnPlayerCells.Count);
 
         if (incountType == IncountType.Store || incountType == IncountType.Restore || incountType == IncountType.Secret || incountType == IncountType.SecretBox)
         {
             EventData eventData = null;
-            if (incountType == IncountType.Secret && RunManager.instance.currentIncountNode != null)
+            if (incountType == IncountType.Secret)
             {
-                eventData = RunManager.instance.currentIncountNode.eventNodeData;
+                eventData = secretEventData;
             }
-            GenerateNPC(currentMapData, incountType, eventData);
+            GenerateNPC(currentMapData, incountType, prefabs, eventData);
         }
 
-        if (RunManager.instance != null)
+        // 맵 상태 설정 자동화
+        if (incountType == IncountType.Battle || incountType == IncountType.Elite || incountType == IncountType.Boss)
         {
-            RunManager.instance.OnMapStateChanged(currentMapState);
+            currentMapState = MapState.Battle;
+        }
+        else if (incountType == IncountType.Secret)
+        {
+            currentMapState = MapState.Secret;
+        }
+        else
+        {
+            currentMapState = MapState.None;
         }
     }
 
@@ -132,7 +127,7 @@ public class MapManager : MonoBehaviour
     {
         if (AssetCacheManager.instance.TryGetModel(objectID, out GameObject prefab))
         {
-            GameObject spawned = Instantiate(prefab);
+            GameObject spawned = UnityEngine.Object.Instantiate(prefab);
 
             Vector3 worldPos = new Vector3(
                         pos.x * currentMapData.cellSize + currentMapData.gridOffset.x,
@@ -151,7 +146,7 @@ public class MapManager : MonoBehaviour
         {
             CellData cell = spawnEnemyCells[i];
 
-            Debug.Log($"Check {name}...");
+            Debug.Log("Check MapManager enemy spawn...");
             //캐싱된 데이터에서 몬스터 데이터 탐색
             if (AssetCacheManager.instance.TryGetMonster(spawnMonsterList[i], out var newMonsterData))
             {
@@ -169,7 +164,7 @@ public class MapManager : MonoBehaviour
                     );
 
                     // 적 생성
-                    GameObject newMonster = Instantiate(monsterPrefab, worldPos, Quaternion.identity);
+                    GameObject newMonster = UnityEngine.Object.Instantiate(monsterPrefab, worldPos, Quaternion.identity);
 
                     // 적 캐릭터의 방향을 Down으로 설정하고 3D 회전 업데이트
                     Character enemyCharacter = newMonster.GetComponent<Character>();
@@ -193,7 +188,7 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public void GenerateNPC(MapDataSO mapData, IncountType incountType, EventData eventData = null)
+    public void GenerateNPC(MapDataSO mapData, IncountType incountType, MapPrefabs prefabs, EventData eventData = null)
     {
         if (spawnNPCCells.Count == 0)
         {
@@ -216,9 +211,9 @@ public class MapManager : MonoBehaviour
         switch (incountType)
         {
             case IncountType.Restore:
-                if (restoreObjectPrefab != null)
+                if (prefabs.restoreObjectPrefab != null)
                 {
-                    RestoreUIManager newRestoreNPC = Instantiate(restoreObjectPrefab, worldPos, Quaternion.identity).GetComponent<RestoreUIManager>();
+                    RestoreUIManager newRestoreNPC = UnityEngine.Object.Instantiate(prefabs.restoreObjectPrefab, worldPos, Quaternion.identity).GetComponent<RestoreUIManager>();
                     if (newRestoreNPC != null)
                     {
                         newRestoreNPC.CreateRestoreUI();
@@ -228,9 +223,9 @@ public class MapManager : MonoBehaviour
                 }
                 break;
             case IncountType.Store:
-                if (shopObjectPrefab != null)
+                if (prefabs.shopObjectPrefab != null)
                 {
-                    ShopUIManager newShopNPC = Instantiate(shopObjectPrefab, worldPos, Quaternion.identity).GetComponent<ShopUIManager>();
+                    ShopUIManager newShopNPC = UnityEngine.Object.Instantiate(prefabs.shopObjectPrefab, worldPos, Quaternion.identity).GetComponent<ShopUIManager>();
                     if (newShopNPC != null)
                     {
                         newShopNPC.AddRandomItems();
@@ -241,9 +236,9 @@ public class MapManager : MonoBehaviour
                 }
                 break;
             case IncountType.SecretBox:
-                if (rewardMapObjectPrefab != null)
+                if (prefabs.rewardMapObjectPrefab != null)
                 {
-                    ChoiceRewardUIHandler newRewardNPC = Instantiate(rewardMapObjectPrefab, worldPos, Quaternion.identity).GetComponent<ChoiceRewardUIHandler>();
+                    ChoiceRewardUIHandler newRewardNPC = UnityEngine.Object.Instantiate(prefabs.rewardMapObjectPrefab, worldPos, Quaternion.identity).GetComponent<ChoiceRewardUIHandler>();
                     if (newRewardNPC != null)
                     {
                         //newRewardNPC.SetReward(RewardItemType.Relic, RandomCardPickupType.Common, RandomRelicPickupType.CommonToUnique, 0);
@@ -253,9 +248,9 @@ public class MapManager : MonoBehaviour
                 }
                 break;
             case IncountType.Secret:
-                if (eventObjectPrefab != null)
+                if (prefabs.eventObjectPrefab != null)
                 {
-                    EventHandler newEventNPC = Instantiate(eventObjectPrefab, worldPos, Quaternion.identity).GetComponent<EventHandler>();
+                    EventHandler newEventNPC = UnityEngine.Object.Instantiate(prefabs.eventObjectPrefab, worldPos, Quaternion.identity).GetComponent<EventHandler>();
                     if (newEventNPC != null)
                     {
                         if (eventData != null)
@@ -280,7 +275,7 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public void SpawnPlayerInMap(MapDataSO mapData, int spawnCount)
+    public void SpawnPlayerInMap(MapDataSO mapData, Character playerCharacter, int spawnCount)
     {
         if (spawnPlayerCells.Count == 0)
         {
@@ -296,10 +291,10 @@ public class MapManager : MonoBehaviour
             spawnPlayerCells[0].position.y * mapData.cellSize + mapData.gridOffset.z
         );
         //플레이어 이동 및 타일 정보 업데이트
-        RunManager.instance.player.character.transform.position = worldPos;
-        if (RunManager.instance.player.character.characterMove != null)
+        playerCharacter.transform.position = worldPos;
+        if (playerCharacter.characterMove != null)
         {
-            RunManager.instance.player.character.characterMove.SetCurrentTile(currentGameMap.GetTileMap()[spawnPlayerCells[0].position.x][spawnPlayerCells[0].position.y]);
+            playerCharacter.characterMove.SetCurrentTile(currentGameMap.GetTileMap()[spawnPlayerCells[0].position.x][spawnPlayerCells[0].position.y]);
         }
     }
 
@@ -383,20 +378,6 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public bool mapCreateTest;
-    private void Update()
-    {
-        if (mapCreateTest)
-        {
-            mapCreateTest = false;
-            if (AssetCacheManager.instance.TryGetBattle("Battle_Test_Data", out BattleData battleData))
-            {
-                currentMapState = MapState.Battle;
-                GenerateStage(LocationType.Temple, IncountType.Battle, battleData);
-            }
-        }
-    }
-
     public void ClearStage()
     {
         // 현재 씬에 존재하는 적 오브젝트를 모두 제거
@@ -404,7 +385,7 @@ public class MapManager : MonoBehaviour
         {
             if (enemy != null)
             {
-                Destroy(enemy);
+                UnityEngine.Object.Destroy(enemy);
             }
         }
         currentSpawnEnemyList.Clear();
@@ -413,7 +394,7 @@ public class MapManager : MonoBehaviour
         {
             if (obj != null)
             {
-                Destroy(obj);
+                UnityEngine.Object.Destroy(obj);
             }
         }
         currentSpawnNPCList.Clear();
@@ -422,7 +403,7 @@ public class MapManager : MonoBehaviour
         {
             if (ui != null)
             {
-                Destroy(ui);
+                UnityEngine.Object.Destroy(ui);
             }
         }
         currentSpawnUIList.Clear();
@@ -431,14 +412,14 @@ public class MapManager : MonoBehaviour
         {
             if (etc != null)
             {
-                Destroy(etc);
+                UnityEngine.Object.Destroy(etc);
             }
         }
         currentSpawnEtcList.Clear();
 
         if (currentGameMap != null)
         {
-            Destroy(currentGameMap.gameObject);
+            UnityEngine.Object.Destroy(currentGameMap.gameObject);
             currentGameMap = null;
         }
     }

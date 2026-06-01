@@ -131,6 +131,12 @@ public class BattleManager
 
         deadCharacter.OnCharacterDied -= OnCharacterDied;
 
+        // 사망한 캐릭터가 현재 턴 소유자일 경우 소프트락 방지를 위해 턴을 강제 종료 처리
+        if (currentTurnController != null && currentTurnController.controlledCharacter == deadCharacter)
+        {
+            EndTurn();
+        }
+
         if (enemyTeam.Count == 0)
             WinBattle();
         else if (playerTeam.Count == 0)

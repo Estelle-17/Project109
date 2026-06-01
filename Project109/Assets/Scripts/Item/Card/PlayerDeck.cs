@@ -44,6 +44,15 @@ public class PlayerDeck
     /// </summary>
     public void AddCard(Card card)
     {
+        if (card != null)
+        {
+            // 외부 임시 복제본이거나(음수 ID), 기존 덱 내에 이미 동일한 ID를 가진 카드가 존재할 경우 ID를 고유 양수로 강제 갱신
+            if (card.runtimeID < 0 || cards.Any(c => c.runtimeID == card.runtimeID))
+            {
+                card.UpdateRuntimeID(nextRuntimeID++);
+            }
+        }
+
         cards.Add(card);
         owner.eventBus.Invoke<IOnAddCard>(c => c.OnAddCard(card));
     }

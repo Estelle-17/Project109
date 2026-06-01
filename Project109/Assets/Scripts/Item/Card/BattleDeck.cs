@@ -22,13 +22,23 @@ public class BattleDeck
         this.owner = owner;
     }
 
-    /// <summary>
-    /// 전투 시작 시 덱 상태 초기화
-    /// </summary>
     public void InitDeck(List<Card> masterDeck)
     {
         drawPile.Clear();
-        drawPile.AddRange(masterDeck);
+        
+        // 마스터 덱 카드를 복제하여 전투 전용 덱 구성 (🚨 참조 공유로 인한 데이터 오염 방지)
+        if (masterDeck != null)
+        {
+            foreach (var card in masterDeck)
+            {
+                if (card != null)
+                {
+                    // 전투 중에는 마스터 덱 카드의 runtimeID를 그대로 활용해 고유성을 띰
+                    drawPile.Add(card.Clone(owner, card.runtimeID));
+                }
+            }
+        }
+        
         ShuffleDrawPile();
 
         hand.Clear();

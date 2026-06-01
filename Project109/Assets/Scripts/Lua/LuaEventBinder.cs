@@ -75,56 +75,25 @@ public static class LuaEventBinder
 
         foreach (var proxy in activeProxies)
         {
-            if (proxy is IOnBeforeDealDamage p1) eventBus.Remove<IOnBeforeDealDamage>(p1);
-            else if (proxy is IOnBeforeTakeDamage p2) eventBus.Remove<IOnBeforeTakeDamage>(p2);
-            else if (proxy is IOnAfterDealDamage p3) eventBus.Remove<IOnAfterDealDamage>(p3);
-            else if (proxy is IOnAfterTakeDamage p4) eventBus.Remove<IOnAfterTakeDamage>(p4);
-            else if (proxy is IOnBreakShield p5) eventBus.Remove<IOnBreakShield>(p5);
-            else if (proxy is IOnShieldBroken p6) eventBus.Remove<IOnShieldBroken>(p6);
-            else if (proxy is IOnKill p7) eventBus.Remove<IOnKill>(p7);
-            
-            else if (proxy is IOnBeforeGiveHeal p8) eventBus.Remove<IOnBeforeGiveHeal>(p8);
-            else if (proxy is IOnBeforeTakeHeal p9) eventBus.Remove<IOnBeforeTakeHeal>(p9);
-            else if (proxy is IOnAfterGiveHeal p10) eventBus.Remove<IOnAfterGiveHeal>(p10);
-            else if (proxy is IOnAfterTakeHeal p11) eventBus.Remove<IOnAfterTakeHeal>(p11);
-
-            else if (proxy is IOnBeforeGiveShield p12) eventBus.Remove<IOnBeforeGiveShield>(p12);
-            else if (proxy is IOnBeforeTakeShield p13) eventBus.Remove<IOnBeforeTakeShield>(p13);
-            else if (proxy is IOnAfterGiveShield p14) eventBus.Remove<IOnAfterGiveShield>(p14);
-            else if (proxy is IOnAfterTakeShield p15) eventBus.Remove<IOnAfterTakeShield>(p15);
-
-            else if (proxy is IOnBeforeSpendStamina p16) eventBus.Remove<IOnBeforeSpendStamina>(p16);
-            else if (proxy is IOnAfterSpendStamina p17) eventBus.Remove<IOnAfterSpendStamina>(p17);
-            else if (proxy is IOnBeforeTakeStamina p18) eventBus.Remove<IOnBeforeTakeStamina>(p18);
-            else if (proxy is IOnAfterTakeStamina p19) eventBus.Remove<IOnAfterTakeStamina>(p19);
-
-            else if (proxy is IOnBeforeMove p20) eventBus.Remove<IOnBeforeMove>(p20);
-            else if (proxy is IOnAfterMove p21) eventBus.Remove<IOnAfterMove>(p21);
-            else if (proxy is IOnBeforeForcedMove p22) eventBus.Remove<IOnBeforeForcedMove>(p22);
-            else if (proxy is IOnAfterForcedMove p23) eventBus.Remove<IOnAfterForcedMove>(p23);
-
-            else if (proxy is IOnBattleStart p24) eventBus.Remove<IOnBattleStart>(p24);
-            else if (proxy is IOnBattleEnd p25) eventBus.Remove<IOnBattleEnd>(p25);
-            else if (proxy is IOnTurnStart p26) eventBus.Remove<IOnTurnStart>(p26);
-            else if (proxy is IOnTurnEnd p27) eventBus.Remove<IOnTurnEnd>(p27);
-            else if (proxy is IOnDeath p28) eventBus.Remove<IOnDeath>(p28);
-
-            else if (proxy is IOnBeforeUseCard p29) eventBus.Remove<IOnBeforeUseCard>(p29);
-            else if (proxy is IOnAfterUseCard p30) eventBus.Remove<IOnAfterUseCard>(p30);
-            else if (proxy is IOnTryUseCard p31) eventBus.Remove<IOnTryUseCard>(p31);
-            else if (proxy is IOnDiscardCard p32) eventBus.Remove<IOnDiscardCard>(p32);
-            else if (proxy is IOnDrawCard p33) eventBus.Remove<IOnDrawCard>(p33);
-            else if (proxy is IOnExhaustCard p34) eventBus.Remove<IOnExhaustCard>(p34);
-            else if (proxy is IOnShuffleDeck p35) eventBus.Remove<IOnShuffleDeck>(p35);
-            else if (proxy is IOnEraseCard p36) eventBus.Remove<IOnEraseCard>(p36);
-
-            else if (proxy is IOnBeforeGiveEffect p37) eventBus.Remove<IOnBeforeGiveEffect>(p37);
-            else if (proxy is IOnBeforeTakeEffect p38) eventBus.Remove<IOnBeforeTakeEffect>(p38);
-            else if (proxy is IOnAfterGiveEffect p39) eventBus.Remove<IOnAfterGiveEffect>(p39);
-            else if (proxy is IOnAfterTakeEffect p40) eventBus.Remove<IOnAfterTakeEffect>(p40);
-            else if (proxy is IOnBeforeRemoveEffect p41) eventBus.Remove<IOnBeforeRemoveEffect>(p41);
-            else if (proxy is IOnAfterRemoveEffect p42) eventBus.Remove<IOnAfterRemoveEffect>(p42);
+            if (proxy == null) continue;
+            var interfaces = proxy.GetType().GetInterfaces();
+            foreach (var iface in interfaces)
+            {
+                if (typeof(ICharacterEvent).IsAssignableFrom(iface) && iface != typeof(ICharacterEvent))
+                {
+                    try
+                    {
+                        var removeMethod = eventBus.GetType().GetMethod("Remove").MakeGenericMethod(iface);
+                        removeMethod.Invoke(eventBus, new object[] { proxy });
+                    }
+                    catch (System.Exception e)
+                    {
+                        UnityEngine.Debug.LogError($"[LuaEventBinder] 캐릭터 이벤트 해제 실패 ({iface.Name}): {e.Message}");
+                    }
+                }
+            }
         }
+        activeProxies.Clear();
     }
 
 
@@ -154,18 +123,25 @@ public static class LuaEventBinder
 
         foreach (var proxy in activeProxies)
         {
-            if (proxy is IOnAddRelic p1) eventBus.Remove<IOnAddRelic>(p1);
-            else if (proxy is IOnRemoveRelic p2) eventBus.Remove<IOnRemoveRelic>(p2);
-            else if (proxy is IOnAddCard p3) eventBus.Remove<IOnAddCard>(p3);
-            else if (proxy is IOnRemoveCard p4) eventBus.Remove<IOnRemoveCard>(p4);
-            else if (proxy is IOnCardUpgrade p9) eventBus.Remove<IOnCardUpgrade>(p9);
-            else if (proxy is IOnCardMasteryUpgrade p10) eventBus.Remove<IOnCardMasteryUpgrade>(p10);
-            else if (proxy is IOnCardsRefreshed p11) eventBus.Remove<IOnCardsRefreshed>(p11);
-            else if (proxy is IOnAddGold p5) eventBus.Remove<IOnAddGold>(p5);
-            else if (proxy is IOnRemoveGold p6) eventBus.Remove<IOnRemoveGold>(p6);
-            else if (proxy is IOnAddMemorySharp p7) eventBus.Remove<IOnAddMemorySharp>(p7);
-            else if (proxy is IOnRemoveMemorySharp p8) eventBus.Remove<IOnRemoveMemorySharp>(p8);
+            if (proxy == null) continue;
+            var interfaces = proxy.GetType().GetInterfaces();
+            foreach (var iface in interfaces)
+            {
+                if (typeof(IPlayerEvent).IsAssignableFrom(iface) && iface != typeof(IPlayerEvent))
+                {
+                    try
+                    {
+                        var removeMethod = eventBus.GetType().GetMethod("Remove").MakeGenericMethod(iface);
+                        removeMethod.Invoke(eventBus, new object[] { proxy });
+                    }
+                    catch (System.Exception e)
+                    {
+                        UnityEngine.Debug.LogError($"[LuaEventBinder] 플레이어 이벤트 해제 실패 ({iface.Name}): {e.Message}");
+                    }
+                }
+            }
         }
+        activeProxies.Clear();
     }
 
 

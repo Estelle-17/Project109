@@ -105,6 +105,16 @@ public class LuaManager
                 CardTag = CS.CardTag,
             }
 
+            -- 루아 스크립트에서의 연산 및 디버깅을 위해 필수 유니티 유틸리티 클래스 주입
+            UnityEngine = {
+                Debug = CS.UnityEngine.Debug,
+                Mathf = CS.UnityEngine.Mathf,
+                Random = CS.UnityEngine.Random,
+                Vector3 = CS.UnityEngine.Vector3,
+                Vector2 = CS.UnityEngine.Vector2,
+                Vector2Int = CS.UnityEngine.Vector2Int,
+            }
+
             CS = nil
         ");
     }

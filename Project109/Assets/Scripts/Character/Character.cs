@@ -97,7 +97,7 @@ public class Character : MonoBehaviour
     [SerializeField]
     private float _curStamina;
     public float curStamina { get { return _curStamina; } set { _curStamina = value; OnCharacterStaminaChanged?.Invoke(this); } }
-    public float curStaminaRate { get { return (_curStamina == 0) ? 0 : _curStamina / curCharacterStat.maxHealth; } }
+    public float curStaminaRate { get { return (_curStamina == 0) ? 0 : _curStamina / curCharacterStat.maxStamina; } }
 
     [SerializeField]
     public float shield = 0f;

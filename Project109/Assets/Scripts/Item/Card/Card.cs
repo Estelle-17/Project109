@@ -6,6 +6,9 @@ using XLua;
 
 public class Card : IDescribable
 {
+    // 임시 복제 카드 인스턴스들의 고유 ID 충돌 방지를 위한 전역 시퀀스 카운터 (음수 영역)
+    private static int nextTemporaryRuntimeID = -1;
+
     // 정적 카드 데이터 템플릿
     public CardData cardData { get; private set; }
 
@@ -114,7 +117,7 @@ public class Card : IDescribable
     /// <summary>
     /// 카드 인스턴스를 마스터리 및 태그 상태를 포함하여 깊은 복사(Deep Copy)합니다.
     /// </summary>
-    public Card Clone(Character newOwner = null)
+    public Card Clone(Character newOwner = null, int? newRuntimeID = null)
     {
         // 1. 새로운 Lua 인스턴스 생성
         LuaTable luaInstance = null;
@@ -134,8 +137,9 @@ public class Card : IDescribable
             }
         }
 
-        // 2. Card 인스턴스 생성
-        Card clonedCard = new Card(cardData, newOwner ?? this.owner, luaInstance, this.runtimeID);
+        // 2. Card 인스턴스 생성 (식별자 충돌 방지를 위해 newRuntimeID가 지정되지 않으면 음수 전역 고유 시퀀스 ID 자동 순차 발급)
+        int id = newRuntimeID ?? System.Threading.Interlocked.Decrement(ref nextTemporaryRuntimeID);
+        Card clonedCard = new Card(cardData, newOwner ?? this.owner, luaInstance, id);
 
         // 3. 마스터리 통계 정보 복사
         if (this.hasMastery)
@@ -172,6 +176,14 @@ public class Card : IDescribable
         clonedCard.isTemporary = this.isTemporary;
 
         return clonedCard;
+    }
+
+    /// <summary>
+    /// 마스터 덱에 안전하게 안착시킬 때 runtimeID를 고유 번호로 갱신하기 위한 메서드입니다.
+    /// </summary>
+    public void UpdateRuntimeID(int newID)
+    {
+        this.runtimeID = newID;
     }
 
     /// <summary>

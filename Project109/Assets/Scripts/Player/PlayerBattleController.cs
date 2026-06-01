@@ -14,7 +14,7 @@ public enum PlayerControlState
 /// 전투 중 플레이어 캐릭터의 턴을 제어하는 컨트롤러.
 /// 전투 시작 ~ 전투 종료까지 유지된다.
 /// </summary>
-public class PlayerCharacterController : ICharacterController
+public class PlayerBattleController : ICharacterController
 {
     #region ICharacterController
 
@@ -47,7 +47,7 @@ public class PlayerCharacterController : ICharacterController
 
     #endregion
 
-    public PlayerCharacterController(Player player)
+    public PlayerBattleController(Player player)
     {
         this.player = player;
         this._controlledCharacter = player.character;
@@ -62,7 +62,7 @@ public class PlayerCharacterController : ICharacterController
         }
         else
         {
-            Debug.LogWarning("PlayerCharacterController: CharacterMove 또는 InputController가 없습니다.");
+            Debug.LogWarning("PlayerBattleController: CharacterMove 또는 InputController가 없습니다.");
         }
     }
 
@@ -217,7 +217,7 @@ public class PlayerCharacterController : ICharacterController
     {
         if (controlState == PlayerControlState.Normal) return;
 
-        Debug.Log($"[PlayerCharacterController] 조작 취소. 이전 상태: {controlState}");
+        Debug.Log($"[PlayerBattleController] 조작 취소. 이전 상태: {controlState}");
 
         if (controlState == PlayerControlState.TargetSelection)
         {

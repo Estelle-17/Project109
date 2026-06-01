@@ -109,16 +109,31 @@ public class CharacterMove
     /// <summary>
     /// 계산된 경로(movePath)를 기반으로 실제 이동을 수행합니다.
     /// </summary>
-    public void MoveAlongPath(List<Tile> movePath, Tile destinationTile)
+    private Coroutine activeMoveCoroutine;
+
+    public void MoveAlongPath(List<Tile> movePath, Tile destinationTile, Action onComplete = null)
     {
-        if (movePath == null || movePath.Count == 0) return;
+        if (activeMoveCoroutine != null)
+        {
+            this.character.StopCoroutine(activeMoveCoroutine);
+            activeMoveCoroutine = null;
+        }
 
-        this.character.curMoveCount--;
+        if (movePath == null || movePath.Count == 0)
+        {
+            onComplete?.Invoke();
+            return;
+        }
 
-        this.character.StartCoroutine(StartMoveCoroutine(movePath, destinationTile));
+        if (MapManager.instance != null && MapManager.instance.currentMapState == MapState.Battle)
+        {
+            this.character.curMoveCount--;
+        }
+
+        activeMoveCoroutine = this.character.StartCoroutine(StartMoveCoroutine(movePath, destinationTile, onComplete));
     }
 
-    private IEnumerator StartMoveCoroutine(List<Tile> movePath, Tile destinationTile)
+    private IEnumerator StartMoveCoroutine(List<Tile> movePath, Tile destinationTile, Action onComplete = null)
     {
         // 1. 이동 직전 이벤트 (IOnBeforeMove)
         Vector2Int fromCoord = new Vector2Int(currentTile.GetCoord().column, currentTile.GetCoord().row);
@@ -129,6 +144,7 @@ public class CharacterMove
 
         if (beforeInfo.isCanceled)
         {
+            activeMoveCoroutine = null;
             yield break;
         }
 
@@ -178,5 +194,10 @@ public class CharacterMove
         Vector2Int currentCoord = new Vector2Int(currentTile.GetCoord().column, currentTile.GetCoord().row);
         MoveInfo afterInfo = new MoveInfo(this.character, currentCoord, currentCoord, MoveFlag.Normal);
         this.character.eventBus?.Invoke<ICharacterEvent>(c => (c as IOnAfterMove)?.OnAfterMove(afterInfo));
+
+        // 콜백 호출
+        onComplete?.Invoke();
+
+        activeMoveCoroutine = null;
     }
 }

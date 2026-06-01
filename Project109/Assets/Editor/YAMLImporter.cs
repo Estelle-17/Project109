@@ -457,12 +457,8 @@ public class YAMLImporter
         foreach (var characterData in rawData.characterCollection)
         {
             var asset = ScriptableObject.CreateInstance<CharacterData>();
-            asset.classType = characterData.classType;
             asset.characterName = characterData.characterName;
             asset.assetPath = characterData.assetPath;
-            asset.level = characterData.level;
-            asset.description = characterData.description;
-            asset.characterStat = characterData.characterStat;
 
             //asset.characterObject = (GameObject)AssetDatabase.LoadAssetAtPath(CharacterData.modelingPath, typeof(GameObject));
 

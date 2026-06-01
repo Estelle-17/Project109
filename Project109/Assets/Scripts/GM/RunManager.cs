@@ -29,7 +29,11 @@ public class RunManager : MonoBehaviour
     [Header("Player")]
     //플레이어 관리
     public Player player;
-    public PlayerCharacterController playerCharacterController;
+    public PlayerBattleController playerBattleController;
+    public PlayerExploreController playerExploreController;
+
+    private ICharacterController _activePlayerController;
+    public ICharacterController activePlayerController => _activePlayerController;
 
     [Header("Map")]
     //맵 관련 변수
@@ -57,7 +61,9 @@ public class RunManager : MonoBehaviour
         currentMapName = "LostTemple";
 
         player = new Player(_startingCharacter);
-        playerCharacterController = new PlayerCharacterController(player);
+        playerBattleController = new PlayerBattleController(player);
+        playerExploreController = new PlayerExploreController(player);
+        _activePlayerController = playerExploreController; // 기본적으로 탐색 컨트롤러가 액티브
 
         // 임시코드: 새 StarterKit 시스템으로 캐릭터 및 시작 카드/유물/효과 초기화
         CharacterData characterData;
@@ -65,17 +71,19 @@ public class RunManager : MonoBehaviour
         AssetCacheManager.instance.TryGetCharacter("전투광", out characterData);
         if (characterData != null)
         {
-            playerCharacterController.controlledCharacter.InitializeStat(characterData.characterStat);
-
             // StarterKitDatabase에서 warrior_starter를 찾아와 적용
             if (ModLoader.Instance.StarterKitDatabase.TryGetValue("warrior_starter", out StarterKitData kitData))
             {
                 player.playerStat.inGame_Currency_Gold = kitData.startGold;
 
-                if (kitData.startMaxHpBonus > 0 && player.character.curCharacterStat != null)
+                // 시작 키트(무기)의 스탯으로 플레이어 캐릭터 스탯 최종 초기화
+                if (kitData.characterStat != null)
                 {
-                    player.character.curCharacterStat.maxHealth += kitData.startMaxHpBonus;
-                    player.character.curHealth = player.character.curCharacterStat.maxHealth;
+                    playerBattleController.controlledCharacter.InitializeStat(kitData.characterStat);
+                }
+                else
+                {
+                    Debug.LogError("[RunManager] 시작 키트에 'characterStat' 스탯 정보가 정의되어 있지 않습니다.");
                 }
 
                 foreach (string cardId in kitData.startCards)
@@ -112,7 +120,7 @@ public class RunManager : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("[RunManager] 'warrior_starter' 시작 키트를 StarterKitDatabase에서 찾을 수 없습니다.");
+                Debug.LogError("[RunManager] 'warrior_starter' 시작 키트를 StarterKitDatabase에서 찾을 수 없습니다.");
             }
 
             player.deck.RequestAllCardRefresh();
@@ -144,7 +152,7 @@ public class RunManager : MonoBehaviour
 
     public void InitRun()
     {
-        playerCharacterController.OnTurnStart();
+        playerBattleController.OnTurnStart();
 
     }
 
@@ -171,8 +179,35 @@ public class RunManager : MonoBehaviour
         }
     }
 
+    public void OnMapStateChanged(MapState newState)
+    {
+        // 이전 탐색 컨트롤러 해제
+        if (_activePlayerController == playerExploreController && playerExploreController != null)
+        {
+            playerExploreController.Deactivate();
+        }
+
+        if (newState == MapState.Battle)
+        {
+            _activePlayerController = playerBattleController;
+        }
+        else
+        {
+            _activePlayerController = playerExploreController;
+            if (playerExploreController != null)
+            {
+                playerExploreController.Activate();
+            }
+        }
+    }
+
     void OnDestroy()
     {
+        if (playerExploreController != null)
+        {
+            playerExploreController.Deactivate();
+        }
+
         if (instance != null)
         {
             instance = null;

@@ -121,6 +121,11 @@ public class MapManager : MonoBehaviour
             }
             GenerateNPC(currentMapData, incountType, eventData);
         }
+
+        if (RunManager.instance != null)
+        {
+            RunManager.instance.OnMapStateChanged(currentMapState);
+        }
     }
 
     private void GenerateObjectInMap(string objectID, Vector2Int pos)

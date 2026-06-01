@@ -27,8 +27,8 @@ public class StarterKitData : IModAssetResolver
     // 시작 골드량
     public int startGold { get; set; }
     
-    // 시작 최대 체력 추가 보너스
-    public int startMaxHpBonus { get; set; }
+    // 시작 키트(무기)가 제공하는 기본 전투 스탯
+    public CharacterStat characterStat { get; set; }
 
     // 시작 카드 ID 리스트 (동일 ID 기재 시 다수 지급)
     public List<string> startCards { get; set; } = new List<string>();

@@ -2,7 +2,12 @@ loadoutId: "warrior_starter"
 displayName: "전투광 기본 키트"
 classType: "전투광"
 startGold: 100
-startMaxHpBonus: 0
+characterStat:
+  maxHealth: 100
+  maxStamina: 100
+  staminaRegenPerSecond: 20
+  maxMoveCount: 3
+  maxTilesPerMove: 2
 startCards:
   - "검격"
   - "검격"

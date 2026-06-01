@@ -27,7 +27,7 @@ public class PlayerMove
             this.routePathfinding = this.battleMap.transform.GetComponent<RoutePathfinding>();
         }
 
-        // 입력 이벤트 바인딩 제거 (PlayerCharacterController에서 중앙 관리)
+        // 입력 이벤트 바인딩 제거 (PlayerBattleController에서 중앙 관리)
     }
 
     public void CheckCanMoveTiles()
@@ -59,7 +59,7 @@ public class PlayerMove
     }
 
     /// <summary>
-    /// 외부(PlayerCharacterController)에서 이동 모드일 때 클릭된 타일을 전달받아 이동을 실행합니다.
+    /// 외부(PlayerBattleController)에서 이동 모드일 때 클릭된 타일을 전달받아 이동을 실행합니다.
     /// </summary>
     public void ExecuteMoveToTile(Tile targetTile)
     {

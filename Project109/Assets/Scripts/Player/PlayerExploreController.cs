@@ -1,0 +1,295 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// 비 전투(탐색/이벤트) 상황에서 플레이어 캐릭터의 움직임과 상호작용을 제어하는 컨트롤러.
+/// </summary>
+public class PlayerExploreController : ICharacterController
+{
+    private readonly Player player;
+    private readonly CharacterMove characterMove;
+
+    public Character controlledCharacter => player?.character;
+
+    public PlayerExploreController(Player player)
+    {
+        this.player = player;
+        this.characterMove = player?.character?.characterMove;
+    }
+
+    public void OnTurnStart() { }
+    public void OnTurnEnd() { }
+    public void OnDie() { }
+
+    /// <summary>
+    /// 탐색 컨트롤러가 활성화될 때 입력을 바인딩합니다.
+    /// </summary>
+    public void Activate()
+    {
+        if (PlayerInputController.instance != null)
+        {
+            PlayerInputController.instance.OnTouchClickEvent += HandleExploreClick;
+        }
+    }
+
+    /// <summary>
+    /// 탐색 컨트롤러가 비활성화될 때 입력을 해제합니다.
+    /// </summary>
+    public void Deactivate()
+    {
+        if (PlayerInputController.instance != null)
+        {
+            PlayerInputController.instance.OnTouchClickEvent -= HandleExploreClick;
+        }
+    }
+
+    private void HandleExploreClick(Vector2 screenPos)
+    {
+        // 마우스 포인터가 UI 위에 있는 경우 인풋 관통 방지를 위해 조작 무시
+        if (UnityEngine.EventSystems.EventSystem.current != null && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
+
+        // 현재 전투 맵 상태가 Battle인 경우 탐색 조작은 동작하지 않음
+        if (MapManager.instance == null || MapManager.instance.currentMapState == MapState.Battle) return;
+
+        // 플레이어 캐릭터 상태가 Idle 또는 Move(이동 중 경로 변경 허용)가 아니면 조작 무시
+        if (controlledCharacter == null || (controlledCharacter.currentState != CharacterState.Idle && controlledCharacter.currentState != CharacterState.Move)) return;
+
+        Ray ray = Camera.main.ScreenPointToRay(screenPos);
+        int layerMask = LayerMask.GetMask("Player", "Enemy", "NPC", "Map");
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 10000.0f, layerMask))
+        {
+            // 1. NPC 혹은 상호작용 대상(IInteractable)을 클릭했는지 감지
+            IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+            if (interactable == null)
+            {
+                interactable = hit.collider.transform.root.GetComponent<IInteractable>();
+            }
+
+            if (interactable != null)
+            {
+                HandleInteractionClick(interactable);
+                return;
+            }
+
+            // 2. 일반 타일을 클릭했는지 감지
+            Tile targetTile = hit.collider.GetComponent<Tile>();
+            if (targetTile == null)
+            {
+                targetTile = hit.collider.transform.root.GetComponentInChildren<Tile>();
+            }
+
+            if (targetTile != null)
+            {
+                HandleTileMovementClick(targetTile);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 일반 타일 클릭 시 제한 없는 이동을 처리합니다.
+    /// </summary>
+    private void HandleTileMovementClick(Tile targetTile)
+    {
+        if (targetTile == null || characterMove == null) return;
+
+        // 장애물 타일이거나 갈 수 없는 상태면 무시
+        if (targetTile.tileState == TileState.Obstacle || targetTile.tileState == TileState.Full) return;
+
+        Tile startTile = characterMove.GetCurrentTile();
+        if (startTile == null || startTile == targetTile) return;
+
+        var tileMap = MapManager.instance.currentGameMap?.GetTileMap();
+        if (tileMap == null) return;
+
+        // 자유 길찾기 수행
+        List<Tile> movePath = FindPathFree(startTile, targetTile, tileMap);
+        if (movePath != null && movePath.Count > 0)
+        {
+            characterMove.MoveAlongPath(movePath, targetTile);
+        }
+    }
+
+    /// <summary>
+    /// 상호작용 대상 클릭 시 대상의 인접 타일로 이동 후 상호작용을 실행합니다.
+    /// </summary>
+    private void HandleInteractionClick(IInteractable interactable)
+    {
+        if (interactable == null || characterMove == null) return;
+
+        Component npcComp = interactable as Component;
+        if (npcComp == null)
+        {
+            // 인터페이스 단독 구현체인 경우 원거리 상호작용을 폴백으로 즉시 실행
+            interactable.OnInteract();
+            return;
+        }
+
+        Tile startTile = characterMove.GetCurrentTile();
+        if (startTile == null) return;
+
+        var tileMap = MapManager.instance.currentGameMap?.GetTileMap();
+        if (tileMap == null) return;
+
+        // 상호작용 대상과 가장 가까운 타일을 NPC가 위치한 타일로 간주
+        Tile npcTile = FindTileNearPosition(npcComp.transform.position, tileMap);
+        if (npcTile == null)
+        {
+            interactable.OnInteract();
+            return;
+        }
+
+        // 이미 플레이어가 NPC에 인접해 있다면 제자리 회전 후 즉시 상호작용
+        if (IsAdjacent(startTile, npcTile))
+        {
+            characterMove.LookAtTile(npcTile);
+            interactable.OnInteract();
+            return;
+        }
+
+        // NPC 타일 주변 4방향 인접 타일 탐색
+        List<Tile> adjacentWalkableTiles = GetAdjacentWalkableTiles(npcTile, tileMap);
+        if (adjacentWalkableTiles.Count == 0)
+        {
+            Debug.LogWarning("NPC 주변에 서 있을 수 있는 빈 타일이 없습니다.");
+            return;
+        }
+
+        // 가장 가까운 인접 타일과 경로 탐색
+        Tile bestTargetTile = null;
+        List<Tile> shortestPath = null;
+
+        foreach (var adjTile in adjacentWalkableTiles)
+        {
+            List<Tile> path = FindPathFree(startTile, adjTile, tileMap);
+            if (path != null && path.Count > 0)
+            {
+                if (shortestPath == null || path.Count < shortestPath.Count)
+                {
+                    shortestPath = path;
+                    bestTargetTile = adjTile;
+                }
+            }
+        }
+
+        if (shortestPath != null && bestTargetTile != null)
+        {
+            // 이동 완료 후 NPC를 바라보고 상호작용 트리거
+            characterMove.MoveAlongPath(shortestPath, bestTargetTile, () =>
+            {
+                if (characterMove != null)
+                {
+                    characterMove.LookAtTile(npcTile);
+                }
+
+                if (interactable.RequiresCameraFocus && CameraController.instance != null)
+                {
+                    CameraController.instance.CameraFocusToTarget(npcComp.transform.position);
+                }
+                interactable.OnInteract();
+            });
+        }
+        else
+        {
+            // 경로가 완전히 막힌(Unreachable) 경우, 멀리서 대화가 가능하도록 원거리 즉시 상호작용 폴백 실행
+            characterMove.LookAtTile(npcTile);
+            if (interactable.RequiresCameraFocus && CameraController.instance != null)
+            {
+                CameraController.instance.CameraFocusToTarget(npcComp.transform.position);
+            }
+            interactable.OnInteract();
+        }
+    }
+
+    /// <summary>
+    /// RoutePathfinding을 수정하지 않기 위해, 탐색 중 길찾기 실행 전 일시적으로 Empty/Trap 타일을 CanMove로 변경하고 길찾기 직후 복구합니다.
+    /// </summary>
+    private List<Tile> FindPathFree(Tile startTile, Tile targetTile, List<List<Tile>> tileMap)
+    {
+        if (startTile == null || targetTile == null || tileMap == null) return null;
+
+        Dictionary<Tile, TileState> originalStates = new Dictionary<Tile, TileState>();
+        foreach (var col in tileMap)
+        {
+            foreach (var tile in col)
+            {
+                if (tile.tileState == TileState.Empty || tile.tileState == TileState.Trap || tile.tileState == TileState.CanMove)
+                {
+                    originalStates[tile] = tile.tileState;
+                    tile.tileState = TileState.CanMove;
+                }
+            }
+        }
+
+        RoutePathfinding pathfinder = MapManager.instance != null ? MapManager.instance.routePathfinding : null;
+        List<Tile> path = null;
+        if (pathfinder != null)
+        {
+            path = pathfinder.TilePathfinding(startTile, targetTile, tileMap);
+        }
+
+        foreach (var kvp in originalStates)
+        {
+            kvp.Key.tileState = kvp.Value;
+        }
+
+        return path;
+    }
+
+    private Tile FindTileNearPosition(Vector3 position, List<List<Tile>> tileMap)
+    {
+        Tile closestTile = null;
+        float minDistance = float.MaxValue;
+
+        foreach (var col in tileMap)
+        {
+            foreach (var tile in col)
+            {
+                float dist = Vector3.Distance(tile.transform.position, position);
+                if (dist < minDistance)
+                {
+                    minDistance = dist;
+                    closestTile = tile;
+                }
+            }
+        }
+        return closestTile;
+    }
+
+    private List<Tile> GetAdjacentWalkableTiles(Tile centerTile, List<List<Tile>> tileMap)
+    {
+        List<Tile> adjacentTiles = new List<Tile>();
+        if (centerTile == null || tileMap == null) return adjacentTiles;
+
+        int col = centerTile.GetCoord().column;
+        int row = centerTile.GetCoord().row;
+
+        int[] dirX = { 0, 0, 1, -1 };
+        int[] dirY = { 1, -1, 0, 0 };
+
+        for (int i = 0; i < 4; i++)
+        {
+            int x = col + dirX[i];
+            int y = row + dirY[i];
+
+            if (x >= 0 && x < tileMap.Count && y >= 0 && y < tileMap[0].Count)
+            {
+                Tile tile = tileMap[x][y];
+                if (tile != null && (tile.tileState == TileState.Empty || tile.tileState == TileState.Trap || tile.tileState == TileState.CanMove))
+                {
+                    adjacentTiles.Add(tile);
+                }
+            }
+        }
+        return adjacentTiles;
+    }
+
+    private bool IsAdjacent(Tile t1, Tile t2)
+    {
+        if (t1 == null || t2 == null) return false;
+        int dist = Mathf.Abs(t1.GetCoord().column - t2.GetCoord().column) +
+                   Mathf.Abs(t1.GetCoord().row - t2.GetCoord().row);
+        return dist == 1;
+    }
+}

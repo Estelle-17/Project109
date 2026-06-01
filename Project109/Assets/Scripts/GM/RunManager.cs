@@ -59,24 +59,62 @@ public class RunManager : MonoBehaviour
         player = new Player(_startingCharacter);
         playerCharacterController = new PlayerCharacterController(player);
 
-        // 임시코드
+        // 임시코드: 새 StarterKit 시스템으로 캐릭터 및 시작 카드/유물/효과 초기화
         CharacterData characterData;
 
         AssetCacheManager.instance.TryGetCharacter("전투광", out characterData);
         if (characterData != null)
         {
             playerCharacterController.controlledCharacter.InitializeStat(characterData.characterStat);
-            foreach (string cardId in characterData.startCardIds)
+
+            // StarterKitDatabase에서 warrior_starter를 찾아와 적용
+            if (ModLoader.Instance.StarterKitDatabase.TryGetValue("warrior_starter", out StarterKitData kitData))
             {
-                if (ModLoader.Instance.CardDatabase.TryGetValue(cardId, out CardData cardData))
+                player.playerStat.inGame_Currency_Gold = kitData.startGold;
+
+                if (kitData.startMaxHpBonus > 0 && player.character.curCharacterStat != null)
                 {
-                    player.deck.AddCard(cardData);
+                    player.character.curCharacterStat.maxHealth += kitData.startMaxHpBonus;
+                    player.character.curHealth = player.character.curCharacterStat.maxHealth;
                 }
-                else
+
+                foreach (string cardId in kitData.startCards)
                 {
-                    Debug.LogWarning($"[RunManager] '{cardId}' 카드가 CardDatabase에 존재하지 않습니다.");
+                    if (ModLoader.Instance.CardDatabase.TryGetValue(cardId, out CardData cardData))
+                    {
+                        player.deck.AddCard(cardData);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[RunManager] 시작 키트의 '{cardId}' 카드가 CardDatabase에 존재하지 않습니다.");
+                    }
+                }
+
+                foreach (string relicId in kitData.startRelics)
+                {
+                    player.AddRelic(relicId);
+                }
+
+                foreach (var effInfo in kitData.startEffects)
+                {
+                    if (ModLoader.Instance.EffectDatabase.TryGetValue(effInfo.effectName, out EffectData effectData))
+                    {
+                        EventStructs.EffectInfo info = new EventStructs.EffectInfo(
+                            player.character,
+                            player.character,
+                            new Effect(effectData, effectData.luaPrototype),
+                            effInfo.stack,
+                            effInfo.duration
+                        );
+                        player.character.TakeEffect(info);
+                    }
                 }
             }
+            else
+            {
+                Debug.LogWarning("[RunManager] 'warrior_starter' 시작 키트를 StarterKitDatabase에서 찾을 수 없습니다.");
+            }
+
             player.deck.RequestAllCardRefresh();
         }
         else

@@ -463,7 +463,6 @@ public class YAMLImporter
             asset.level = characterData.level;
             asset.description = characterData.description;
             asset.characterStat = characterData.characterStat;
-            asset.startRelic = characterData.startRelic;
 
             //asset.characterObject = (GameObject)AssetDatabase.LoadAssetAtPath(CharacterData.modelingPath, typeof(GameObject));
 

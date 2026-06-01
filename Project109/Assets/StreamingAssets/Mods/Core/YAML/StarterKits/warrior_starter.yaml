@@ -1,0 +1,13 @@
+loadoutId: "warrior_starter"
+displayName: "전투광 기본 키트"
+classType: "전투광"
+startGold: 100
+startMaxHpBonus: 0
+startCards:
+  - "검격"
+  - "검격"
+  - "검격"
+  - "방어"
+  - "방어"
+startRelics: []
+startEffects: []

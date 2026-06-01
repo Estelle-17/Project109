@@ -16,6 +16,9 @@ public class ModLoader
     // Key: cardName (고유 ID), Value: CardData
     public Dictionary<string, CardData> CardDatabase { get; private set; } = new Dictionary<string, CardData>();
 
+    // Key: loadoutId (고유 ID), Value: StarterKitData
+    public Dictionary<string, StarterKitData> StarterKitDatabase { get; private set; } = new Dictionary<string, StarterKitData>();
+
     private static ModLoader _instance;
     public static ModLoader Instance
     {
@@ -36,6 +39,7 @@ public class ModLoader
         EffectDatabase.Clear();
         RelicDatabase.Clear();
         CardDatabase.Clear();
+        StarterKitDatabase.Clear();
 
         // 1. 바닐라(Core) 모드 로딩
         // 경로: Assets/StreamingAssets/Mods/Core
@@ -61,7 +65,7 @@ public class ModLoader
 
 
 
-        Debug.Log($"[ModLoader] 총 {EffectDatabase.Count}개의 이펙트 데이터, {RelicDatabase.Count}개의 유물 데이터, {CardDatabase.Count}개의 카드 데이터가 로드되었습니다.");
+        Debug.Log($"[ModLoader] 총 {EffectDatabase.Count}개의 이펙트 데이터, {RelicDatabase.Count}개의 유물 데이터, {CardDatabase.Count}개의 카드 데이터, {StarterKitDatabase.Count}개의 시작 키트 데이터가 로드되었습니다.");
     }
 
     private void LoadModDirectory(string modDir)
@@ -99,6 +103,13 @@ public class ModLoader
         if (Directory.Exists(cardsPath))
         {
             LoadCardsFromPath(cardsPath, modDir);
+        }
+
+        // [시작 키트(StarterKit) 로딩]
+        string starterKitsPath = Path.Combine(modDir, "YAML", "StarterKits");
+        if (Directory.Exists(starterKitsPath))
+        {
+            LoadStarterKitsFromPath(starterKitsPath, modDir);
         }
     }
 
@@ -198,6 +209,40 @@ public class ModLoader
                     else
                     {
                         Debug.LogWarning($"[ModLoader] 무결성 검증 실패로 카드가 무시되었습니다: {file}");
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[ModLoader] YAML 파싱 에러 ({file}):\n{e.Message}");
+            }
+        }
+    }
+
+    private void LoadStarterKitsFromPath(string dataPath, string modRootPath)
+    {
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+
+        string[] yamlFiles = Directory.GetFiles(dataPath, "*.yaml", SearchOption.AllDirectories);
+
+        foreach (string file in yamlFiles)
+        {
+            string yamlContent = File.ReadAllText(file);
+            try
+            {
+                StarterKitData kitData = deserializer.Deserialize<StarterKitData>(yamlContent);
+
+                if (kitData != null)
+                {
+                    if (kitData.ResolveAndValidate(modRootPath))
+                    {
+                        StarterKitDatabase[kitData.loadoutId] = kitData;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[ModLoader] 무결성 검증 실패로 시작 키트가 무시되었습니다: {file}");
                     }
                 }
             }

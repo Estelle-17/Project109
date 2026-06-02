@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class UIPanelBase : MonoBehaviour
 {
+    [Header("UI Layer Type Settings")]
+    public UILayerType uiLayerType = UILayerType.Normal;
+
     protected virtual void OnDisable()
     {
         if (UIManager.instance == null)
@@ -10,7 +13,7 @@ public class UIPanelBase : MonoBehaviour
             return;
         }
 
-        UIManager.instance.RemoveActiveUIFromStack(this.gameObject);
+        UIManager.instance.RemoveActiveUIFromStack(this.gameObject, uiLayerType);
     }
 
     public void UIActive()
@@ -26,7 +29,7 @@ public class UIPanelBase : MonoBehaviour
             return;
         }
 
-        UIManager.instance.PushActiveUIPanel(this.gameObject);
+        UIManager.instance.PushActiveUIPanel(this.gameObject, uiLayerType);
     }
 
     public void UIDeactive()
@@ -37,7 +40,7 @@ public class UIPanelBase : MonoBehaviour
             return;
         }
 
-        UIManager.instance.RemoveActiveUIFromStack(this.gameObject);
+        UIManager.instance.RemoveActiveUIFromStack(this.gameObject, uiLayerType);
         this.gameObject.SetActive(false);
     }
 

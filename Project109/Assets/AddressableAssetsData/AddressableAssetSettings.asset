@@ -81,6 +81,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: da43386111dbc8c4da3c5550fcf8fc79, type: 2}
   - {fileID: 11400000, guid: 793cc86cfe5a3814b8569652791f8118, type: 2}
   - {fileID: 11400000, guid: 27edf69e46087e145bedfffa890e1bdd, type: 2}
+  - {fileID: 11400000, guid: 9326dcd864d6b964cb0f3d707bb52739, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
     m_BundleBuildPath: Temp/com.unity.addressables/AssetBundles
@@ -133,6 +134,7 @@ MonoBehaviour:
     - Obstacle
     - Trap
     - MapData
+    - UI
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 9edc6ad1741e30e408ac61ec1c6e2997, type: 2}

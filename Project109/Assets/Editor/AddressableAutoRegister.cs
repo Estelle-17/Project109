@@ -59,4 +59,58 @@ public class AddressableAutoRegister : Editor
 
         Debug.Log($"<color=green>총 {registeredCount}개의 MapDataSO가 Addressables에 성공적으로 등록/갱신되었습니다!</color>");
     }
+
+    private const string UI_GROUP_NAME = "UI_Prefabs";
+    private const string UI_PREFAB_PATH = "Assets/Prefab/UI";
+
+    [MenuItem("Tools/Addressables/UI 프리팹 자동 등록 (UI)")]
+    public static void RegisterAllUIPrefabs()
+    {
+        AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+        if (settings == null)
+        {
+            Debug.LogError("Addressable Settings를 찾을 수 없습니다. Addressables 창을 열어 초기화해주세요.");
+            return;
+        }
+
+        //타겟 그룹 찾거나 생성
+        AddressableAssetGroup targetGroup = settings.FindGroup(UI_GROUP_NAME);
+        if (targetGroup == null)
+        {
+            targetGroup = settings.CreateGroup(UI_GROUP_NAME, false, false, false, settings.DefaultGroup.Schemas);
+        }
+
+        if (!Directory.Exists(UI_PREFAB_PATH))
+        {
+            Debug.LogWarning($"UI 프리팹 폴더를 찾을 수 없습니다: {UI_PREFAB_PATH}");
+            return;
+        }
+
+        string[] fileEntries = Directory.GetFiles(UI_PREFAB_PATH, "*.prefab", SearchOption.AllDirectories);
+        int registeredCount = 0;
+
+        foreach (string filePath in fileEntries)
+        {
+            string relativePath = filePath.Replace("\\", "/");
+            string guid = AssetDatabase.AssetPathToGUID(relativePath);
+
+            if (string.IsNullOrEmpty(guid)) continue;
+
+            string assetName = Path.GetFileNameWithoutExtension(relativePath);
+
+            AddressableAssetEntry entry = settings.CreateOrMoveEntry(guid, targetGroup);
+            if (entry != null)
+            {
+                entry.SetAddress(assetName);
+                entry.SetLabel("UI", true);
+                registeredCount++;
+            }
+        }
+
+        // 변경 사항 저장
+        settings.SetDirty(AddressableAssetSettings.ModificationEvent.EntryMoved, null, true, true);
+        AssetDatabase.SaveAssets();
+
+        Debug.Log($"<color=green>총 {registeredCount}개의 UI 프리팹이 Addressables에 성공적으로 등록/갱신되었습니다!</color>");
+    }
 }

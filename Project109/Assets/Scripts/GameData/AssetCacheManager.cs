@@ -51,6 +51,7 @@ public class AssetCacheManager : MonoBehaviour
     public string textureKey = "Texture";
     public string obstacleKey = "Obstacle";
     public string trapKey = "Trap";
+    public string uiKey = "UI";
 
 
     public IList<EventData> eventList;
@@ -91,6 +92,9 @@ public class AssetCacheManager : MonoBehaviour
 
     public IList<TrapData> trapList;
     private Dictionary<string, TrapData> trapDict = new Dictionary<string, TrapData>();
+
+    public IList<GameObject> uiList;
+    private Dictionary<string, GameObject> uiDict = new Dictionary<string, GameObject>();
 
     private IEnumerator Start()
     {
@@ -228,6 +232,13 @@ public class AssetCacheManager : MonoBehaviour
         {
             trapList = list;
             trapDict = dict;
+        }));
+
+        //UI 데이터 할당 시작
+        yield return StartCoroutine(LoadAndCacheGameObjectFromAddressableData(uiKey, (list, dict) =>
+        {
+            uiList = list;
+            uiDict = dict;
         }));
 
         ModManager modManager = GetComponent<ModManager>();
@@ -427,4 +438,5 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetTexture(string name, out Sprite texture) => textureDict.TryGetValue(name, out texture);
     public bool TryGetObstacle(string name, out ObstacleData obstacle) => obstacleDict.TryGetValue(name, out obstacle);
     public bool TryGetTrap(string name, out TrapData trap) => trapDict.TryGetValue(name, out trap);
+    public bool TryGetUI(string name, out GameObject uiPrefab) => uiDict.TryGetValue(name, out uiPrefab);
 }

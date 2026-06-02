@@ -47,7 +47,7 @@ public class RunManager : MonoBehaviour
     public int currentExploreMapFloor = 0;
     public IncountNode currentIncountNode;
     public IncountNode beforeIncountNode;
-    public MapManager currentMap;
+    public MapManager currentMap = new();
     public ExploreUI currentExploreUI;
 
     public LoadMapHandler loadMapHandler;
@@ -58,7 +58,7 @@ public class RunManager : MonoBehaviour
     void Start()
     {
         loadMapHandler = GetComponent<LoadMapHandler>();
-        currentMapName = "LostTemple";
+        currentMapName = "Temple";
 
         player = new Player(_startingCharacter);
         playerBattleController = new PlayerBattleController(player);
@@ -140,6 +140,12 @@ public class RunManager : MonoBehaviour
 
         //불러온 아이템들 세분화 진행
         GameItemRewardManager.instance.UpdateItemList();
+
+        // TopHUDPanel에 플레이어 데이터 바인딩 시도 (UIManager 로딩 시점 대비)
+        if (UIManager.instance != null)
+        {
+            UIManager.instance.BindPlayerToHUD(player);
+        }
     }
 
     private void Update()
@@ -154,6 +160,11 @@ public class RunManager : MonoBehaviour
     {
         playerBattleController.OnTurnStart();
 
+        if (UIManager.instance != null)
+        {
+            UIManager.instance.DestroyExploreMap();
+            UIManager.instance.GetOrSpawnExploreMap();
+        }
     }
 
     public void LoadRun()

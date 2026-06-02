@@ -14,6 +14,7 @@ public class EditorStartInit : Editor
         Debug.Log($"Set play mode start scene to: {pathOfFirstScene}");
 
         AddressableAutoRegister.RegisterAllMapData();
+        AddressableAutoRegister.RegisterAllUIPrefabs();
     }
 }
 #endif

@@ -56,6 +56,8 @@ choice: &choice_data
       type: string
     nextStageID:
       type: string
+    luaScript:
+      type: string
     useItems:
       type: array
       item:

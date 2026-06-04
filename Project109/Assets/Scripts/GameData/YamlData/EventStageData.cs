@@ -6,5 +6,5 @@ public class EventStageData
 {
     public string stageID;
     public string stageDescription;
-    public List<Choice_Data> choices;
+    public List<ChoiceData> choices;
 }

@@ -20,6 +20,18 @@ public class BattleManager
     private List<ICharacterController> enemyTeam = new();
     private ICharacterController currentTurnController;
     public float battleTimeScale = 1f;
+    public int accumulativeGoldReward { get; private set; }
+
+    /// <summary>
+    /// 전장의 아군 및 적군 컨트롤러 목록을 합쳐서 반환합니다.
+    /// </summary>
+    public List<ICharacterController> GetAllCombatants()
+    {
+        List<ICharacterController> all = new List<ICharacterController>();
+        all.AddRange(playerTeam);
+        all.AddRange(enemyTeam);
+        return all;
+    }
 
     #endregion
 
@@ -126,6 +138,17 @@ public class BattleManager
 
     private void OnCharacterDied(Character deadCharacter)
     {
+        if (deadCharacter.faction == CharacterFaction.Enemy)
+        {
+            ICharacterController controller = enemyTeam.Find(c => c.controlledCharacter == deadCharacter);
+            if (controller is NPCUnitController npcController && npcController.unitData != null)
+            {
+                int goldDrop = UnityEngine.Random.Range(npcController.unitData.minDropGoldAmount, npcController.unitData.maxDropGoldAmount + 1);
+                accumulativeGoldReward += goldDrop;
+                Debug.Log($"[BattleManager] 적 '{deadCharacter.name}' 처치 전리품 골드 {goldDrop} 누적 (현재 총 누적: {accumulativeGoldReward})");
+            }
+        }
+
         playerTeam.RemoveAll(c => c.controlledCharacter == deadCharacter);
         enemyTeam.RemoveAll(c => c.controlledCharacter == deadCharacter);
 
@@ -146,14 +169,33 @@ public class BattleManager
     public void WinBattle()
     {
         battleState = BattleState.BattleEnd;
-        // TODO: 승리 처리 (보상 등)
+        
+        if (ActionQueueManager.Instance != null)
+        {
+            ActionQueueManager.Instance.ClearQueue();
+        }
+
+        if (RunManager.instance != null)
+        {
+            if (RunManager.instance.currentMap != null)
+            {
+                RunManager.instance.currentMap.currentMapState = MapState.None;
+            }
+            RunManager.instance.OnMapStateChanged(MapState.None);
+        }
+
         CleanupCombatants();
     }
 
     public void LoseBattle()
     {
         battleState = BattleState.BattleEnd;
-        // TODO: 패배 처리
+        
+        if (ActionQueueManager.Instance != null)
+        {
+            ActionQueueManager.Instance.ClearQueue();
+        }
+
         CleanupCombatants();
     }
 
@@ -182,6 +224,7 @@ public class BattleManager
     {
         CleanupCombatants();
         battleState = BattleState.None;
+        accumulativeGoldReward = 0;
     }
 
     #endregion

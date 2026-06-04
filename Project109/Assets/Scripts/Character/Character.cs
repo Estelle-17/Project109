@@ -14,8 +14,50 @@ public enum CharacterState
 }
 
 
+public enum CharacterFaction
+{
+    Player,
+    Ally,
+    Enemy,
+    Neutral
+}
+
 public class Character : MonoBehaviour
 {
+    // 캐릭터 진영 소속 정보
+    public CharacterFaction faction = CharacterFaction.Enemy;
+
+    /// <summary>
+    /// 상대 캐릭터가 나와 적대적인 관계인지 판별합니다.
+    /// </summary>
+    public bool IsHostileTo(Character other)
+    {
+        if (other == null || other.isDead) return false;
+
+        // 중립(Neutral) 진영은 누구와도 서로 적대하지 않음
+        if (this.faction == CharacterFaction.Neutral || other.faction == CharacterFaction.Neutral)
+            return false;
+
+        // 플레이어(Player)와 아군 소환수(Ally)는 아군 진영이므로 서로 적대하지 않음
+        if ((this.faction == CharacterFaction.Player || this.faction == CharacterFaction.Ally) &&
+            (other.faction == CharacterFaction.Player || other.faction == CharacterFaction.Ally))
+        {
+            return false;
+        }
+
+        // 그 외 진영이 다를 경우 적대 관계로 판별
+        return this.faction != other.faction;
+    }
+
+    /// <summary>
+    /// 상대 캐릭터가 나와 동맹 관계인지 판별합니다.
+    /// </summary>
+    public bool IsFriendlyTo(Character other)
+    {
+        if (other == null) return false;
+        return !IsHostileTo(other) && (this.faction != CharacterFaction.Neutral && other.faction != CharacterFaction.Neutral);
+    }
+
     #region CharacterStat
 
     [SerializeField]
@@ -208,6 +250,12 @@ public class Character : MonoBehaviour
             curHealth -= info.hpDamageAmount;
         }
 
+        // 데미지 표시기 트리거
+        if (DamageIndicatorManager.Instance != null)
+        {
+            DamageIndicatorManager.Instance.ShowIndicator(this.transform.position, info.hpDamageAmount, info.damageFlags);
+        }
+
         // 4. 결과 기록 (사망 여부)
         if (curHealth <= 0f)
         {
@@ -256,6 +304,12 @@ public class Character : MonoBehaviour
         else
         {
             curHealth = Mathf.Min(curCharacterStat.maxHealth, curHealth + healAmount);
+        }
+
+        // 힐 표시기 트리거
+        if (DamageIndicatorManager.Instance != null)
+        {
+            DamageIndicatorManager.Instance.ShowHealIndicator(this.transform.position, healAmount);
         }
 
         // 회복 직후 처리

@@ -43,7 +43,7 @@ public class AssetCacheManager : MonoBehaviour
     public string eventKey = "Event";
     public string battleKey = "Battle";
     public string monsterKey = "Monster";
-    public string monsterRewardKey = "Reward";
+
     public string characterKey = "Character";
     public string mapKey = "Map";
     public string mapInfoKey = "MapInfo";
@@ -65,8 +65,7 @@ public class AssetCacheManager : MonoBehaviour
     public IList<MonsterData> monsterList;
     private Dictionary<string, MonsterData> monsterDict = new Dictionary<string, MonsterData>();
 
-    public IList<MonsterRewardData> monsterRewardList;
-    private Dictionary<string, MonsterRewardData> monsterRewardDict = new Dictionary<string, MonsterRewardData>();
+
 
     public IList<CharacterData> characterList;
     private Dictionary<string, CharacterData> characterDict = new Dictionary<string, CharacterData>();
@@ -135,12 +134,7 @@ public class AssetCacheManager : MonoBehaviour
             monsterDict = dict;
         }));
 
-        //몬스터 보상 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<MonsterRewardData>(monsterRewardKey, (list, dict) =>
-        {
-            monsterRewardList = list;
-            monsterRewardDict = dict;
-        }));
+
 
         //캐릭터 데이터 할당 시작
         yield return StartCoroutine(LoadAndCacheFromAddressableData<CharacterData>(characterKey, (list, dict) =>
@@ -415,7 +409,7 @@ public class AssetCacheManager : MonoBehaviour
 
 
     public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
-    public bool TryGetMonsterReward(string name, out MonsterRewardData reward) => monsterRewardDict.TryGetValue(name, out reward);
+
     public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);
     public bool TryGetSpecificEvent(string name, out EventData ev) => specificEventDict.TryGetValue(name, out ev);
     public bool TryGetBattle(string name, out BattleData battle) => battleDict.TryGetValue(name, out battle);

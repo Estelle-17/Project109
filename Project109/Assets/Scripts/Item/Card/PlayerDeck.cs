@@ -20,6 +20,18 @@ public class PlayerDeck
     }
 
     /// <summary>
+    /// 마스터 덱의 모든 카드를 제거하고 이벤트를 발행합니다.
+    /// </summary>
+    public void Clear()
+    {
+        var existingCards = GetCards();
+        foreach (var card in existingCards)
+        {
+            RemoveCard(card);
+        }
+    }
+
+    /// <summary>
     /// 현재 덱에 보관된 카드 리스트를 반환합니다.
     /// </summary>
     public List<Card> GetCards()

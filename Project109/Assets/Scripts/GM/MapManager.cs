@@ -38,6 +38,7 @@ public class MapManager
 
     //맵 이동 시 제거할 오브젝트 모음
     public List<GameObject> currentSpawnEnemyList = new List<GameObject>();
+    public List<ICharacterController> currentEnemyControllers = new List<ICharacterController>();
     public List<GameObject> currentSpawnNPCList = new List<GameObject>();
     public List<GameObject> currentSpawnUIList = new List<GameObject>();
     public List<GameObject> currentSpawnEtcList = new List<GameObject>();
@@ -150,7 +151,7 @@ public class MapManager
             //캐싱된 데이터에서 몬스터 데이터 탐색
             if (AssetCacheManager.instance.TryGetMonster(spawnMonsterList[i], out var newMonsterData))
             {
-                Debug.Log($"MonsterData {newMonsterData.name} Load Success.");
+                Debug.Log($"MonsterData {newMonsterData.monsterName} Load Success.");
                 //몬스터 데이터에 맞는 프리팹 탐색
                 if (AssetCacheManager.instance.TryGetModel(newMonsterData.objectPath, out var monsterPrefab))
                 {
@@ -177,9 +178,64 @@ public class MapManager
                         }
                     }
 
-                    if (enemyCharacter != null && enemyCharacter.characterMove != null)
+                    if (enemyCharacter != null)
                     {
-                        enemyCharacter.characterMove.SetFacingDirection(LookDirection.Down);
+                        // 몬스터 진영 설정
+                        enemyCharacter.faction = CharacterFaction.Enemy;
+
+                        // 1. Enemy 스탯 초기화
+                        NPCUnitData aiData = null;
+                        if (!ModLoader.Instance.NPCUnitDatabase.TryGetValue(spawnMonsterList[i], out aiData))
+                        {
+                            ModLoader.Instance.NPCUnitDatabase.TryGetValue(newMonsterData.monsterName, out aiData);
+                        }
+
+                        CharacterStat enemyStat = null;
+                        if (aiData != null && aiData.characterStat != null)
+                        {
+                            enemyStat = aiData.characterStat;
+                        }
+                        else
+                        {
+                            enemyStat = new CharacterStat
+                            {
+                                maxHealth = 50f,
+                                maxStamina = 100f,
+                                staminaRegenPerSecond = 10f,
+                                maxMoveCount = 3,
+                                maxTilesPerMove = 2
+                            };
+                        }
+                        enemyCharacter.InitializeStat(enemyStat);
+
+                        // 2. NPC AI Controller 초기화 및 등록
+                        NPCUnitController enemyController = null;
+                        if (aiData != null)
+                        {
+                            enemyController = new NPCUnitController(enemyCharacter, aiData);
+                        }
+                        else
+                        {
+                            NPCUnitData fallbackAiData = new NPCUnitData();
+                            fallbackAiData.unitId = newMonsterData.monsterName;
+                            fallbackAiData.characterStat = enemyStat;
+
+                            enemyController = new NPCUnitController(enemyCharacter, fallbackAiData);
+                        }
+                        currentEnemyControllers.Add(enemyController);
+
+                        // 3. 이동 컴포넌트 세팅 및 배치 타일 세팅
+                        if (enemyCharacter.characterMove != null)
+                        {
+                            enemyCharacter.characterMove.SetFacingDirection(LookDirection.Down);
+                            
+                            // 타일 정보 설정
+                            List<List<Tile>> tileMap = currentGameMap.GetTileMap();
+                            if (tileMap != null && cell.position.x < tileMap.Count && cell.position.y < tileMap[cell.position.x].Count)
+                            {
+                                enemyCharacter.characterMove.SetCurrentTile(tileMap[cell.position.x][cell.position.y]);
+                            }
+                        }
                     }
 
                     currentSpawnEnemyList.Add(newMonster);
@@ -290,6 +346,9 @@ public class MapManager
             mapData.gridOffset.y,
             spawnPlayerCells[0].position.y * mapData.cellSize + mapData.gridOffset.z
         );
+        // 플레이어 진영 설정
+        playerCharacter.faction = CharacterFaction.Player;
+
         //플레이어 이동 및 타일 정보 업데이트
         playerCharacter.transform.position = worldPos;
         if (playerCharacter.characterMove != null)
@@ -389,6 +448,7 @@ public class MapManager
             }
         }
         currentSpawnEnemyList.Clear();
+        currentEnemyControllers.Clear();
         // 현재 씬에 존재하는 NPC 오브젝트를 모두 제거
         foreach (GameObject obj in currentSpawnNPCList)
         {

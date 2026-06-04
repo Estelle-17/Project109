@@ -142,6 +142,7 @@ public class BattleDeck
     {
         owner?.eventBus.Invoke<IOnDiscardCard>(c => c.OnDiscardCard(info));
         discardPile.Add(card);
+        hand.Remove(card);
     }
 
     /// <summary>
@@ -151,5 +152,6 @@ public class BattleDeck
     {
         owner?.eventBus.Invoke<IOnExhaustCard>(c => c.OnExhaustCard(info));
         exhaustPile.Add(card);
+        hand.Remove(card);
     }
 }

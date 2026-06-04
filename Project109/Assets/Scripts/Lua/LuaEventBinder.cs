@@ -93,7 +93,6 @@ public static class LuaEventBinder
                 }
             }
         }
-        activeProxies.Clear();
     }
 
 
@@ -141,7 +140,6 @@ public static class LuaEventBinder
                 }
             }
         }
-        activeProxies.Clear();
     }
 
 

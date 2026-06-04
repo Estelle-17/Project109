@@ -122,11 +122,6 @@ public class PlayerBattleController : ICharacterController
         controlState = PlayerControlState.Normal;
     }
 
-    public void OnDie()
-    {
-        // TODO: 사망 처리
-    }
-
     #region Card Operations
 
     /// <summary>
@@ -134,40 +129,9 @@ public class PlayerBattleController : ICharacterController
     /// </summary>
     public void UseCard(Card card, List<Character> targets, Vector2Int targetPosition)
     {
-        // 1. 이벤트 버스로 전송할 Payload 생성
-        CardInfo info = new CardInfo(controlledCharacter, targets, targetPosition, card, CardFlag.Normal);
-
-        // 2. 사용 직전 발동 처리 (IOnBeforeUseCard)
-
-        controlledCharacter.eventBus.Invoke<IOnBeforeUseCard>(c => c.OnBeforeUseCard(info));
-
-        // 3. 실제 카드 로직 실행 (카드 데이터 쪽에 구현된 함수 호출)
-        // ex) card.Execute(info);
-
-        // 4. 리소스 소모 및 손패/묘지 처리
-
-        battleDeck.RemoveFromHand(card);
-
-        // 카드가 소모되는 특수 상태(NoDiscard)가 아니면 버리기 혹은 소멸로 이동
-
-        if (!info.cardFlags.HasFlag(CardFlag.NoDiscard))
-        {
-            // 카드 마스터리 태그 등으로 Destroy 또는 Single_use(소멸)가 부착되어 있는지 체크
-            bool isExhaustCard = card != null && (card.HasTag("Destroy") || card.HasTag("Single_use"));
-
-            if (!info.cardFlags.HasFlag(CardFlag.NoExhaust) && isExhaustCard)
-            {
-                battleDeck.ExhaustCard(card, info);
-            }
-            else
-            {
-                battleDeck.DiscardCard(card, info);
-            }
-        }
-
-        // 5. 사용 직후 발동 처리 (IOnAfterUseCard)
-
-        controlledCharacter.eventBus.Invoke<IOnAfterUseCard>(c => c.OnAfterUseCard(info));
+        // 즉시 실행하지 않고 액션 큐에 위임
+        CardPlayAction playAction = new CardPlayAction(controlledCharacter, card, targets, targetPosition);
+        ActionQueueManager.Instance.EnqueueAction(playAction);
     }
 
     /// <summary>
@@ -176,6 +140,20 @@ public class PlayerBattleController : ICharacterController
     public void TryUseCard(Card card)
     {
         if (card == null) return;
+
+        // 액션 큐 실행 중 조작 방지 잠금
+        if (ActionQueueManager.Instance.IsBusy)
+        {
+            Debug.LogWarning("[PlayerBattleController] 캐릭터가 행동 중입니다. 카드 사용이 무시됩니다.");
+            return;
+        }
+
+        // 실시간 다중 비용 및 시전 가능 조건 검사
+        if (!card.CanPlay(controlledCharacter))
+        {
+            Debug.LogWarning($"[PlayerBattleController] 시전 요구조건이 충족되지 않아 '{card.cardName}' 카드를 사용할 수 없습니다.");
+            return;
+        }
 
         // 사용 시도 이벤트 발동 (IOnTryUseCard)
         CardInfo tryInfo = new CardInfo(controlledCharacter, new List<Character>(), Vector2Int.zero, card, CardFlag.Normal);
@@ -249,7 +227,7 @@ public class PlayerBattleController : ICharacterController
 
     private void HandleGlobalClick(Vector2 pos)
     {
-        if (controlledCharacter == null || controlledCharacter.currentState != CharacterState.Idle)
+        if (controlledCharacter == null || controlledCharacter.currentState != CharacterState.Idle || ActionQueueManager.Instance.IsBusy)
         {
             return;
         }

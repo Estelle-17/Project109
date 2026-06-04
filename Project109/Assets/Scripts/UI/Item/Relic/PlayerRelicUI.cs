@@ -24,7 +24,7 @@ public class PlayerRelicUI : MonoBehaviour
 
             if (relicUI)
             {
-                relicUI.UpdateRelicData(newRelic.Data); // Or update it to use Relic if RelicUI supports it
+                relicUI.UpdateRelicData(newRelic);
             }
         }
     }

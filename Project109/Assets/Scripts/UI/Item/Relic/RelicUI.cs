@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class RelicUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public RelicData relicData;
+    public Relic relicInstance;
 
     public TextMeshProUGUI relicName;
 
@@ -19,13 +20,36 @@ public class RelicUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     public void UpdateRelicData(RelicData newRelicData)
     {
         relicData = newRelicData;
+        relicInstance = null;
 
-        if (relicData.iconSprite != null)
+        if (relicData != null && relicData.iconSprite != null && relicImage != null)
         {
             relicImage.sprite = relicData.iconSprite;
         }
 
-        relicName.text = relicData.relicName;
+        if (relicData != null && relicName != null)
+        {
+            relicName.text = relicData.relicName;
+        }
+    }
+
+    public void UpdateRelicData(Relic instance)
+    {
+        relicInstance = instance;
+        if (instance != null)
+        {
+            relicData = instance.Data;
+        }
+
+        if (relicData != null && relicData.iconSprite != null && relicImage != null)
+        {
+            relicImage.sprite = relicData.iconSprite;
+        }
+
+        if (relicData != null && relicName != null)
+        {
+            relicName.text = relicData.relicName;
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -35,18 +59,42 @@ public class RelicUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (UIManager.instance.relicDescription == null || relicData == null)
-            return;
+        if (relicData == null) return;
 
-        UIManager.instance.UpdateRelicDescription(relicData.relicName + "\n" + relicData.description);
-        UIManager.instance.OnRelicDescription();
+        string descriptionText = relicData.description;
+        if (relicInstance != null)
+        {
+            descriptionText = relicInstance.GetDescription();
+        }
+
+        if (TooltipPanel.Instance != null)
+        {
+            TooltipPanel.Instance.ShowTooltip(relicData.relicName, descriptionText);
+        }
+        else if (UIManager.instance != null && UIManager.instance.relicDescription != null)
+        {
+            UIManager.instance.UpdateRelicDescription(relicData.relicName + "\n" + descriptionText);
+            UIManager.instance.OnRelicDescription();
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (UIManager.instance.relicDescription == null || relicData == null)
-            return;
+        if (TooltipPanel.Instance != null)
+        {
+            TooltipPanel.Instance.HideTooltip();
+        }
+        else if (UIManager.instance != null && UIManager.instance.relicDescription != null)
+        {
+            UIManager.instance.OffRelicDescription();
+        }
+    }
 
-        UIManager.instance.OffRelicDescription();
+    private void OnDisable()
+    {
+        if (TooltipPanel.Instance != null)
+        {
+            TooltipPanel.Instance.HideTooltip();
+        }
     }
 }

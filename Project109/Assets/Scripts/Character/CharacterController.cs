@@ -4,5 +4,4 @@ public interface ICharacterController
 
     void OnTurnStart();
     void OnTurnEnd();
-    void OnDie();
 }

@@ -20,7 +20,6 @@ public class PlayerExploreController : ICharacterController
 
     public void OnTurnStart() { }
     public void OnTurnEnd() { }
-    public void OnDie() { }
 
     /// <summary>
     /// 탐색 컨트롤러가 활성화될 때 입력을 바인딩합니다.

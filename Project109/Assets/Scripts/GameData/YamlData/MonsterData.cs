@@ -5,16 +5,9 @@ using System.Collections.Generic;
 public class MonsterData : ScriptableObject, IIdentifiable
 {
     public GameObject monsterPrefab;
-    public string monsterType;
     public string monsterName;
     public string objectPath;
     public string dataPath;
-    public int appearLevel;
-    public float hp;
-    public float stamina;
-    public float staminaRegen;
-    public int strength;
-    public int armor;
 
     public string ID => dataPath;
 }

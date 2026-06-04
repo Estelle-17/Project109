@@ -57,4 +57,17 @@ public class RelicManager
     {
         return relics;
     }
+
+    public void ClearRelics()
+    {
+        foreach (var relic in relics)
+        {
+            if (relic != null)
+            {
+                relic.Dispose();
+                OnRelicRemovedEvent?.Invoke(relic);
+            }
+        }
+        relics.Clear();
+    }
 }

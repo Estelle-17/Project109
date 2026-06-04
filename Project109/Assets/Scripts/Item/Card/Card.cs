@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GameItem.Types;
 using XLua;
+using EventStructs;
 
 public class Card : IDescribable
 {
@@ -52,7 +53,7 @@ public class Card : IDescribable
 
     #endregion
 
-    private readonly LuaTable luaTable;
+    public readonly LuaTable luaTable;
     private readonly List<object> activeProxies = new List<object>();
 
     public Card(CardData data, Character owner, LuaTable luaLogic, int runtimeID)
@@ -242,6 +243,80 @@ public class Card : IDescribable
             return luaFunc(luaTable, this, template);
 
         return template;
+    }
+
+    /// <summary>
+    /// 카드의 루아 실행 함수를 호출합니다.
+    /// </summary>
+    public void Execute(CardInfo info)
+    {
+        var luaFunc = luaTable?.Get<Action<LuaTable, CardInfo>>("Execute");
+        luaFunc?.Invoke(luaTable, info);
+    }
+
+    /// <summary>
+    /// 이 카드를 현재 시점에서 시전할 수 있는지 실시간으로 검사합니다.
+    /// C#의 Stamina 비용 검사와 Lua의 CanPlay 재정의 함수를 평가합니다.
+    /// </summary>
+    public bool CanPlay(Character caster)
+    {
+        if (caster == null) return false;
+
+        // 1. 스태미나 기본 비용 유효성 검증
+        if (caster.curStamina < currentCost)
+        {
+            return false;
+        }
+
+        // 2. Lua 스크립트에 CanPlay 함수가 정의되어 있다면 호출하여 최종 검증 진행
+        if (luaTable != null)
+        {
+            var luaCanPlay = luaTable.Get<Func<LuaTable, Card, Character, bool>>("CanPlay");
+            if (luaCanPlay != null)
+            {
+                try
+                {
+                    return luaCanPlay.Invoke(luaTable, this, caster);
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogError($"[Card.CanPlay] '{cardName}' Lua CanPlay 실행 실패:\n{e.Message}");
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// 카드 시전에 소요되는 기본 비용(Stamina) 및 Lua의 커스텀 비용(HP, Gold 등)을 차감합니다.
+    /// </summary>
+    public void SpendCosts(Character caster)
+    {
+        if (caster == null) return;
+
+        // 1. 기본 스태미나 소모 차감
+        if (currentCost > 0)
+        {
+            caster.SpendStamina(new StaminaInfo(caster, caster, currentCost, StaminaFlag.Normal));
+        }
+
+        // 2. Lua 스크립트에 SpendCosts 함수가 정의되어 있다면 호출하여 커스텀 비용 소모 진행
+        if (luaTable != null)
+        {
+            var luaSpendCosts = luaTable.Get<Action<LuaTable, Card, Character>>("SpendCosts");
+            if (luaSpendCosts != null)
+            {
+                try
+                {
+                    luaSpendCosts.Invoke(luaTable, this, caster);
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogError($"[Card.SpendCosts] '{cardName}' Lua SpendCosts 실행 실패:\n{e.Message}");
+                }
+            }
+        }
     }
 
     /// <summary>

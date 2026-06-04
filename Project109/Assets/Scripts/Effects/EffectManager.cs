@@ -10,6 +10,8 @@ public class EffectManager
     private readonly List<Effect> effects = new();
     private readonly Character target;
 
+    public IReadOnlyList<Effect> GetEffects() => effects;
+
     public EffectManager(Character character)
     {
         target = character;

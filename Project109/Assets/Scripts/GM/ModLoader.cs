@@ -19,6 +19,9 @@ public class ModLoader
     // Key: loadoutId (고유 ID), Value: StarterKitData
     public Dictionary<string, StarterKitData> StarterKitDatabase { get; private set; } = new Dictionary<string, StarterKitData>();
 
+    // Key: unitId (고유 ID), Value: NPCUnitData
+    public Dictionary<string, NPCUnitData> NPCUnitDatabase { get; private set; } = new Dictionary<string, NPCUnitData>();
+
     private static ModLoader _instance;
     public static ModLoader Instance
     {
@@ -40,6 +43,7 @@ public class ModLoader
         RelicDatabase.Clear();
         CardDatabase.Clear();
         StarterKitDatabase.Clear();
+        NPCUnitDatabase.Clear();
 
         // 1. 바닐라(Core) 모드 로딩
         // 경로: Assets/StreamingAssets/Mods/Core
@@ -110,6 +114,13 @@ public class ModLoader
         if (Directory.Exists(starterKitsPath))
         {
             LoadStarterKitsFromPath(starterKitsPath, modDir);
+        }
+
+        // [적군 AI(Enemy) 로딩]
+        string enemiesPath = Path.Combine(modDir, "YAML", "Enemies");
+        if (Directory.Exists(enemiesPath))
+        {
+            LoadNPCUnitsFromPath(enemiesPath, modDir);
         }
     }
 
@@ -243,6 +254,40 @@ public class ModLoader
                     else
                     {
                         Debug.LogWarning($"[ModLoader] 무결성 검증 실패로 시작 키트가 무시되었습니다: {file}");
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[ModLoader] YAML 파싱 에러 ({file}):\n{e.Message}");
+            }
+        }
+    }
+
+    private void LoadNPCUnitsFromPath(string dataPath, string modRootPath)
+    {
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+
+        string[] yamlFiles = Directory.GetFiles(dataPath, "*.yaml", SearchOption.AllDirectories);
+
+        foreach (string file in yamlFiles)
+        {
+            string yamlContent = File.ReadAllText(file);
+            try
+            {
+                NPCUnitData enemyData = deserializer.Deserialize<NPCUnitData>(yamlContent);
+
+                if (enemyData != null)
+                {
+                    if (enemyData.ResolveAndValidate(modRootPath))
+                    {
+                        NPCUnitDatabase[enemyData.unitId] = enemyData;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[ModLoader] 무결성 검증 실패로 적 데이터가 무시되었습니다: {file}");
                     }
                 }
             }

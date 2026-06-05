@@ -16,7 +16,7 @@ public class CardRewardPanel : UIPanelBase
 
     }
 
-    public void SettingCards(RandomCardPickupType pickupType, int rewardCardCount)
+    public void SettingCards(string dropTableID, int rewardCardCount)
     {
         GameItemRewardManager.instance.ResetCardLists();
 
@@ -27,7 +27,7 @@ public class CardRewardPanel : UIPanelBase
             if (card == null)
                 continue;
 
-            CardData cardData = GameItemRewardManager.instance.GetRandomCardDataByPickupType(pickupType);
+            CardData cardData = GameItemRewardManager.instance.GetRandomCardDataByDropTable(dropTableID);
 
             card.UpdateCardData(cardData);
             card.bShowEffectAreaUI = true;

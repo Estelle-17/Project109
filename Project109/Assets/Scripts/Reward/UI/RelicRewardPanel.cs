@@ -13,7 +13,7 @@ public class RelicRewardPanel : MonoBehaviour
 
     }
 
-    public void SettingRelics(RandomRelicPickupType pickupType, int rewardRelicCount)
+    public void SettingRelics(string dropTableID, int rewardRelicCount)
     {
         for (int count = 0; count < rewardRelicCount; count++)
         {
@@ -23,7 +23,7 @@ public class RelicRewardPanel : MonoBehaviour
             if (relic == null)
                 continue;
 
-            RelicData relicData = GameItemRewardManager.instance.GetRandomRelicDataByPickupType(pickupType);
+            RelicData relicData = GameItemRewardManager.instance.GetRandomRelicDataByDropTable(dropTableID);
 
             relic.UpdateRelicData(relicData);
 

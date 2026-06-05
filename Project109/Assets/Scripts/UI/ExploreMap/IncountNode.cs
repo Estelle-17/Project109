@@ -31,7 +31,7 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     public bool isNodeChanged;  //노드가 생성되고 노드 타입이 한번 이상 변경되었는지 여부
 
     public BattleData battleNodeData;
-    public EventData eventNodeData;
+    public InteractableData eventNodeData;
 
     //화살표 기준 노드의 위치
     public Vector2 arrowRelativePos;

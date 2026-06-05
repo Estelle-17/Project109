@@ -20,7 +20,7 @@ public class BattleManager
     private List<ICharacterController> enemyTeam = new();
     private ICharacterController currentTurnController;
     public float battleTimeScale = 1f;
-    public int accumulativeGoldReward { get; private set; }
+    public int accumulativeGoldReward { get; set; }
 
     /// <summary>
     /// 전장의 아군 및 적군 컨트롤러 목록을 합쳐서 반환합니다.

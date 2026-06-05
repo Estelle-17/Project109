@@ -26,12 +26,12 @@ public class Player
         this.deck = new PlayerDeck(this);
 
         // 초기 스탯 세팅
-        this.playerStat.inGame_Currency_Gold = 0;
-        this.playerStat.mapFloorCheck_Length = 3;
-        this.playerStat.Upgrade_MasteryPoint_Value = 500;
-        this.playerStat.reward_Card_Count = 3;
-        this.playerStat.reward_Relic_Count = 3;
-        this.playerStat.mastery_Choice_Count = 3;
+        this.playerStat.InGameCurrencyGold = 0;
+        this.playerStat.MapFloorCheckLength = 3;
+        this.playerStat.UpgradeMasteryPointValue = 500;
+        this.playerStat.RewardCardCount = 3;
+        this.playerStat.RewardRelicCount = 3;
+        this.playerStat.MasteryChoiceCount = 3;
 
         this.relicManager = new RelicManager(this);
     }

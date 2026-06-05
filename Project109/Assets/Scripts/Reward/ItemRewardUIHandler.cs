@@ -26,7 +26,7 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
 
     }
 
-    public void SetReward(ItemRewardUIType npcType, RandomCardPickupType cardType, RandomRelicPickupType reilcType, int value)
+    public void SetReward(ItemRewardUIType npcType, string referenceID, int value)
     {
         currentItemRewardUIType = npcType;
 
@@ -45,7 +45,7 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
             case ItemRewardUIType.Card:
                 currentRewardUIObject = Instantiate(cardRewardUIPrefab);
                 CardRewardPanel cardRewardHandler = currentRewardUIObject.GetComponent<CardRewardPanel>();
-                cardRewardHandler.SettingCards(cardType, RunManager.instance.player.playerStat.reward_Card_Count);    //보여줄 아이템의 수는 상황에 따라 변경 가능
+                cardRewardHandler.SettingCards(referenceID, value > 0 ? value : RunManager.instance.player.playerStat.RewardCardCount);
                 cardRewardHandler.rootObject = this.gameObject;
                 cardRewardHandler.gameObject.SetActive(false);
 
@@ -55,7 +55,7 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
                 itemText.text = "새로운 기억 보상!";
                 break;
             case ItemRewardUIType.Relic:    //단일 유물 획득 보상
-                rewardRelicData = GameItemRewardManager.instance.GetRandomRelicDataByPickupType(reilcType);
+                rewardRelicData = GameItemRewardManager.instance.GetRandomRelicDataByDropTable(referenceID);
 
                 // if (AssetCacheManager.instance.TryGetTexture(rewardRelicData.texturePath, out Sprite texture))
                 // {
@@ -78,10 +78,10 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
         switch (currentItemRewardUIType)
         {
             case ItemRewardUIType.Gold:
-                RunManager.instance.player.playerStat.inGame_Currency_Gold += rewardValue;
+                RunManager.instance.player.playerStat.InGameCurrencyGold += rewardValue;
                 break;
             case ItemRewardUIType.MemorySharp:
-                RunManager.instance.player.playerStat.inGame_Currency_MemorySharp += rewardValue;
+                RunManager.instance.player.playerStat.InGameCurrencyMemorySharp += rewardValue;
                 break;
             case ItemRewardUIType.Card:
                 UIManager.instance.TempDeactivateCurrentActiveUIPanel();

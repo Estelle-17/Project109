@@ -10,7 +10,7 @@ public class ExploreUI : UIPanelBase
     //SO데이터 및 랜덤으로 선택된 데이터들
     AssetCacheManager dataLoader;
     RandomItemPicker<BattleData> battleItemPicker;
-    RandomItemPicker<EventData> eventItemPicker;
+    RandomItemPicker<InteractableData> eventItemPicker;
 
     public GameObject ViewLayout;
     public GameObject ArrowObjects;
@@ -43,7 +43,7 @@ public class ExploreUI : UIPanelBase
         if (dataLoader != null)
         {
             battleItemPicker = new RandomItemPicker<BattleData>(dataLoader.battleList);
-            eventItemPicker = new RandomItemPicker<EventData>(dataLoader.eventList);
+            eventItemPicker = new RandomItemPicker<InteractableData>(dataLoader.interactableList);
         }
         else
         {
@@ -157,7 +157,7 @@ public class ExploreUI : UIPanelBase
                 currentNode.isNodeChanged = true;   //노드 생성이 완료된 노드는 이후에 변경되지 않도록 설정
 
                 //이벤트 데이터도 저장
-                if (dataLoader.TryGetSpecificEvent("Insight_Event_Data", out EventData data))
+                if (dataLoader.TryGetSpecificInteractable("Insight_Event_Data", out InteractableData data))
                 {
                     currentNode.eventNodeData = data;
                 }
@@ -236,14 +236,14 @@ public class ExploreUI : UIPanelBase
                 currentNode.SetIncountNode(IncountType.Secret, ExtraIncountType.None);
 
                 //랜덤하게 섞인 데이터들 중 한 가지를 저장
-                if (eventItemPicker.TryGetNext(out EventData data))
+                if (eventItemPicker.TryGetNext(out InteractableData data))
                 {
                     currentNode.eventNodeData = data;
                 }
                 else
                 {
                     eventItemPicker.Reset();
-                    if (eventItemPicker.TryGetNext(out EventData newData))
+                    if (eventItemPicker.TryGetNext(out InteractableData newData))
                     {
                         currentNode.eventNodeData = newData;
                     }
@@ -253,7 +253,7 @@ public class ExploreUI : UIPanelBase
 
         //생성 시 필요한 만큼 노드 가리기
         //중간 지점의 휴식, 상점 2개의 노드만 있는 곳은 가리지 않기
-        for (int i = RunManager.instance.player.playerStat.mapFloorCheck_Length; i < ExploreMap.Count; i++)
+        for (int i = RunManager.instance.player.playerStat.MapFloorCheckLength; i < ExploreMap.Count; i++)
         {
             if (mapLength / 2 != i)
             {
@@ -321,7 +321,7 @@ public class ExploreUI : UIPanelBase
     public void OpenExploreMapNodesBasedOnFloorLength()
     {
         int currentFloor = RunManager.instance.currentExploreMapFloor;
-        int openNodeLength = currentFloor + RunManager.instance.player.playerStat.mapFloorCheck_Length;
+        int openNodeLength = currentFloor + RunManager.instance.player.playerStat.MapFloorCheckLength;
         openNodeLength = openNodeLength > ExploreMap.Count ? ExploreMap.Count : openNodeLength;
 
         for (int i = currentFloor; i < openNodeLength; i++)

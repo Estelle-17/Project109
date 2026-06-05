@@ -19,14 +19,19 @@ public static class GenConfig
         typeof(Player),
         typeof(Character),
         typeof(RelicManager),
-        typeof(EventHandler),
+        typeof(DialogueManager),
 
         // Yaml / Data Types
-        typeof(ChoiceUseItem),
-        typeof(ChoiceGetItem),
         typeof(ChoiceData),
-        typeof(EventStageData),
-        typeof(EventData),
+        typeof(DialogueData),
+        typeof(InteractableData),
+        typeof(RewardChestData),
+        typeof(InteractableObject),
+        typeof(ShopNPC),
+        typeof(RestoreBonfire),
+        typeof(RewardChest),
+        typeof(RewardData),
+        typeof(DropTableData),
         typeof(Effect),
 
         // Event Payloads & Flags
@@ -64,8 +69,9 @@ public static class GenConfig
     public static List<Type> CSharpCallLua = new List<Type>()
     {
         // Delegates
-        typeof(CheckSelectable),
-        typeof(ExecuteChoice),
+        typeof(CanSelectDialogueChoice),
+        typeof(ExecuteDialogueChoice),
+        typeof(GetDialogueChoiceDescription),
 
         // Character Event Interfaces (Damage)
         typeof(IOnBeforeDealDamage),

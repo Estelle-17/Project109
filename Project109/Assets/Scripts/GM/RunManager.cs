@@ -98,7 +98,7 @@ public class RunManager : MonoBehaviour
 
         if (ModLoader.Instance.StarterKitDatabase.TryGetValue(loadoutId, out StarterKitData kitData))
         {
-            player.playerStat.inGame_Currency_Gold = kitData.startGold;
+            player.playerStat.InGameCurrencyGold = kitData.startGold;
 
             if (kitData.characterStat != null && playerBattleController != null && playerBattleController.controlledCharacter != null)
             {
@@ -163,8 +163,8 @@ public class RunManager : MonoBehaviour
         // 폴백 시작 장비 적용 (로비를 거치지 않고 바로 시작하는 씬 진입용)
         ApplyStarterKit(_selectedStarterKitId);
 
-        player.playerStat.inGame_Currency_Gold = 100;
-        player.playerStat.inGame_Currency_MemorySharp = 1;
+        player.playerStat.InGameCurrencyGold = 100;
+        player.playerStat.InGameCurrencyMemorySharp = 1;
 
         if (GameItemRewardManager.instance != null)
         {
@@ -220,8 +220,8 @@ public class RunManager : MonoBehaviour
             player.playerStat = new PlayerStat();
         }
 
-        player.playerStat.inGame_Currency_Gold = data.playerGold;
-        player.playerStat.inGame_Currency_MemorySharp = data.playerMemorySharp;
+        player.playerStat.InGameCurrencyGold = data.playerGold;
+        player.playerStat.InGameCurrencyMemorySharp = data.playerMemorySharp;
 
         if (player.character != null)
         {
@@ -285,10 +285,10 @@ public class RunManager : MonoBehaviour
         switch (type)
         {
             case CurrencyType.Gold:
-                player.playerStat.inGame_Currency_Gold += amount;
+                player.playerStat.InGameCurrencyGold += amount;
                 break;
             case CurrencyType.MemorySharp:
-                player.playerStat.inGame_Currency_MemorySharp += amount;
+                player.playerStat.InGameCurrencyMemorySharp += amount;
                 break;
             default:
                 break;

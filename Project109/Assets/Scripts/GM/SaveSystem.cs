@@ -61,8 +61,8 @@ public static class SaveSystem
             data.currentStageLevel = runManager.currentStageLevel;
             data.currentExploreMapFloor = runManager.currentExploreMapFloor;
             
-            data.playerGold = runManager.player.playerStat != null ? runManager.player.playerStat.inGame_Currency_Gold : 0;
-            data.playerMemorySharp = runManager.player.playerStat != null ? runManager.player.playerStat.inGame_Currency_MemorySharp : 0;
+            data.playerGold = runManager.player.playerStat != null ? runManager.player.playerStat.InGameCurrencyGold : 0;
+            data.playerMemorySharp = runManager.player.playerStat != null ? runManager.player.playerStat.InGameCurrencyMemorySharp : 0;
 
             if (runManager.player.character != null)
             {

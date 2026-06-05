@@ -32,6 +32,19 @@ namespace GameItem.Types
         Relic
     }
 
+    public enum RewardType
+    {
+        Gold,
+        MemorySharp,
+        CardChoice,     // 카드 선택지 제공 (DropTable 참조)
+        Relic,          // 유물 획득 (DropTable 참조)
+        SpecificCard,   // 특정 카드 획득
+        SpecificRelic,  // 특정 유물 획득
+        Potion,         // 포션 획득
+        Heal            // 체력 회복
+    }
+
+    [System.Obsolete("Use DropTableData and RewardType instead")]
     public enum RandomCardPickupType
     {
         Common,
@@ -42,6 +55,7 @@ namespace GameItem.Types
         RareToUnique
     }
 
+    [System.Obsolete("Use DropTableData and RewardType instead")]
     public enum RandomRelicPickupType
     {
         Common,
@@ -68,26 +82,6 @@ namespace CardTypes
         Move
     }
 
-    public enum BuffType    //버프 타입
-    {
-        None,
-        Strength,       //힘
-        Armor,          //방어
-        Frenzy          //광분
-    }
-
-    public enum DebuffType    //디버프 타입
-    {
-        None,
-        Bleeding,       //출혈
-        Poison,         //독
-        DeadlyPoison,   //맹독
-        Debilitate,     //쇠약
-        Weaken,         //약화
-    }
-
-
-
     public enum TargetType  //공격 대상 타입
     {
         Target,
@@ -108,7 +102,3 @@ namespace CardTypes
     }
 }
 
-public class Enums
-{
-
-}

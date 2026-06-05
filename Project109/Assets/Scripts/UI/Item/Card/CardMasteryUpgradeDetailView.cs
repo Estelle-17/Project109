@@ -24,7 +24,7 @@ public class CardMasteryUpgradeDetailView : MonoBehaviour
         selectedCardInstance = card;
 
         currentMasteryPointUI.PreviewUpgradeMasteryPointUI(selectedCardInstance,
-                                                           RunManager.instance.player.playerStat.Upgrade_MasteryPoint_Value);
+                                                           RunManager.instance.player.playerStat.UpgradeMasteryPointValue);
 
         gameObject.SetActive(true);
     }
@@ -33,7 +33,7 @@ public class CardMasteryUpgradeDetailView : MonoBehaviour
     {
         if (selectedCardInstance != null)
         {
-            selectedCardInstance.AddMasteryPoint(RunManager.instance.player.playerStat.Upgrade_MasteryPoint_Value);
+            selectedCardInstance.AddMasteryPoint(RunManager.instance.player.playerStat.UpgradeMasteryPointValue);
         }
         transform.root.gameObject.SetActive(false);
         Destroy(transform.root.gameObject);

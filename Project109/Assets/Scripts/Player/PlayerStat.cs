@@ -6,33 +6,33 @@ public class PlayerStat
 {
     public event Action<int> OnGoldChanged;
 
-    private int _inGame_Currency_Gold;
-    public int inGame_Currency_Gold 
+    private int _inGameCurrencyGold;
+    public int InGameCurrencyGold 
     { 
-        get => _inGame_Currency_Gold; 
+        get => _inGameCurrencyGold; 
         set 
         { 
-            _inGame_Currency_Gold = value; 
-            OnGoldChanged?.Invoke(_inGame_Currency_Gold); 
+            _inGameCurrencyGold = value; 
+            OnGoldChanged?.Invoke(_inGameCurrencyGold); 
         } 
     }
     public event Action<int> OnMemorySharpChanged;
 
-    private int _inGame_Currency_MemorySharp;
-    public int inGame_Currency_MemorySharp 
+    private int _inGameCurrencyMemorySharp;
+    public int InGameCurrencyMemorySharp 
     { 
-        get => _inGame_Currency_MemorySharp; 
+        get => _inGameCurrencyMemorySharp; 
         set 
         { 
-            _inGame_Currency_MemorySharp = value; 
-            OnMemorySharpChanged?.Invoke(_inGame_Currency_MemorySharp); 
+            _inGameCurrencyMemorySharp = value; 
+            OnMemorySharpChanged?.Invoke(_inGameCurrencyMemorySharp); 
         } 
     }
-    public int mapFloorCheck_Start_Length { get; set; }
-    public int mapFloorCheck_Length { get; set; }
-    public int mapReveal_Random_Count { get; set; }
-    public int reward_Card_Count {  get; set; }
-    public int reward_Relic_Count { get; set; }
-    public int mastery_Choice_Count { get; set; }
-    public int Upgrade_MasteryPoint_Value { get; set; }
+    public int MapFloorCheckStartLength { get; set; }
+    public int MapFloorCheckLength { get; set; }
+    public int MapRevealRandomCount { get; set; }
+    public int RewardCardCount {  get; set; }
+    public int RewardRelicCount { get; set; }
+    public int MasteryChoiceCount { get; set; }
+    public int UpgradeMasteryPointValue { get; set; }
 }

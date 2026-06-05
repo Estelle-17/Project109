@@ -109,18 +109,18 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
                 continue; //업그레이드 카드들은 보상으로 등장하지 않음
             }
 
-            switch (data.rarity) //1~3
+            switch (data.rarity)
             {
-                case 1:
+                case CardRarity.Common:
                     commonCardList.Add(data);
                     break;
-                case 2:
+                case CardRarity.Uncommon:
                     uncommonCardList.Add(data);
                     break;
-                case 3:
+                case CardRarity.Rare:
                     rareCardList.Add(data);
                     break;
-                case 4:
+                case CardRarity.Unique:
                     uniqueCardList.Add(data);
                     break;
             }
@@ -498,21 +498,157 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
         }
     }
 
-    public void InstantiateItemReward(RewardItemType rewardType, RandomRelicPickupType itemPickupType, Vector3 spawnPosition)
+    public CardData GetRandomCardDataByDropTable(string dropTableID)
     {
-        if (rewardObjectPrefab == null)
+        DropTableData dropTable = null;
+        if (AssetCacheManager.instance != null)
+        {
+            AssetCacheManager.instance.TryGetDropTable(dropTableID, out dropTable);
+        }
+
+        int commonRate = 100;
+        int uncommonRate = 0;
+        int rareRate = 0;
+        int uniqueRate = 0;
+
+        if (dropTable != null)
+        {
+            if (dropTable.specificItemIDs != null && dropTable.specificItemIDs.Count > 0)
+            {
+                string randomName = dropTable.specificItemIDs[Random.Range(0, dropTable.specificItemIDs.Count)];
+                if (ModLoader.Instance.CardDatabase.TryGetValue(randomName, out CardData specificCard))
+                {
+                    return specificCard;
+                }
+            }
+
+            commonRate = dropTable.commonWeight;
+            uncommonRate = dropTable.uncommonWeight;
+            rareRate = dropTable.rareWeight;
+            uniqueRate = dropTable.uniqueWeight;
+        }
+        else
+        {
+            // 기본 드롭 레이트 폴백
+            commonRate = 60;
+            uncommonRate = 40;
+        }
+
+        int totalWeight = commonRate + uncommonRate + rareRate + uniqueRate;
+        if (totalWeight <= 0) totalWeight = 100;
+
+        int pickNumber = Random.Range(1, totalWeight + 1);
+        CardData cardData = null;
+
+        if (pickNumber <= uniqueRate)
+        {
+            if (uniqueCardPicker.TryGetNext(out CardData data)) cardData = data;
+            else { uniqueCardPicker.Reset(); if (uniqueCardPicker.TryGetNext(out CardData newData)) cardData = newData; }
+        }
+        else if (pickNumber > uniqueRate && pickNumber <= uniqueRate + rareRate)
+        {
+            if (rareCardPicker.TryGetNext(out CardData data)) cardData = data;
+            else { rareCardPicker.Reset(); if (rareCardPicker.TryGetNext(out CardData newData)) cardData = newData; }
+        }
+        else if (pickNumber > uniqueRate + rareRate && pickNumber <= uniqueRate + rareRate + uncommonRate)
+        {
+            if (uncommonCardPicker.TryGetNext(out CardData data)) cardData = data;
+            else { uncommonCardPicker.Reset(); if (uncommonCardPicker.TryGetNext(out CardData newData)) cardData = newData; }
+        }
+        else
+        {
+            if (commonCardPicker.TryGetNext(out CardData data)) cardData = data;
+            else { commonCardPicker.Reset(); if (commonCardPicker.TryGetNext(out CardData newData)) cardData = newData; }
+        }
+
+        return cardData;
+    }
+
+    public RelicData GetRandomRelicDataByDropTable(string dropTableID)
+    {
+        DropTableData dropTable = null;
+        if (AssetCacheManager.instance != null)
+        {
+            AssetCacheManager.instance.TryGetDropTable(dropTableID, out dropTable);
+        }
+
+        int commonRate = 100;
+        int rareRate = 0;
+        int uniqueRate = 0;
+
+        if (dropTable != null)
+        {
+            if (dropTable.specificItemIDs != null && dropTable.specificItemIDs.Count > 0)
+            {
+                string randomName = dropTable.specificItemIDs[Random.Range(0, dropTable.specificItemIDs.Count)];
+                if (ModLoader.Instance.RelicDatabase.TryGetValue(randomName, out RelicData specificRelic))
+                {
+                    return specificRelic;
+                }
+            }
+
+            commonRate = dropTable.commonWeight;
+            rareRate = dropTable.rareWeight;
+            uniqueRate = dropTable.uniqueWeight;
+        }
+        else
+        {
+            // 기본 드롭 레이트 폴백
+            commonRate = 70;
+            rareRate = 30;
+        }
+
+        int totalWeight = commonRate + rareRate + uniqueRate;
+        if (totalWeight <= 0) totalWeight = 100;
+
+        int pickNumber = Random.Range(1, totalWeight + 1);
+        RelicData relicData = new RelicData();
+
+        if (pickNumber <= uniqueRate)
+        {
+            if (uniqueRelicPicker.TryGetNext(out RelicData data)) relicData = data;
+            else { uniqueRelicPicker.Reset(); if (uniqueRelicPicker.TryGetNext(out RelicData newData)) relicData = newData; }
+        }
+        else if (pickNumber > uniqueRate && pickNumber <= uniqueRate + rareRate)
+        {
+            if (rareRelicPicker.TryGetNext(out RelicData data)) relicData = data;
+            else { rareRelicPicker.Reset(); if (rareRelicPicker.TryGetNext(out RelicData newData)) relicData = newData; }
+        }
+        else
+        {
+            if (commonRelicPicker.TryGetNext(out RelicData data)) relicData = data;
+            else { commonRelicPicker.Reset(); if (commonRelicPicker.TryGetNext(out RelicData newData)) relicData = newData; }
+        }
+
+        return relicData;
+    }
+
+    public void InstantiateItemReward(RewardItemType rewardType, string dropTableID, Vector3 spawnPosition)
+    {
+        if (rewardBoxPrefab == null)
             return;
 
-        //카드 보상 생성
-        ChoiceRewardUIHandler rewardNPC = Instantiate(rewardObjectPrefab).GetComponent<ChoiceRewardUIHandler>();
-        if (rewardNPC != null)
+        RewardChest newRewardBox = Instantiate(rewardBoxPrefab, spawnPosition, Quaternion.identity).GetComponent<RewardChest>();
+
+        if (newRewardBox != null)
         {
-            rewardNPC.SetReward(rewardType, RandomCardPickupType.Common, itemPickupType, 0);
-            rewardNPC.transform.position = spawnPosition;
+            RewardData tempReward = new RewardData();
+            RewardItemConfig config = new RewardItemConfig();
+            config.rewardType = (rewardType == RewardItemType.Card) ? RewardType.CardChoice : RewardType.Relic;
+            config.minValue = 1;
+            config.maxValue = 1;
+            config.referenceID = dropTableID;
+            tempReward.rewards.Add(config);
+
+            newRewardBox.SetRewardData(tempReward);
         }
+
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        RunManager.instance.currentMap.currentSpawnNPCList.Add(rewardNPC.gameObject);
-        RunManager.instance.currentMap.currentSpawnUIList.Add(rewardNPC.GetRewardUI());
+        if (newRewardBox != null)
+        {
+            RunManager.instance.currentMap.currentSpawnNPCList.Add(newRewardBox.gameObject);
+            RunManager.instance.currentMap.currentSpawnUIList.Add(newRewardBox.GetRewardListUI());
+        }
     }
 
     public void SpawnRewardBox(Vector3 spawnPosition)
@@ -522,7 +658,7 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
             return;
         }
 
-        RewardBoxManager newRewardBox = Instantiate(rewardBoxPrefab, spawnPosition, Quaternion.identity).GetComponent<RewardBoxManager>();
+        RewardChest newRewardBox = Instantiate(rewardBoxPrefab, spawnPosition, Quaternion.identity).GetComponent<RewardChest>();
 
         if (newRewardBox != null)
         {
@@ -530,8 +666,11 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
         }
 
         //맵 이동 시 지워질 오브젝트 목록으로 등록
-        RunManager.instance.currentMap.currentSpawnNPCList.Add(newRewardBox.gameObject);
-        RunManager.instance.currentMap.currentSpawnUIList.Add(newRewardBox.GetRewardListUI());
+        if (newRewardBox != null)
+        {
+            RunManager.instance.currentMap.currentSpawnNPCList.Add(newRewardBox.gameObject);
+            RunManager.instance.currentMap.currentSpawnUIList.Add(newRewardBox.GetRewardListUI());
+        }
     }
 
     public List<CardData> GetCommonCardList() { return commonCardList; }

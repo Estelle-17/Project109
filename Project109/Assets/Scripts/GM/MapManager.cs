@@ -48,7 +48,7 @@ public class MapManager
     }
 
     // 이 함수는 노드에 진입할 때 호출됩니다.
-    public void GenerateStage(LocationType mapLocation, IncountType incountType, Character playerCharacter, MapPrefabs prefabs, EventData secretEventData = null, BattleData battleData = null)
+    public void GenerateStage(LocationType mapLocation, IncountType incountType, Character playerCharacter, MapPrefabs prefabs, InteractableData secretEventData = null, BattleData battleData = null)
     {
         //플레이어를 제외한 생성된 모든 요소 제거
         ClearStage();
@@ -101,8 +101,8 @@ public class MapManager
 
         if (incountType == IncountType.Store || incountType == IncountType.Restore || incountType == IncountType.Secret || incountType == IncountType.SecretBox)
         {
-            EventData eventData = null;
-            if (incountType == IncountType.Secret)
+            InteractableData eventData = null;
+            if (incountType == IncountType.Secret || incountType == IncountType.SecretBox)
             {
                 eventData = secretEventData;
             }
@@ -228,8 +228,9 @@ public class MapManager
                         if (enemyCharacter.characterMove != null)
                         {
                             enemyCharacter.characterMove.SetFacingDirection(LookDirection.Down);
-                            
+
                             // 타일 정보 설정
+
                             List<List<Tile>> tileMap = currentGameMap.GetTileMap();
                             if (tileMap != null && cell.position.x < tileMap.Count && cell.position.y < tileMap[cell.position.x].Count)
                             {
@@ -244,7 +245,7 @@ public class MapManager
         }
     }
 
-    public void GenerateNPC(MapDataSO mapData, IncountType incountType, MapPrefabs prefabs, EventData eventData = null)
+    public void GenerateNPC(MapDataSO mapData, IncountType incountType, MapPrefabs prefabs, InteractableData eventData = null)
     {
         if (spawnNPCCells.Count == 0)
         {
@@ -269,53 +270,71 @@ public class MapManager
             case IncountType.Restore:
                 if (prefabs.restoreObjectPrefab != null)
                 {
-                    RestoreUIManager newRestoreNPC = UnityEngine.Object.Instantiate(prefabs.restoreObjectPrefab, worldPos, Quaternion.identity).GetComponent<RestoreUIManager>();
-                    if (newRestoreNPC != null)
+                    GameObject spawned = UnityEngine.Object.Instantiate(prefabs.restoreObjectPrefab, worldPos, Quaternion.identity);
+                    RestoreBonfire restoreBonfire = spawned.GetComponent<RestoreBonfire>();
+                    if (restoreBonfire == null)
                     {
-                        newRestoreNPC.CreateRestoreUI();
-                        npcObj = newRestoreNPC.gameObject;
-                        uiObj = newRestoreNPC.GetRestoreUI() != null ? newRestoreNPC.GetRestoreUI().gameObject : null;
+                        restoreBonfire = spawned.AddComponent<RestoreBonfire>();
                     }
+
+                    if (eventData != null)
+                    {
+                        restoreBonfire.SetInteractableData(eventData);
+                    }
+
+                    restoreBonfire.CreateRestoreUI();
+                    npcObj = spawned;
+                    uiObj = restoreBonfire.GetRestoreUI() != null ? restoreBonfire.GetRestoreUI().gameObject : null;
                 }
                 break;
             case IncountType.Store:
                 if (prefabs.shopObjectPrefab != null)
                 {
-                    ShopUIManager newShopNPC = UnityEngine.Object.Instantiate(prefabs.shopObjectPrefab, worldPos, Quaternion.identity).GetComponent<ShopUIManager>();
-                    if (newShopNPC != null)
+                    GameObject spawned = UnityEngine.Object.Instantiate(prefabs.shopObjectPrefab, worldPos, Quaternion.identity);
+                    ShopNPC shopNPC = spawned.GetComponent<ShopNPC>();
+                    if (shopNPC == null)
                     {
-                        newShopNPC.AddRandomItems();
-                        newShopNPC.UpdateShopItems();
-                        npcObj = newShopNPC.gameObject;
-                        uiObj = newShopNPC.GetShopUI() != null ? newShopNPC.GetShopUI().gameObject : null;
+                        shopNPC = spawned.AddComponent<ShopNPC>();
                     }
+
+                    if (eventData != null)
+                    {
+                        shopNPC.SetInteractableData(eventData);
+                    }
+
+                    shopNPC.InitializeShop();
+                    npcObj = spawned;
+                    uiObj = shopNPC.GetShopUI() != null ? shopNPC.GetShopUI().gameObject : null;
                 }
                 break;
             case IncountType.SecretBox:
                 if (prefabs.rewardMapObjectPrefab != null)
                 {
-                    ChoiceRewardUIHandler newRewardNPC = UnityEngine.Object.Instantiate(prefabs.rewardMapObjectPrefab, worldPos, Quaternion.identity).GetComponent<ChoiceRewardUIHandler>();
-                    if (newRewardNPC != null)
+                    GameObject spawned = UnityEngine.Object.Instantiate(prefabs.rewardMapObjectPrefab, worldPos, Quaternion.identity);
+                    RewardChest rewardChest = spawned.GetComponent<RewardChest>();
+                    if (rewardChest == null)
                     {
-                        //newRewardNPC.SetReward(RewardItemType.Relic, RandomCardPickupType.Common, RandomRelicPickupType.CommonToUnique, 0);
-                        npcObj = newRewardNPC.gameObject;
-                        uiObj = newRewardNPC.GetRewardUI();
+                        rewardChest = spawned.AddComponent<RewardChest>();
                     }
+
+                    if (eventData != null)
+                    {
+                        rewardChest.SetInteractableData(eventData);
+                    }
+                    npcObj = spawned;
                 }
                 break;
             case IncountType.Secret:
                 if (prefabs.eventObjectPrefab != null)
                 {
-                    EventHandler newEventNPC = UnityEngine.Object.Instantiate(prefabs.eventObjectPrefab, worldPos, Quaternion.identity).GetComponent<EventHandler>();
-                    if (newEventNPC != null)
+                    InteractableObject newNPC = UnityEngine.Object.Instantiate(prefabs.eventObjectPrefab, worldPos, Quaternion.identity).GetComponent<InteractableObject>();
+                    if (newNPC != null)
                     {
                         if (eventData != null)
                         {
-                            newEventNPC.SetEventData(eventData);
-                            newEventNPC.UpdateEventDescription("START");
+                            newNPC.SetInteractableData(eventData);
                         }
-                        npcObj = newEventNPC.gameObject;
-                        uiObj = newEventNPC.eventDescription != null ? newEventNPC.eventDescription.gameObject : null;
+                        npcObj = newNPC.gameObject;
                     }
                 }
                 break;
@@ -521,8 +540,8 @@ public class MapManager
 
                 for (int i = 0; i < 4; i++)
                 {
-                    int x = t.GetCoord().column + dirX[i];
-                    int y = t.GetCoord().row + dirY[i];
+                    int x = t.GetCoord().x + dirX[i];
+                    int y = t.GetCoord().y + dirY[i];
 
                     //맵을 넘어가는 경우 제외
                     if (x >= column || y >= row || x < 0 || y < 0)
@@ -530,7 +549,7 @@ public class MapManager
 
 
                     //플레이어 위치 혹은 갈 수 없는 경우 제외
-                    if (map[x][y].GetCoord().column == moveStart.GetCoord().column && map[x][y].GetCoord().row == moveStart.GetCoord().row ||
+                    if (map[x][y].GetCoord() == moveStart.GetCoord() ||
                         map[x][y].tileState != TileState.Empty && map[x][y].tileState != TileState.Trap)
                         continue;
 

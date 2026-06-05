@@ -55,11 +55,11 @@ public class CurrencyRewardHandler : MonoBehaviour
 
         if (currencyType == CurrencyType.Gold)
         {
-            RunManager.instance.player.playerStat.inGame_Currency_Gold += currencyValue;
+            RunManager.instance.player.playerStat.InGameCurrencyGold += currencyValue;
         }
         else if (currencyType == CurrencyType.MemorySharp)
         {
-            RunManager.instance.player.playerStat.inGame_Currency_MemorySharp += currencyValue;
+            RunManager.instance.player.playerStat.InGameCurrencyMemorySharp += currencyValue;
         }
 
         //재화 추가 후 오브젝트 삭제

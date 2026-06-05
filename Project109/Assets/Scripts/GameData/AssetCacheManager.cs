@@ -51,16 +51,27 @@ public class AssetCacheManager : MonoBehaviour
     public string textureKey = "Texture";
     public string obstacleKey = "Obstacle";
     public string trapKey = "Trap";
+    public string interactableKey = "Interactable";
+    public string dropTableKey = "DropTable";
 
 
-    public IList<EventData> eventList;
-    private Dictionary<string, EventData> eventDict = new Dictionary<string, EventData>();
+    public IList<DialogueData> eventList;
+    private Dictionary<string, DialogueData> eventDict = new Dictionary<string, DialogueData>();
 
-    public IList<EventData> specificEventList;
-    private Dictionary<string, EventData> specificEventDict = new Dictionary<string, EventData>();
+    public IList<DialogueData> specificEventList;
+    private Dictionary<string, DialogueData> specificEventDict = new Dictionary<string, DialogueData>();
+
+    public IList<InteractableData> interactableList;
+    private Dictionary<string, InteractableData> interactableDict = new Dictionary<string, InteractableData>();
+
+    public IList<InteractableData> specificInteractableList;
+    private Dictionary<string, InteractableData> specificInteractableDict = new Dictionary<string, InteractableData>();
 
     public IList<BattleData> battleList;
     private Dictionary<string, BattleData> battleDict = new Dictionary<string, BattleData>();
+
+    public IList<DropTableData> dropTableList;
+    private Dictionary<string, DropTableData> dropTableDict = new Dictionary<string, DropTableData>();
 
     public IList<MonsterData> monsterList;
     private Dictionary<string, MonsterData> monsterDict = new Dictionary<string, MonsterData>();
@@ -93,58 +104,87 @@ public class AssetCacheManager : MonoBehaviour
 
     private IEnumerator Start()
     {
+        bool isDialogueLoaded = false;
+        bool isInteractableLoaded = false;
+        bool isBattleLoaded = false;
+        bool isMonsterLoaded = false;
+        bool isCharacterLoaded = false;
+        bool isMapLoaded = false;
+        bool isMapInfoLoaded = false;
+        bool isModelLoaded = false;
+        bool isTextureLoaded = false;
+        bool isObstacleLoaded = false;
+        bool isTrapLoaded = false;
+        bool isDropTableLoaded = false;
 
-
-        //이벤트 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<EventData>(eventKey, (list, dict) =>
+        // 1. 이벤트 데이터 할당 시작
+        StartCoroutine(LoadAndCacheFromAddressableData<DialogueData>(eventKey, (list, dict) =>
         {
             eventList = list;
             eventDict = dict;
 
-            //특정 이벤트 데이터 분리 작업
-            specificEventList = new List<EventData>();
-            specificEventDict = new Dictionary<string, EventData>();
-            //역순으로 순회
-            for (int index = list.Count - 1; index >= 0; index--)
-            {
-                //4: 랜덤으로 발견할 수 없는 특정 이벤트
-                if (list[index].eventAppearLevel == 4)
-                {
-                    specificEventList.Add(list[index]);
-                    specificEventDict[list[index].ID] = list[index];
-
-                    //원본 리스트 및 딕셔너리에서 제거
-                    eventDict.Remove(list[index].ID);
-                    eventList.Remove(list[index]);
-                }
-            }
+            // DialogueData는 별도 필터링 없이 일괄 로드
+            specificEventList = new List<DialogueData>();
+            specificEventDict = new Dictionary<string, DialogueData>();
+            isDialogueLoaded = true;
         }));
 
-        //전투 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<BattleData>(battleKey, (list, dict) =>
+        // 2. 상호작용 객체 데이터 할당 시작
+        StartCoroutine(LoadAndCacheFromAddressableData<InteractableData>(interactableKey, (list, dict) =>
+        {
+            interactableList = list;
+            interactableDict = dict;
+
+            //특정 상호작용 데이터 분리 작업
+            specificInteractableList = new List<InteractableData>();
+            specificInteractableDict = new Dictionary<string, InteractableData>();
+            for (int index = list.Count - 1; index >= 0; index--)
+            {
+                if (list[index].eventAppearLevel == 4)
+                {
+                    specificInteractableList.Add(list[index]);
+                    specificInteractableDict[list[index].ID] = list[index];
+                    interactableDict.Remove(list[index].ID);
+                    interactableList.Remove(list[index]);
+                }
+            }
+            isInteractableLoaded = true;
+        }));
+
+        // 3. 전투 데이터 할당 시작
+        StartCoroutine(LoadAndCacheFromAddressableData<BattleData>(battleKey, (list, dict) =>
         {
             battleList = list;
             battleDict = dict;
+            isBattleLoaded = true;
         }));
 
-        //몬스터 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<MonsterData>(monsterKey, (list, dict) =>
+        // 드롭 테이블 데이터 할당 시작
+        StartCoroutine(LoadAndCacheFromAddressableData<DropTableData>(dropTableKey, (list, dict) =>
+        {
+            dropTableList = list;
+            dropTableDict = dict;
+            isDropTableLoaded = true;
+        }));
+
+        // 4. 몬스터 데이터 할당 시작
+        StartCoroutine(LoadAndCacheFromAddressableData<MonsterData>(monsterKey, (list, dict) =>
         {
             monsterList = list;
             monsterDict = dict;
+            isMonsterLoaded = true;
         }));
 
-
-
-        //캐릭터 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<CharacterData>(characterKey, (list, dict) =>
+        // 5. 캐릭터 데이터 할당 시작
+        StartCoroutine(LoadAndCacheFromAddressableData<CharacterData>(characterKey, (list, dict) =>
         {
             characterList = list;
             characterDict = dict;
+            isCharacterLoaded = true;
         }));
 
-        //맵 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<MapDataSO>(mapKey, (list, dict) =>
+        // 6. 맵 데이터 할당 시작
+        StartCoroutine(LoadAndCacheFromAddressableData<MapDataSO>(mapKey, (list, dict) =>
         {
             mapList = list;
             mapDict = dict;
@@ -189,40 +229,64 @@ public class AssetCacheManager : MonoBehaviour
                         break;
                 }
             }
+            isMapLoaded = true;
         }));
 
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<MapDataInfo>(mapInfoKey, (list, dict) =>
+        // 7. 맵 정보 할당 시작
+        StartCoroutine(LoadAndCacheFromAddressableData<MapDataInfo>(mapInfoKey, (list, dict) =>
         {
             mapInfoList = list;
             mapInfoDict = dict;
+            isMapInfoLoaded = true;
         }));
 
-        //모델링 및 오브젝트 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheGameObjectFromAddressableData(modelKey, (list, dict) =>
+        // 8. 모델링 및 오브젝트 데이터 할당 시작
+        StartCoroutine(LoadAndCacheGameObjectFromAddressableData(modelKey, (list, dict) =>
         {
             modelList = list;
             modelDict = dict;
+            isModelLoaded = true;
         }));
 
-        //텍스처 데이터 할당 시작
-        yield return StartCoroutine(LoadAndCacheTextureFromAddressableData(textureKey, (list, dict) =>
+        // 9. 텍스처 데이터 할당 시작
+        StartCoroutine(LoadAndCacheTextureFromAddressableData(textureKey, (list, dict) =>
         {
             textureList = list;
             textureDict = dict;
+            isTextureLoaded = true;
         }));
 
-
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<ObstacleData>(obstacleKey, (list, dict) =>
+        // 10. 장애물 할당 시작
+        StartCoroutine(LoadAndCacheFromAddressableData<ObstacleData>(obstacleKey, (list, dict) =>
         {
             obstacleList = list;
             obstacleDict = dict;
+            isObstacleLoaded = true;
         }));
 
-        yield return StartCoroutine(LoadAndCacheFromAddressableData<TrapData>(trapKey, (list, dict) =>
+        // 11. 함정 할당 시작
+        StartCoroutine(LoadAndCacheFromAddressableData<TrapData>(trapKey, (list, dict) =>
         {
             trapList = list;
             trapDict = dict;
+            isTrapLoaded = true;
         }));
+
+        // 모든 비동기 작업이 병렬 완료될 때까지 대기
+        yield return new WaitUntil(() =>
+            isDialogueLoaded &&
+            isInteractableLoaded &&
+            isBattleLoaded &&
+            isMonsterLoaded &&
+            isCharacterLoaded &&
+            isMapLoaded &&
+            isMapInfoLoaded &&
+            isModelLoaded &&
+            isTextureLoaded &&
+            isObstacleLoaded &&
+            isTrapLoaded &&
+            isDropTableLoaded
+        );
 
         ModManager modManager = GetComponent<ModManager>();
         if (modManager != null)
@@ -410,8 +474,10 @@ public class AssetCacheManager : MonoBehaviour
 
     public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
 
-    public bool TryGetEvent(string name, out EventData ev) => eventDict.TryGetValue(name, out ev);
-    public bool TryGetSpecificEvent(string name, out EventData ev) => specificEventDict.TryGetValue(name, out ev);
+    public bool TryGetEvent(string name, out DialogueData ev) => eventDict.TryGetValue(name, out ev);
+    public bool TryGetSpecificDialogue(string name, out DialogueData ev) => specificEventDict.TryGetValue(name, out ev);
+    public bool TryGetInteractable(string name, out InteractableData interactable) => interactableDict.TryGetValue(name, out interactable);
+    public bool TryGetSpecificInteractable(string name, out InteractableData interactable) => specificInteractableDict.TryGetValue(name, out interactable);
     public bool TryGetBattle(string name, out BattleData battle) => battleDict.TryGetValue(name, out battle);
     public bool TryGetCharacter(string name, out CharacterData character) => characterDict.TryGetValue(name, out character);
     public bool TryGetMap(string name, out MapDataSO mapData) => mapDict.TryGetValue(name, out mapData);
@@ -421,4 +487,5 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetTexture(string name, out Sprite texture) => textureDict.TryGetValue(name, out texture);
     public bool TryGetObstacle(string name, out ObstacleData obstacle) => obstacleDict.TryGetValue(name, out obstacle);
     public bool TryGetTrap(string name, out TrapData trap) => trapDict.TryGetValue(name, out trap);
+    public bool TryGetDropTable(string name, out DropTableData table) => dropTableDict.TryGetValue(name, out table);
 }

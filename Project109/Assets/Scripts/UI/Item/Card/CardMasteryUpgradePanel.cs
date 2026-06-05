@@ -20,7 +20,7 @@ public class CardMasteryUpgradePanel : UIPanelBase
 
         //특정 갯수만큼 무작위 마스터리 ID 목록 획득
         List<string> availableMasteryIds = card.GetRandomMasteryOption(
-            RunManager.instance.player.playerStat.mastery_Choice_Count);
+            RunManager.instance.player.playerStat.MasteryChoiceCount);
 
         foreach (string masteryId in availableMasteryIds)
         {

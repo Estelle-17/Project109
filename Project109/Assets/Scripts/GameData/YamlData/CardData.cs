@@ -19,7 +19,7 @@ public class CardData : IModAssetResolver
     public int targetMaxDistance { get; set; }
     public List<EffectArea> additionalEffectAreaList { get; set; } = new();
 
-    public int rarity { get; set; }
+    public CardRarity rarity { get; set; }
     public int stamina { get; set; }
 
     // 마스터리 최대 포인트

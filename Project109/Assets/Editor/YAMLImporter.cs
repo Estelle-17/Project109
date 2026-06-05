@@ -98,6 +98,7 @@ public class YAMLImporter
     }
     */
 
+#if false
     [MenuItem("Tools/Import Event YAML")]
     //[System.Obsolete]
     public static void ImportEventYAML()
@@ -174,6 +175,7 @@ public class YAMLImporter
 
         Debug.Log("YAML import complete.");
     }
+#endif
 
     [MenuItem("Tools/Import Battle YAML")]
     //[System.Obsolete]
@@ -673,6 +675,7 @@ public class YAMLImporter
     }
     */
 
+#if false
     public class RootEventData
     {
         public List<EventEntry> @eventCollection { get; set; }
@@ -687,6 +690,7 @@ public class YAMLImporter
         public string eventName { get; set; }
         public List<EventStageData> stages { get; set; }
     }
+#endif
 
     public class RootBattleData
     {

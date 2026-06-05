@@ -59,4 +59,46 @@ public class AddressableAutoRegister : Editor
 
         Debug.Log($"<color=green>총 {registeredCount}개의 MapDataSO가 Addressables에 성공적으로 등록/갱신되었습니다!</color>");
     }
+
+    [MenuItem("Tools/Addressables/UI 프리팹 자동 등록")]
+    public static void RegisterUIPrefabs()
+    {
+        AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+        if (settings == null)
+        {
+            Debug.LogError("Addressable Settings를 찾을 수 없습니다.");
+            return;
+        }
+
+        AddressableAssetGroup targetGroup = settings.DefaultGroup;
+        string[] uiPrefabs = new string[]
+        {
+            "Assets/Prefab/UI/Card/EraseCardDeckCanvas.prefab",
+            "Assets/Prefab/UI/Card/UpgradeCardDeckCanvas.prefab"
+        };
+
+        int registeredCount = 0;
+        foreach (var path in uiPrefabs)
+        {
+            if (File.Exists(path))
+            {
+                string guid = AssetDatabase.AssetPathToGUID(path);
+                AddressableAssetEntry entry = settings.CreateOrMoveEntry(guid, targetGroup);
+                if (entry != null)
+                {
+                    string assetName = Path.GetFileNameWithoutExtension(path);
+                    entry.SetAddress(assetName);
+                    entry.SetLabel("UI", true);
+                    registeredCount++;
+                }
+            }
+        }
+
+        if (registeredCount > 0)
+        {
+            settings.SetDirty(AddressableAssetSettings.ModificationEvent.EntryMoved, null, true, true);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"<color=green>총 {registeredCount}개의 UI 프리팹이 Addressables에 등록되었습니다!</color>");
+        }
+    }
 }

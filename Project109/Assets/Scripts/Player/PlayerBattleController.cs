@@ -180,8 +180,7 @@ public class PlayerBattleController : ICharacterController
 
             if (controlledCharacter.characterMove != null && controlledCharacter.characterMove.GetCurrentTile() != null)
             {
-                var coord = controlledCharacter.characterMove.GetCurrentTile().GetCoord();
-                casterPos = new Vector2Int(coord.column, coord.row);
+                casterPos = controlledCharacter.characterMove.GetCurrentTile().GetCoord();
             }
 
             UseCard(card, targets, casterPos);
@@ -274,7 +273,7 @@ public class PlayerBattleController : ICharacterController
                                 if (distance >= minDistance && distance <= maxDistance)
                                 {
                                     List<Character> targets = new();
-                                    Vector2Int targetPos = new Vector2Int(targetTile.GetCoord().column, targetTile.GetCoord().row);
+                                    Vector2Int targetPos = targetTile.GetCoord();
 
                                     UseCard(activeCardForTargeting, targets, targetPos);
 
@@ -302,7 +301,7 @@ public class PlayerBattleController : ICharacterController
         if (t1 == null || t2 == null) return int.MaxValue;
         var coord1 = t1.GetCoord();
         var coord2 = t2.GetCoord();
-        return Mathf.Abs(coord1.column - coord2.column) + Mathf.Abs(coord1.row - coord2.row);
+        return Mathf.Abs(coord1.x - coord2.x) + Mathf.Abs(coord1.y - coord2.y);
     }
 
     #endregion

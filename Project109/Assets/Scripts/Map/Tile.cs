@@ -12,8 +12,7 @@ public enum TileState
 public class Tile : MonoBehaviour
 {
     [SerializeField]
-    private Coord coord;
-    public Vector2Int position; // 그리드 좌표 (x, y)
+    private Vector2Int coord;
     public TileState tileState;
     public GameObject canMoveAreaTextureObject;
 
@@ -31,17 +30,17 @@ public class Tile : MonoBehaviour
 
     public void SetCoord(int column, int row)
     {
-        coord = new Coord(column, row);
+        coord = new Vector2Int(column, row);
     }
 
-    public Coord GetCoord()
+    public Vector2Int GetCoord()
     {
         return coord;
     }
 
     public string GetCoordToString()
     {
-        return coord.column + ", " + coord.row;
+        return coord.x + ", " + coord.y;
     }
 
     /// <summary>
@@ -61,17 +60,4 @@ public class Tile : MonoBehaviour
             }
         }
     }
-}
-
-[System.Serializable]
-public class Coord
-{
-    public int column;
-    public int row;
-
-    public Coord(int column, int row)
-    {
-        this.column = column;
-        this.row = row;
-    }
-}
+}

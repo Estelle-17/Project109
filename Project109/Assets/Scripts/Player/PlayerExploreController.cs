@@ -261,8 +261,8 @@ public class PlayerExploreController : ICharacterController
         List<Tile> adjacentTiles = new List<Tile>();
         if (centerTile == null || tileMap == null) return adjacentTiles;
 
-        int col = centerTile.GetCoord().column;
-        int row = centerTile.GetCoord().row;
+        int col = centerTile.GetCoord().x;
+        int row = centerTile.GetCoord().y;
 
         int[] dirX = { 0, 0, 1, -1 };
         int[] dirY = { 1, -1, 0, 0 };
@@ -287,8 +287,8 @@ public class PlayerExploreController : ICharacterController
     private bool IsAdjacent(Tile t1, Tile t2)
     {
         if (t1 == null || t2 == null) return false;
-        int dist = Mathf.Abs(t1.GetCoord().column - t2.GetCoord().column) +
-                   Mathf.Abs(t1.GetCoord().row - t2.GetCoord().row);
+        int dist = Mathf.Abs(t1.GetCoord().x - t2.GetCoord().x) +
+                   Mathf.Abs(t1.GetCoord().y - t2.GetCoord().y);
         return dist == 1;
     }
 }

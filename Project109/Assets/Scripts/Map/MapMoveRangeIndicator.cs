@@ -75,8 +75,8 @@ public class MapMoveRangeIndicator : MonoBehaviour
             if (tile.tileState == TileState.Full || tile.tileState == TileState.Obstacle)
                 continue;
 
-            int col = tile.GetCoord().column;
-            int row = tile.GetCoord().row;
+            int col = tile.GetCoord().x;
+            int row = tile.GetCoord().y;
 
             if (col >= 0 && col < gridColumns && row >= 0 && row < gridRows)
             {
@@ -106,8 +106,8 @@ public class MapMoveRangeIndicator : MonoBehaviour
         // 특정 타일 선택 시 G채널 활성화
         if (selectedTile != null)
         {
-            int col = selectedTile.GetCoord().column;
-            int row = selectedTile.GetCoord().row;
+            int col = selectedTile.GetCoord().x;
+            int row = selectedTile.GetCoord().y;
 
             if (col >= 0 && col < gridColumns && row >= 0 && row < gridRows)
             {

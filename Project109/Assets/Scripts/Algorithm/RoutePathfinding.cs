@@ -44,8 +44,8 @@ public class RoutePathfinding
         //노드 맵 생성
         MakeTileNodeMap(map);
 
-        TileNode startNode = tileNodeMap[start.GetCoord().column, start.GetCoord().row];
-        TileNode targetNode = tileNodeMap[target.GetCoord().column, target.GetCoord().row];
+        TileNode startNode = tileNodeMap[start.GetCoord().x, start.GetCoord().y];
+        TileNode targetNode = tileNodeMap[target.GetCoord().x, target.GetCoord().y];
 
         List<Tile> resultPath = new List<Tile>();
 

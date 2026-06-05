@@ -136,8 +136,8 @@ public class CharacterMove
     private IEnumerator StartMoveCoroutine(List<Tile> movePath, Tile destinationTile, Action onComplete = null)
     {
         // 1. 이동 직전 이벤트 (IOnBeforeMove)
-        Vector2Int fromCoord = new Vector2Int(currentTile.GetCoord().column, currentTile.GetCoord().row);
-        Vector2Int toCoord = new Vector2Int(destinationTile.GetCoord().column, destinationTile.GetCoord().row);
+        Vector2Int fromCoord = currentTile.GetCoord();
+        Vector2Int toCoord = destinationTile.GetCoord();
 
         MoveInfo beforeInfo = new MoveInfo(this.character, fromCoord, toCoord, MoveFlag.Normal);
         this.character.eventBus?.Invoke<ICharacterEvent>(c => (c as IOnBeforeMove)?.OnBeforeMove(beforeInfo));
@@ -191,7 +191,7 @@ public class CharacterMove
         }
 
         // 2. 이동 직후 이벤트 (IOnAfterMove)
-        Vector2Int currentCoord = new Vector2Int(currentTile.GetCoord().column, currentTile.GetCoord().row);
+        Vector2Int currentCoord = currentTile.GetCoord();
         MoveInfo afterInfo = new MoveInfo(this.character, currentCoord, currentCoord, MoveFlag.Normal);
         this.character.eventBus?.Invoke<ICharacterEvent>(c => (c as IOnAfterMove)?.OnAfterMove(afterInfo));
 

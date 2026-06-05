@@ -123,8 +123,7 @@ public class NPCUnitController : ICharacterController
             Vector2Int targetPos = Vector2Int.zero;
             if (hostileTarget != null && hostileTarget.characterMove != null && hostileTarget.characterMove.GetCurrentTile() != null)
             {
-                var coord = hostileTarget.characterMove.GetCurrentTile().GetCoord();
-                targetPos = new Vector2Int(coord.column, coord.row);
+                targetPos = hostileTarget.characterMove.GetCurrentTile().GetCoord();
             }
 
             // 2. 카드 시전 액션을 큐에 적재 (선입력 잠금으로 순차 실행됨)
@@ -265,7 +264,7 @@ public class NPCUnitController : ICharacterController
         
         var coord1 = tile1.GetCoord();
         var coord2 = tile2.GetCoord();
-        return Mathf.Abs(coord1.column - coord2.column) + Mathf.Abs(coord1.row - coord2.row);
+        return Mathf.Abs(coord1.x - coord2.x) + Mathf.Abs(coord1.y - coord2.y);
     }
 
     private void UpdateIntentHUD()

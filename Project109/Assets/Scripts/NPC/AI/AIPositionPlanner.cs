@@ -140,6 +140,6 @@ public static class AIPositionPlanner
         if (t1 == null || t2 == null) return int.MaxValue;
         var coord1 = t1.GetCoord();
         var coord2 = t2.GetCoord();
-        return Mathf.Abs(coord1.column - coord2.column) + Mathf.Abs(coord1.row - coord2.row);
+        return Mathf.Abs(coord1.x - coord2.x) + Mathf.Abs(coord1.y - coord2.y);
     }
 }

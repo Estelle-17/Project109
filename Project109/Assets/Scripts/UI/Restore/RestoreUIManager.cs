@@ -44,10 +44,27 @@ public class RestoreUIManager : MonoBehaviour, IInteractable
 
     public void CreateRestoreUI()
     {
-        restoreUI = GameObject.Instantiate(restoreUIPrefab).transform.GetChild(0).GetComponent<RestoreUIHandler>();
-        if(restoreUI != null)
+        if (restoreUI != null)
+        {
+            return;
+        }
+
+        if (UIManager.instance != null)
+        {
+            GameObject inst = UIManager.instance.OpenUI("RestoreNPCUI", UILayerType.Normal, false);
+            if (inst != null)
+            {
+                restoreUI = inst.GetComponent<RestoreUIHandler>();
+            }
+        }
+
+        if (restoreUI != null)
         {
             restoreUI.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("[RestoreUIManager] Failed to load or instantiate RestoreNPCUI via UIManager!");
         }
     }
 

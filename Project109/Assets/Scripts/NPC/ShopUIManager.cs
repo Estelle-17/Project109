@@ -1,7 +1,7 @@
-using NUnit.Framework;
-using UnityEngine;
-using System.Collections.Generic;
 using GameItem.Types;
+using NUnit.Framework;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class ShopUIManager : MonoBehaviour, IInteractable
 {
@@ -11,8 +11,8 @@ public class ShopUIManager : MonoBehaviour, IInteractable
     public int cardCount;
     public int relicCount;
 
-    public List<CardData> actionCards;
-    public List<RelicData> relics;
+    public List<CardData> actionCards = new();
+    public List<RelicData> relics = new();
     //이후 포션 추가 예정
 
     [SerializeField] private string modelName = "NPC_Shop_Model";
@@ -74,12 +74,26 @@ public class ShopUIManager : MonoBehaviour, IInteractable
 
     public void UpdateShopItems() //상점UI 생성 후 아이템 진열
     {
-        if (shopUICanvasPrefab == null || shopUI != null)
+        if (shopUI != null)
         {
             return;
         }
 
-        shopUI = GameObject.Instantiate(shopUICanvasPrefab).GetComponent<ShopPanel>();
+        if (UIManager.instance != null)
+        {
+            GameObject inst = UIManager.instance.OpenUI("ShopNPCUI", UILayerType.Normal, false);
+            if (inst != null)
+            {
+                shopUI = inst.GetComponent<ShopPanel>();
+            }
+        }
+
+        if (shopUI == null)
+        {
+            Debug.LogError("[ShopUIManager] Failed to load or instantiate ShopNPCUI via UIManager!");
+            return;
+        }
+
         shopUI.CreateStoreItemCollections(actionCards.Count, relics.Count, 3);
         shopUI.UpdateCardList(actionCards);
         shopUI.UpdateRelicList(relics);

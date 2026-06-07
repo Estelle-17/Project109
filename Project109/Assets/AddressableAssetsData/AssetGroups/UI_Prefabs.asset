@@ -33,6 +33,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - UI
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 12af776dc2faff342bf041f2fe115073
+    m_Address: RestoreNPCUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UI
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 17a856207ddf552448609551f91e43af
     m_Address: ExploreMap
     m_ReadOnly: 0
@@ -63,6 +69,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - UI
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 39a18a397335fd44da0eea7c1d25f5c0
+    m_Address: ShopNPCUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UI
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3d2c6c8547eabb248ad6a601b4f15dc3
     m_Address: MasteryPointInfomationBox
     m_ReadOnly: 0
@@ -77,18 +89,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 50100ec96eec4cd41912472846028670
     m_Address: MasteryUpgradeCanvas
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - UI
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 59e749617a9ea44488963783135c935e
-    m_Address: ShopUICanvas
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - UI
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 66abdf25b6a0e5e4fbf0d60904c6121c
-    m_Address: CardDeckViewPanel
     m_ReadOnly: 0
     m_SerializedLabels:
     - UI
@@ -117,18 +117,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - UI
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 9bec568e3bf82e247ac78f412434fed3
-    m_Address: RestoreUICanvas
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - UI
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 9c24271421ea96449b5a03b54618cac8
-    m_Address: EventUICanvas
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - UI
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a82ffe4c2d93b064d8573c35f3166c77
     m_Address: CardRewardCanvas
     m_ReadOnly: 0
@@ -137,6 +125,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: adce66c79a8f630429861b26bbb25ac5
     m_Address: ShopItemTrigger
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UI
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b65a7c25ceb324846bcf5b895b3da63d
+    m_Address: EventNPCUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - UI

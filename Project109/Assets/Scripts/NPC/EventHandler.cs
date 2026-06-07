@@ -34,15 +34,6 @@ public class EventHandler : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        if (eventUICanvasPrefab != null)
-        {
-            eventDescription = GameObject.Instantiate(eventUICanvasPrefab).GetComponent<EventDescriptionScript>();
-        }
-        else
-        {
-            Debug.LogWarning("EventUICanvasPrefab이 존재하지 않습니다.");
-        }
-
         makeEventDescription = GetComponent<ChoiceDescriptionHandler>();
         choiceHandler = GetComponent<ChoiceHandler>();
 
@@ -57,6 +48,22 @@ public class EventHandler : MonoBehaviour, IInteractable
         if (isChoiceCanSelectable == null)
         {
             Debug.LogError("XLua : 'IsChoiceCanSelectable' function not found!");
+        }
+    }
+
+    private void Start()
+    {
+        if (UIManager.instance != null)
+        {
+            GameObject inst = UIManager.instance.OpenUI("EventNPCUI", UILayerType.Normal, false);
+            if (inst != null)
+            {
+                eventDescription = inst.GetComponent<EventDescriptionScript>();
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[EventHandler] UIManager is null in Start!");
         }
     }
     public void SetEventData(EventData newEventData)

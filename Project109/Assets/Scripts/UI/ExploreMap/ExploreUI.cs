@@ -22,19 +22,19 @@ public class ExploreUI : UIPanelBase
 
     [SerializeField] private int VerticalLayoutSpacing = 60;
 
-    [Header ("Map Setting")]
+    [Header("Map Setting")]
     [SerializeField] private int StoreNumber = 1;  //맵에 등장하는 상점 갯수
     [SerializeField] private int RestoreNumber = 2;  //맵에 등장하는 휴식 갯수
     [SerializeField] private int SecretNumber = 4;  //맵에 등장하는 시크릿 갯수
     [SerializeField] private int BoxNumber = 1;  //맵에 등장하는 상자 갯수
     [SerializeField] private int EliteNumber = 2;  //맵에 등장하는 엘리트 갯수
 
-    [Header ("Prefab")]
+    [Header("Prefab")]
     [SerializeField] private GameObject NodePrefab;
     [SerializeField] private GameObject ArrowLinePrefab;
     [SerializeField] private GameObject ArrowHeadPrefab;
     [SerializeField] private GameObject ExploreMapVerticalLayoutPrefab;
-    
+
     void Start()
     {
         ExploreMap = new List<List<IncountNode>>();
@@ -55,7 +55,7 @@ public class ExploreUI : UIPanelBase
 
         //노드들을 담아두는 Vertical Leyout들을 미리 담아두기
         ExploreVerticalObjects = new List<VerticalLayoutGroup>();
-        for(int i = 0; i < mapLength; i++)
+        for (int i = 0; i < mapLength; i++)
         {
             ExploreVerticalObjects.Add(GameObject.Instantiate(ExploreMapVerticalLayoutPrefab, ViewLayout.transform).GetComponent<VerticalLayoutGroup>());
             ExploreVerticalObjects[i].spacing = VerticalLayoutSpacing;
@@ -73,11 +73,11 @@ public class ExploreUI : UIPanelBase
 
         incountNodeListInSection.Add(new List<IncountNode>());
 
-        for(int index = 0; index < mapLength; index++)
+        for (int index = 0; index < mapLength; index++)
         {
             ExploreMap.Add(new List<IncountNode>());
 
-            if(index == 0)  //처음 노드는 무조건 None으로 생성
+            if (index == 0)  //처음 노드는 무조건 None으로 생성
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.exploreUI = this;
@@ -85,7 +85,7 @@ public class ExploreUI : UIPanelBase
                 ExploreMap[index].Add(node);
                 ExploreVerticalObjects[index].padding.top = 300;
             }
-            else if(index == mapLength - 1) //마지막 노드는 무조건 Boss로 생성
+            else if (index == mapLength - 1) //마지막 노드는 무조건 Boss로 생성
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.exploreUI = this;
@@ -93,7 +93,7 @@ public class ExploreUI : UIPanelBase
                 ExploreMap[index].Add(node);
                 ExploreVerticalObjects[index].padding.top = 300;
             }
-            else if(index == mapLength / 2) //맵 중간에 회복 및 상점 위치 생성
+            else if (index == mapLength / 2) //맵 중간에 회복 및 상점 위치 생성
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.exploreUI = this;
@@ -304,7 +304,7 @@ public class ExploreUI : UIPanelBase
             }
         }
     }
-   
+
     public void OpenAllExploreMapNodes()
     {
         int currentFloor = RunManager.instance.currentExploreMapFloor;
@@ -384,7 +384,7 @@ public class ExploreUI : UIPanelBase
         float dist = dir.magnitude - 120;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-       // Debug.Log("StartPos : " + startPos + ", EndPos : " + endPos + ", Position : " + ((startPos + endPos) / 2f).ToString());
+        // Debug.Log("StartPos : " + startPos + ", EndPos : " + endPos + ", Position : " + ((startPos + endPos) / 2f).ToString());
 
         if (ArrowLinePrefab != null)
         {

@@ -118,7 +118,7 @@ public class ChoiceHandler : MonoBehaviour
                 //전투 진행
                 if (AssetCacheManager.instance.TryGetBattle(item.name, out BattleData battleData))
                 {
-                    RunManager.instance.loadMapHandler.SpawnMonsterInBattleNodeData(battleData);
+                    RunManager.instance.SpawnMonsterInBattleNodeData(battleData);
                 }
                 else
                 {

@@ -47,6 +47,7 @@ public class UIManager : MonoBehaviour
     public TopHUDPanel topHUDPanel;
     private Player boundPlayer;
     private GameObject exploreMapInstance;
+    public CardDeckViewPanel cardDeckViewPanel;
 
 
     //카드 범위 확인 관련 변수
@@ -69,6 +70,12 @@ public class UIManager : MonoBehaviour
 
     private System.Collections.IEnumerator InitializeAddressableUI()
     {
+        // RunManager와 player가 생성될 때까지 대기
+        while (RunManager.instance == null || RunManager.instance.player == null)
+        {
+            yield return null;
+        }
+
         // AssetCacheManager 인스턴스가 준비될 때까지 대기
         while (AssetCacheManager.instance == null)
         {
@@ -76,12 +83,14 @@ public class UIManager : MonoBehaviour
         }
         GameObject relicPrefab = null;
         GameObject hudPrefab = null;
-        // AssetCacheManager가 RelicDescription 및 TopHUDPanel 프리팹을 캐시할 때까지 대기
+        GameObject deckPrefab = null;
+        // AssetCacheManager가 필요한 프리팹들을 캐시할 때까지 대기
         while (true)
         {
             bool relicReady = AssetCacheManager.instance.TryGetUI("RelicDescription", out relicPrefab);
             bool hudReady = AssetCacheManager.instance.TryGetUI("TopHUDPanel", out hudPrefab);
-            if (relicReady && hudReady)
+            bool deckReady = AssetCacheManager.instance.TryGetUI("CardDeckCanvas", out deckPrefab);
+            if (relicReady && hudReady && deckReady)
             {
                 break;
             }
@@ -89,55 +98,23 @@ public class UIManager : MonoBehaviour
         }
         if (relicPrefab != null)
         {
-            GameObject inst = Instantiate(relicPrefab);
+            Transform parentTransform = popupUILayer != null ? popupUILayer : transform;
+            GameObject inst = Instantiate(relicPrefab, parentTransform, false);
             inst.name = "RelicDescription";
-            
-            Transform parentTransform = topUILayer != null ? topUILayer : transform;
-            inst.transform.SetParent(parentTransform, false);
-
-            RectTransform prefabRect = relicPrefab.GetComponent<RectTransform>();
-            relicDescriptionTransform = inst.GetComponent<RectTransform>();
-            
-            if (relicDescriptionTransform != null && prefabRect != null)
-            {
-                CopyRectTransform(prefabRect, relicDescriptionTransform);
-            }
 
             relicDescription = inst;
+            relicDescriptionTransform = inst.GetComponent<RectTransform>();
             relicDescriptionText = inst.GetComponentInChildren<TextMeshProUGUI>();
             OffRelicDescription();
             Debug.Log("[UIManager] RelicDescription UI dynamically initialized via Addressables.");
         }
         if (hudPrefab != null)
         {
-            GameObject inst = Instantiate(hudPrefab);
-            inst.name = "TopHUDPanel";
-            
             Transform parentTransform = topUILayer != null ? topUILayer : transform;
-            inst.transform.SetParent(parentTransform, false);
+            GameObject inst = Instantiate(hudPrefab, parentTransform, false);
+            inst.name = "TopHUDPanel";
 
             topHUDPanel = inst.GetComponent<TopHUDPanel>();
-            
-            // Nested Canvas의 스케일 및 왜곡을 방지하기 위해 앵커를 부모 Canvas에 맞춘 Full Stretch로 강제 정의합니다.
-            RectTransform hudRect = inst.GetComponent<RectTransform>();
-            if (hudRect != null)
-            {
-                hudRect.anchorMin = Vector2.zero;
-                hudRect.anchorMax = Vector2.one;
-                hudRect.pivot = new Vector2(0.5f, 0.5f);
-                hudRect.anchoredPosition = Vector2.zero;
-                hudRect.sizeDelta = Vector2.zero;
-                hudRect.offsetMin = Vector2.zero;
-                hudRect.offsetMax = Vector2.zero;
-                hudRect.localScale = Vector3.one; // 프리팹의 0,0,0 스케일 오류 원천 차단
-            }
-
-            // 중첩 Canvas 구조에서는 독립적인 CanvasScaler가 동작하지 않으므로 컴포넌트를 제거합니다.
-            CanvasScaler scaler = inst.GetComponent<CanvasScaler>();
-            if (scaler != null)
-            {
-                Destroy(scaler);
-            }
 
             if (topHUDPanel != null)
             {
@@ -149,10 +126,24 @@ public class UIManager : MonoBehaviour
                 }
             }
             Debug.Log("[UIManager] TopHUDPanel UI dynamically initialized via Addressables.");
-            
-            // 어드레서블 초기 로딩이 완료되었으므로, 인게임 탐색에 필요한 지도를 즉각 스폰 및 초기화합니다.
-            GetOrSpawnExploreMap();
         }
+        if (deckPrefab != null)
+        {
+            Transform parentTransform = topUILayer != null ? topUILayer : transform;
+            GameObject inst = Instantiate(deckPrefab, parentTransform, false);
+            inst.name = "CardDeckCanvas";
+
+            cardDeckViewPanel = inst.GetComponent<CardDeckViewPanel>();
+
+            if (cardDeckViewPanel != null)
+            {
+                cardDeckViewPanel.gameObject.SetActive(false);
+            }
+            Debug.Log("[UIManager] CardDeckCanvas UI dynamically initialized via Addressables.");
+        }
+
+        // 어드레서블 초기 로딩이 완료되었으므로, 인게임 탐색에 필요한 지도를 즉각 스폰 및 초기화합니다.
+        GetOrSpawnExploreMap();
     }
 
 
@@ -184,7 +175,7 @@ public class UIManager : MonoBehaviour
 
     #region UIStack Check
 
-    public GameObject OpenUI(string uiName, UILayerType layerType = UILayerType.Normal)
+    public GameObject OpenUI(string uiName, UILayerType layerType = UILayerType.Normal, bool startActive = true)
     {
         if (AssetCacheManager.instance == null)
         {
@@ -198,16 +189,28 @@ public class UIManager : MonoBehaviour
             return null;
         }
 
-        GameObject uiInstance = Instantiate(prefab);
-        uiInstance.name = uiName;
-
+        // 프리팹 단계에서 UIPanelBase의 레이어 타입을 먼저 체크합니다.
         UILayerType targetLayerType = layerType;
-        if (uiInstance.TryGetComponent<UIPanelBase>(out var panel))
+        if (prefab.TryGetComponent<UIPanelBase>(out var panel))
         {
             targetLayerType = panel.uiLayerType;
         }
 
-        PushActiveUIPanel(uiInstance, targetLayerType);
+        RectTransform targetLayer = GetLayerTransform(targetLayerType);
+
+        // 생성과 동시에 부모를 명사해 스케일 1,1,1 및 앵커가 프리팹 세팅 그대로 자연스럽게 자리 잡도록 합니다.
+        GameObject uiInstance = Instantiate(prefab, targetLayer, false);
+        uiInstance.name = uiName;
+
+        if (startActive)
+        {
+            PushActiveUIPanel(uiInstance, targetLayerType);
+        }
+        else
+        {
+            uiInstance.SetActive(false);
+        }
+
         return uiInstance;
     }
 
@@ -542,7 +545,7 @@ public class UIManager : MonoBehaviour
     private void OnMapButtonClicked()
     {
         Debug.Log("[UIManager] Map Button Clicked");
-        
+
         ExploreUI exploreUI = GetOrSpawnExploreMap();
         if (exploreUI != null)
         {
@@ -593,28 +596,19 @@ public class UIManager : MonoBehaviour
     private void OnDeckButtonClicked()
     {
         Debug.Log("[UIManager] Deck Button Clicked");
-        // TODO: 덱 UI 연동 필요 시 처리
-    }
 
-    private void CopyRectTransform(RectTransform source, RectTransform target)
-    {
-        if (source == null || target == null) return;
-
-        target.anchorMin = source.anchorMin;
-        target.anchorMax = source.anchorMax;
-        target.pivot = source.pivot;
-        target.anchoredPosition = source.anchoredPosition;
-        target.sizeDelta = source.sizeDelta;
-
-        Vector3 sourceScale = source.localScale;
-        if (sourceScale == Vector3.zero)
+        if (cardDeckViewPanel != null)
         {
-            sourceScale = Vector3.one;
+            if (cardDeckViewPanel.gameObject.activeSelf)
+            {
+                RemoveActiveUIFromStack(cardDeckViewPanel.gameObject);
+                cardDeckViewPanel.gameObject.SetActive(false);
+            }
+            else
+            {
+                PushActiveUIPanel(cardDeckViewPanel.gameObject, UILayerType.Normal);
+            }
         }
-        target.localScale = sourceScale;
-
-        target.offsetMin = source.offsetMin;
-        target.offsetMax = source.offsetMax;
     }
     #endregion
 }

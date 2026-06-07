@@ -55,7 +55,20 @@ public class MapManager
         //이전의 맵 타일 및 생성된 오브젝트 제거 후 새롭게 맵 데이터 업데이트 및 타일 생성하도록 코딩 진행
         UpdateMapData(mapLocation.ToString(), incountType);
 
-        currentGameMap = UnityEngine.Object.Instantiate(prefabs.mapSpawnRootPrefab).GetComponent<GameMap>();
+        GameObject mapRootPrefab = prefabs.mapSpawnRootPrefab;
+        if (mapRootPrefab == null)
+        {
+            if (AssetCacheManager.instance.TryGetModel("MapSpawnRoot", out var cachedPrefab))
+            {
+                mapRootPrefab = cachedPrefab;
+            }
+            else
+            {
+                Debug.LogError("[MapManager] MapSpawnRoot 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
+            }
+        }
+
+        currentGameMap = UnityEngine.Object.Instantiate(mapRootPrefab).GetComponent<GameMap>();
 
         spawnEnemyCells.Clear();
         spawnPlayerCells.Clear();
@@ -211,9 +224,14 @@ public class MapManager
         switch (incountType)
         {
             case IncountType.Restore:
-                if (prefabs.restoreObjectPrefab != null)
+                GameObject restorePrefab = prefabs.restoreObjectPrefab;
+                if (restorePrefab == null)
                 {
-                    RestoreUIManager newRestoreNPC = UnityEngine.Object.Instantiate(prefabs.restoreObjectPrefab, worldPos, Quaternion.identity).GetComponent<RestoreUIManager>();
+                    AssetCacheManager.instance.TryGetModel("RestoreObject", out restorePrefab);
+                }
+                if (restorePrefab != null)
+                {
+                    RestoreUIManager newRestoreNPC = UnityEngine.Object.Instantiate(restorePrefab, worldPos, Quaternion.identity).GetComponent<RestoreUIManager>();
                     if (newRestoreNPC != null)
                     {
                         newRestoreNPC.CreateRestoreUI();
@@ -221,11 +239,20 @@ public class MapManager
                         uiObj = newRestoreNPC.GetRestoreUI() != null ? newRestoreNPC.GetRestoreUI().gameObject : null;
                     }
                 }
+                else
+                {
+                    Debug.LogError("[MapManager] RestoreObject 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
+                }
                 break;
             case IncountType.Store:
-                if (prefabs.shopObjectPrefab != null)
+                GameObject shopPrefab = prefabs.shopObjectPrefab;
+                if (shopPrefab == null)
                 {
-                    ShopUIManager newShopNPC = UnityEngine.Object.Instantiate(prefabs.shopObjectPrefab, worldPos, Quaternion.identity).GetComponent<ShopUIManager>();
+                    AssetCacheManager.instance.TryGetModel("ShopObject", out shopPrefab);
+                }
+                if (shopPrefab != null)
+                {
+                    ShopUIManager newShopNPC = UnityEngine.Object.Instantiate(shopPrefab, worldPos, Quaternion.identity).GetComponent<ShopUIManager>();
                     if (newShopNPC != null)
                     {
                         newShopNPC.AddRandomItems();
@@ -234,11 +261,23 @@ public class MapManager
                         uiObj = newShopNPC.GetShopUI() != null ? newShopNPC.GetShopUI().gameObject : null;
                     }
                 }
+                else
+                {
+                    Debug.LogError("[MapManager] ShopObject 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
+                }
                 break;
             case IncountType.SecretBox:
-                if (prefabs.rewardMapObjectPrefab != null)
+                GameObject rewardPrefab = prefabs.rewardMapObjectPrefab;
+                if (rewardPrefab == null)
                 {
-                    ChoiceRewardUIHandler newRewardNPC = UnityEngine.Object.Instantiate(prefabs.rewardMapObjectPrefab, worldPos, Quaternion.identity).GetComponent<ChoiceRewardUIHandler>();
+                    if (!AssetCacheManager.instance.TryGetModel("RewardNPC", out rewardPrefab))
+                    {
+                        AssetCacheManager.instance.TryGetModel("RewardBox", out rewardPrefab);
+                    }
+                }
+                if (rewardPrefab != null)
+                {
+                    ChoiceRewardUIHandler newRewardNPC = UnityEngine.Object.Instantiate(rewardPrefab, worldPos, Quaternion.identity).GetComponent<ChoiceRewardUIHandler>();
                     if (newRewardNPC != null)
                     {
                         //newRewardNPC.SetReward(RewardItemType.Relic, RandomCardPickupType.Common, RandomRelicPickupType.CommonToUnique, 0);
@@ -246,11 +285,20 @@ public class MapManager
                         uiObj = newRewardNPC.GetRewardUI();
                     }
                 }
+                else
+                {
+                    Debug.LogError("[MapManager] RewardNPC 또는 RewardBox 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
+                }
                 break;
             case IncountType.Secret:
-                if (prefabs.eventObjectPrefab != null)
+                GameObject eventPrefab = prefabs.eventObjectPrefab;
+                if (eventPrefab == null)
                 {
-                    EventHandler newEventNPC = UnityEngine.Object.Instantiate(prefabs.eventObjectPrefab, worldPos, Quaternion.identity).GetComponent<EventHandler>();
+                    AssetCacheManager.instance.TryGetModel("EventObject", out eventPrefab);
+                }
+                if (eventPrefab != null)
+                {
+                    EventHandler newEventNPC = UnityEngine.Object.Instantiate(eventPrefab, worldPos, Quaternion.identity).GetComponent<EventHandler>();
                     if (newEventNPC != null)
                     {
                         if (eventData != null)
@@ -261,6 +309,10 @@ public class MapManager
                         npcObj = newEventNPC.gameObject;
                         uiObj = newEventNPC.eventDescription != null ? newEventNPC.eventDescription.gameObject : null;
                     }
+                }
+                else
+                {
+                    Debug.LogError("[MapManager] EventObject 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
                 }
                 break;
         }

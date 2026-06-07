@@ -16,9 +16,17 @@ public class PlayerInputController : MonoBehaviour
 
     private Vector2 startTouchPos;
     private Vector2 lastTouchPos;
+    private bool isClickPending;
+    private Vector2 pendingClickPos;
 
     private void Update()
     {
+        if (isClickPending)
+        {
+            isClickPending = false;
+            OnTouchClickEvent?.Invoke(pendingClickPos);
+        }
+
         // 마우스 우클릭 혹은 ESC(취소) 입력 감지
         if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
         {
@@ -92,7 +100,8 @@ public class PlayerInputController : MonoBehaviour
         // 클릭과 드래그 판정 로직
         if (Vector2.Distance(startTouchPos, lastTouchPos) <= 20.0f)
         {
-            OnTouchClickEvent?.Invoke(lastTouchPos);
+            isClickPending = true;
+            pendingClickPos = lastTouchPos;
         }
     }
 }

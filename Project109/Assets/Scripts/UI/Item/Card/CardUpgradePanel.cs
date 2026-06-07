@@ -15,7 +15,6 @@ public class CardUpgradePanel : UIPanelBase
     {
         if (RunManager.instance != null && RunManager.instance.player != null)
         {
-            UIActive();
             RefreshAllCardUIs();
         }
         else

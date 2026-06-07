@@ -15,6 +15,8 @@ public class ShopUIManager : MonoBehaviour, IInteractable
     public List<RelicData> relics = new();
     //이후 포션 추가 예정
 
+
+
     [SerializeField] private string modelName = "NPC_Shop_Model";
 
     private void Awake()

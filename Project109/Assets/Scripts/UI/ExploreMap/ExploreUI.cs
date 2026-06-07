@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ExploreUI : UIPanelBase
 {
-    public List<List<IncountNode>> ExploreMap;
+    public List<List<IncountNode>> ExploreMap = new();
 
     //SO데이터 및 랜덤으로 선택된 데이터들
     AssetCacheManager dataLoader;
@@ -16,9 +16,8 @@ public class ExploreUI : UIPanelBase
     public GameObject ArrowObjects;
     public List<VerticalLayoutGroup> ExploreVerticalObjects;
 
-    int mapLength;
-
-    public int currentMapFloor;
+    //public int mapLength;
+    public int currentMapFloor = 0;
 
     [SerializeField] private int VerticalLayoutSpacing = 60;
 
@@ -35,10 +34,8 @@ public class ExploreUI : UIPanelBase
     [SerializeField] private GameObject ArrowHeadPrefab;
     [SerializeField] private GameObject ExploreMapVerticalLayoutPrefab;
 
-    void Start()
+    void Awake()
     {
-        ExploreMap = new List<List<IncountNode>>();
-
         dataLoader = AssetCacheManager.instance;
         if (dataLoader != null)
         {
@@ -49,9 +46,17 @@ public class ExploreUI : UIPanelBase
         {
             Debug.LogWarning("AddressablesData Loader is Null!");
         }
+    }
+    /// <summary>
+    /// Vertical Layout의 padding시 노드가 2개 이상일 경우 390 - (노드의 갯수 * 65)만큼 top에 더해주면 중심이 맞게 정렬됨
+    /// 1개일 경우는 325로 고정
+    /// </summary>
+    public void CreateExploreMap(int mapLength)
+    {
+        //기존 맵이 있다면 삭제
+        EraseExploreMap();
 
-        mapLength = 15;
-        currentMapFloor = 0;
+        List<List<IncountNode>> incountNodeListInSection = new List<List<IncountNode>>();
 
         //노드들을 담아두는 Vertical Leyout들을 미리 담아두기
         ExploreVerticalObjects = new List<VerticalLayoutGroup>();
@@ -60,14 +65,6 @@ public class ExploreUI : UIPanelBase
             ExploreVerticalObjects.Add(GameObject.Instantiate(ExploreMapVerticalLayoutPrefab, ViewLayout.transform).GetComponent<VerticalLayoutGroup>());
             ExploreVerticalObjects[i].spacing = VerticalLayoutSpacing;
         }
-    }
-    /// <summary>
-    /// Vertical Layout의 padding시 노드가 2개 이상일 경우 390 - (노드의 갯수 * 65)만큼 top에 더해주면 중심이 맞게 정렬됨
-    /// 1개일 경우는 325로 고정
-    /// </summary>
-    public void CreateExploreMap()
-    {
-        List<List<IncountNode>> incountNodeListInSection = new List<List<IncountNode>>();
 
         int sectionIndex = 0;
 
@@ -309,7 +306,7 @@ public class ExploreUI : UIPanelBase
     {
         int currentFloor = RunManager.instance.currentExploreMapFloor;
 
-        for (int i = currentFloor; i < mapLength; i++)
+        for (int i = currentFloor; i < ExploreMap.Count; i++)
         {
             for (int j = 0; j < ExploreMap[i].Count; j++)
             {
@@ -416,6 +413,25 @@ public class ExploreUI : UIPanelBase
                 ExploreMap[i][j].arrowRelativePos = relativeVector;
             }
         }
+    }
+
+    void EraseExploreMap()
+    {
+        for (int i = 0; i < ExploreMap.Count; i++)
+        {
+            for (int j = 0; j < ExploreMap[i].Count; j++)
+            {
+                GameObject.Destroy(ExploreMap[i][j].gameObject);
+            }
+        }
+
+        for (int i = 0; i < ExploreVerticalObjects.Count; i++)
+        {
+            GameObject.Destroy(ExploreVerticalObjects[i].gameObject);
+        }
+
+        ExploreMap.Clear();
+        ExploreVerticalObjects.Clear();
     }
 
     /// <summary>
@@ -574,10 +590,5 @@ public class ExploreUI : UIPanelBase
             //    }
             //}
         }
-    }
-
-    public void CloseUI()
-    {
-        gameObject.SetActive(false);
     }
 }

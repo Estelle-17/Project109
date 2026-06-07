@@ -231,7 +231,7 @@ public class RunManager : MonoBehaviour
                 prevNodeComponent.IncountNodeCurrentHighlightCircleObject.SetActive(false);
             }
         }
-        
+
         currentIncountNode = nextNode; // 다음 맵 로딩을 위해 이동할 노드 정보를 저장
         currentExploreMapFloor += 1;
 
@@ -245,7 +245,8 @@ public class RunManager : MonoBehaviour
 
         if (FadeManager.instance != null)
         {
-            FadeManager.instance.FadeIn(0.35f, () => {
+            FadeManager.instance.FadeIn(0.35f, () =>
+            {
                 LoadCurrentNodeDataInMap();
             });
         }
@@ -263,7 +264,7 @@ public class RunManager : MonoBehaviour
             currentExploreUI.OpenExploreMapNodesBasedOnFloorLength();
             // 이전에 이동한 노드를 제외한 나머지 노드 가리기
             currentExploreUI.CloseBeforeNodes();
-            currentExploreUI.CloseUI();
+            currentExploreUI.UIDeactive();
         }
 
         IncountNode newIncountNode = currentIncountNode;

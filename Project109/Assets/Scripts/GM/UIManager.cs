@@ -551,11 +551,11 @@ public class UIManager : MonoBehaviour
         {
             if (exploreUI.gameObject.activeSelf)
             {
-                exploreUI.CloseUI();
+                exploreUI.UIDeactive();
             }
             else
             {
-                PushActiveUIPanel(exploreUI.gameObject, UILayerType.Normal);
+                PushActiveUIPanel(exploreUI.gameObject, UILayerType.Top);
             }
         }
     }
@@ -564,13 +564,13 @@ public class UIManager : MonoBehaviour
     {
         if (exploreMapInstance == null)
         {
-            exploreMapInstance = OpenUI("ExploreMap", UILayerType.Normal);
+            exploreMapInstance = OpenUI("ExploreMap", UILayerType.Top);
             if (exploreMapInstance != null)
             {
                 ExploreUI exploreUI = exploreMapInstance.GetComponent<ExploreUI>();
                 if (exploreUI != null)
                 {
-                    exploreUI.CreateExploreMap();
+                    exploreUI.CreateExploreMap(15);
                 }
             }
         }

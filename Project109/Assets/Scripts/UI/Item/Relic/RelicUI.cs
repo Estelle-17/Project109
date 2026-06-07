@@ -10,8 +10,6 @@ public class RelicUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 {
     public RelicData relicData;
 
-    public TextMeshProUGUI relicName;
-
     public Image relicImage;
 
     public UnityEvent OnRelicClick; //클릭 시 호출될 이벤트
@@ -24,8 +22,6 @@ public class RelicUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         {
             relicImage.sprite = relicData.iconSprite;
         }
-
-        relicName.text = relicData.relicName;
     }
 
     public void OnPointerClick(PointerEventData eventData)

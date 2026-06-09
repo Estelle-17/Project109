@@ -35,14 +35,14 @@ public class RoutePathfinding
 {
     TileNode[,] tileNodeMap;
 
-    public List<Tile> TilePathfinding(Tile start, Tile target, List<List<Tile>> map)
+    public List<Tile> TilePathfinding(Tile start, Tile target, List<List<Tile>> map, MoverCapability capabilities = MoverCapability.None)
     {
         PriorityQueue<TileNode> TileList = new PriorityQueue<TileNode>();
         HashSet<TileNode> openList = new HashSet<TileNode>();
         HashSet<TileNode> closeList = new HashSet<TileNode>();
 
         //노드 맵 생성
-        MakeTileNodeMap(map);
+        MakeTileNodeMap(map, capabilities);
 
         TileNode startNode = tileNodeMap[start.GetCoord().x, start.GetCoord().y];
         TileNode targetNode = tileNodeMap[target.GetCoord().x, target.GetCoord().y];
@@ -125,7 +125,7 @@ public class RoutePathfinding
     }
 
     //탐색을 위한 타일 맵 생성
-    void MakeTileNodeMap(List<List<Tile>> map)
+    void MakeTileNodeMap(List<List<Tile>> map, MoverCapability capabilities)
     {
         int column = map.Count;
         int row = map[0].Count;
@@ -136,15 +136,26 @@ public class RoutePathfinding
         {
             for (int rowIndex = 0; rowIndex < row; rowIndex++)
             {
-                if (map[columnIndex][rowIndex].tileState == TileState.CanMove)
+                TileState state = map[columnIndex][rowIndex].tileState;
+                bool isWalkable = false;
+
+                if (state == TileState.Full)
                 {
-                    tileNodeMap[columnIndex, rowIndex] = new TileNode(true, columnIndex, rowIndex);
+                    // 벽(Full)을 관통하려면 PassWalls 플래그가 있어야 합니다.
+                    isWalkable = capabilities.HasFlag(MoverCapability.PassWalls);
+                }
+                else if (state == TileState.Obstacle)
+                {
+                    // 장애물(Obstacle)을 관통하려면 PassObstacles 플래그가 있어야 합니다.
+                    isWalkable = capabilities.HasFlag(MoverCapability.PassObstacles);
                 }
                 else
                 {
-                    tileNodeMap[columnIndex, rowIndex] = new TileNode(false, columnIndex, rowIndex);
+                    // 일반 타일(Empty, Trap)은 항상 통과 가능
+                    isWalkable = true;
                 }
 
+                tileNodeMap[columnIndex, rowIndex] = new TileNode(isWalkable, columnIndex, rowIndex);
                 tileNodeMap[columnIndex, rowIndex].gCost = 0;
             }
         }

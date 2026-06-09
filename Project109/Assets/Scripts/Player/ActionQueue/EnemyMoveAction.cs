@@ -29,10 +29,12 @@ public class EnemyMoveAction : BattleAction
         if (currentMap != null && currentMap.currentGameMap != null && currentMap.routePathfinding != null)
         {
             var tileMap = currentMap.currentGameMap.GetTileMap();
+            MoverCapability caps = (caster != null && caster.characterMove != null) ? caster.characterMove.capabilities : MoverCapability.None;
             List<Tile> movePath = currentMap.routePathfinding.TilePathfinding(
                 caster.characterMove.GetCurrentTile(), 
                 TargetTile, 
-                tileMap
+                tileMap,
+                caps
             );
 
             if (movePath != null && movePath.Count > 0)

@@ -4,10 +4,10 @@ classType: "전투광"
 startGold: 100
 characterStat:
   maxHealth: 100
-  maxStamina: 100
-  staminaRegenPerSecond: 20
-  maxMoveCount: 3
-  maxTilesPerMove: 2
+  maxStamina: 120
+  staminaRegenPerSecond: 40
+  maxMoveCount: 1
+  maxTilesPerMove: 3
 startCards:
   - "검격"
   - "검격"

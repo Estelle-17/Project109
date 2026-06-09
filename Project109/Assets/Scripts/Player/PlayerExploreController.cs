@@ -55,15 +55,15 @@ public class PlayerExploreController : ICharacterController
         if (controlledCharacter == null || (controlledCharacter.currentState != CharacterState.Idle && controlledCharacter.currentState != CharacterState.Move)) return;
 
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
-        int layerMask = LayerMask.GetMask("Player", "Enemy", "NPC", "Map");
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 10000.0f, layerMask))
+        // 1차 레이캐스트: 캐릭터 및 상호작용 가능한 대상(Player, Enemy, NPC) 우선 스캔
+        int interactionMask = LayerMask.GetMask("Player", "Enemy", "NPC");
+        if (Physics.Raycast(ray, out RaycastHit interactHit, 10000.0f, interactionMask))
         {
-            // 1. NPC 혹은 상호작용 대상(IInteractable)을 클릭했는지 감지
-            IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+            IInteractable interactable = interactHit.collider.GetComponent<IInteractable>();
             if (interactable == null)
             {
-                interactable = hit.collider.transform.root.GetComponent<IInteractable>();
+                interactable = interactHit.collider.transform.root.GetComponent<IInteractable>();
             }
 
             if (interactable != null)
@@ -71,12 +71,17 @@ public class PlayerExploreController : ICharacterController
                 HandleInteractionClick(interactable);
                 return;
             }
+        }
 
-            // 2. 일반 타일을 클릭했는지 감지
-            Tile targetTile = hit.collider.GetComponent<Tile>();
+        // 2차 레이캐스트: 1차 검출 실패 시, 오직 바닥 타일(Tile) 레이어만 필터링하여 스캔
+        // 이를 통해 벽(Map 레이어)이나 기타 콜라이더를 관통하여 순수한 바닥 타일만 피격합니다.
+        int tileMask = LayerMask.GetMask("Tile");
+        if (Physics.Raycast(ray, out RaycastHit tileHit, 10000.0f, tileMask))
+        {
+            Tile targetTile = tileHit.collider.GetComponent<Tile>();
             if (targetTile == null)
             {
-                targetTile = hit.collider.transform.root.GetComponentInChildren<Tile>();
+                targetTile = tileHit.collider.transform.root.GetComponentInChildren<Tile>();
             }
 
             if (targetTile != null)
@@ -93,8 +98,8 @@ public class PlayerExploreController : ICharacterController
     {
         if (targetTile == null || characterMove == null) return;
 
-        // 장애물 타일이거나 갈 수 없는 상태면 무시
-        if (targetTile.tileState == TileState.Obstacle || targetTile.tileState == TileState.Full) return;
+        // 이 타일에 캐릭터가 진입하여 대기할 수 있는지 체크 (벽 관통 유무에 따른 차등 판단)
+        if (!targetTile.CanEnter(characterMove)) return;
 
         Tile startTile = characterMove.GetCurrentTile();
         if (startTile == null || startTile == targetTile) return;
@@ -201,39 +206,18 @@ public class PlayerExploreController : ICharacterController
         }
     }
 
-    /// <summary>
-    /// RoutePathfinding을 수정하지 않기 위해, 탐색 중 길찾기 실행 전 일시적으로 Empty/Trap 타일을 CanMove로 변경하고 길찾기 직후 복구합니다.
-    /// </summary>
     private List<Tile> FindPathFree(Tile startTile, Tile targetTile, List<List<Tile>> tileMap)
     {
         if (startTile == null || targetTile == null || tileMap == null) return null;
 
-        Dictionary<Tile, TileState> originalStates = new Dictionary<Tile, TileState>();
-        foreach (var col in tileMap)
-        {
-            foreach (var tile in col)
-            {
-                if (tile.tileState == TileState.Empty || tile.tileState == TileState.Trap || tile.tileState == TileState.CanMove)
-                {
-                    originalStates[tile] = tile.tileState;
-                    tile.tileState = TileState.CanMove;
-                }
-            }
-        }
-
         RoutePathfinding pathfinder = (RunManager.instance != null && RunManager.instance.currentMap != null) ? RunManager.instance.currentMap.routePathfinding : null;
-        List<Tile> path = null;
         if (pathfinder != null)
         {
-            path = pathfinder.TilePathfinding(startTile, targetTile, tileMap);
+            MoverCapability caps = characterMove != null ? characterMove.capabilities : MoverCapability.None;
+            return pathfinder.TilePathfinding(startTile, targetTile, tileMap, caps);
         }
 
-        foreach (var kvp in originalStates)
-        {
-            kvp.Key.tileState = kvp.Value;
-        }
-
-        return path;
+        return null;
     }
 
     private Tile FindTileNearPosition(Vector3 position, List<List<Tile>> tileMap)
@@ -275,7 +259,7 @@ public class PlayerExploreController : ICharacterController
             if (x >= 0 && x < tileMap.Count && y >= 0 && y < tileMap[0].Count)
             {
                 Tile tile = tileMap[x][y];
-                if (tile != null && (tile.tileState == TileState.Empty || tile.tileState == TileState.Trap || tile.tileState == TileState.CanMove))
+                if (tile != null && (tile.tileState == TileState.Empty || tile.tileState == TileState.Trap))
                 {
                     adjacentTiles.Add(tile);
                 }

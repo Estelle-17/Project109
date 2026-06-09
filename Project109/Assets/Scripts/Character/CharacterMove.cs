@@ -26,6 +26,7 @@ public class CharacterMove
     protected Tile currentTile;
     public float moveSpeed = 50f;
     public float turnSpeed = 600f;
+    public MoverCapability capabilities = MoverCapability.None;
 
     public CharacterMove(Character character)
     {

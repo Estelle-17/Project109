@@ -32,10 +32,11 @@ public class PlayerMove
 
     public void CheckCanMoveTiles()
     {
-        canMoveTiles = battleMap.CheckPlayerMoveTiles(characterMove.GetCurrentTile(), characterMove.character.curCharacterStat.maxTilesPerMove);
+        canMoveTiles = battleMap.CheckPlayerMoveTiles(characterMove.GetCurrentTile(), characterMove.character.curCharacterStat.maxTilesPerMove, characterMove);
 
         if (battleMap != null && battleMap.currentGameMap != null && battleMap.currentGameMap.GetMoveRangeIndicator() != null)
         {
+            battleMap.currentGameMap.GetMoveRangeIndicator().gameObject.SetActive(true);
             battleMap.currentGameMap.GetMoveRangeIndicator().ShowWalkableTiles(canMoveTiles, battleMap.currentGameMap.GetTileMap());
         }
     }
@@ -47,14 +48,14 @@ public class PlayerMove
     {
         for (int index = 0; index < canMoveTiles.Count; index++)
         {
-            canMoveTiles[index].tileState = TileState.Empty;
-            canMoveTiles[index].ChangeEffect();
+            canMoveTiles[index].SetMoveIndicator(false);
         }
         canMoveTiles.Clear();
 
         if (battleMap != null && battleMap.currentGameMap != null && battleMap.currentGameMap.GetMoveRangeIndicator() != null)
         {
             battleMap.currentGameMap.GetMoveRangeIndicator().ClearAllTiles(battleMap.currentGameMap.GetTileMap());
+            battleMap.currentGameMap.GetMoveRangeIndicator().gameObject.SetActive(false);
         }
     }
 
@@ -71,7 +72,7 @@ public class PlayerMove
 
         if (targetTile != null)
         {
-            if (targetTile.tileState == TileState.CanMove)
+            if (canMoveTiles.Contains(targetTile))
             {
                 if (characterMove.character.curMoveCount <= 0)
                 {
@@ -81,8 +82,9 @@ public class PlayerMove
 
                 Debug.Log("이동 목표 타일: " + targetTile.GetCoordToString());
 
-                // 경로 탐색 및 실제 이동 명령
-                List<Tile> movePath = routePathfinding.TilePathfinding(characterMove.GetCurrentTile(), targetTile, battleMap.currentGameMap.GetTileMap());
+                // 경로 탐색 및 실제 이동 명령 (capabilities 적용)
+                MoverCapability caps = characterMove != null ? characterMove.capabilities : MoverCapability.None;
+                List<Tile> movePath = routePathfinding.TilePathfinding(characterMove.GetCurrentTile(), targetTile, battleMap.currentGameMap.GetTileMap(), caps);
                 characterMove.MoveAlongPath(movePath, targetTile);
             }
         }

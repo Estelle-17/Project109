@@ -44,7 +44,7 @@ public static class AIPositionPlanner
                 if (tile == null) continue;
 
                 // 자기 타일이거나 비어있는 타일만 후보군
-                if (tile != casterTile && tile.tileState != TileState.Empty && tile.tileState != TileState.Trap && tile.tileState != TileState.CanMove)
+                if (tile != casterTile && tile.tileState != TileState.Empty && tile.tileState != TileState.Trap)
                 {
                     // 장애물이 있거나 다른 유닛이 점유한 타일 제외
                     continue;
@@ -72,8 +72,9 @@ public static class AIPositionPlanner
 
         foreach (var candidate in candidateTiles)
         {
-            // 경로 계산 (A* 또는 BFS 연동)
-            List<Tile> path = pathfinder.TilePathfinding(casterTile, candidate, tileMap);
+            // 경로 계산 (A* 또는 BFS 연동, capabilities 반영)
+            MoverCapability caps = (caster != null && caster.characterMove != null) ? caster.characterMove.capabilities : MoverCapability.None;
+            List<Tile> path = pathfinder.TilePathfinding(casterTile, candidate, tileMap, caps);
             if (path != null && path.Count > 0)
             {
                 if (path.Count < shortestPathLength)
@@ -122,7 +123,8 @@ public static class AIPositionPlanner
         List<List<Tile>> tileMap = gameMap.GetTileMap();
         RoutePathfinding pathfinder = new RoutePathfinding();
         
-        List<Tile> path = pathfinder.TilePathfinding(currentTile, finalDestination, tileMap);
+        MoverCapability caps = (caster != null && caster.characterMove != null) ? caster.characterMove.capabilities : MoverCapability.None;
+        List<Tile> path = pathfinder.TilePathfinding(currentTile, finalDestination, tileMap, caps);
         if (path == null || path.Count == 0) return currentTile;
 
         // 이동 사거리 한도로 경로 자르기

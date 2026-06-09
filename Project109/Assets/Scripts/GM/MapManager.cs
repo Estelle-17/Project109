@@ -515,9 +515,10 @@ public class MapManager
         }
     }
 
-    public List<Tile> CheckPlayerMoveTiles(Tile moveStart, int canMoveDistance)
+    public List<Tile> CheckPlayerMoveTiles(Tile moveStart, int canMoveDistance, CharacterMove mover)
     {
         List<Tile> checkList = new List<Tile>();
+        if (mover == null) return checkList;
 
         Queue<Tile> checkNextTiles = new Queue<Tile>();
         Queue<Tile> checkCurrentTiles = new Queue<Tile>();
@@ -527,6 +528,9 @@ public class MapManager
 
         int column = map.Count;
         int row = map[0].Count;
+
+        HashSet<Tile> visited = new HashSet<Tile>();
+        visited.Add(moveStart);
 
         for (int currentDistance = 0; currentDistance < canMoveDistance; currentDistance++)
         {
@@ -547,17 +551,36 @@ public class MapManager
                     if (x >= column || y >= row || x < 0 || y < 0)
                         continue;
 
-
-                    //플레이어 위치 혹은 갈 수 없는 경우 제외
-                    if (map[x][y].GetCoord() == moveStart.GetCoord() ||
-                        map[x][y].tileState != TileState.Empty && map[x][y].tileState != TileState.Trap)
+                    Tile nextTile = map[x][y];
+                    if (visited.Contains(nextTile))
                         continue;
 
-                    map[x][y].tileState = TileState.CanMove;
-                    map[x][y].ChangeEffect();
+                    //플레이어 위치 제외
+                    if (nextTile.GetCoord() == moveStart.GetCoord())
+                        continue;
 
-                    checkList.Add(map[x][y]);
-                    checkNextTiles.Enqueue(map[x][y]);
+                    // 이동 및 전파 가능 여부 판단
+                    if (nextTile.tileState == TileState.Full)
+                    {
+                        if (!mover.capabilities.HasFlag(MoverCapability.PassWalls))
+                            continue;
+                    }
+                    else if (nextTile.tileState == TileState.Obstacle)
+                    {
+                        if (!mover.capabilities.HasFlag(MoverCapability.PassObstacles))
+                            continue;
+                    }
+
+                    // 탐색 전파 등록
+                    visited.Add(nextTile);
+                    checkNextTiles.Enqueue(nextTile);
+
+                    // 멈춰설 수 있는 타일만 최종 이동 범위에 추가하고 visual indicator 활성화
+                    if (nextTile.CanEnter(mover))
+                    {
+                        nextTile.SetMoveIndicator(true);
+                        checkList.Add(nextTile);
+                    }
                 }
             }
 

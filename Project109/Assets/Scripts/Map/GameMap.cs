@@ -24,6 +24,65 @@ public class GameMap : MonoBehaviour
         return moveRangeIndicator;
     }
 
+    /// <summary>
+    /// 지정된 타일 좌표가 맵 경계 내부의 유효한 격자 범위인지 확인합니다.
+    /// </summary>
+    public bool IsValidCoordinate(int col, int row)
+    {
+        return col >= 0 && col < mapColumn && row >= 0 && row < mapRow;
+    }
+
+    /// <summary>
+    /// 지정된 타일 좌표가 벽(Full), 장애물(Obstacle)이거나 맵 바깥(장외)인지 판정합니다.
+    /// 밀치기(넉백) 시 벽 충돌 여부를 검사할 때 공용으로 사용됩니다.
+    /// </summary>
+    public bool IsWallOrOutside(int col, int row)
+    {
+        // 맵 바깥인 경우 벽(장외) 판정
+        if (!IsValidCoordinate(col, row))
+        {
+            return true;
+        }
+
+        Tile tile = tileMap[col][row];
+        if (tile == null)
+        {
+            return true;
+        }
+
+        // 타일 상태가 Full(벽)이거나 Obstacle(장애물)이면 벽 판정
+        return tile.tileState == TileState.Full || tile.tileState == TileState.Obstacle;
+    }
+
+    /// <summary>
+    /// 특정 좌표에서 지정된 방향으로 밀려날 때, 최종 도달할 타일 좌표와 벽/장외 충돌 여부를 계산합니다.
+    /// </summary>
+    /// <param name="startCoord">밀치기가 시작되는 캐릭터의 타일 좌표</param>
+    /// <param name="direction">밀려나는 방향 (상하좌우 단위 벡터. 예: Vector2Int.up, Vector2Int.down 등)</param>
+    /// <param name="distance">밀려나는 최대 타일 수</param>
+    /// <param name="finalCoord">최종 도달하는 타일 좌표 (벽/장외 충돌 시 충돌 직전 좌표)</param>
+    /// <returns>벽이나 맵 바깥(장외)에 부딪혔다면 true(추가 데미지/기절 등 처리용), 안전하게 밀려났다면 false</returns>
+    public bool CalculateKnockbackPosition(Vector2Int startCoord, Vector2Int direction, int distance, out Vector2Int finalCoord)
+    {
+        finalCoord = startCoord;
+        bool isCollided = false;
+
+        for (int i = 1; i <= distance; i++)
+        {
+            Vector2Int nextCoord = startCoord + direction * i;
+
+            if (IsWallOrOutside(nextCoord.x, nextCoord.y))
+            {
+                isCollided = true;
+                break;
+            }
+
+            finalCoord = nextCoord;
+        }
+
+        return isCollided;
+    }
+
     public void TileCreateByMapData(MapDataSO mapData)
     {
         float startX = mapData.gridOffset.x;

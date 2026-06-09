@@ -59,11 +59,6 @@ public class RelicUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         {
             TooltipPanel.Instance.ShowTooltip(relicData.relicName, descriptionText);
         }
-        else if (UIManager.instance != null && UIManager.instance.relicDescription != null)
-        {
-            UIManager.instance.UpdateRelicDescription(relicData.relicName + "\n" + descriptionText);
-            UIManager.instance.OnRelicDescription();
-        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -71,10 +66,6 @@ public class RelicUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         if (TooltipPanel.Instance != null)
         {
             TooltipPanel.Instance.HideTooltip();
-        }
-        else if (UIManager.instance != null && UIManager.instance.relicDescription != null)
-        {
-            UIManager.instance.OffRelicDescription();
         }
     }
 

@@ -61,13 +61,36 @@ public class ShopNPC : InteractableObject
 
     public void UpdateShopItems() //상점UI 생성 후 아이템 진열
     {
-        if (shopUICanvasPrefab == null || shopUI != null)
+        if (shopUI != null)
         {
             return;
         }
 
-        GameObject spawned = Instantiate(shopUICanvasPrefab);
+        GameObject spawned = null;
+        if (UIManager.instance != null)
+        {
+            spawned = UIManager.instance.OpenUI("ShopNPCUI", UILayerType.Normal, false);
+        }
+
+        if (spawned == null)
+        {
+            if (shopUICanvasPrefab != null)
+            {
+                spawned = Instantiate(shopUICanvasPrefab);
+            }
+            else
+            {
+                Debug.LogError("[ShopNPC] ShopNPCUI 프리팹을 찾을 수 없습니다.");
+                return;
+            }
+        }
+
         shopUI = spawned.GetComponent<ShopPanel>();
+        if (shopUI == null && spawned.transform.childCount > 0)
+        {
+            shopUI = spawned.transform.GetChild(0).GetComponent<ShopPanel>();
+        }
+
         if (shopUI != null)
         {
             shopUI.CreateStoreItemCollections(actionCards.Count, relics.Count, 3);

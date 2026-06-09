@@ -25,15 +25,37 @@ public class RestoreBonfire : InteractableObject
 
     public void CreateRestoreUI()
     {
-        if (restoreUIPrefab == null || restoreUI != null)
+        if (restoreUI != null)
         {
             return;
         }
 
-        GameObject spawned = Instantiate(restoreUIPrefab);
+        GameObject spawned = null;
+        if (UIManager.instance != null)
+        {
+            spawned = UIManager.instance.OpenUI("RestoreNPCUI", UILayerType.Normal, false);
+        }
+
+        if (spawned == null)
+        {
+            if (restoreUIPrefab != null)
+            {
+                spawned = Instantiate(restoreUIPrefab);
+            }
+            else
+            {
+                Debug.LogError("[RestoreBonfire] RestoreNPCUI 프리팹을 찾을 수 없습니다.");
+                return;
+            }
+        }
+
         if (spawned.transform.childCount > 0)
         {
             restoreUI = spawned.transform.GetChild(0).GetComponent<RestoreUIHandler>();
+            if (restoreUI == null)
+            {
+                restoreUI = spawned.GetComponent<RestoreUIHandler>();
+            }
         }
         else
         {

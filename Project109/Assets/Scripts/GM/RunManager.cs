@@ -447,6 +447,8 @@ public class RunManager : MonoBehaviour
             currentExploreUI.UIDeactive();
         }
 
+        Debug.Log("currentIncountNode = " + currentIncountNode.incountType.ToString());
+
         IncountNode newIncountNode = currentIncountNode;
         if (newIncountNode != null)
         {

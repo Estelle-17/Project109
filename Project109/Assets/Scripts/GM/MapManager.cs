@@ -122,6 +122,8 @@ public class MapManager
         {
             currentMapState = MapState.None;
         }
+
+        Debug.Log($"Map Generated Done : {incountType}");
     }
 
     private void GenerateObjectInMap(string objectID, Vector2Int pos)

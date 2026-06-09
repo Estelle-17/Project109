@@ -36,10 +36,12 @@ public class ShopItemTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExit
                 break;
             case ShopItems.Relic:
                 //유물 설명 출력
-                if(relicHandler != null)
+                if (relicHandler != null && relicHandler.relicData != null)
                 {
-                    UIManager.instance.UpdateRelicDescription(relicHandler.relicData.description);
-                    UIManager.instance.OnRelicDescription();
+                    if (TooltipPanel.Instance != null)
+                    {
+                        TooltipPanel.Instance.ShowTooltip(relicHandler.relicData.relicName, relicHandler.relicData.description);
+                    }
                 }
                 break;
             case ShopItems.Potion:
@@ -63,7 +65,10 @@ public class ShopItemTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExit
             case ShopItems.Relic:
                 if (relicHandler != null)
                 {
-                    UIManager.instance.OffRelicDescription();
+                    if (TooltipPanel.Instance != null)
+                    {
+                        TooltipPanel.Instance.HideTooltip();
+                    }
                 }
                 break;
             case ShopItems.Potion:

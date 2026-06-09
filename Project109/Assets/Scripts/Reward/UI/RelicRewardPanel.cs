@@ -36,7 +36,10 @@ public class RelicRewardPanel : MonoBehaviour
     {
         RunManager.instance.player.AddRelic(newRelicData.relicName);
         //이 카드 선택지를 제공한 NPC오브젝트 제거 및 캔버스 제거
-        UIManager.instance.OffRelicDescription();
+        if (TooltipPanel.Instance != null)
+        {
+            TooltipPanel.Instance.HideTooltip();
+        }
         Destroy(rootObject);
         Destroy(gameObject);
     }

@@ -47,15 +47,40 @@ public class DialogueManager : MonoBehaviour
         }
 
         luaEnv = new LuaEnv();
+    }
 
-        if (dialogueUICanvasPrefab != null)
+    private void EnsureDialogueUI()
+    {
+        if (dialogueUI != null) return;
+
+        GameObject spawned = null;
+        if (UIManager.instance != null)
         {
-            dialogueUI = Instantiate(dialogueUICanvasPrefab).GetComponent<EventDescriptionScript>();
-            dialogueUI.gameObject.SetActive(false);
+            spawned = UIManager.instance.OpenUI("EventNPCUI", UILayerType.Normal, false);
         }
-        else
+
+        if (spawned == null)
         {
-            Debug.LogWarning("[DialogueManager] DialogueUICanvasPrefab이 누락되었습니다.");
+            if (dialogueUICanvasPrefab != null)
+            {
+                spawned = Instantiate(dialogueUICanvasPrefab);
+            }
+            else
+            {
+                Debug.LogError("[DialogueManager] EventNPCUI 프리팹을 찾을 수 없습니다.");
+                return;
+            }
+        }
+
+        dialogueUI = spawned.GetComponent<EventDescriptionScript>();
+        if (dialogueUI == null && spawned.transform.childCount > 0)
+        {
+            dialogueUI = spawned.transform.GetChild(0).GetComponent<EventDescriptionScript>();
+        }
+
+        if (dialogueUI != null)
+        {
+            dialogueUI.gameObject.SetActive(false);
         }
     }
 
@@ -71,6 +96,8 @@ public class DialogueManager : MonoBehaviour
             Debug.LogWarning("[DialogueManager] StartDialogue 호출에 빈 데이터가 들어왔습니다.");
             return;
         }
+
+        EnsureDialogueUI();
 
         ActiveInteractable = trigger;
         activeDialogue = data;
@@ -214,6 +241,7 @@ public class DialogueManager : MonoBehaviour
     /// </summary>
     public void EndDialogue()
     {
+        EnsureDialogueUI();
         if (dialogueUI != null)
         {
             dialogueUI.UIDeactive();

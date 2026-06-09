@@ -35,10 +35,7 @@ public class UIManager : MonoBehaviour
     private Stack<GameObject> activeNormalUIStack = new Stack<GameObject>();
     private Stack<GameObject> tempDeactivatedNormalUIStack = new Stack<GameObject>();
 
-    //유물 관련 변수
-    public GameObject relicDescription;
-    RectTransform relicDescriptionTransform;
-    public TextMeshProUGUI relicDescriptionText;
+    //유물 관련 변수는 TooltipPanel에서 개별 관리하므로 제거되었습니다.
 
     //카드 상세 확인 관련 변수
     public CardDetailPanel cardCheckHandler;
@@ -57,15 +54,7 @@ public class UIManager : MonoBehaviour
 
     System.Collections.IEnumerator Start()
     {
-        if (relicDescription == null)
-        {
-            yield return StartCoroutine(InitializeAddressableUI());
-        }
-        else
-        {
-            OffRelicDescription();
-            relicDescriptionTransform = relicDescription.transform.GetComponent<RectTransform>();
-        }
+        yield return StartCoroutine(InitializeAddressableUI());
     }
 
     private System.Collections.IEnumerator InitializeAddressableUI()
@@ -81,13 +70,12 @@ public class UIManager : MonoBehaviour
         {
             yield return null;
         }
-        GameObject relicPrefab = null;
         GameObject hudPrefab = null;
         GameObject deckPrefab = null;
         // AssetCacheManager가 필요한 프리팹들을 캐시할 때까지 대기
         while (true)
         {
-            bool relicReady = AssetCacheManager.instance.TryGetUI("RelicDescription", out relicPrefab);
+            bool relicReady = AssetCacheManager.instance.TryGetUI("RelicDescription", out _);
             bool hudReady = AssetCacheManager.instance.TryGetUI("TopHUDPanel", out hudPrefab);
             bool deckReady = AssetCacheManager.instance.TryGetUI("CardDeckCanvas", out deckPrefab);
             if (relicReady && hudReady && deckReady)
@@ -95,18 +83,6 @@ public class UIManager : MonoBehaviour
                 break;
             }
             yield return null;
-        }
-        if (relicPrefab != null)
-        {
-            Transform parentTransform = popupUILayer != null ? popupUILayer : transform;
-            GameObject inst = Instantiate(relicPrefab, parentTransform, false);
-            inst.name = "RelicDescription";
-
-            relicDescription = inst;
-            relicDescriptionTransform = inst.GetComponent<RectTransform>();
-            relicDescriptionText = inst.GetComponentInChildren<TextMeshProUGUI>();
-            OffRelicDescription();
-            Debug.Log("[UIManager] RelicDescription UI dynamically initialized via Addressables.");
         }
         if (hudPrefab != null)
         {
@@ -149,14 +125,7 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if (relicDescription == null) return;
-
-        if (relicDescription.activeSelf && relicDescriptionTransform)
-        {
-            Vector2 mousePos = Mouse.current.position.ReadValue();
-            mousePos += new Vector2(50, 50);    //offset
-            relicDescriptionTransform.position = mousePos;
-        }
+        // 유물 툴팁 위치 업데이트는 TooltipPanel 내부에서 처리되므로 UIManager Update에서는 제거되었습니다.
     }
 
     void OnDestroy()
@@ -402,32 +371,7 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
-    #region 유물 설명UI
-
-    public void UpdateRelicDescription(string newDescription)
-    {
-        relicDescriptionText.text = newDescription;
-    }
-
-    public void OnRelicDescription()
-    {
-        if (relicDescription == null)
-            return;
-
-
-        //relicDescription.transform.GetComponent<RectTransform>().position = newItemPos + new Vector3(75, -50, 0);
-        relicDescription.SetActive(true);
-    }
-
-    public void OffRelicDescription()
-    {
-        if (relicDescription == null)
-            return;
-
-        relicDescription.SetActive(false);
-    }
-
-    #endregion
+    // 유물 설명UI 관련 메서드(UpdateRelicDescription, OnRelicDescription, OffRelicDescription)는 TooltipPanel로 이동되어 제거되었습니다.
 
     #region 카드 범위확인 UI
 

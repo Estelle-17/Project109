@@ -15,7 +15,6 @@ using YamlDotNet.Serialization.NamingConventions;
 
 public class YAMLImporter
 {
-
     /* 
     [MenuItem("Tools/Import Relic YAML")]
     //[System.Obsolete]
@@ -97,85 +96,6 @@ public class YAMLImporter
         Debug.Log("YAML import complete.");
     }
     */
-
-#if false
-    [MenuItem("Tools/Import Event YAML")]
-    //[System.Obsolete]
-    public static void ImportEventYAML()
-    {
-        string yamlPath = "Assets/Data/Events.yaml";
-        string schemaPath = "Assets/Data/EventSchema.yaml";
-
-        string yamlText = File.ReadAllText(yamlPath);
-        string schemaYamlText = File.ReadAllText(schemaPath);
-
-        //YAML -> Json으로 변환
-        var deserializer = new DeserializerBuilder()
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .WithNodeTypeResolver(new NumericTypeResolver())
-            .Build();
-        var yamlObject = deserializer.Deserialize(new StringReader(yamlText));
-
-        var jsonSerializer = new SerializerBuilder()
-            .JsonCompatible()
-            .Build();
-        string jsonText = jsonSerializer.Serialize(yamlObject);
-
-        //YAML Schema -> Json Schema로 변환
-        var schemaYamlObject = deserializer.Deserialize(new StringReader(schemaYamlText));
-        string schemaJsonText = jsonSerializer.Serialize(schemaYamlObject);
-
-        JSchema schema = JSchema.Parse(schemaJsonText);
-
-        JObject jsonObj = JObject.Parse(jsonText);
-        if (!jsonObj.IsValid(schema, out IList<string> errorMessages))
-        {
-            Debug.LogError("❌ YAML validation failed:");
-            foreach (var error in errorMessages)
-                Debug.LogError(error);
-            return;
-        }
-
-        Debug.Log("YAML validation Success:");
-
-        //검증에 성공하면 ScriptableObject 생성
-        var rawData = deserializer.Deserialize<RootEventData>(yamlText);
-
-        foreach (var eventData in rawData.@eventCollection)
-        {
-            var asset = ScriptableObject.CreateInstance<EventData>();
-            asset.eventID = eventData.eventID;
-            asset.eventAppearLevel = eventData.eventAppearLevel;
-            asset.eventAppearCondition = eventData.eventAppearCondition;
-            asset.eventObjectPath = eventData.eventObjectPath;
-            asset.stages = eventData.stages;
-
-            var path = $"Assets/SO/Events/{eventData.eventID}.asset";
-            Directory.CreateDirectory("Assets/SO/Events");
-            AssetDatabase.CreateAsset(asset, path);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            //Addressable에 등록
-            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
-            if (settings == null)
-            {
-                Debug.LogError("Addressables 설정이 존재하지 않습니다.");
-                return;
-            }
-
-            AddressableAssetEntry entry = settings.CreateOrMoveEntry(
-                AssetDatabase.AssetPathToGUID(path),
-                CreateOrFindAddressablesGroup(settings, "Events")
-            );
-            entry.address = eventData.eventID;
-            entry.SetLabel("Event", true);
-            Debug.Log("Addressables에 등록 완료: " + entry.address);
-        }
-
-        Debug.Log("YAML import complete.");
-    }
-#endif
 
     [MenuItem("Tools/Import Battle YAML")]
     //[System.Obsolete]
@@ -674,23 +594,6 @@ public class YAMLImporter
         public string upgradeDescription { get; set; }
     }
     */
-
-#if false
-    public class RootEventData
-    {
-        public List<EventEntry> @eventCollection { get; set; }
-    }
-
-    public class EventEntry
-    {
-        public string eventID { get; set; }
-        public int eventAppearLevel { get; set; }
-        public List<AppearCondition> eventAppearCondition { get; set; }
-        public string eventObjectPath { get; set; }
-        public string eventName { get; set; }
-        public List<EventStageData> stages { get; set; }
-    }
-#endif
 
     public class RootBattleData
     {

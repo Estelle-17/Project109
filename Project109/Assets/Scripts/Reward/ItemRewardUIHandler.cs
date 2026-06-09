@@ -90,7 +90,10 @@ public class ItemRewardUIHandler : MonoBehaviour, IPointerClickHandler, IPointer
             case ItemRewardUIType.Relic:
                 RunManager.instance.player.AddRelic(rewardRelicData.relicName);
                 //이 유물 선택지를 제공한 UI 제거
-                UIManager.instance.OffRelicDescription();
+                if (TooltipPanel.Instance != null)
+                {
+                    TooltipPanel.Instance.HideTooltip();
+                }
                 break;
         }
 

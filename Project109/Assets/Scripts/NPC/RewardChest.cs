@@ -44,14 +44,30 @@ public class RewardChest : InteractableObject
     {
         if (rewardListUI != null) return; // 중복 생성 방지
 
-        if (rewardListUIPrefab == null)
+        GameObject spawned = null;
+        if (UIManager.instance != null)
         {
-            Debug.LogWarning("[RewardChest] rewardListUIPrefab이 누락되었습니다.");
-            return;
+            spawned = UIManager.instance.OpenUI("RewardListCanvas", UILayerType.Normal, false);
         }
 
-        GameObject spawned = Instantiate(rewardListUIPrefab);
+        if (spawned == null)
+        {
+            if (rewardListUIPrefab != null)
+            {
+                spawned = Instantiate(rewardListUIPrefab);
+            }
+            else
+            {
+                Debug.LogError("[RewardChest] RewardListCanvas 프리팹을 찾을 수 없습니다.");
+                return;
+            }
+        }
+
         rewardListUI = spawned.GetComponent<RewardListUIHandler>();
+        if (rewardListUI == null && spawned.transform.childCount > 0)
+        {
+            rewardListUI = spawned.transform.GetChild(0).GetComponent<RewardListUIHandler>();
+        }
 
         if (rewardListUI != null && activeRewardData != null)
         {

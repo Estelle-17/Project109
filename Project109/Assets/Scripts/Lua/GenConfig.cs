@@ -25,7 +25,6 @@ public static class GenConfig
         typeof(ChoiceData),
         typeof(DialogueData),
         typeof(InteractableData),
-        typeof(RewardChestData),
         typeof(InteractableObject),
         typeof(ShopNPC),
         typeof(RestoreBonfire),

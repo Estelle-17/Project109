@@ -40,11 +40,6 @@ public class ExploreUI : UIPanelBase
         if (dataLoader != null)
         {
             battleItemPicker = new RandomItemPicker<BattleData>(dataLoader.battleList ?? new List<BattleData>());
-            eventItemPicker = new RandomItemPicker<InteractableData>(dataLoader.interactableList ?? new List<InteractableData>());
-        }
-        else
-        {
-            Debug.LogWarning("AddressablesData Loader is Null!");
         }
     }
     /// <summary>
@@ -55,6 +50,11 @@ public class ExploreUI : UIPanelBase
     {
         //기존 맵이 있다면 삭제
         EraseExploreMap();
+
+        if (ModLoader.Instance != null)
+        {
+            eventItemPicker = new RandomItemPicker<InteractableData>(ModLoader.Instance.GetRandomInteractablesForFloor(currentMapFloor));
+        }
 
         List<List<IncountNode>> incountNodeListInSection = new List<List<IncountNode>>();
 
@@ -154,7 +154,7 @@ public class ExploreUI : UIPanelBase
                 currentNode.isNodeChanged = true;   //노드 생성이 완료된 노드는 이후에 변경되지 않도록 설정
 
                 //이벤트 데이터도 저장
-                if (dataLoader.TryGetSpecificInteractable("Insight_Event_Data", out InteractableData data))
+                if (ModLoader.Instance != null && ModLoader.Instance.InteractableDatabase.TryGetValue("Insight_Event_Data", out InteractableData data))
                 {
                     currentNode.eventNodeData = data;
                 }

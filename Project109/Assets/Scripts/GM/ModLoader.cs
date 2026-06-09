@@ -25,6 +25,9 @@ public class ModLoader
     // Key: dialogueID (고유 ID), Value: DialogueData
     public Dictionary<string, DialogueData> DialogueDatabase { get; private set; } = new Dictionary<string, DialogueData>();
 
+    // Key: interactableID (고유 ID), Value: InteractableData
+    public Dictionary<string, InteractableData> InteractableDatabase { get; private set; } = new Dictionary<string, InteractableData>();
+
     private static ModLoader _instance;
     public static ModLoader Instance
     {
@@ -48,6 +51,7 @@ public class ModLoader
         StarterKitDatabase.Clear();
         NPCUnitDatabase.Clear();
         DialogueDatabase.Clear();
+        InteractableDatabase.Clear();
 
         // 1. 바닐라(Core) 모드 로딩
         // 경로: Assets/StreamingAssets/Mods/Core
@@ -73,7 +77,7 @@ public class ModLoader
 
 
 
-        Debug.Log($"[ModLoader] 총 {EffectDatabase.Count}개의 이펙트 데이터, {RelicDatabase.Count}개의 유물 데이터, {CardDatabase.Count}개의 카드 데이터, {StarterKitDatabase.Count}개의 시작 키트 데이터가 로드되었습니다.");
+        Debug.Log($"[ModLoader] 총 {EffectDatabase.Count}개의 이펙트 데이터, {RelicDatabase.Count}개의 유물 데이터, {CardDatabase.Count}개의 카드 데이터, {StarterKitDatabase.Count}개의 시작 키트 데이터, {InteractableDatabase.Count}개의 상호작용 데이터가 로드되었습니다.");
     }
 
     private void LoadModDirectory(string modDir)
@@ -132,6 +136,13 @@ public class ModLoader
         if (Directory.Exists(dialoguesPath))
         {
             LoadDialoguesFromPath(dialoguesPath, modDir);
+        }
+
+        // [상호작용(Interactable) 로딩]
+        string interactablesPath = Path.Combine(modDir, "YAML", "Interactables");
+        if (Directory.Exists(interactablesPath))
+        {
+            LoadInteractablesFromPath(interactablesPath, modDir);
         }
     }
 
@@ -335,5 +346,49 @@ public class ModLoader
                 Debug.LogError($"[ModLoader] YAML 파싱 에러 ({file}):\n{e.Message}");
             }
         }
+    }
+
+    private void LoadInteractablesFromPath(string dataPath, string modRootPath)
+    {
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+
+        string[] yamlFiles = Directory.GetFiles(dataPath, "*.yaml", SearchOption.AllDirectories);
+
+        foreach (string file in yamlFiles)
+        {
+            string yamlContent = File.ReadAllText(file);
+            try
+            {
+                InteractableData interactableData = deserializer.Deserialize<InteractableData>(yamlContent);
+
+                if (interactableData != null)
+                {
+                    // 상호작용 데이터는 별도 외부 리소스 매핑(ResolveAndValidate) 없이 딕셔너리에 추가
+                    InteractableDatabase[interactableData.interactableID] = interactableData;
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[ModLoader] YAML 파싱 에러 ({file}):\n{e.Message}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 특정 층(Floor) 번호에 등장할 수 있는 랜덤 상호작용 이벤트 목록을 반환합니다.
+    /// </summary>
+    public List<InteractableData> GetRandomInteractablesForFloor(int floor)
+    {
+        List<InteractableData> list = new List<InteractableData>();
+        foreach (var data in InteractableDatabase.Values)
+        {
+            if (data.eventAppearLevels != null && data.eventAppearLevels.Contains(floor))
+            {
+                list.Add(data);
+            }
+        }
+        return list;
     }
 }

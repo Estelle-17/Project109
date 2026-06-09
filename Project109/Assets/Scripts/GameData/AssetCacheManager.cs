@@ -57,12 +57,6 @@ public class AssetCacheManager : MonoBehaviour
     public string dropTableKey = "DropTable";
 
 
-    public IList<InteractableData> interactableList;
-    private Dictionary<string, InteractableData> interactableDict = new Dictionary<string, InteractableData>();
-
-    public IList<InteractableData> specificInteractableList;
-    private Dictionary<string, InteractableData> specificInteractableDict = new Dictionary<string, InteractableData>();
-
     public IList<BattleData> battleList;
     private Dictionary<string, BattleData> battleDict = new Dictionary<string, BattleData>();
 
@@ -103,7 +97,6 @@ public class AssetCacheManager : MonoBehaviour
 
     private IEnumerator Start()
     {
-        bool isInteractableLoaded = false;
         bool isBattleLoaded = false;
         bool isMonsterLoaded = false;
         bool isCharacterLoaded = false;
@@ -115,38 +108,6 @@ public class AssetCacheManager : MonoBehaviour
         bool isTrapLoaded = false;
         bool isDropTableLoaded = false;
         bool isUiLoaded = false;
-
-        // 2. 상호작용 객체 데이터 할당 시작
-        StartCoroutine(LoadAndCacheFromAddressableData<InteractableData>(interactableKey, (list, dict) =>
-        {
-            if (list != null)
-            {
-                interactableList = list;
-                interactableDict = dict;
-
-                //특정 상호작용 데이터 분리 작업
-                specificInteractableList = new List<InteractableData>();
-                specificInteractableDict = new Dictionary<string, InteractableData>();
-                for (int index = list.Count - 1; index >= 0; index--)
-                {
-                    if (list[index].eventAppearLevel == 4)
-                    {
-                        specificInteractableList.Add(list[index]);
-                        specificInteractableDict[list[index].ID] = list[index];
-                        interactableDict.Remove(list[index].ID);
-                        interactableList.Remove(list[index]);
-                    }
-                }
-            }
-            else
-            {
-                interactableList = new List<InteractableData>();
-                interactableDict = new Dictionary<string, InteractableData>();
-                specificInteractableList = new List<InteractableData>();
-                specificInteractableDict = new Dictionary<string, InteractableData>();
-            }
-            isInteractableLoaded = true;
-        }));
 
         // 3. 전투 데이터 할당 시작
         StartCoroutine(LoadAndCacheFromAddressableData<BattleData>(battleKey, (list, dict) =>
@@ -287,8 +248,7 @@ public class AssetCacheManager : MonoBehaviour
 
         // 모든 비동기 작업이 병렬 완료될 때까지 대기
         float waitTimer = 0f;
-        while (!(isInteractableLoaded &&
-                 isBattleLoaded &&
+        while (!(isBattleLoaded &&
                  isMonsterLoaded &&
                  isCharacterLoaded &&
                  isMapLoaded &&
@@ -304,7 +264,6 @@ public class AssetCacheManager : MonoBehaviour
             if (waitTimer >= 2f)
             {
                 Debug.Log($"[AssetCacheManager] Waiting for flags: " +
-                    $"Interactable={isInteractableLoaded}, " +
                     $"Battle={isBattleLoaded}, " +
                     $"Monster={isMonsterLoaded}, " +
                     $"Character={isCharacterLoaded}, " +
@@ -508,8 +467,6 @@ public class AssetCacheManager : MonoBehaviour
 
     public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
 
-    public bool TryGetInteractable(string name, out InteractableData interactable) => interactableDict.TryGetValue(name, out interactable);
-    public bool TryGetSpecificInteractable(string name, out InteractableData interactable) => specificInteractableDict.TryGetValue(name, out interactable);
     public bool TryGetBattle(string name, out BattleData battle) => battleDict.TryGetValue(name, out battle);
     public bool TryGetCharacter(string name, out CharacterData character) => characterDict.TryGetValue(name, out character);
     public bool TryGetMap(string name, out MapDataSO mapData) => mapDict.TryGetValue(name, out mapData);

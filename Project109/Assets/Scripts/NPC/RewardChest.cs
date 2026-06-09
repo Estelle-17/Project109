@@ -11,9 +11,9 @@ public class RewardChest : InteractableObject
     public override void SetInteractableData(InteractableData data)
     {
         base.SetInteractableData(data);
-        if (data is RewardChestData chestData)
+        if (data != null)
         {
-            activeRewardData = chestData.rewardData;
+            activeRewardData = data.rewardData;
         }
     }
 

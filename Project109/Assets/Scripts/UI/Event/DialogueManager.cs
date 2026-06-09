@@ -377,7 +377,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (AssetCacheManager.instance.TryGetBattle(battleName, out BattleData battleData))
         {
-            RunManager.instance.loadMapHandler.SpawnMonsterInBattleNodeData(battleData);
+            RunManager.instance.SpawnMonsterInBattleNodeData(battleData);
         }
         else
         {

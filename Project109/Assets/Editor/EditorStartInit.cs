@@ -8,10 +8,9 @@ public class EditorStartInit : Editor
 {
     static EditorStartInit()
     {
-        var pathOfFirstScene = EditorBuildSettings.scenes[0].path;
-        var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(pathOfFirstScene);
-        EditorSceneManager.playModeStartScene = sceneAsset;
-        Debug.Log($"Set play mode start scene to: {pathOfFirstScene}");
+        // 테스트를 위해 씬 강제 이동 지정을 해제합니다. (null 설정)
+        EditorSceneManager.playModeStartScene = null;
+        Debug.Log("Clear play mode start scene (playModeStartScene = null)");
 
         AddressableAutoRegister.RegisterAll();
     }

@@ -77,9 +77,9 @@ public class RunManager : MonoBehaviour
         currentStageLevel = 1;
         currentExploreMapFloor = 1;
 
-        if (loadMapHandler != null)
+        if (FadeManager.instance != null)
         {
-            loadMapHandler.StartFadeInOut(true);
+            FadeManager.instance.FadeIn();
         }
     }
 
@@ -276,9 +276,9 @@ public class RunManager : MonoBehaviour
 
         Debug.Log("[RunManager] 세이브 파일로부터 이전 세션 데이터를 완벽히 복구했습니다.");
 
-        if (loadMapHandler != null)
+        if (FadeManager.instance != null)
         {
-            loadMapHandler.StartFadeInOut(true);
+            FadeManager.instance.FadeIn();
         }
     }
 

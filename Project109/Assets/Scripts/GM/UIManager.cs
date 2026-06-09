@@ -514,8 +514,8 @@ public class UIManager : MonoBehaviour
 
         if (boundPlayer != null && boundPlayer.playerStat != null)
         {
-            topHUDPanel.UpdateGold(boundPlayer.playerStat.inGame_Currency_Gold);
-            topHUDPanel.UpdateSpecialResource(boundPlayer.playerStat.inGame_Currency_MemorySharp);
+            topHUDPanel.UpdateGold(boundPlayer.playerStat.InGameCurrencyGold);
+            topHUDPanel.UpdateSpecialResource(boundPlayer.playerStat.InGameCurrencyMemorySharp);
 
             boundPlayer.playerStat.OnGoldChanged += OnHUDGoldChanged;
             boundPlayer.playerStat.OnMemorySharpChanged += OnHUDMemorySharpChanged;

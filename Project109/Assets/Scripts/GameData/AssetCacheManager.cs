@@ -24,6 +24,7 @@ public struct StageMapDataBundle : IIdentifiable
 public class AssetCacheManager : MonoBehaviour
 {
     public static AssetCacheManager instance { get; private set; }
+    public bool isLoadComplete { get; private set; } = false;
 
     private void Awake()
     {
@@ -55,12 +56,6 @@ public class AssetCacheManager : MonoBehaviour
     public string interactableKey = "Interactable";
     public string dropTableKey = "DropTable";
 
-
-    public IList<DialogueData> eventList;
-    private Dictionary<string, DialogueData> eventDict = new Dictionary<string, DialogueData>();
-
-    public IList<DialogueData> specificEventList;
-    private Dictionary<string, DialogueData> specificEventDict = new Dictionary<string, DialogueData>();
 
     public IList<InteractableData> interactableList;
     private Dictionary<string, InteractableData> interactableDict = new Dictionary<string, InteractableData>();
@@ -108,7 +103,6 @@ public class AssetCacheManager : MonoBehaviour
 
     private IEnumerator Start()
     {
-        bool isDialogueLoaded = false;
         bool isInteractableLoaded = false;
         bool isBattleLoaded = false;
         bool isMonsterLoaded = false;
@@ -122,36 +116,34 @@ public class AssetCacheManager : MonoBehaviour
         bool isDropTableLoaded = false;
         bool isUiLoaded = false;
 
-        // 1. 이벤트 데이터 할당 시작
-        StartCoroutine(LoadAndCacheFromAddressableData<DialogueData>(eventKey, (list, dict) =>
-        {
-            eventList = list;
-            eventDict = dict;
-
-            // DialogueData는 별도 필터링 없이 일괄 로드
-            specificEventList = new List<DialogueData>();
-            specificEventDict = new Dictionary<string, DialogueData>();
-            isDialogueLoaded = true;
-        }));
-
         // 2. 상호작용 객체 데이터 할당 시작
         StartCoroutine(LoadAndCacheFromAddressableData<InteractableData>(interactableKey, (list, dict) =>
         {
-            interactableList = list;
-            interactableDict = dict;
-
-            //특정 상호작용 데이터 분리 작업
-            specificInteractableList = new List<InteractableData>();
-            specificInteractableDict = new Dictionary<string, InteractableData>();
-            for (int index = list.Count - 1; index >= 0; index--)
+            if (list != null)
             {
-                if (list[index].eventAppearLevel == 4)
+                interactableList = list;
+                interactableDict = dict;
+
+                //특정 상호작용 데이터 분리 작업
+                specificInteractableList = new List<InteractableData>();
+                specificInteractableDict = new Dictionary<string, InteractableData>();
+                for (int index = list.Count - 1; index >= 0; index--)
                 {
-                    specificInteractableList.Add(list[index]);
-                    specificInteractableDict[list[index].ID] = list[index];
-                    interactableDict.Remove(list[index].ID);
-                    interactableList.Remove(list[index]);
+                    if (list[index].eventAppearLevel == 4)
+                    {
+                        specificInteractableList.Add(list[index]);
+                        specificInteractableDict[list[index].ID] = list[index];
+                        interactableDict.Remove(list[index].ID);
+                        interactableList.Remove(list[index]);
+                    }
                 }
+            }
+            else
+            {
+                interactableList = new List<InteractableData>();
+                interactableDict = new Dictionary<string, InteractableData>();
+                specificInteractableList = new List<InteractableData>();
+                specificInteractableDict = new Dictionary<string, InteractableData>();
             }
             isInteractableLoaded = true;
         }));
@@ -167,8 +159,16 @@ public class AssetCacheManager : MonoBehaviour
         // 드롭 테이블 데이터 할당 시작
         StartCoroutine(LoadAndCacheFromAddressableData<DropTableData>(dropTableKey, (list, dict) =>
         {
-            dropTableList = list;
-            dropTableDict = dict;
+            if (list != null)
+            {
+                dropTableList = list;
+                dropTableDict = dict;
+            }
+            else
+            {
+                dropTableList = new List<DropTableData>();
+                dropTableDict = new Dictionary<string, DropTableData>();
+            }
             isDropTableLoaded = true;
         }));
 
@@ -286,21 +286,40 @@ public class AssetCacheManager : MonoBehaviour
         }));
 
         // 모든 비동기 작업이 병렬 완료될 때까지 대기
-        yield return new WaitUntil(() =>
-            isDialogueLoaded &&
-            isInteractableLoaded &&
-            isBattleLoaded &&
-            isMonsterLoaded &&
-            isCharacterLoaded &&
-            isMapLoaded &&
-            isMapInfoLoaded &&
-            isModelLoaded &&
-            isTextureLoaded &&
-            isObstacleLoaded &&
-            isTrapLoaded &&
-            isDropTableLoaded &&
-            isUiLoaded
-        );
+        float waitTimer = 0f;
+        while (!(isInteractableLoaded &&
+                 isBattleLoaded &&
+                 isMonsterLoaded &&
+                 isCharacterLoaded &&
+                 isMapLoaded &&
+                 isMapInfoLoaded &&
+                 isModelLoaded &&
+                 isTextureLoaded &&
+                 isObstacleLoaded &&
+                 isTrapLoaded &&
+                 isDropTableLoaded &&
+                 isUiLoaded))
+        {
+            waitTimer += Time.deltaTime;
+            if (waitTimer >= 2f)
+            {
+                Debug.Log($"[AssetCacheManager] Waiting for flags: " +
+                    $"Interactable={isInteractableLoaded}, " +
+                    $"Battle={isBattleLoaded}, " +
+                    $"Monster={isMonsterLoaded}, " +
+                    $"Character={isCharacterLoaded}, " +
+                    $"Map={isMapLoaded}, " +
+                    $"MapInfo={isMapInfoLoaded}, " +
+                    $"Model={isModelLoaded}, " +
+                    $"Texture={isTextureLoaded}, " +
+                    $"Obstacle={isObstacleLoaded}, " +
+                    $"Trap={isTrapLoaded}, " +
+                    $"DropTable={isDropTableLoaded}, " +
+                    $"UI={isUiLoaded}");
+                waitTimer = 0f;
+            }
+            yield return null;
+        }
 
         ModManager modManager = GetComponent<ModManager>();
         if (modManager != null)
@@ -316,6 +335,7 @@ public class AssetCacheManager : MonoBehaviour
         ModLoader.Instance.LoadAllMods();
 
         Debug.Log("All Data Load is Complete.");
+        isLoadComplete = true;
 
         if (SceneLoadManager.instance != null)
         {
@@ -488,8 +508,6 @@ public class AssetCacheManager : MonoBehaviour
 
     public bool TryGetMonster(string name, out MonsterData monster) => monsterDict.TryGetValue(name, out monster);
 
-    public bool TryGetEvent(string name, out DialogueData ev) => eventDict.TryGetValue(name, out ev);
-    public bool TryGetSpecificDialogue(string name, out DialogueData ev) => specificEventDict.TryGetValue(name, out ev);
     public bool TryGetInteractable(string name, out InteractableData interactable) => interactableDict.TryGetValue(name, out interactable);
     public bool TryGetSpecificInteractable(string name, out InteractableData interactable) => specificInteractableDict.TryGetValue(name, out interactable);
     public bool TryGetBattle(string name, out BattleData battle) => battleDict.TryGetValue(name, out battle);

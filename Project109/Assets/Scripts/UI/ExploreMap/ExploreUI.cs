@@ -39,8 +39,8 @@ public class ExploreUI : UIPanelBase
         dataLoader = AssetCacheManager.instance;
         if (dataLoader != null)
         {
-            battleItemPicker = new RandomItemPicker<BattleData>(dataLoader.battleList);
-            eventItemPicker = new RandomItemPicker<InteractableData>(dataLoader.interactableList);
+            battleItemPicker = new RandomItemPicker<BattleData>(dataLoader.battleList ?? new List<BattleData>());
+            eventItemPicker = new RandomItemPicker<InteractableData>(dataLoader.interactableList ?? new List<InteractableData>());
         }
         else
         {

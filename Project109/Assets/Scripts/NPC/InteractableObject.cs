@@ -72,7 +72,7 @@ public class InteractableObject : MonoBehaviour, IInteractable
 
         if (!string.IsNullOrEmpty(interactableData.targetDialogueID))
         {
-            if (AssetCacheManager.instance != null && AssetCacheManager.instance.TryGetEvent(interactableData.targetDialogueID, out var dialogueData))
+            if (ModLoader.Instance != null && ModLoader.Instance.DialogueDatabase.TryGetValue(interactableData.targetDialogueID, out var dialogueData))
             {
                 DialogueManager.Instance.StartDialogue(dialogueData, this);
             }

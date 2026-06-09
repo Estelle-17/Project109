@@ -1,0 +1,22 @@
+cardName: "Strike"
+classTypes:
+  - "Warrior"
+cardType: "Attack"
+targetType: "Enemy"
+targetMinDistance: 1
+targetMaxDistance: 1
+rarity: "Common"
+stamina: 1
+maxMasteryPoint: 3
+isUpgradable: true
+isUpgraded: false
+description: "대상 적에게 {damage}의 피해를 입힙니다."
+baseValues:
+  damage: 10
+masteryUpgrades:
+  power_up:
+    damage: 3
+masteryMaxUpgrades:
+  power_up: 3
+masteryNames:
+  power_up: "공격력 강화"

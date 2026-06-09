@@ -22,6 +22,9 @@ public class ModLoader
     // Key: unitId (고유 ID), Value: NPCUnitData
     public Dictionary<string, NPCUnitData> NPCUnitDatabase { get; private set; } = new Dictionary<string, NPCUnitData>();
 
+    // Key: dialogueID (고유 ID), Value: DialogueData
+    public Dictionary<string, DialogueData> DialogueDatabase { get; private set; } = new Dictionary<string, DialogueData>();
+
     private static ModLoader _instance;
     public static ModLoader Instance
     {
@@ -44,6 +47,7 @@ public class ModLoader
         CardDatabase.Clear();
         StarterKitDatabase.Clear();
         NPCUnitDatabase.Clear();
+        DialogueDatabase.Clear();
 
         // 1. 바닐라(Core) 모드 로딩
         // 경로: Assets/StreamingAssets/Mods/Core
@@ -121,6 +125,13 @@ public class ModLoader
         if (Directory.Exists(enemiesPath))
         {
             LoadNPCUnitsFromPath(enemiesPath, modDir);
+        }
+
+        // [다이얼로그(Dialogue) 로딩]
+        string dialoguesPath = Path.Combine(modDir, "YAML", "Dialogues");
+        if (Directory.Exists(dialoguesPath))
+        {
+            LoadDialoguesFromPath(dialoguesPath, modDir);
         }
     }
 
@@ -289,6 +300,34 @@ public class ModLoader
                     {
                         Debug.LogWarning($"[ModLoader] 무결성 검증 실패로 적 데이터가 무시되었습니다: {file}");
                     }
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[ModLoader] YAML 파싱 에러 ({file}):\n{e.Message}");
+            }
+        }
+    }
+
+    private void LoadDialoguesFromPath(string dataPath, string modRootPath)
+    {
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+
+        string[] yamlFiles = Directory.GetFiles(dataPath, "*.yaml", SearchOption.AllDirectories);
+
+        foreach (string file in yamlFiles)
+        {
+            string yamlContent = File.ReadAllText(file);
+            try
+            {
+                DialogueData dialogueData = deserializer.Deserialize<DialogueData>(yamlContent);
+
+                if (dialogueData != null)
+                {
+                    // 다이얼로그 데이터는 별도 외부 리소스 매핑(ResolveAndValidate) 없이 딕셔너리에 추가
+                    DialogueDatabase[dialogueData.dialogueID] = dialogueData;
                 }
             }
             catch (System.Exception e)

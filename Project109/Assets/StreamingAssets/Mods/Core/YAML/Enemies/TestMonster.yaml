@@ -1,0 +1,12 @@
+unitId: "TestMonster"
+className: "Goblin"
+monsterType: "Normal"
+appearLevel: 1
+characterStat:
+  maxHealth: 30
+  maxStamina: 100
+  staminaRegenPerSecond: 30
+  maxMoveCount: 1
+  maxTilesPerMove: 3
+minDropGoldAmount: 5
+maxDropGoldAmount: 15

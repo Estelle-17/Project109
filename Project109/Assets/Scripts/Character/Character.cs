@@ -71,6 +71,7 @@ public class Character : MonoBehaviour
 
     private void Awake()
     {
+        effectManager = new EffectManager(this);
         characterMove = new CharacterMove(this);
     }
 
@@ -176,7 +177,7 @@ public class Character : MonoBehaviour
     /// </summary>
     public void ResetStamina()
     {
-        curStamina = 0;
+        curStamina = curStamina * 0.5f;
     }
 
     /// <summary>

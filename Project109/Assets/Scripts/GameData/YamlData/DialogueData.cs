@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "DialogueData", menuName = "Dialogue/DialogueData")]
-public class DialogueData : ScriptableObject, IIdentifiable
+[System.Serializable]
+public class DialogueData : IIdentifiable
 {
     public string dialogueID;                 // 다이얼로그 고유 식별자
     public string startNodeID;                // 시작 대화 노드 ID

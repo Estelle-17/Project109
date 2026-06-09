@@ -28,6 +28,7 @@ public class RunManager : MonoBehaviour
 
     [Header("Player")]
     //플레이어 관리
+    public int currentSaveSlot = 1;
     public Player player;
     public PlayerBattleController playerBattleController;
     public PlayerExploreController playerExploreController;
@@ -167,10 +168,9 @@ public class RunManager : MonoBehaviour
         if (GameItemRewardManager.instance != null)
         {
             GameItemRewardManager.instance.SubscribeToPlayerEvents();
+            //불러온 아이템들 세분화 진행
+            GameItemRewardManager.instance.UpdateItemList();
         }
-
-        //불러온 아이템들 세분화 진행
-        GameItemRewardManager.instance.UpdateItemList();
 
         // TopHUDPanel에 플레이어 데이터 바인딩 시도 (UIManager 로딩 시점 대비)
         if (UIManager.instance != null)
@@ -197,15 +197,52 @@ public class RunManager : MonoBehaviour
 
     public void SaveGame()
     {
-        SaveSystem.SaveGame(this);
+        SaveSystem.SaveGame(this, currentSaveSlot);
+    }
+
+    public void CreateNewRun(int slotIndex, string starterKitId)
+    {
+        currentSaveSlot = slotIndex;
+        SetTempStarterKit(starterKitId);
+
+        if (player == null)
+        {
+            player = new Player(_startingCharacter);
+        }
+
+        // 1. 기존 플레이어 덱 및 유물 상태 완전 청소
+        if (player.deck != null) player.deck.Clear();
+        if (player.relicManager != null) player.relicManager.ClearRelics();
+
+        // 2. 스타터 키트 적용
+        ApplyStarterKit(starterKitId);
+
+        currentStageLevel = 1;
+        currentExploreMapFloor = 1;
+        currentMapName = "Temple";
+
+        if (player.character != null && player.character.curCharacterStat != null)
+        {
+            player.character.curHealth = player.character.curCharacterStat.maxHealth;
+        }
+
+        // 3. 생성과 동시에 세이브 파일 생성
+        SaveGame();
+        Debug.Log($"[RunManager] 슬롯 {slotIndex}에 새 게임 세션이 저장되었습니다. 시작 키트: {starterKitId}");
     }
 
     public void LoadRun()
     {
-        RunSaveData data = SaveSystem.LoadGameData();
+        LoadRun(currentSaveSlot);
+    }
+
+    public void LoadRun(int slotIndex)
+    {
+        currentSaveSlot = slotIndex;
+        RunSaveData data = SaveSystem.LoadGameData(slotIndex);
         if (data == null)
         {
-            Debug.LogWarning("[RunManager] 로드할 게임 데이터가 존재하지 않습니다.");
+            Debug.LogWarning($"[RunManager] 슬롯 {slotIndex}에 로드할 게임 데이터가 존재하지 않습니다.");
             return;
         }
 
@@ -274,7 +311,7 @@ public class RunManager : MonoBehaviour
             }
         }
 
-        Debug.Log("[RunManager] 세이브 파일로부터 이전 세션 데이터를 완벽히 복구했습니다.");
+        Debug.Log($"[RunManager] 슬롯 {slotIndex} 세이브 파일로부터 이전 세션 데이터를 완벽히 복구했습니다.");
 
         if (FadeManager.instance != null)
         {

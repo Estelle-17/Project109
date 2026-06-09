@@ -40,13 +40,15 @@ public class RunSaveData
 /// </summary>
 public static class SaveSystem
 {
-    private static readonly string SaveFileName = "save.json";
-    private static string SavePath => Path.Combine(Application.persistentDataPath, SaveFileName);
+    private static string GetSavePath(int slotIndex)
+    {
+        return Path.Combine(Application.persistentDataPath, $"save_{slotIndex}.json");
+    }
 
     /// <summary>
-    /// 현재의 RunManager 세션 상태를 save.json 파일로 저장합니다.
+    /// 특정 슬롯에 현재의 RunManager 세션 상태를 저장합니다.
     /// </summary>
-    public static void SaveGame(RunManager runManager)
+    public static void SaveGame(RunManager runManager, int slotIndex)
     {
         if (runManager == null || runManager.player == null)
         {
@@ -105,8 +107,9 @@ public static class SaveSystem
             }
 
             string json = JsonUtility.ToJson(data, true);
-            File.WriteAllText(SavePath, json, System.Text.Encoding.UTF8);
-            Debug.Log($"[SaveSystem] 게임 상태가 '{SavePath}'에 정상적으로 저장되었습니다.");
+            string savePath = GetSavePath(slotIndex);
+            File.WriteAllText(savePath, json, System.Text.Encoding.UTF8);
+            Debug.Log($"[SaveSystem] 게임 상태가 '{savePath}'에 정상적으로 저장되었습니다.");
         }
         catch (Exception e)
         {
@@ -115,27 +118,28 @@ public static class SaveSystem
     }
 
     /// <summary>
-    /// save.json 파일이 존재하는지 검사합니다.
+    /// 특정 슬롯에 세이브 파일이 존재하는지 검사합니다.
     /// </summary>
-    public static bool HasSaveData()
+    public static bool HasSaveData(int slotIndex)
     {
-        return File.Exists(SavePath);
+        return File.Exists(GetSavePath(slotIndex));
     }
 
     /// <summary>
-    /// 저장소로부터 save.json 데이터를 읽어 RunSaveData 객체로 역직렬화합니다.
+    /// 특정 슬롯 저장소로부터 데이터를 읽어 RunSaveData 객체로 역직렬화합니다.
     /// </summary>
-    public static RunSaveData LoadGameData()
+    public static RunSaveData LoadGameData(int slotIndex)
     {
-        if (!HasSaveData())
+        if (!HasSaveData(slotIndex))
         {
-            Debug.LogWarning("[SaveSystem] 로드할 세이브 파일이 존재하지 않습니다.");
+            Debug.LogWarning($"[SaveSystem] 슬롯 {slotIndex}에 로드할 세이브 파일이 존재하지 않습니다.");
             return null;
         }
 
         try
         {
-            string json = File.ReadAllText(SavePath, System.Text.Encoding.UTF8);
+            string savePath = GetSavePath(slotIndex);
+            string json = File.ReadAllText(savePath, System.Text.Encoding.UTF8);
             RunSaveData data = JsonUtility.FromJson<RunSaveData>(json);
             return data;
         }
@@ -147,20 +151,21 @@ public static class SaveSystem
     }
 
     /// <summary>
-    /// 세이브 파일을 영구적으로 삭제합니다.
+    /// 특정 슬롯의 세이브 파일을 영구적으로 삭제합니다.
     /// </summary>
-    public static void DeleteSaveFile()
+    public static void DeleteSaveFile(int slotIndex)
     {
-        if (HasSaveData())
+        if (HasSaveData(slotIndex))
         {
             try
             {
-                File.Delete(SavePath);
-                Debug.Log("[SaveSystem] 세이브 파일이 성공적으로 삭제되었습니다.");
+                string savePath = GetSavePath(slotIndex);
+                File.Delete(savePath);
+                Debug.Log($"[SaveSystem] 슬롯 {slotIndex}의 세이브 파일이 성공적으로 삭제되었습니다.");
             }
             catch (Exception e)
             {
-                Debug.LogError($"[SaveSystem] 세이브 파일 삭제 중 예외 발생: {e.Message}");
+                Debug.LogError($"[SaveSystem] 슬롯 {slotIndex}의 세이브 파일 삭제 중 예외 발생: {e.Message}");
             }
         }
     }

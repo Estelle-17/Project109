@@ -13,7 +13,7 @@ public class EditorStartInit : Editor
         EditorSceneManager.playModeStartScene = sceneAsset;
         Debug.Log($"Set play mode start scene to: {pathOfFirstScene}");
 
-        AddressableAutoRegister.RegisterAllMapData();
+        AddressableAutoRegister.RegisterAll();
     }
 }
 #endif

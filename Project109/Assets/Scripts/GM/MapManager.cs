@@ -268,9 +268,14 @@ public class MapManager
         switch (incountType)
         {
             case IncountType.Restore:
-                if (prefabs.restoreObjectPrefab != null)
+                GameObject restorePrefab = prefabs.restoreObjectPrefab;
+                if (restorePrefab == null)
                 {
-                    GameObject spawned = UnityEngine.Object.Instantiate(prefabs.restoreObjectPrefab, worldPos, Quaternion.identity);
+                    AssetCacheManager.instance.TryGetModel("RestoreObject", out restorePrefab);
+                }
+                if (restorePrefab != null)
+                {
+                    GameObject spawned = UnityEngine.Object.Instantiate(restorePrefab, worldPos, Quaternion.identity);
                     RestoreBonfire restoreBonfire = spawned.GetComponent<RestoreBonfire>();
                     if (restoreBonfire == null)
                     {
@@ -286,11 +291,20 @@ public class MapManager
                     npcObj = spawned;
                     uiObj = restoreBonfire.GetRestoreUI() != null ? restoreBonfire.GetRestoreUI().gameObject : null;
                 }
+                else
+                {
+                    Debug.LogError("[MapManager] RestoreObject 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
+                }
                 break;
             case IncountType.Store:
-                if (prefabs.shopObjectPrefab != null)
+                GameObject shopPrefab = prefabs.shopObjectPrefab;
+                if (shopPrefab == null)
                 {
-                    GameObject spawned = UnityEngine.Object.Instantiate(prefabs.shopObjectPrefab, worldPos, Quaternion.identity);
+                    AssetCacheManager.instance.TryGetModel("ShopObject", out shopPrefab);
+                }
+                if (shopPrefab != null)
+                {
+                    GameObject spawned = UnityEngine.Object.Instantiate(shopPrefab, worldPos, Quaternion.identity);
                     ShopNPC shopNPC = spawned.GetComponent<ShopNPC>();
                     if (shopNPC == null)
                     {
@@ -306,11 +320,23 @@ public class MapManager
                     npcObj = spawned;
                     uiObj = shopNPC.GetShopUI() != null ? shopNPC.GetShopUI().gameObject : null;
                 }
+                else
+                {
+                    Debug.LogError("[MapManager] ShopObject 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
+                }
                 break;
             case IncountType.SecretBox:
-                if (prefabs.rewardMapObjectPrefab != null)
+                GameObject rewardPrefab = prefabs.rewardMapObjectPrefab;
+                if (rewardPrefab == null)
                 {
-                    GameObject spawned = UnityEngine.Object.Instantiate(prefabs.rewardMapObjectPrefab, worldPos, Quaternion.identity);
+                    if (!AssetCacheManager.instance.TryGetModel("RewardNPC", out rewardPrefab))
+                    {
+                        AssetCacheManager.instance.TryGetModel("RewardBox", out rewardPrefab);
+                    }
+                }
+                if (rewardPrefab != null)
+                {
+                    GameObject spawned = UnityEngine.Object.Instantiate(rewardPrefab, worldPos, Quaternion.identity);
                     RewardChest rewardChest = spawned.GetComponent<RewardChest>();
                     if (rewardChest == null)
                     {
@@ -323,19 +349,38 @@ public class MapManager
                     }
                     npcObj = spawned;
                 }
+                else
+                {
+                    Debug.LogError("[MapManager] RewardNPC 또는 RewardBox 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
+                }
                 break;
             case IncountType.Secret:
-                if (prefabs.eventObjectPrefab != null)
+                GameObject eventPrefab = prefabs.eventObjectPrefab;
+                if (eventPrefab == null)
                 {
-                    InteractableObject newNPC = UnityEngine.Object.Instantiate(prefabs.eventObjectPrefab, worldPos, Quaternion.identity).GetComponent<InteractableObject>();
+                    AssetCacheManager.instance.TryGetModel("EventObject", out eventPrefab);
+                }
+                if (eventPrefab != null)
+                {
+                    GameObject spawned = UnityEngine.Object.Instantiate(eventPrefab, worldPos, Quaternion.identity);
+                    InteractableObject newNPC = spawned.GetComponent<InteractableObject>();
+                    if (newNPC == null)
+                    {
+                        newNPC = spawned.AddComponent<InteractableObject>();
+                    }
+
                     if (newNPC != null)
                     {
                         if (eventData != null)
                         {
                             newNPC.SetInteractableData(eventData);
                         }
-                        npcObj = newNPC.gameObject;
+                        npcObj = spawned;
                     }
+                }
+                else
+                {
+                    Debug.LogError("[MapManager] EventObject 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
                 }
                 break;
         }

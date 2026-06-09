@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ExploreUI : UIPanelBase
 {
-    public List<List<IncountNode>> ExploreMap;
+    public List<List<IncountNode>> ExploreMap = new();
 
     //SO데이터 및 랜덤으로 선택된 데이터들
     AssetCacheManager dataLoader;
@@ -16,29 +16,26 @@ public class ExploreUI : UIPanelBase
     public GameObject ArrowObjects;
     public List<VerticalLayoutGroup> ExploreVerticalObjects;
 
-    int mapLength;
-
-    public int currentMapFloor;
+    //public int mapLength;
+    public int currentMapFloor = 0;
 
     [SerializeField] private int VerticalLayoutSpacing = 60;
 
-    [Header ("Map Setting")]
+    [Header("Map Setting")]
     [SerializeField] private int StoreNumber = 1;  //맵에 등장하는 상점 갯수
     [SerializeField] private int RestoreNumber = 2;  //맵에 등장하는 휴식 갯수
     [SerializeField] private int SecretNumber = 4;  //맵에 등장하는 시크릿 갯수
     [SerializeField] private int BoxNumber = 1;  //맵에 등장하는 상자 갯수
     [SerializeField] private int EliteNumber = 2;  //맵에 등장하는 엘리트 갯수
 
-    [Header ("Prefab")]
+    [Header("Prefab")]
     [SerializeField] private GameObject NodePrefab;
     [SerializeField] private GameObject ArrowLinePrefab;
     [SerializeField] private GameObject ArrowHeadPrefab;
     [SerializeField] private GameObject ExploreMapVerticalLayoutPrefab;
-    
-    void Start()
-    {
-        ExploreMap = new List<List<IncountNode>>();
 
+    void Awake()
+    {
         dataLoader = AssetCacheManager.instance;
         if (dataLoader != null)
         {
@@ -49,35 +46,35 @@ public class ExploreUI : UIPanelBase
         {
             Debug.LogWarning("AddressablesData Loader is Null!");
         }
-
-        mapLength = 15;
-        currentMapFloor = 0;
-
-        //노드들을 담아두는 Vertical Leyout들을 미리 담아두기
-        ExploreVerticalObjects = new List<VerticalLayoutGroup>();
-        for(int i = 0; i < mapLength; i++)
-        {
-            ExploreVerticalObjects.Add(GameObject.Instantiate(ExploreMapVerticalLayoutPrefab, ViewLayout.transform).GetComponent<VerticalLayoutGroup>());
-            ExploreVerticalObjects[i].spacing = VerticalLayoutSpacing;
-        }
     }
     /// <summary>
     /// Vertical Layout의 padding시 노드가 2개 이상일 경우 390 - (노드의 갯수 * 65)만큼 top에 더해주면 중심이 맞게 정렬됨
     /// 1개일 경우는 325로 고정
     /// </summary>
-    public void CreateExploreMap()
+    public void CreateExploreMap(int mapLength)
     {
+        //기존 맵이 있다면 삭제
+        EraseExploreMap();
+
         List<List<IncountNode>> incountNodeListInSection = new List<List<IncountNode>>();
+
+        //노드들을 담아두는 Vertical Leyout들을 미리 담아두기
+        ExploreVerticalObjects = new List<VerticalLayoutGroup>();
+        for (int i = 0; i < mapLength; i++)
+        {
+            ExploreVerticalObjects.Add(GameObject.Instantiate(ExploreMapVerticalLayoutPrefab, ViewLayout.transform).GetComponent<VerticalLayoutGroup>());
+            ExploreVerticalObjects[i].spacing = VerticalLayoutSpacing;
+        }
 
         int sectionIndex = 0;
 
         incountNodeListInSection.Add(new List<IncountNode>());
 
-        for(int index = 0; index < mapLength; index++)
+        for (int index = 0; index < mapLength; index++)
         {
             ExploreMap.Add(new List<IncountNode>());
 
-            if(index == 0)  //처음 노드는 무조건 None으로 생성
+            if (index == 0)  //처음 노드는 무조건 None으로 생성
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.exploreUI = this;
@@ -85,7 +82,7 @@ public class ExploreUI : UIPanelBase
                 ExploreMap[index].Add(node);
                 ExploreVerticalObjects[index].padding.top = 300;
             }
-            else if(index == mapLength - 1) //마지막 노드는 무조건 Boss로 생성
+            else if (index == mapLength - 1) //마지막 노드는 무조건 Boss로 생성
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.exploreUI = this;
@@ -93,7 +90,7 @@ public class ExploreUI : UIPanelBase
                 ExploreMap[index].Add(node);
                 ExploreVerticalObjects[index].padding.top = 300;
             }
-            else if(index == mapLength / 2) //맵 중간에 회복 및 상점 위치 생성
+            else if (index == mapLength / 2) //맵 중간에 회복 및 상점 위치 생성
             {
                 IncountNode node = GameObject.Instantiate(NodePrefab, ExploreVerticalObjects[index].transform).GetComponent<IncountNode>();
                 node.exploreUI = this;
@@ -304,12 +301,12 @@ public class ExploreUI : UIPanelBase
             }
         }
     }
-   
+
     public void OpenAllExploreMapNodes()
     {
         int currentFloor = RunManager.instance.currentExploreMapFloor;
 
-        for (int i = currentFloor; i < mapLength; i++)
+        for (int i = currentFloor; i < ExploreMap.Count; i++)
         {
             for (int j = 0; j < ExploreMap[i].Count; j++)
             {
@@ -384,7 +381,7 @@ public class ExploreUI : UIPanelBase
         float dist = dir.magnitude - 120;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-       // Debug.Log("StartPos : " + startPos + ", EndPos : " + endPos + ", Position : " + ((startPos + endPos) / 2f).ToString());
+        // Debug.Log("StartPos : " + startPos + ", EndPos : " + endPos + ", Position : " + ((startPos + endPos) / 2f).ToString());
 
         if (ArrowLinePrefab != null)
         {
@@ -416,6 +413,25 @@ public class ExploreUI : UIPanelBase
                 ExploreMap[i][j].arrowRelativePos = relativeVector;
             }
         }
+    }
+
+    void EraseExploreMap()
+    {
+        for (int i = 0; i < ExploreMap.Count; i++)
+        {
+            for (int j = 0; j < ExploreMap[i].Count; j++)
+            {
+                GameObject.Destroy(ExploreMap[i][j].gameObject);
+            }
+        }
+
+        for (int i = 0; i < ExploreVerticalObjects.Count; i++)
+        {
+            GameObject.Destroy(ExploreVerticalObjects[i].gameObject);
+        }
+
+        ExploreMap.Clear();
+        ExploreVerticalObjects.Clear();
     }
 
     /// <summary>
@@ -574,10 +590,5 @@ public class ExploreUI : UIPanelBase
             //    }
             //}
         }
-    }
-
-    public void CloseUI()
-    {
-        gameObject.SetActive(false);
     }
 }

@@ -51,6 +51,7 @@ public class AssetCacheManager : MonoBehaviour
     public string textureKey = "Texture";
     public string obstacleKey = "Obstacle";
     public string trapKey = "Trap";
+    public string uiKey = "UI";
     public string interactableKey = "Interactable";
     public string dropTableKey = "DropTable";
 
@@ -102,6 +103,9 @@ public class AssetCacheManager : MonoBehaviour
     public IList<TrapData> trapList;
     private Dictionary<string, TrapData> trapDict = new Dictionary<string, TrapData>();
 
+    public IList<GameObject> uiList;
+    private Dictionary<string, GameObject> uiDict = new Dictionary<string, GameObject>();
+
     private IEnumerator Start()
     {
         bool isDialogueLoaded = false;
@@ -116,6 +120,7 @@ public class AssetCacheManager : MonoBehaviour
         bool isObstacleLoaded = false;
         bool isTrapLoaded = false;
         bool isDropTableLoaded = false;
+        bool isUiLoaded = false;
 
         // 1. 이벤트 데이터 할당 시작
         StartCoroutine(LoadAndCacheFromAddressableData<DialogueData>(eventKey, (list, dict) =>
@@ -272,6 +277,14 @@ public class AssetCacheManager : MonoBehaviour
             isTrapLoaded = true;
         }));
 
+        // 12. UI 데이터 할당 시작
+        StartCoroutine(LoadAndCacheGameObjectFromAddressableData(uiKey, (list, dict) =>
+        {
+            uiList = list;
+            uiDict = dict;
+            isUiLoaded = true;
+        }));
+
         // 모든 비동기 작업이 병렬 완료될 때까지 대기
         yield return new WaitUntil(() =>
             isDialogueLoaded &&
@@ -285,7 +298,8 @@ public class AssetCacheManager : MonoBehaviour
             isTextureLoaded &&
             isObstacleLoaded &&
             isTrapLoaded &&
-            isDropTableLoaded
+            isDropTableLoaded &&
+            isUiLoaded
         );
 
         ModManager modManager = GetComponent<ModManager>();
@@ -488,4 +502,5 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetObstacle(string name, out ObstacleData obstacle) => obstacleDict.TryGetValue(name, out obstacle);
     public bool TryGetTrap(string name, out TrapData trap) => trapDict.TryGetValue(name, out trap);
     public bool TryGetDropTable(string name, out DropTableData table) => dropTableDict.TryGetValue(name, out table);
+    public bool TryGetUI(string name, out GameObject uiPrefab) => uiDict.TryGetValue(name, out uiPrefab);
 }

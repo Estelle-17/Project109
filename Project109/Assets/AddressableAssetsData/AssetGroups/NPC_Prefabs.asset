@@ -33,38 +33,14 @@ MonoBehaviour:
     m_SerializedLabels:
     - Model
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 42f439033f7a09b40aa2ffc4ddd0db22
-    m_Address: InsightNPCObject
+  - m_GUID: 3f79565ff91de4b418f73f531062673c
+    m_Address: NPC_Event_Tombstone_Model
     m_ReadOnly: 0
     m_SerializedLabels:
     - Model
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 483804fe5a31926439b888af42e9f475
     m_Address: NPC_Restore_Bonfire_Model
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Model
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 4e38a3d73e95a8a4892238876921134d
-    m_Address: ShopObject
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Model
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7ed3c9e4c57e6e045a2958a6948cc35d
-    m_Address: RewardNPC
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Model
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d62462cc67174b44b8cfcfa414fe50df
-    m_Address: RewardBox
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Model
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f72f9f993e0e4c548a7e371ca6f08dc2
-    m_Address: RestoreObject
     m_ReadOnly: 0
     m_SerializedLabels:
     - Model

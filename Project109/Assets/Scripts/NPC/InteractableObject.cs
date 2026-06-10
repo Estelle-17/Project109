@@ -5,6 +5,8 @@ public class InteractableObject : MonoBehaviour, IInteractable
     [SerializeField]
     protected InteractableData interactableData; // 상호작용 관련 기획 데이터
 
+    public InteractableData InteractableData => interactableData;
+
     public bool RequiresCameraFocus => true;
 
     public virtual void SetInteractableData(InteractableData data)
@@ -83,7 +85,43 @@ public class InteractableObject : MonoBehaviour, IInteractable
         }
         else
         {
-            Debug.LogWarning("[InteractableObject] targetDialogueID가 설정되어 있지 않습니다.");
+            // targetDialogueID가 없는데 상점, 휴식, 또는 보상상자의 컴포넌트가 유효한 경우 직접 오픈 처리
+            if (this is ShopNPC shop)
+            {
+                shop.OpenShopDirectly();
+            }
+            else if (this is RestoreBonfire restore)
+            {
+                restore.OpenRestoreDirectly();
+            }
+            else if (this is RewardChest chest)
+            {
+                chest.OpenChestDirectly();
+            }
+            else
+            {
+                // 인스턴스가 부모 타입일 경우를 대비해 컴포넌트 검색 후 직접 실행 폴백
+                var shopComp = GetComponent<ShopNPC>();
+                if (shopComp != null)
+                {
+                    shopComp.OpenShopDirectly();
+                    return;
+                }
+                var restoreComp = GetComponent<RestoreBonfire>();
+                if (restoreComp != null)
+                {
+                    restoreComp.OpenRestoreDirectly();
+                    return;
+                }
+                var chestComp = GetComponent<RewardChest>();
+                if (chestComp != null)
+                {
+                    chestComp.OpenChestDirectly();
+                    return;
+                }
+
+                Debug.LogWarning("[InteractableObject] targetDialogueID가 설정되어 있지 않으며, 대응되는 특정 UI 컴포넌트가 없습니다.");
+            }
         }
     }
 }

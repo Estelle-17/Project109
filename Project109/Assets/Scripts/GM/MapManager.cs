@@ -267,124 +267,105 @@ public class MapManager
         GameObject npcObj = null;
         GameObject uiObj = null;
 
-        switch (incountType)
+        // [단일 베이스 프리팹 사용]
+        // 모든 NPC는 "EventObject" 프리팹을 공통 기반으로 생성하며, 
+        // 런타임에 필요한 컴포넌트를 추가하여 역할을 분화합니다.
+        GameObject basePrefab = prefabs.eventObjectPrefab;
+        if (basePrefab == null)
         {
-            case IncountType.Restore:
-                GameObject restorePrefab = prefabs.restoreObjectPrefab;
-                if (restorePrefab == null)
-                {
-                    AssetCacheManager.instance.TryGetModel("RestoreObject", out restorePrefab);
-                }
-                if (restorePrefab != null)
-                {
-                    GameObject spawned = UnityEngine.Object.Instantiate(restorePrefab, worldPos, Quaternion.identity);
-                    RestoreBonfire restoreBonfire = spawned.GetComponent<RestoreBonfire>();
-                    if (restoreBonfire == null)
-                    {
-                        restoreBonfire = spawned.AddComponent<RestoreBonfire>();
-                    }
+            AssetCacheManager.instance.TryGetModel("EventObject", out basePrefab);
+        }
 
-                    if (eventData != null)
-                    {
-                        restoreBonfire.SetInteractableData(eventData);
-                    }
+        if (basePrefab != null)
+        {
+            GameObject spawned = UnityEngine.Object.Instantiate(basePrefab, worldPos, Quaternion.identity);
+            
+            // 기존 프리팹에 이미 부착되어 있을 수 있는 기본 InteractableObject 컴포넌트 제거
+            var existing = spawned.GetComponent<InteractableObject>();
+            if (existing != null)
+            {
+                UnityEngine.Object.DestroyImmediate(existing);
+            }
 
-                    restoreBonfire.CreateRestoreUI();
-                    npcObj = spawned;
-                    uiObj = restoreBonfire.GetRestoreUI() != null ? restoreBonfire.GetRestoreUI().gameObject : null;
+            InteractableObject newNPC = null;
+            
+            // incountType 및 eventData에 맞춰 알맞은 컴포넌트 타입 판단
+            bool isRestore = (incountType == IncountType.Restore);
+            bool isShop = (incountType == IncountType.Store);
+            bool isChest = (incountType == IncountType.SecretBox);
+
+            if (incountType == IncountType.Secret && eventData != null)
+            {
+                if (eventData.rewardData != null && eventData.rewardData.rewards != null && eventData.rewardData.rewards.Count > 0)
+                {
+                    isChest = true;
                 }
                 else
                 {
-                    Debug.LogError("[MapManager] RestoreObject 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
-                }
-                break;
-            case IncountType.Store:
-                GameObject shopPrefab = prefabs.shopObjectPrefab;
-                if (shopPrefab == null)
-                {
-                    AssetCacheManager.instance.TryGetModel("ShopObject", out shopPrefab);
-                }
-                if (shopPrefab != null)
-                {
-                    GameObject spawned = UnityEngine.Object.Instantiate(shopPrefab, worldPos, Quaternion.identity);
-                    ShopNPC shopNPC = spawned.GetComponent<ShopNPC>();
-                    if (shopNPC == null)
-                    {
-                        shopNPC = spawned.AddComponent<ShopNPC>();
-                    }
+                    string idLower = !string.IsNullOrEmpty(eventData.interactableID) ? eventData.interactableID.ToLower() : "";
+                    string modelLower = !string.IsNullOrEmpty(eventData.modelPrefabPath) ? eventData.modelPrefabPath.ToLower() : "";
 
-                    if (eventData != null)
+                    if (idLower.Contains("shop") || modelLower.Contains("shop") || idLower.Contains("store") || modelLower.Contains("store"))
                     {
-                        shopNPC.SetInteractableData(eventData);
+                        isShop = true;
                     }
+                    else if (idLower.Contains("restore") || modelLower.Contains("restore") || idLower.Contains("bonfire") || modelLower.Contains("bonfire") || idLower.Contains("rest") || modelLower.Contains("rest"))
+                    {
+                        isRestore = true;
+                    }
+                }
+            }
 
-                    shopNPC.InitializeShop();
-                    npcObj = spawned;
-                    uiObj = shopNPC.GetShopUI() != null ? shopNPC.GetShopUI().gameObject : null;
-                }
-                else
+            // 컴포넌트 할당 및 초기화
+            if (isChest)
+            {
+                var chest = spawned.AddComponent<RewardChest>();
+                if (eventData != null)
                 {
-                    Debug.LogError("[MapManager] ShopObject 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
+                    chest.SetInteractableData(eventData);
                 }
-                break;
-            case IncountType.SecretBox:
-                GameObject rewardPrefab = prefabs.rewardMapObjectPrefab;
-                if (rewardPrefab == null)
+                newNPC = chest;
+            }
+            else if (isShop)
+            {
+                var shop = spawned.AddComponent<ShopNPC>();
+                if (eventData != null)
                 {
-                    if (!AssetCacheManager.instance.TryGetModel("RewardNPC", out rewardPrefab))
-                    {
-                        AssetCacheManager.instance.TryGetModel("RewardBox", out rewardPrefab);
-                    }
+                    shop.SetInteractableData(eventData);
                 }
-                if (rewardPrefab != null)
+                shop.InitializeShop();
+                uiObj = shop.GetShopUI() != null ? shop.GetShopUI().gameObject : null;
+                newNPC = shop;
+            }
+            else if (isRestore)
+            {
+                var restore = spawned.AddComponent<RestoreBonfire>();
+                if (eventData != null)
                 {
-                    GameObject spawned = UnityEngine.Object.Instantiate(rewardPrefab, worldPos, Quaternion.identity);
-                    RewardChest rewardChest = spawned.GetComponent<RewardChest>();
-                    if (rewardChest == null)
-                    {
-                        rewardChest = spawned.AddComponent<RewardChest>();
-                    }
+                    restore.SetInteractableData(eventData);
+                }
+                restore.CreateRestoreUI();
+                uiObj = restore.GetRestoreUI() != null ? restore.GetRestoreUI().gameObject : null;
+                newNPC = restore;
+            }
+            else
+            {
+                var normalNPC = spawned.AddComponent<InteractableObject>();
+                if (eventData != null)
+                {
+                    normalNPC.SetInteractableData(eventData);
+                }
+                newNPC = normalNPC;
+            }
 
-                    if (eventData != null)
-                    {
-                        rewardChest.SetInteractableData(eventData);
-                    }
-                    npcObj = spawned;
-                }
-                else
-                {
-                    Debug.LogError("[MapManager] RewardNPC 또는 RewardBox 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
-                }
-                break;
-            case IncountType.Secret:
-                GameObject eventPrefab = prefabs.eventObjectPrefab;
-                if (eventPrefab == null)
-                {
-                    AssetCacheManager.instance.TryGetModel("EventObject", out eventPrefab);
-                }
-                if (eventPrefab != null)
-                {
-                    GameObject spawned = UnityEngine.Object.Instantiate(eventPrefab, worldPos, Quaternion.identity);
-                    InteractableObject newNPC = spawned.GetComponent<InteractableObject>();
-                    if (newNPC == null)
-                    {
-                        newNPC = spawned.AddComponent<InteractableObject>();
-                    }
-
-                    if (newNPC != null)
-                    {
-                        if (eventData != null)
-                        {
-                            newNPC.SetInteractableData(eventData);
-                        }
-                        npcObj = spawned;
-                    }
-                }
-                else
-                {
-                    Debug.LogError("[MapManager] EventObject 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
-                }
-                break;
+            if (newNPC != null)
+            {
+                npcObj = spawned;
+            }
+        }
+        else
+        {
+            Debug.LogError("[MapManager] EventObject 프리팹을 MapPrefabs 또는 Addressables 캐시에서 찾을 수 없습니다!");
         }
 
         if (npcObj != null)

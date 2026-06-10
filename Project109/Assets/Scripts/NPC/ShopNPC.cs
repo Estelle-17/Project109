@@ -1,6 +1,6 @@
-using UnityEngine;
-using System.Collections.Generic;
 using GameItem.Types;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class ShopNPC : InteractableObject
 {
@@ -74,15 +74,8 @@ public class ShopNPC : InteractableObject
 
         if (spawned == null)
         {
-            if (shopUICanvasPrefab != null)
-            {
-                spawned = Instantiate(shopUICanvasPrefab);
-            }
-            else
-            {
-                Debug.LogError("[ShopNPC] ShopNPCUI 프리팹을 찾을 수 없습니다.");
-                return;
-            }
+            Debug.LogError("[ShopNPC] ShopNPCUI 프리팹을 찾을 수 없습니다.");
+            return;
         }
 
         shopUI = spawned.GetComponent<ShopPanel>();

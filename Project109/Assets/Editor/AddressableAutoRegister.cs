@@ -13,6 +13,7 @@ public class AddressableAutoRegister : Editor
 
     private const string UI_PATH = "Assets/Prefab/UI";
     private const string NPC_PATH = "Assets/Prefab/NPC";
+    private const string NPC_MODEL_PATH = "Assets/Prefab/Model/NPC";
     private const string MAP_PATH = "Assets/Prefab/Map";
 
     [MenuItem("Tools/Addressables/모든 에셋 자동 등록")]
@@ -41,6 +42,7 @@ public class AddressableAutoRegister : Editor
     {
         // NPC 프리팹들은 3D 공간에 생성되는 오브젝트이므로 AssetCacheManager의 modelKey("Model") 라벨을 부여해 modelDict에 로드되도록 합니다.
         RegisterFromFolder(NPC_GROUP, NPC_PATH, "Model");
+        RegisterFromFolder(NPC_GROUP, NPC_MODEL_PATH, "Model");
     }
 
     [MenuItem("Tools/Addressables/맵 프리팹 자동 등록 (Map)")]

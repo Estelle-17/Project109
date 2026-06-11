@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(RectTransform))]
 public class TooltipPanel : MonoBehaviour
 {
     private static TooltipPanel instance;

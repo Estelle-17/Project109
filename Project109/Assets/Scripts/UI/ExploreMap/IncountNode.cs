@@ -22,6 +22,7 @@ public enum ExtraIncountType
     ShineWell   //빛나는 우물
 }
 
+[RequireComponent(typeof(Image))]
 public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public IncountType incountType;

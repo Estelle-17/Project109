@@ -15,6 +15,7 @@ public class CurrencyRewardHandler : MonoBehaviour
 {
     private CurrencyType currencyType;
     private int currencyValue;
+    private static readonly WaitForSeconds _rewardDelay = new WaitForSeconds(1.0f);
 
     void Start()
     {
@@ -51,7 +52,7 @@ public class CurrencyRewardHandler : MonoBehaviour
 
     IEnumerator AddCurrencyValueToPlayer()
     {
-        yield return new WaitForSeconds(1.0f); //1초 대기 후 재화 추가
+        yield return _rewardDelay; //1초 대기 후 재화 추가
 
         if (currencyType == CurrencyType.Gold)
         {

@@ -5,6 +5,9 @@ using EventStructs;
 
 public class CardPlayAction : BattleAction
 {
+    private static readonly WaitForSeconds _playDelay = new WaitForSeconds(0.4f);
+    private static readonly WaitForSeconds _postPlayDelay = new WaitForSeconds(0.3f);
+
     public Card card { get; private set; }
     public List<Character> targets { get; private set; }
     public Vector2Int targetPosition { get; private set; }
@@ -30,7 +33,7 @@ public class CardPlayAction : BattleAction
         // 실제 프로젝트 애니메이터 연동이 있다면 여기서 트리거 재생 가능
 
         // 3. 연출을 위한 인게임 대기 (예: 투사체 날아가는 시간, 이펙트 시작 등)
-        yield return new WaitForSeconds(0.4f);
+        yield return _playDelay;
 
         // 4. 실제 카드 로직 실행 (Lua 및 C#) 및 다중 비용(Stamina, HP, Gold 등) 차감
         if (card != null)
@@ -64,7 +67,7 @@ public class CardPlayAction : BattleAction
         }
 
         // 6. 후처리 연출 대기 (애니메이션 마무리 동작)
-        yield return new WaitForSeconds(0.3f);
+        yield return _postPlayDelay;
         
         caster.currentState = CharacterState.Idle;
         caster.eventBus.Invoke<IOnAfterUseCard>(c => c.OnAfterUseCard(info));

@@ -65,7 +65,10 @@ public class BattleDeck
             var card = drawPile[0];
             drawPile.RemoveAt(0);
 
-            owner?.eventBus.Invoke<IOnDrawCard>(c => c.OnDrawCard(card));
+            if (owner != null)
+            {
+                owner.eventBus.Invoke<IOnDrawCard>(c => c.OnDrawCard(card));
+            }
 
             hand.Add(card);
         }
@@ -105,7 +108,10 @@ public class BattleDeck
             }
 
             CardInfo info = new CardInfo(owner, new List<Character>(), Vector2Int.zero, card, initialFlags);
-            owner?.eventBus.Invoke<IOnDiscardCard>(c => c.OnDiscardCard(info));
+            if (owner != null)
+            {
+                owner.eventBus.Invoke<IOnDiscardCard>(c => c.OnDiscardCard(info));
+            }
 
             // NoDiscard 플래그가 세팅되어 있다면 버리지 않고 보존
             if (info.cardFlags.HasFlag(CardFlag.NoDiscard))
@@ -131,7 +137,10 @@ public class BattleDeck
     /// </summary>
     public void EraseCard(Card card, CardInfo info)
     {
-        owner?.eventBus.Invoke<IOnEraseCard>(c => c.OnEraseCard(info));
+        if (owner != null)
+        {
+            owner.eventBus.Invoke<IOnEraseCard>(c => c.OnEraseCard(info));
+        }
         hand.Remove(card);
     }
 
@@ -140,7 +149,10 @@ public class BattleDeck
     /// </summary>
     public void DiscardCard(Card card, CardInfo info)
     {
-        owner?.eventBus.Invoke<IOnDiscardCard>(c => c.OnDiscardCard(info));
+        if (owner != null)
+        {
+            owner.eventBus.Invoke<IOnDiscardCard>(c => c.OnDiscardCard(info));
+        }
         discardPile.Add(card);
         hand.Remove(card);
     }
@@ -150,7 +162,10 @@ public class BattleDeck
     /// </summary>
     public void ExhaustCard(Card card, CardInfo info)
     {
-        owner?.eventBus.Invoke<IOnExhaustCard>(c => c.OnExhaustCard(info));
+        if (owner != null)
+        {
+            owner.eventBus.Invoke<IOnExhaustCard>(c => c.OnExhaustCard(info));
+        }
         exhaustPile.Add(card);
         hand.Remove(card);
     }

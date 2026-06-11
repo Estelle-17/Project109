@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class EnemyMoveAction : BattleAction
 {
+    private static readonly WaitForSeconds _postMoveDelay = new WaitForSeconds(0.2f);
+
     public Tile TargetTile { get; private set; }
 
     public EnemyMoveAction(Character caster, Tile targetTile) : base(caster)
@@ -51,7 +53,7 @@ public class EnemyMoveAction : BattleAction
         }
 
         // 이동 완료 후 짧은 대기 (자연스러운 딜레이)
-        yield return new WaitForSeconds(0.2f);
+        yield return _postMoveDelay;
         caster.currentState = CharacterState.Idle;
     }
 }

@@ -261,7 +261,7 @@ GameObject:
   - component: {fileID: 8165477301410158496}
   - component: {fileID: 3328546805646007380}
   m_Layer: 5
-  m_Name: EventNPCUI
+  m_Name: DialogueUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

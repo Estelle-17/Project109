@@ -15,7 +15,7 @@ nodes:
   - description: 랜덤한 카드를 소모하여 골드 획득
     nextNodeID: END_TEST
     luaScript: EventTest_LoseCardGetGold
-  - description: 랜덤한 유물을 소모하여 골드 획득
+  - description: 랜덤한 유물를 소모하여 골드 획득
     nextNodeID: END_TEST
     luaScript: EventTest_LoseRelicGetGold
   - description: 전투 진행

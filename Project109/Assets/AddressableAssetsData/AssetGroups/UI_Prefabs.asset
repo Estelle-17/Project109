@@ -130,7 +130,7 @@ MonoBehaviour:
     - UI
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b65a7c25ceb324846bcf5b895b3da63d
-    m_Address: EventNPCUI
+    m_Address: DialogueUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - UI

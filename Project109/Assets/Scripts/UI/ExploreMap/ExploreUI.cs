@@ -17,7 +17,7 @@ public class ExploreUI : UIPanelBase
     public List<VerticalLayoutGroup> ExploreVerticalObjects;
 
     //public int mapLength;
-    public int currentMapFloor = 0;
+    public int currentMapFloor = 1;
 
     [SerializeField] private int VerticalLayoutSpacing = 60;
 
@@ -54,6 +54,12 @@ public class ExploreUI : UIPanelBase
         if (ModLoader.Instance != null)
         {
             eventItemPicker = new RandomItemPicker<InteractableData>(ModLoader.Instance.GetRandomInteractablesForFloor(currentMapFloor));
+            Debug.Log($"[ExploreUI] Current Floor: {currentMapFloor}, Interactable Count: {eventItemPicker.Count()}");
+        }
+        else
+        {
+            Debug.LogWarning("[ExploreUI] ModLoader is not initialized! Using empty list for interactables.");
+            eventItemPicker = new RandomItemPicker<InteractableData>(new List<InteractableData>());
         }
 
         List<List<IncountNode>> incountNodeListInSection = new List<List<IncountNode>>();

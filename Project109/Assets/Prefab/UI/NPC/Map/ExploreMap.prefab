@@ -749,7 +749,7 @@ MonoBehaviour:
   ViewLayout: {fileID: 1464713697919226087}
   ArrowObjects: {fileID: 1010734748027591566}
   ExploreVerticalObjects: []
-  currentMapFloor: 0
+  currentMapFloor: 1
   VerticalLayoutSpacing: 60
   StoreNumber: 1
   RestoreNumber: 2

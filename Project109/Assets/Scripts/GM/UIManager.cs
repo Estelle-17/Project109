@@ -65,8 +65,8 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
 
-        // AssetCacheManager 인스턴스가 준비될 때까지 대기
-        while (AssetCacheManager.instance == null)
+        // AssetCacheManager 인스턴스가 준비되고 모든 데이터 로드가 완료될 때까지 대기
+        while (AssetCacheManager.instance == null || !AssetCacheManager.instance.isLoadComplete)
         {
             yield return null;
         }

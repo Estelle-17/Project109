@@ -1,11 +1,11 @@
+using GameItem.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.AddressableAssets;
+using UnityEngine.UI;
 using XLua;
-using GameItem.Types;
 
 // XLua에서 C# 호출을 프록시로 받아오기 위한 델리게이트 정의
 [CSharpCallLua]
@@ -28,7 +28,7 @@ public class DialogueManager : MonoBehaviour
     private Dictionary<string, DialogueNode> nodeMap = new Dictionary<string, DialogueNode>();
     private DialogueNode currentNode;
     private int currentLineIndex = 0;
-    
+
     private LuaEnv luaEnv;
     private string luaNextNodeOverride = null;
     private bool endDialogueTriggered = false;
@@ -56,7 +56,7 @@ public class DialogueManager : MonoBehaviour
         GameObject spawned = null;
         if (UIManager.instance != null)
         {
-            spawned = UIManager.instance.OpenUI("EventNPCUI", UILayerType.Normal, false);
+            spawned = UIManager.instance.OpenUI("DialogueUI", UILayerType.Normal, false);
         }
 
         if (spawned == null)
@@ -67,7 +67,7 @@ public class DialogueManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("[DialogueManager] EventNPCUI 프리팹을 찾을 수 없습니다.");
+                Debug.LogError("[DialogueManager] DialogueUI 프리팹을 찾을 수 없습니다.");
                 return;
             }
         }
@@ -147,7 +147,7 @@ public class DialogueManager : MonoBehaviour
             dialogueUI.ClearChoiceButton();
             // 지문 대사 출력
             dialogueUI.SetDescription(currentNode.lines[currentLineIndex]);
-            
+
             // 기존 EventDescriptionScript의 Next 기능이나 마우스 클릭으로 다음 줄을 출력하도록 바인딩하기 위해 기본 진행용 '다음' 버튼 생성
             Button nextBtn = dialogueUI.CreateChoiceButton("▶");
             nextBtn.onClick.AddListener(() =>
@@ -247,7 +247,7 @@ public class DialogueManager : MonoBehaviour
             dialogueUI.UIDeactive();
             dialogueUI.gameObject.SetActive(false);
         }
-        
+
         if (luaEnv != null)
         {
             luaEnv.FullGc(); // XLua 가비지 컬렉션 수행
@@ -375,7 +375,7 @@ public class DialogueManager : MonoBehaviour
 
     // 4. 플레이어 체력 제어 API
     public int GetCurrentHealth() => (int)RunManager.instance.player.character.curHealth;
-    
+
     public int GetMaxHealth() => (int)RunManager.instance.player.character.curCharacterStat.maxHealth;
 
     public void HealPlayer(int amount)

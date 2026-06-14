@@ -5604,7 +5604,6 @@ MonoBehaviour:
   eventKey: Event
   battleKey: Battle
   monsterKey: Monster
-  monsterRewardKey: Reward
   characterKey: Character
   mapKey: Map
   mapInfoKey: MapInfo
@@ -5613,6 +5612,8 @@ MonoBehaviour:
   obstacleKey: Obstacle
   trapKey: Trap
   uiKey: UI
+  interactableKey: Interactable
+  dropTableKey: DropTable
 --- !u!1 &813495787
 GameObject:
   m_ObjectHideFlags: 0
@@ -6353,8 +6354,6 @@ MonoBehaviour:
   normalUILayer: {fileID: 1791120030}
   topUILayer: {fileID: 1197279975}
   popupUILayer: {fileID: 955001881}
-  relicDescription: {fileID: 0}
-  relicDescriptionText: {fileID: 0}
   cardCheckHandler: {fileID: 2143283312}
   topHUDPanel: {fileID: 0}
   cardDeckViewPanel: {fileID: 0}
@@ -9043,6 +9042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3493c0c13e6cbd24f8d32a29cf71b1ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character
+  faction: 2
   _characterStat:
     maxHealth: 0
     maxStamina: 0
@@ -15764,6 +15764,7 @@ GameObject:
   - component: {fileID: 2077144584}
   - component: {fileID: 2077144585}
   - component: {fileID: 2077144586}
+  - component: {fileID: 2077144589}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -15784,6 +15785,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _startingCharacter: {fileID: 1272209232}
+  currentSaveSlot: 1
   mapPrefabs:
     mapSpawnRootPrefab: {fileID: 1523703071106812780, guid: 332f1c148c6f40d44b1e69a0bbe5d127, type: 3}
     eventObjectPrefab: {fileID: 0}
@@ -15797,6 +15799,7 @@ MonoBehaviour:
   currentIncountNode: {fileID: 0}
   beforeIncountNode: {fileID: 0}
   currentExploreUI: {fileID: 0}
+  _selectedStarterKitId: warrior_starter
 --- !u!4 &2077144578
 Transform:
   m_ObjectHideFlags: 0
@@ -15867,6 +15870,19 @@ MonoBehaviour:
   moveRangeIndicatorPrefab: {fileID: 0}
   mapColumn: 0
   mapRow: 0
+--- !u!114 &2077144589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077144576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84a83d654a65d3544bd6b4452dd06088, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueManager
+  dialogueUICanvasPrefab: {fileID: 7807475992176815723, guid: b65a7c25ceb324846bcf5b895b3da63d, type: 3}
 --- !u!1 &2081569538
 GameObject:
   m_ObjectHideFlags: 0

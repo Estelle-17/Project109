@@ -417,11 +417,22 @@ public class Character : MonoBehaviour
 
         // 4. 무사히 통과했으므로 진짜로 버프 추가 (이때 Added, Stacked 등의 UI 이벤트가 터짐)
         this.effectManager.AddEffect(info.caster, info.effect, info.FinalStack, info.FinalDuration);
-
         // 5. 부여 직후 파이프라인 (ex. 취약 부여 성공 시 약화도 부여)
         if (info.caster != null)
             info.caster.eventBus?.Invoke<IOnAfterGiveEffect>(l => l.OnAfterGiveEffect(info));
         this.eventBus?.Invoke<IOnAfterTakeEffect>(l => l.OnAfterTakeEffect(info));
+    }
+
+    /// <summary>
+    /// 이펙트 ID와 스택, 지속 시간을 기반으로 이펙트를 대상에게 부여합니다.
+    /// </summary>
+    public void ApplyEffect(Character caster, string effectId, int stack, float duration)
+    {
+        Effect effect = ModObjectFactory.CreateEffect(effectId);
+        if (effect != null)
+        {
+            TakeEffect(new EffectInfo(caster, this, effect, stack, duration));
+        }
     }
 
     #endregion

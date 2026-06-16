@@ -47,6 +47,10 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         cardInstance = null;
 
         cardName.text = cardData.cardName;
+        if (useStamina != null)
+        {
+            useStamina.text = cardData.stamina.ToString();
+        }
 
         UpdateCardDescription();
 
@@ -71,6 +75,10 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         if (cardInstance.masteryLevel > 0)
             displayName = "\u2605" + displayName;
         cardName.text = displayName;
+        if (useStamina != null)
+        {
+            useStamina.text = cardInstance.currentCost.ToString();
+        }
 
         UpdateCardDescription();
 
@@ -90,6 +98,10 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         {
             cardData = upgradeCardData;
             cardName.text = cardData.cardName;
+            if (useStamina != null)
+            {
+                useStamina.text = cardData.stamina.ToString();
+            }
             UpdateCardDescription();
 
             if (cardData.cardSprite != null)

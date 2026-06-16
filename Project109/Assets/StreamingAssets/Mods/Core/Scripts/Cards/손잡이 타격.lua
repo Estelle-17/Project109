@@ -1,0 +1,24 @@
+local card = {}
+function card:OnInit(cardBase, owner)
+    self.base = cardBase
+end
+function card:GetDescription(cardBase, template)
+    local baseDamage = cardBase:GetBaseValue("damage")
+    local draw = cardBase:GetBaseValue("draw")
+    return (template:gsub("{damage}", tostring(math.floor(baseDamage))):gsub("{draw}", tostring(math.floor(draw))))
+end
+function card:Execute(cardInfo)
+    local caster = cardInfo.caster
+    if cardInfo.targets ~= nil and cardInfo.targets.Count > 0 then
+        local target = cardInfo.targets[0]
+        local baseDamage = self.base:GetBaseValue("damage")
+        local draw = self.base:GetBaseValue("draw")
+        local dmgInfo = EventStructs.DamageInfo(caster, target, baseDamage, EventStructs.DamageFlag.Normal)
+        target:TakeDamage(dmgInfo)
+        
+        if RunManager.instance ~= nil and RunManager.instance.playerBattleController ~= nil then
+            RunManager.instance.playerBattleController.battleDeck:DrawCards(math.floor(draw))
+        end
+    end
+end
+return card

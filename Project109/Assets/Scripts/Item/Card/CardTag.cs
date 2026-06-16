@@ -69,4 +69,44 @@ public class CardTag
 
         targetCard = null;
     }
+
+    /// <summary>
+    /// 카드 태그의 화면 표시용 이름을 반환합니다. Lua에 구현되어 있지 않으면 tagName을 폴백으로 씁니다.
+    /// </summary>
+    public string GetDisplayName()
+    {
+        if (luaTable != null)
+        {
+            var luaFunc = luaTable.Get<LuaFunction>("GetDisplayName");
+            if (luaFunc != null)
+            {
+                object[] results = luaFunc.Call(luaTable);
+                if (results != null && results.Length > 0 && results[0] is string str)
+                {
+                    return str;
+                }
+            }
+        }
+        return tagName;
+    }
+
+    /// <summary>
+    /// 카드 태그의 상세 설명을 반환합니다. Lua에 구현되어 있지 않으면 빈 값을 반환합니다.
+    /// </summary>
+    public string GetDescription()
+    {
+        if (luaTable != null)
+        {
+            var luaFunc = luaTable.Get<LuaFunction>("GetDescription");
+            if (luaFunc != null)
+            {
+                object[] results = luaFunc.Call(luaTable);
+                if (results != null && results.Length > 0 && results[0] is string str)
+                {
+                    return str;
+                }
+            }
+        }
+        return string.Empty;
+    }
 }

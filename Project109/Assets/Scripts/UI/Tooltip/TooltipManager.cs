@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using XLua;
 
 public struct TooltipData
 {
@@ -15,15 +16,6 @@ public struct TooltipData
         this.header = header;
         this.body = body;
     }
-}
-
-[System.Serializable]
-public struct KeywordEntry
-{
-    public string keyword;
-    public string header;
-    [TextArea(3, 5)]
-    public string description;
 }
 
 [RequireComponent(typeof(RectTransform))]
@@ -42,13 +34,12 @@ public class TooltipManager : MonoBehaviour
         }
     }
 
+    // 네임스페이스 키워드 정규식: [타입.ID] (예: [effect.burning], [cardtag.exhaust] 3)
+    private static readonly Regex KeywordRegex = new Regex(@"\[(effect|card|relic|cardtag)\.([a-zA-Z0-9_]+)\](?:\s*(\d+))?", RegexOptions.Compiled);
+
     [Header("Layout Settings")]
     [SerializeField] private Vector2 mouseOffset = new Vector2(15, -15);
     [SerializeField] private float padding = 15f;
-
-    [Header("Keyword Settings")]
-    [SerializeField] private List<KeywordEntry> keywordDatabase = new List<KeywordEntry>();
-    private Dictionary<string, KeywordEntry> keywordCache = new Dictionary<string, KeywordEntry>();
 
     private RectTransform rectTransform;
     private Canvas parentCanvas;
@@ -61,6 +52,95 @@ public class TooltipManager : MonoBehaviour
 
     // 고정 배치 타겟 임시 보관
     private RectTransform currentTargetRect;
+
+    /// <summary>
+    /// [type.id] 키워드 텍스트를 유저 화면용 컬러/이름으로 치환해줍니다.
+    /// 예: [effect.burning] ➡ <color=#FF7F00>[화상]</color>
+    /// </summary>
+    public static string ReplaceKeywordsForDisplay(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return text;
+
+        return KeywordRegex.Replace(text, match =>
+        {
+            string type = match.Groups[1].Value;
+            string id = match.Groups[2].Value;
+
+            string displayName = GetDisplayName(type, id);
+            if (string.IsNullOrEmpty(displayName))
+            {
+                return match.Value; // 찾지 못한 경우 원본 복원
+            }
+
+            string colorHex = GetColorForType(type);
+            return $"<color={colorHex}>[{displayName}]</color>";
+        });
+    }
+
+    private static string GetDisplayName(string type, string id)
+    {
+        switch (type.ToLower())
+        {
+            case "effect":
+                if (ModLoader.Instance != null && ModLoader.Instance.EffectDatabase != null)
+                {
+                    if (ModLoader.Instance.EffectDatabase.TryGetValue(id, out EffectData effectData))
+                    {
+                        return effectData.effectName;
+                    }
+                }
+                break;
+            case "card":
+                if (ModLoader.Instance != null && ModLoader.Instance.CardDatabase != null)
+                {
+                    if (ModLoader.Instance.CardDatabase.TryGetValue(id, out CardData cardData))
+                    {
+                        return cardData.cardName;
+                    }
+                }
+                break;
+            case "relic":
+                if (ModLoader.Instance != null && ModLoader.Instance.RelicDatabase != null)
+                {
+                    if (ModLoader.Instance.RelicDatabase.TryGetValue(id, out RelicData relicData))
+                    {
+                        return relicData.relicName;
+                    }
+                }
+                break;
+            case "cardtag":
+                if (LuaManager.Instance != null)
+                {
+                    LuaTable proto = LuaManager.Instance.GetCardTagPrototype(id);
+                    if (proto != null)
+                    {
+                        var getDisplayName = proto.Get<LuaFunction>("GetDisplayName");
+                        if (getDisplayName != null)
+                        {
+                            object[] results = getDisplayName.Call(proto);
+                            if (results != null && results.Length > 0 && results[0] is string str)
+                            {
+                                return str;
+                            }
+                        }
+                    }
+                }
+                break;
+        }
+        return null;
+    }
+
+    private static string GetColorForType(string type)
+    {
+        switch (type.ToLower())
+        {
+            case "effect": return "#FF7F00"; // 주황 (버프/디버프)
+            case "card": return "#32CD32";   // 연두 (카드 링크)
+            case "relic": return "#DA70D6";  // 연보라 (유물 링크)
+            case "cardtag": return "#FFCC00";    // 노랑 (카드 태그)
+            default: return "#FFFFFF";
+        }
+    }
 
     private void Awake()
     {
@@ -104,7 +184,6 @@ public class TooltipManager : MonoBehaviour
         sizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
         // 3. 기존 프리팹에 들어있던 텍스트 요소를 찾아서 템플릿(TooltipPanel)으로 개조
-        // UIManager에서 dynamic하게 스폰될 때 child에 TextMeshProUGUI가 있을 것임
         TextMeshProUGUI legacyText = GetComponentInChildren<TextMeshProUGUI>(true);
         if (legacyText != null)
         {
@@ -125,23 +204,6 @@ public class TooltipManager : MonoBehaviour
         else
         {
             Debug.LogError("[TooltipManager] Legacy text component not found in prefab children.");
-        }
-
-        // 4. 키워드 사전 캐싱
-        BuildKeywordCache();
-    }
-
-    private void BuildKeywordCache()
-    {
-        keywordCache.Clear();
-        foreach (var entry in keywordDatabase)
-        {
-            if (!string.IsNullOrEmpty(entry.keyword))
-            {
-                // [화상]이나 화상 둘 다 매칭 가능하게 처리
-                string cleanedKey = entry.keyword.Replace("[", "").Replace("]", "");
-                keywordCache[cleanedKey] = entry;
-            }
         }
     }
 
@@ -176,24 +238,115 @@ public class TooltipManager : MonoBehaviour
 
     public void ShowTooltip(string title, string content, RectTransform targetRect = null)
     {
-        List<TooltipData> tooltips = new List<TooltipData> { new TooltipData(title, content) };
+        // 1. 본문의 [type.id] 키워드를 유저용 강조 텍스트로 치환
+        string displayTitle = ReplaceKeywordsForDisplay(title);
+        string displayContent = ReplaceKeywordsForDisplay(content);
+
+        List<TooltipData> tooltips = new List<TooltipData> { new TooltipData(displayTitle, displayContent) };
         
-        // 본문(content) 스캔 후 추가 키워드 검출
+        // 2. 원본 본문(content) 스캔 후 추가 키워드 검출
         if (!string.IsNullOrEmpty(content))
         {
-            // [화상], [취약] 등의 키워드를 찾는 정규식 패턴
-            MatchCollection matches = Regex.Matches(content, @"\[(.*?)\]");
+            MatchCollection matches = KeywordRegex.Matches(content);
             HashSet<string> scannedKeywords = new HashSet<string>();
 
             foreach (Match match in matches)
             {
-                string keyword = match.Groups[1].Value;
-                if (keywordCache.TryGetValue(keyword, out KeywordEntry entry))
+                string type = match.Groups[1].Value;
+                string id = match.Groups[2].Value;
+                string valueStr = match.Groups[3].Success ? match.Groups[3].Value : string.Empty;
+                
+                string uniqueKey = $"{type}.{id}".ToLower();
+                if (!scannedKeywords.Add(uniqueKey)) continue; // 중복 추가 방지
+
+                string subTitle = string.Empty;
+                string subDescription = string.Empty;
+
+                switch (type.ToLower())
                 {
-                    if (scannedKeywords.Add(keyword)) // 중복 검사
-                    {
-                        tooltips.Add(new TooltipData(entry.header, entry.description));
-                    }
+                    case "effect":
+                        if (ModLoader.Instance != null && ModLoader.Instance.EffectDatabase != null)
+                        {
+                            if (ModLoader.Instance.EffectDatabase.TryGetValue(id, out EffectData effectData))
+                            {
+                                subTitle = effectData.effectName;
+                                subDescription = effectData.description ?? string.Empty;
+
+                                // 이펙트 템플릿의 {stacks} 등 플레이스홀더 치환
+                                if (!string.IsNullOrEmpty(valueStr))
+                                {
+                                    subDescription = Regex.Replace(subDescription, @"\{stacks?\}", valueStr, RegexOptions.IgnoreCase);
+                                    subDescription = Regex.Replace(subDescription, @"\{values?\}", valueStr, RegexOptions.IgnoreCase);
+                                    subDescription = Regex.Replace(subDescription, @"\{amt\}", valueStr, RegexOptions.IgnoreCase);
+                                }
+                            }
+                        }
+                        break;
+
+                    case "card":
+                        if (ModLoader.Instance != null && ModLoader.Instance.CardDatabase != null)
+                        {
+                            if (ModLoader.Instance.CardDatabase.TryGetValue(id, out CardData cardData))
+                            {
+                                subTitle = cardData.cardName;
+                                subDescription = cardData.description ?? string.Empty;
+                            }
+                        }
+                        break;
+
+                    case "relic":
+                        if (ModLoader.Instance != null && ModLoader.Instance.RelicDatabase != null)
+                        {
+                            if (ModLoader.Instance.RelicDatabase.TryGetValue(id, out RelicData relicData))
+                            {
+                                subTitle = relicData.relicName;
+                                subDescription = relicData.description ?? string.Empty;
+                            }
+                        }
+                        break;
+
+                    case "cardtag":
+                        if (LuaManager.Instance != null)
+                        {
+                            LuaTable proto = LuaManager.Instance.GetCardTagPrototype(id);
+                            if (proto != null)
+                            {
+                                var getDisplayName = proto.Get<LuaFunction>("GetDisplayName");
+                                var getDescription = proto.Get<LuaFunction>("GetDescription");
+                                
+                                string dispName = id;
+                                if (getDisplayName != null)
+                                {
+                                    object[] resName = getDisplayName.Call(proto);
+                                    if (resName != null && resName.Length > 0 && resName[0] is string strName)
+                                    {
+                                        dispName = strName;
+                                    }
+                                }
+
+                                string descText = string.Empty;
+                                if (getDescription != null)
+                                {
+                                    object[] resDesc = getDescription.Call(proto);
+                                    if (resDesc != null && resDesc.Length > 0 && resDesc[0] is string strDesc)
+                                    {
+                                        descText = strDesc;
+                                    }
+                                }
+
+                                subTitle = dispName;
+                                subDescription = descText;
+                            }
+                        }
+                        break;
+                }
+
+                if (!string.IsNullOrEmpty(subTitle))
+                {
+                    // 서브 툴팁 본문에 포함된 키워드도 렌더링 치환 적용
+                    string finalSubTitle = ReplaceKeywordsForDisplay(subTitle);
+                    string finalSubDescription = ReplaceKeywordsForDisplay(subDescription);
+                    tooltips.Add(new TooltipData(finalSubTitle, finalSubDescription));
                 }
             }
         }

@@ -7,6 +7,15 @@ function Preserve:OnInit(tagBase, card)
     self.card = card         -- C# Card 인스턴스
 end
 
+-- 툴팁 및 표시용 정보
+function Preserve:GetDisplayName()
+    return "보존"
+end
+
+function Preserve:GetDescription()
+    return "턴 종료 시 이 카드가 패에 있어도 버려지지 않습니다."
+end
+
 -- 캐릭터가 카드를 버릴 때 호출되는 이벤트 (IOnDiscardCard 인터페이스 대응)
 function Preserve:OnDiscardCard(info)
     -- info는 EventStructs.CardInfo 타입

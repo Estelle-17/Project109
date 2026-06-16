@@ -426,12 +426,16 @@ public class Character : MonoBehaviour
     /// <summary>
     /// 이펙트 ID와 스택, 지속 시간을 기반으로 이펙트를 대상에게 부여합니다.
     /// </summary>
-    public void ApplyEffect(Character caster, string effectId, int stack, float duration)
+    public void TakeEffect(Character caster, string effectId, int stack, float duration)
     {
         Effect effect = ModObjectFactory.CreateEffect(effectId);
         if (effect != null)
         {
             TakeEffect(new EffectInfo(caster, this, effect, stack, duration));
+        }
+        else
+        {
+            Debug.LogError($"[Character] Failed to take effect: Effect ID '{effectId}' not found in ModObjectFactory. Target: {gameObject.name}");
         }
     }
 

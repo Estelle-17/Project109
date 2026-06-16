@@ -20,8 +20,8 @@ function card:Execute(cardInfo)
             local target = cardInfo.targets[i]
             local dmgInfo = EventStructs.DamageInfo(caster, target, baseDamage, EventStructs.DamageFlag.Normal)
             target:TakeDamage(dmgInfo)
-            target:ApplyEffect(caster, "Vulnerable", vulnerable, 0)
-            target:ApplyEffect(caster, "Weakness", weak, 0)
+            target:TakeEffect(caster, "Vulnerable", vulnerable, 0)
+            target:TakeEffect(caster, "Weakness", weak, 0)
         end
     end
 end

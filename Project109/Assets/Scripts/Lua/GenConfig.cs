@@ -98,6 +98,8 @@ public static class GenConfig
         typeof(IOnAfterSpendStamina),
         typeof(IOnBeforeTakeStamina),
         typeof(IOnAfterTakeStamina),
+        typeof(IOnBeforeGiveStamina),
+        typeof(IOnAfterGiveStamina),
 
         // Character Event Interfaces (Move)
         typeof(IOnBeforeMove),

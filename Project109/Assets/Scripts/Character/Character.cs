@@ -324,7 +324,7 @@ public class Character : MonoBehaviour
         if (isDead) return;
 
         if (info.caster != null)
-            info.caster.eventBus?.Invoke<IOnBeforeTakeStamina>(l => l.OnBeforeTakeStamina(ref info));
+            info.caster.eventBus?.Invoke<IOnBeforeGiveStamina>(l => l.OnBeforeGiveStamina(ref info));
         this.eventBus?.Invoke<IOnBeforeTakeStamina>(l => l.OnBeforeTakeStamina(ref info));
 
         float gainAmount = info.baseStaminaAmount * info.staminaMultiplier;
@@ -339,7 +339,7 @@ public class Character : MonoBehaviour
         }
 
         if (info.caster != null)
-            info.caster.eventBus?.Invoke<IOnAfterTakeStamina>(l => l.OnAfterTakeStamina(info));
+            info.caster.eventBus?.Invoke<IOnAfterGiveStamina>(l => l.OnAfterGiveStamina(info));
         this.eventBus?.Invoke<IOnAfterTakeStamina>(l => l.OnAfterTakeStamina(info));
     }
 
@@ -347,19 +347,15 @@ public class Character : MonoBehaviour
     {
         if (isDead) return;
 
-        if (info.caster != null)
-            info.caster.eventBus?.Invoke<IOnBeforeSpendStamina>(l => l.OnBeforeSpendStamina(ref info));
         this.eventBus?.Invoke<IOnBeforeSpendStamina>(l => l.OnBeforeSpendStamina(ref info));
 
         float spendAmount = info.baseStaminaAmount * info.staminaMultiplier;
         curStamina = Mathf.Max(0f, curStamina - spendAmount);
 
-        if (info.caster != null)
-            info.caster.eventBus?.Invoke<IOnAfterSpendStamina>(l => l.OnAfterSpendStamina(info));
         this.eventBus?.Invoke<IOnAfterSpendStamina>(l => l.OnAfterSpendStamina(info));
     }
 
-    public void TakeShield(ShieldInfo info, int durationTurns = 1)
+    public void TakeShield(ShieldInfo info)
     {
         if (isDead) return;
 
@@ -370,9 +366,9 @@ public class Character : MonoBehaviour
         float shieldAmount = info.baseShieldAmount * info.shieldMultiplier;
         shield += shieldAmount;
 
-        if (durationTurns > shieldDurationTurns)
+        if (info.durationTurns > shieldDurationTurns)
         {
-            shieldDurationTurns = durationTurns;
+            shieldDurationTurns = info.durationTurns;
         }
 
         OnCharacterShieldChanged?.Invoke(this);
@@ -380,6 +376,63 @@ public class Character : MonoBehaviour
         if (info.caster != null)
             info.caster.eventBus?.Invoke<IOnAfterGiveShield>(l => l.OnAfterGiveShield(info));
         this.eventBus?.Invoke<IOnAfterTakeShield>(l => l.OnAfterTakeShield(info));
+    }
+
+    /// <summary>
+    /// 하위 호환성을 위해 남겨둔 TakeShield 오버로드 데코레이터입니다.
+    /// </summary>
+    public void TakeShield(ShieldInfo info, int durationTurns)
+    {
+        info.durationTurns = durationTurns;
+        TakeShield(info);
+    }
+
+    /// <summary>
+    /// 대상에게 간단하게 데미지를 적용합니다. (편의성 오버로드)
+    /// </summary>
+    public void TakeDamage(Character caster, float baseDamageAmount, DamageFlag flags = DamageFlag.Normal)
+    {
+        TakeDamage(new DamageInfo(caster, this, baseDamageAmount, flags));
+    }
+
+    /// <summary>
+    /// 대상에게 간단하게 회복을 적용합니다. (편의성 오버로드)
+    /// </summary>
+    public void TakeHeal(Character caster, float baseHealAmount, HealFlag flags = HealFlag.Normal)
+    {
+        TakeHeal(new HealInfo(caster, this, baseHealAmount, flags));
+    }
+
+    /// <summary>
+    /// 대상에게 간단하게 보호막을 적용합니다. (편의성 오버로드)
+    /// </summary>
+    public void TakeShield(Character caster, float baseShieldAmount, int durationTurns = 1, ShieldFlag flags = ShieldFlag.Normal)
+    {
+        TakeShield(new ShieldInfo(caster, this, baseShieldAmount, durationTurns, flags));
+    }
+
+    /// <summary>
+    /// 대상에게 간단하게 스태미나를 부여합니다. (편의성 오버로드)
+    /// </summary>
+    public void TakeStamina(Character caster, float baseStaminaAmount, StaminaFlag flags = StaminaFlag.Normal)
+    {
+        TakeStamina(new StaminaInfo(caster, this, baseStaminaAmount, flags));
+    }
+
+    /// <summary>
+    /// 본인의 스태미나를 스스로 소모하거나 적에 의해 차감됩니다. (편의성 오버로드)
+    /// </summary>
+    public void SpendStamina(float baseStaminaAmount, StaminaFlag flags = StaminaFlag.Normal)
+    {
+        SpendStamina(new StaminaInfo(null, this, baseStaminaAmount, flags));
+    }
+
+    /// <summary>
+    /// 타겟에 의해 스태미나가 소모되거나 삭감됩니다. (편의성 오버로드)
+    /// </summary>
+    public void SpendStamina(Character caster, float baseStaminaAmount, StaminaFlag flags = StaminaFlag.Normal)
+    {
+        SpendStamina(new StaminaInfo(caster, this, baseStaminaAmount, flags));
     }
 
     /// <summary>

@@ -98,6 +98,10 @@ namespace EventStructs
             this.staminaFlags = flags;
             this.staminaMultiplier = 1.0f;
         }
+
+        public StaminaInfo(Character target, float baseAmount, StaminaFlag flags = StaminaFlag.Normal) : this(null, target, baseAmount, flags)
+        {
+        }
     }
 
 
@@ -112,8 +116,9 @@ namespace EventStructs
         public float finalShieldAmount;
         public float shieldMultiplier;
         public ShieldFlag shieldFlags;
+        public int durationTurns;
 
-        public ShieldInfo(Character caster, Character target, float baseAmount, ShieldFlag flags = ShieldFlag.Normal) : this()
+        public ShieldInfo(Character caster, Character target, float baseAmount, int durationTurns = 1, ShieldFlag flags = ShieldFlag.Normal) : this()
         {
             this.caster = caster;
             this.target = target;
@@ -121,6 +126,7 @@ namespace EventStructs
             this.baseShieldAmount = baseAmount;
             this.shieldFlags = flags;
             this.shieldMultiplier = 1.0f;
+            this.durationTurns = durationTurns;
         }
     }
 

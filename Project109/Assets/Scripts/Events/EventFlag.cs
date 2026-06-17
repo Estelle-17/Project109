@@ -36,6 +36,7 @@ namespace EventStructs
         OverStamina = 1 << 0,
         NoCasterEvents = 1 << 1,
         NoTargetEvents = 1 << 2,
+        Drain = 1 << 3,
 
         // --- 임의의 조합 프리셋 ---
         Regen = NoCasterEvents | NoTargetEvents,

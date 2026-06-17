@@ -13,10 +13,8 @@ function card:Execute(cardInfo)
         local target = cardInfo.targets[0]
         local baseDamage = self.base:GetBaseValue("damage")
         local shield = self.base:GetBaseValue("shield")
-        local dmgInfo = EventStructs.DamageInfo(caster, target, baseDamage, EventStructs.DamageFlag.Normal)
-        target:TakeDamage(dmgInfo)
-        local shieldInfo = EventStructs.ShieldInfo(caster, caster, shield, EventStructs.ShieldFlag.Normal)
-        caster:TakeShield(shieldInfo, 1)
+        target:TakeDamage(caster, baseDamage)
+        caster:TakeShield(caster, shield, 1)
     end
 end
 return card

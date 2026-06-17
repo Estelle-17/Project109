@@ -36,6 +36,8 @@ public static class LuaEventBinder
         BindCharacter<IOnAfterSpendStamina>(luaTable, eventBus, activeProxies);
         BindCharacter<IOnBeforeTakeStamina>(luaTable, eventBus, activeProxies);
         BindCharacter<IOnAfterTakeStamina>(luaTable, eventBus, activeProxies);
+        BindCharacter<IOnBeforeGiveStamina>(luaTable, eventBus, activeProxies);
+        BindCharacter<IOnAfterGiveStamina>(luaTable, eventBus, activeProxies);
 
         // Movement Interfaces
         BindCharacter<IOnBeforeMove>(luaTable, eventBus, activeProxies);

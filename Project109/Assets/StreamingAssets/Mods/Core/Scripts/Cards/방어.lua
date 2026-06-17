@@ -9,7 +9,6 @@ end
 function card:Execute(cardInfo)
     local caster = cardInfo.caster
     local shield = self.base:GetBaseValue("shield")
-    local shieldInfo = EventStructs.ShieldInfo(caster, caster, shield, EventStructs.ShieldFlag.Normal)
-    caster:TakeShield(shieldInfo, 1)
+    caster:TakeShield(caster, shield, 1)
 end
 return card

@@ -5,8 +5,13 @@ using UnityEngine;
 /// <summary>
 /// 비 전투(탐색/이벤트) 상황에서 플레이어 캐릭터의 움직임과 상호작용을 제어하는 컨트롤러.
 /// </summary>
-public class PlayerExploreController : ICharacterController
+public class PlayerExploreController : ICharacterController, System.IDisposable
 {
+    public void Dispose()
+    {
+        Deactivate();
+    }
+
     private readonly Player player;
     private readonly CharacterMove characterMove;
 

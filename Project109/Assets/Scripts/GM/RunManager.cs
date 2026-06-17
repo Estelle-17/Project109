@@ -15,7 +15,10 @@ public class RunManager : MonoBehaviour
 
             // DontDestroyOnLoad(this.gameObject);
             battleManager = new();
+            battleManager.Initialize();
+
             currentMap = new MapManager();
+            currentMap.Initialize();
         }
         else
         {
@@ -386,10 +389,12 @@ public class RunManager : MonoBehaviour
 
     void OnDestroy()
     {
-        if (playerExploreController != null)
-        {
-            playerExploreController.Deactivate();
-        }
+        // C# 컨트롤러 및 매니저 생명주기 마무리 (Dispose 일괄 호출)
+        playerBattleController?.Dispose();
+        playerExploreController?.Dispose();
+
+        battleManager?.Dispose();
+        currentMap?.Dispose();
 
         if (instance != null)
         {

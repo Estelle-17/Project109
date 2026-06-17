@@ -14,8 +14,17 @@ public enum PlayerControlState
 /// 전투 중 플레이어 캐릭터의 턴을 제어하는 컨트롤러.
 /// 전투 시작 ~ 전투 종료까지 유지된다.
 /// </summary>
-public class PlayerBattleController : ICharacterController
+public class PlayerBattleController : ICharacterController, System.IDisposable
 {
+    public void Dispose()
+    {
+        if (PlayerInputController.instance != null)
+        {
+            PlayerInputController.instance.OnTouchClickEvent -= HandleGlobalClick;
+            PlayerInputController.instance.OnCancelEvent -= CancelCurrentState;
+        }
+    }
+
     #region ICharacterController
 
     [SerializeField]

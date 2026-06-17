@@ -10,8 +10,17 @@ public enum BattleState
     BattleEnd,
 }
 
-public class BattleManager
+public class BattleManager : IInitializable, IDisposable
 {
+    public void Initialize()
+    {
+        // 초기화 필요한 멤버 변수가 있다면 여기서 처리
+    }
+
+    public void Dispose()
+    {
+        ClearBattle();
+    }
     #region Battle State
 
     public BattleState battleState { get; private set; } = BattleState.None;

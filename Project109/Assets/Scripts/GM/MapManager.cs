@@ -23,8 +23,17 @@ public struct MapPrefabs
     public GameObject rewardMapObjectPrefab;
 }
 
-public class MapManager
+public class MapManager : IInitializable, System.IDisposable
 {
+    public void Initialize()
+    {
+        // 초기화가 필요한 멤버 변수가 있다면 여기서 처리
+    }
+
+    public void Dispose()
+    {
+        ClearStage();
+    }
     public RoutePathfinding routePathfinding = new();
 
     public MapDataSO currentMapData;

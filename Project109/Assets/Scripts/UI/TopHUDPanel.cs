@@ -5,6 +5,11 @@ using UnityEngine.UI;
 
 public class TopHUDPanel : UIPanelBase
 {
+    private void Awake()
+    {
+        blockWorldInput = false;
+    }
+
     [Header("Currency TMP Texts")]
     [SerializeField] private TextMeshProUGUI goldText;
     [SerializeField] private TextMeshProUGUI specialResourceText;

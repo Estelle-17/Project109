@@ -5,8 +5,26 @@ public class UIPanelBase : MonoBehaviour
     [Header("UI Layer Type Settings")]
     public UILayerType uiLayerType = UILayerType.Normal;
 
+    [Header("Input Block Settings")]
+    public bool blockWorldInput = true;
+
+    protected virtual void OnEnable()
+    {
+        if (blockWorldInput && UIInputManager.instance != null)
+        {
+            UIInputManager.instance.AcquireUILock();
+        }
+
+        transform.SetAsLastSibling();
+    }
+
     protected virtual void OnDisable()
     {
+        if (blockWorldInput && UIInputManager.instance != null)
+        {
+            UIInputManager.instance.ReleaseUILock();
+        }
+
         if (UIManager.instance == null)
         {
             Debug.LogWarning("UIManager is null. Check UIManager setting in hierarchy.");

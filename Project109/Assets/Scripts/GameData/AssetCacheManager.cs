@@ -478,4 +478,27 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetTrap(string name, out TrapData trap) => trapDict.TryGetValue(name, out trap);
     public bool TryGetDropTable(string name, out DropTableData table) => dropTableDict.TryGetValue(name, out table);
     public bool TryGetUI(string name, out GameObject uiPrefab) => uiDict.TryGetValue(name, out uiPrefab);
+
+    public System.Collections.IEnumerator GetUIAsyncCoroutine(string addressableKey, Action<GameObject> onLoaded)
+    {
+        if (uiDict.TryGetValue(addressableKey, out GameObject cachedPrefab))
+        {
+            onLoaded?.Invoke(cachedPrefab);
+            yield break;
+        }
+
+        AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(addressableKey);
+        yield return handle;
+        
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            uiDict[addressableKey] = handle.Result;
+            onLoaded?.Invoke(handle.Result);
+        }
+        else
+        {
+            Debug.LogError($"[AssetCacheManager] Failed to load UI async: {addressableKey}");
+            onLoaded?.Invoke(null);
+        }
+    }
 }

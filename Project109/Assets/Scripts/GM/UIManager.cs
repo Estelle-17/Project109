@@ -1,6 +1,7 @@
 using CardTypes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -209,9 +210,13 @@ public class UIManager : MonoBehaviour
     {
         // 1. 해당 레이어 하위로 부모 재설정
         RectTransform targetLayer = GetLayerTransform(layerType);
-        if (targetLayer != null && newObject.transform.parent != targetLayer)
+        if (targetLayer != null)
         {
-            newObject.transform.SetParent(targetLayer, false);
+            if (newObject.transform.parent != targetLayer)
+            {
+                newObject.transform.SetParent(targetLayer, false);
+            }
+            newObject.transform.SetAsLastSibling();
         }
 
         // 2. Normal 타입만 스택으로 관리
@@ -349,14 +354,8 @@ public class UIManager : MonoBehaviour
 
     public void SetPlayerTouchSystemActiveInGame()
     {
-        if (activeNormalUIStack.Count == 0)
-        {
-            PlayerInputController.instance.EnableObjectInteractionInput();
-        }
-        else
-        {
-            PlayerInputController.instance.DisableObjectInteractionInput();
-        }
+        // 이제 InputManager가 Reference Counting을 통해 터치 잠금을 자동으로 관리하므로,
+        // UIManager에서 직접 PlayerInputController의 입력을 활성화/비활성화할 필요가 없습니다.
     }
 
     public bool IsUIActiveInStack(GameObject checkObject)
@@ -552,6 +551,82 @@ public class UIManager : MonoBehaviour
             {
                 PushActiveUIPanel(cardDeckViewPanel.gameObject, UILayerType.Normal);
             }
+        }
+    }
+    #endregion
+
+    #region Async UI & Dialog Support
+    public System.Collections.IEnumerator OpenUIAsyncCoroutine<T>(string uiName, UILayerType layerType, bool blockWorldInput, Action<T> onComplete) where T : UIPanelBase
+    {
+        bool acquiredPreLock = false;
+
+        // 1. 에셋 비동기 로딩을 시작하기 전에 '선제적'으로 터치 입력 차단
+        if (blockWorldInput && UIInputManager.instance != null)
+        {
+            UIInputManager.instance.AcquireUILock();
+            acquiredPreLock = true;
+        }
+
+        // 2. 비동기 에셋 캐시 획득 및 인스턴스화
+        GameObject prefab = null;
+        yield return StartCoroutine(AssetCacheManager.instance.GetUIAsyncCoroutine(uiName, (result) => prefab = result));
+
+        if (prefab == null)
+        {
+            Debug.LogError($"[UIManager] Failed to load UI async: {uiName}");
+            if (acquiredPreLock && UIInputManager.instance != null)
+            {
+                UIInputManager.instance.ReleaseUILock();
+            }
+            onComplete?.Invoke(null);
+            yield break;
+        }
+
+        RectTransform targetLayer = GetLayerTransform(layerType);
+        GameObject uiInstance = Instantiate(prefab, targetLayer, false);
+        uiInstance.name = uiName;
+
+        T panel = uiInstance.GetComponent<T>();
+        if (panel != null)
+        {
+            panel.blockWorldInput = blockWorldInput;
+            panel.uiLayerType = layerType;
+        }
+
+        if (uiInstance != null)
+        {
+            PushActiveUIPanel(uiInstance, layerType);
+        }
+
+        // 선제 락을 해제합니다.
+        if (acquiredPreLock && UIInputManager.instance != null)
+        {
+            UIInputManager.instance.ReleaseUILock();
+        }
+
+        onComplete?.Invoke(panel);
+    }
+
+    public void ShowConfirmDialog(string title, string message, Action onConfirm, Action onCancel)
+    {
+        // 팝업 레이어(popupUILayer)에 띄우도록 설정
+        GameObject dialogObj = OpenUI("ConfirmDialog", UILayerType.Popup, true);
+        if (dialogObj != null)
+        {
+            UIDialogPanel dialogPanel = dialogObj.GetComponent<UIDialogPanel>();
+            if (dialogPanel != null)
+            {
+                dialogPanel.Setup(title, message, onConfirm, onCancel);
+            }
+            else
+            {
+                Debug.LogError("[UIManager] ConfirmDialog prefab does not have UIDialogPanel component!");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[UIManager] ConfirmDialog prefab not found in cache. Executing confirm callback as fallback.");
+            onConfirm?.Invoke();
         }
     }
     #endregion

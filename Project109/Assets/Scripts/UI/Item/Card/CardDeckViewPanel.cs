@@ -10,8 +10,9 @@ public class CardDeckViewPanel : UIPanelBase, IOnAddCard, IOnRemoveCard, IOnCard
 
     private Dictionary<int, GameObject> activeCardUIs = new Dictionary<int, GameObject>();
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         if (RunManager.instance != null && RunManager.instance.player != null)
         {
             RunManager.instance.player.deck.RequestAllCardRefresh();

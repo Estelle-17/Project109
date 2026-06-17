@@ -75,3 +75,10 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # End of https://www.toptal.com/developers/gitignore/api/unity
+
+# Ignore all dot-directories (e.g. .Docs, .vscode, .agents)
+.*/
+
+# EventBinderGenerator build folders
+EventBinderGenerator/bin/
+EventBinderGenerator/obj/

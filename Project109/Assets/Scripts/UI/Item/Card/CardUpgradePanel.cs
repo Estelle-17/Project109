@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class CardUpgradePanel : UIPanelBase
@@ -49,19 +49,12 @@ public class CardUpgradePanel : UIPanelBase
 
         CardUI cardUI = ObjectPoolManager.instance.GetCardUI(contentTransform).GetComponent<CardUI>();
 
-        if (cardUI != null && contentTransform != null)
+        if (cardUI != null)
         {
             cardUI.UpdateCardInstance(card);
             AddCardClickEvent(cardUI);
 
             activeCardUIs.Add(card.runtimeID, cardUI.gameObject);
-        }
-        else
-        {
-            if (cardUI != null)
-            {
-                ObjectPoolManager.instance.ReturnCardUI(cardUI.gameObject);
-            }
         }
     }
 
@@ -84,7 +77,7 @@ public class CardUpgradePanel : UIPanelBase
         {
             foreach (Card card in RunManager.instance.player.deck.GetCards())
             {
-                if (card.cardData != null && !card.cardData.isUpgraded)
+                if (card.cardData != null && !card.cardData.isUpgraded && (card.cardData.isUpgradable || card.cardData.maxMasteryPoint > 0))
                 {
                     HandleCardAdded(card);
                 }
@@ -99,6 +92,8 @@ public class CardUpgradePanel : UIPanelBase
         //이전에 등록했던 클릭 이벤트 제거
         cardUI.OnCardClick.RemoveAllListeners();
 
+        Debug.Log($"AddCardClickEvent {cardUI.GetCardInstance().cardData.cardName}");
+
         //카드가 눌리면 카드 데이터를 전달과 동시에 함수 실행
         Card cardInstance = cardUI.GetCardInstance();
         cardUI.OnCardClick.AddListener(() => CheckUpgradeCard(cardInstance));
@@ -106,18 +101,28 @@ public class CardUpgradePanel : UIPanelBase
 
     void CheckUpgradeCard(Card card)
     {
-        if(card == null || card.cardData == null || upgradeCardCheckHandler == null || upgradeMasteryCardCheckHandler == null)
+        if (card == null || card.cardData == null)
         {
-            Debug.LogWarning("CheckUpgradeCard: card or handlers are null");
+            Debug.LogWarning("CheckUpgradeCard: card or cardData is null");
             return;
         }
 
-        if(card.cardData.maxMasteryPoint > 0)
+        if (card.cardData.maxMasteryPoint > 0)
         {
+            if (upgradeMasteryCardCheckHandler == null)
+            {
+                Debug.LogWarning("CheckUpgradeCard: upgradeMasteryCardCheckHandler is null");
+                return;
+            }
             upgradeMasteryCardCheckHandler.OnCardCheckUI(card);
         }
         else
         {
+            if (upgradeCardCheckHandler == null)
+            {
+                Debug.LogWarning("CheckUpgradeCard: upgradeCardCheckHandler is null");
+                return;
+            }
             upgradeCardCheckHandler.OnCardCheckUI(card);
         }
     }

@@ -210,6 +210,12 @@ public class BattleManager : IInitializable, IDisposable
 
     private void CleanupCombatants()
     {
+        if (currentTurnController != null)
+        {
+            currentTurnController.OnTurnEnd();
+            currentTurnController = null;
+        }
+
         foreach (var combatant in playerTeam)
         {
             combatant.controlledCharacter.eventBus.Invoke<IOnBattleEnd>(a => a.OnBattleEnd());
@@ -223,7 +229,6 @@ public class BattleManager : IInitializable, IDisposable
 
         playerTeam.Clear();
         enemyTeam.Clear();
-        currentTurnController = null;
     }
 
     /// <summary>

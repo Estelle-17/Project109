@@ -1214,7 +1214,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 5230234510766637954}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -1422,10 +1422,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7885794208291660814}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 6186952208870095572}
+        m_TargetAssemblyTypeName: CardUpgradePanel, Assembly-CSharp
+        m_MethodName: UIDeactive
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1733,8 +1733,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiLayerType: 1
-  upgradeCardCheckHandler: {fileID: 0}
-  upgradeMasteryCardCheckHandler: {fileID: 0}
+  blockWorldInput: 1
+  upgradeCardCheckHandler: {fileID: 4536588141730379115}
+  upgradeMasteryCardCheckHandler: {fileID: 7573011446856983002}
   contentTransform: {fileID: 4496010643873203085}
 --- !u!1 &8038437566614996914
 GameObject:
@@ -2069,7 +2070,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 8716488471542945553}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6

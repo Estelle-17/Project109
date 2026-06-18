@@ -54,14 +54,8 @@ public class AssetCacheManager : MonoBehaviour
     public string trapKey = "Trap";
     public string uiKey = "UI";
     public string interactableKey = "Interactable";
-    public string dropTableKey = "DropTable";
-
-
     public IList<BattleData> battleList;
     private Dictionary<string, BattleData> battleDict = new Dictionary<string, BattleData>();
-
-    public IList<DropTableData> dropTableList;
-    private Dictionary<string, DropTableData> dropTableDict = new Dictionary<string, DropTableData>();
 
     public IList<MonsterData> monsterList;
     private Dictionary<string, MonsterData> monsterDict = new Dictionary<string, MonsterData>();
@@ -106,7 +100,6 @@ public class AssetCacheManager : MonoBehaviour
         bool isTextureLoaded = false;
         bool isObstacleLoaded = false;
         bool isTrapLoaded = false;
-        bool isDropTableLoaded = false;
         bool isUiLoaded = false;
 
         // 3. 전투 데이터 할당 시작
@@ -115,22 +108,6 @@ public class AssetCacheManager : MonoBehaviour
             battleList = list;
             battleDict = dict;
             isBattleLoaded = true;
-        }));
-
-        // 드롭 테이블 데이터 할당 시작
-        StartCoroutine(LoadAndCacheFromAddressableData<DropTableData>(dropTableKey, (list, dict) =>
-        {
-            if (list != null)
-            {
-                dropTableList = list;
-                dropTableDict = dict;
-            }
-            else
-            {
-                dropTableList = new List<DropTableData>();
-                dropTableDict = new Dictionary<string, DropTableData>();
-            }
-            isDropTableLoaded = true;
         }));
 
         // 4. 몬스터 데이터 할당 시작
@@ -257,7 +234,6 @@ public class AssetCacheManager : MonoBehaviour
                  isTextureLoaded &&
                  isObstacleLoaded &&
                  isTrapLoaded &&
-                 isDropTableLoaded &&
                  isUiLoaded))
         {
             waitTimer += Time.deltaTime;
@@ -273,7 +249,6 @@ public class AssetCacheManager : MonoBehaviour
                     $"Texture={isTextureLoaded}, " +
                     $"Obstacle={isObstacleLoaded}, " +
                     $"Trap={isTrapLoaded}, " +
-                    $"DropTable={isDropTableLoaded}, " +
                     $"UI={isUiLoaded}");
                 waitTimer = 0f;
             }
@@ -476,7 +451,6 @@ public class AssetCacheManager : MonoBehaviour
     public bool TryGetTexture(string name, out Sprite texture) => textureDict.TryGetValue(name, out texture);
     public bool TryGetObstacle(string name, out ObstacleData obstacle) => obstacleDict.TryGetValue(name, out obstacle);
     public bool TryGetTrap(string name, out TrapData trap) => trapDict.TryGetValue(name, out trap);
-    public bool TryGetDropTable(string name, out DropTableData table) => dropTableDict.TryGetValue(name, out table);
     public bool TryGetUI(string name, out GameObject uiPrefab) => uiDict.TryGetValue(name, out uiPrefab);
 
     public System.Collections.IEnumerator GetUIAsyncCoroutine(string addressableKey, Action<GameObject> onLoaded)

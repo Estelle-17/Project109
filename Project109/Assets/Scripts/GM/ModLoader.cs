@@ -28,6 +28,9 @@ public class ModLoader
     // Key: interactableID (고유 ID), Value: InteractableData
     public Dictionary<string, InteractableData> InteractableDatabase { get; private set; } = new Dictionary<string, InteractableData>();
 
+    // Key: dropTableID (고유 ID), Value: DropTableData
+    public Dictionary<string, DropTableData> DropTableDatabase { get; private set; } = new Dictionary<string, DropTableData>();
+
     private static ModLoader _instance;
     public static ModLoader Instance
     {
@@ -52,6 +55,7 @@ public class ModLoader
         NPCUnitDatabase.Clear();
         DialogueDatabase.Clear();
         InteractableDatabase.Clear();
+        DropTableDatabase.Clear();
 
         // 1. 바닐라(Core) 모드 로딩
         // 경로: Assets/StreamingAssets/Mods/Core
@@ -77,7 +81,7 @@ public class ModLoader
 
 
 
-        Debug.Log($"[ModLoader] 총 {EffectDatabase.Count}개의 이펙트 데이터, {RelicDatabase.Count}개의 유물 데이터, {CardDatabase.Count}개의 카드 데이터, {StarterKitDatabase.Count}개의 시작 키트 데이터, {InteractableDatabase.Count}개의 상호작용 데이터가 로드되었습니다.");
+        Debug.Log($"[ModLoader] 총 {EffectDatabase.Count}개의 이펙트 데이터, {RelicDatabase.Count}개의 유물 데이터, {CardDatabase.Count}개의 카드 데이터, {StarterKitDatabase.Count}개의 시작 키트 데이터, {InteractableDatabase.Count}개의 상호작용 데이터, {DropTableDatabase.Count}개의 드롭 테이블 데이터가 로드되었습니다.");
     }
 
     private void LoadModDirectory(string modDir)
@@ -143,6 +147,13 @@ public class ModLoader
         if (Directory.Exists(interactablesPath))
         {
             LoadInteractablesFromPath(interactablesPath, modDir);
+        }
+
+        // [드롭 테이블(DropTable) 로딩]
+        string dropTablesPath = Path.Combine(modDir, "YAML", "DropTables");
+        if (Directory.Exists(dropTablesPath))
+        {
+            LoadDropTablesFromPath(dropTablesPath, modDir);
         }
     }
 
@@ -367,6 +378,33 @@ public class ModLoader
                 {
                     // 상호작용 데이터는 별도 외부 리소스 매핑(ResolveAndValidate) 없이 딕셔너리에 추가
                     InteractableDatabase[interactableData.interactableID] = interactableData;
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[ModLoader] YAML 파싱 에러 ({file}):\n{e.Message}");
+            }
+        }
+    }
+
+    private void LoadDropTablesFromPath(string dataPath, string modRootPath)
+    {
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+
+        string[] yamlFiles = Directory.GetFiles(dataPath, "*.yaml", SearchOption.AllDirectories);
+
+        foreach (string file in yamlFiles)
+        {
+            string yamlContent = File.ReadAllText(file);
+            try
+            {
+                DropTableData dropTableData = deserializer.Deserialize<DropTableData>(yamlContent);
+
+                if (dropTableData != null)
+                {
+                    DropTableDatabase[dropTableData.dropTableID] = dropTableData;
                 }
             }
             catch (System.Exception e)

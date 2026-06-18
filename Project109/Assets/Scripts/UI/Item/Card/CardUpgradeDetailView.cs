@@ -20,8 +20,12 @@ public class CardUpgradeDetailView : MonoBehaviour
     //클릭한 카드 데이터를 확인하고 화면 상에 보여줌
     public void OnCardCheckUI(Card card)
     {
+        Debug.Log("OnCardCheckUI");
         if (currentCard == null || upgradeCard == null || card == null || card.cardData == null)
+        {
+            Debug.Log("[CardUpgradeDetailView] OnCardCheckUI() : 카드가 없거나 카드의 데이터가 없습니다.");
             return;
+        }
 
         currentCardInstance = card;
 
@@ -46,7 +50,7 @@ public class CardUpgradeDetailView : MonoBehaviour
         {
             RunManager.instance.player.deck.UpgradeCard(currentCardInstance.runtimeID);
         }
-        transform.root.gameObject.SetActive(false);
-        Destroy(transform.root.gameObject);
+        transform.parent.gameObject.SetActive(false);
+        Destroy(transform.parent.gameObject);
     }
 }

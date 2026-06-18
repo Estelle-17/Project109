@@ -18,8 +18,11 @@ public class CardMasteryUpgradeDetailView : MonoBehaviour
     //클릭한 카드 데이터를 확인하고 화면 상에 보여줌
     public void OnCardCheckUI(Card card)
     {
-        if (currentMasteryPointUI == null || card == null)
+        if (currentMasteryPointUI == null || card == null || card.cardData == null)
+        {
+            Debug.Log("[CardMasteryUpgradeDetailView] OnCardCheckUI() : 카드가 없거나 카드의 데이터가 없습니다.");
             return;
+        }
 
         selectedCardInstance = card;
 
@@ -35,7 +38,7 @@ public class CardMasteryUpgradeDetailView : MonoBehaviour
         {
             selectedCardInstance.AddMasteryPoint(RunManager.instance.player.playerStat.UpgradeMasteryPointValue);
         }
-        transform.root.gameObject.SetActive(false);
-        Destroy(transform.root.gameObject);
+        transform.parent.gameObject.SetActive(false);
+        Destroy(transform.parent.gameObject);
     }
 }

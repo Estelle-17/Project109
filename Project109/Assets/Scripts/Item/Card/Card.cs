@@ -188,6 +188,18 @@ public class Card : IDescribable
     }
 
     /// <summary>
+    /// 카드의 기본 수치(Base Value)를 반환합니다.
+    /// </summary>
+    public float GetBaseValue(string valueKey)
+    {
+        if (cardData != null && cardData.baseValues != null && cardData.baseValues.TryGetValue(valueKey, out float val))
+        {
+            return val;
+        }
+        return 0f;
+    }
+
+    /// <summary>
     /// 카드 인스턴스 자체에 기록된 마스터리 업그레이드 횟수를 기반으로 최종 수치를 계산합니다.
     /// </summary>
     public float GetEffectiveValue(string valueKey)

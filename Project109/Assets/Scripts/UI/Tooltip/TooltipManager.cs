@@ -52,6 +52,7 @@ public class TooltipManager : MonoBehaviour
 
     // 고정 배치 타겟 임시 보관
     private RectTransform currentTargetRect;
+    private readonly Vector3[] cornersCache = new Vector3[4];
 
     /// <summary>
     /// [type.id] 키워드 텍스트를 유저 화면용 컬러/이름으로 치환해줍니다.
@@ -217,7 +218,7 @@ public class TooltipManager : MonoBehaviour
 
         if (AssetCacheManager.instance.TryGetUI("RelicDescription", out GameObject prefab))
         {
-            Transform parentTransform = UIManager.instance.popupUILayer != null ? UIManager.instance.popupUILayer : UIManager.instance.transform;
+            Transform parentTransform = UIManager.instance.popupUILayer != null ? UIManager.instance.popupUILayer.transform : UIManager.instance.transform;
             GameObject inst = Instantiate(prefab, parentTransform, false);
             inst.name = "RelicDescription";
 
@@ -454,14 +455,13 @@ public class TooltipManager : MonoBehaviour
         if (currentTargetRect != null)
         {
             // [UI 기준 고정 모드]
-            Vector3[] corners = new Vector3[4];
-            currentTargetRect.GetWorldCorners(corners);
+            currentTargetRect.GetWorldCorners(cornersCache);
             
-            // corners: 0=좌하, 1=좌상, 2=우상, 3=우하
-            float minX = corners[0].x;
-            float maxX = corners[2].x;
-            float minY = corners[0].y;
-            float maxY = corners[1].y;
+            // cornersCache: 0=좌하, 1=좌상, 2=우상, 3=우하
+            float minX = cornersCache[0].x;
+            float maxX = cornersCache[2].x;
+            float minY = cornersCache[0].y;
+            float maxY = cornersCache[1].y;
 
             targetCenterX = (minX + maxX) / 2f;
             targetCenterY = (minY + maxY) / 2f;

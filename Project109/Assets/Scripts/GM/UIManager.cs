@@ -27,10 +27,10 @@ public class UIManager : MonoBehaviour
 
     // UI 부모 레이어 관리 (각 레이어는 독립된 Canvas와 Sorting Order를 갖게 됨)
     [Header("UI Parent Layers")]
-    public RectTransform worldUILayer;
-    public RectTransform normalUILayer;
-    public RectTransform topUILayer;
-    public RectTransform popupUILayer;
+    public Canvas worldUILayer;
+    public Canvas normalUILayer;
+    public Canvas topUILayer;
+    public Canvas popupUILayer;
 
     //현재 활성화된 Normal UI 목록 (스택 관리 대상)
     private Stack<GameObject> activeNormalUIStack = new Stack<GameObject>();
@@ -44,7 +44,7 @@ public class UIManager : MonoBehaviour
     //상단 HUD 관련 변수
     public TopHUDPanel topHUDPanel;
     private Player boundPlayer;
-    private GameObject exploreMapInstance;
+    private ExploreUI exploreMapInstance;
     public CardDeckViewPanel cardDeckViewPanel;
 
 
@@ -87,7 +87,7 @@ public class UIManager : MonoBehaviour
         }
         if (hudPrefab != null)
         {
-            Transform parentTransform = topUILayer != null ? topUILayer : transform;
+            Transform parentTransform = topUILayer != null ? topUILayer.transform : transform;
             GameObject inst = Instantiate(hudPrefab, parentTransform, false);
             inst.name = "TopHUDPanel";
 
@@ -106,7 +106,7 @@ public class UIManager : MonoBehaviour
         }
         if (deckPrefab != null)
         {
-            Transform parentTransform = topUILayer != null ? topUILayer : transform;
+            Transform parentTransform = topUILayer != null ? topUILayer.transform : transform;
             GameObject inst = Instantiate(deckPrefab, parentTransform, false);
             inst.name = "CardDeckCanvas";
 
@@ -188,10 +188,10 @@ public class UIManager : MonoBehaviour
     {
         switch (layerType)
         {
-            case UILayerType.World: return worldUILayer;
-            case UILayerType.Normal: return normalUILayer;
-            case UILayerType.Top: return topUILayer;
-            case UILayerType.Popup: return popupUILayer;
+            case UILayerType.World: return worldUILayer != null ? worldUILayer.transform as RectTransform : null;
+            case UILayerType.Normal: return normalUILayer != null ? normalUILayer.transform as RectTransform : null;
+            case UILayerType.Top: return topUILayer != null ? topUILayer.transform as RectTransform : null;
+            case UILayerType.Popup: return popupUILayer != null ? popupUILayer.transform as RectTransform : null;
             default: return null;
         }
     }
@@ -369,11 +369,7 @@ public class UIManager : MonoBehaviour
     }
 
     #endregion
-
-    // 유물 설명UI 관련 메서드(UpdateRelicDescription, OnRelicDescription, OffRelicDescription)는 TooltipPanel로 이동되어 제거되었습니다.
-
     #region 카드 범위확인 UI
-
 
     public void UpdateEffectAreaUI(CardData newCardData)
     {
@@ -507,25 +503,25 @@ public class UIManager : MonoBehaviour
     {
         if (exploreMapInstance == null)
         {
-            exploreMapInstance = OpenUI("ExploreMap", UILayerType.Top);
-            if (exploreMapInstance != null)
+            GameObject exploreMapObj = OpenUI("ExploreMap", UILayerType.Top);
+            if (exploreMapObj != null)
             {
-                ExploreUI exploreUI = exploreMapInstance.GetComponent<ExploreUI>();
-                if (exploreUI != null)
+                exploreMapInstance = exploreMapObj.GetComponent<ExploreUI>();
+                if (exploreMapInstance != null)
                 {
-                    exploreUI.CreateExploreMap(15);
+                    exploreMapInstance.CreateExploreMap(15);
                 }
             }
         }
-        return exploreMapInstance != null ? exploreMapInstance.GetComponent<ExploreUI>() : null;
+        return exploreMapInstance;
     }
 
     public void DestroyExploreMap()
     {
         if (exploreMapInstance != null)
         {
-            RemoveActiveUIFromStack(exploreMapInstance);
-            Destroy(exploreMapInstance);
+            RemoveActiveUIFromStack(exploreMapInstance.gameObject);
+            Destroy(exploreMapInstance.gameObject);
             exploreMapInstance = null;
 
             if (RunManager.instance != null)

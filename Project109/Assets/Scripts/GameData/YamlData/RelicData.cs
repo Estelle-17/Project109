@@ -1,24 +1,24 @@
-using YamlDotNet.Serialization;
-using UnityEngine;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 using XLua;
+using YamlDotNet.Serialization;
 
 public class RelicData : IModAssetResolver
 {
     // relicName이 고유 식별자(ID) 역할을 겸합니다.
     public string relicName { get; set; }
-    
+
     // 등장 가능한 캐릭터 클래스 목록.
     // 비어있거나 "All" 또는 "None" 포함 시 공용 유물로 취급됩니다.
     // YAML 예시 (전사/마법사 전용): classTypes:\n  - Warrior\n  - Wizard
     public List<string> classTypes { get; set; } = new List<string>();
-    
+
     public GameItem.Types.RelicRarity rarity { get; set; }
-    
+
     // 업그레이드 시 변환될 유물의 ID (null이거나 비어있으면 업그레이드 불가)
     public string upgradedRelicId { get; set; }
-    
+
     // 효과에 대한 기계적 설명 (예: "매 턴 시작 시 힘 +1")
     // {placeholder} 문법으로 동적 수치 표현 가능 (예: "공격력 {damage}만큼 피해")
     public string description { get; set; }
@@ -50,7 +50,7 @@ public class RelicData : IModAssetResolver
 
         // 1. 아이콘 스프라이트 링크 (relicName으로 자동 추론)
         string expectedImagePath = Path.Combine(modDirectory, "Icons", "Relics", relicName + ".png");
-        
+
         if (File.Exists(expectedImagePath))
         {
             // 최대 128x128 픽셀로 제한하여 로드
@@ -77,10 +77,10 @@ public class RelicData : IModAssetResolver
             try
             {
                 byte[] scriptBytes = File.ReadAllBytes(expectedScriptPath);
-                
+
                 // 루아 스크립트 실행 (컴파일 및 프로토타입 획득)
                 object[] results = LuaManager.Instance.luaEnv.DoString(scriptBytes, relicName);
-                
+
                 LuaTable proto = null;
                 if (results != null && results.Length > 0)
                 {
@@ -105,7 +105,7 @@ public class RelicData : IModAssetResolver
                     {
                         Debug.LogWarning($"[RelicData: {relicName}] 경고: 필수 함수 'OnInit'이 누락되었습니다. 게임 내에서 정상 작동하지 않을 수 있습니다.");
                     }
-                    
+
                     this.luaPrototype = proto;
                 }
                 else

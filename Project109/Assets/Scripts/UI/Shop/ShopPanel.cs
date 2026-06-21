@@ -14,9 +14,12 @@ public class ShopPanel : UIPanelBase
 
     public Button upgradeCardButton;
 
+    public Button closeUIButton;
+
     void Start()
     {
         upgradeCardButton.onClick.AddListener(OpenUpgradeCardUI);   //버튼 등록
+        closeUIButton.onClick.AddListener(CloseUI);     //버튼 등록
     }
 
     /// <summary>
@@ -123,5 +126,10 @@ public class ShopPanel : UIPanelBase
             UIManager.instance.OpenUI("UpgradeCardDeckCanvas", UILayerType.Normal, true);
         }
         Debug.Log("Card Upgrade is Process!");
+    }
+
+    public void CloseUI()
+    {
+        UIDeactive();
     }
 }

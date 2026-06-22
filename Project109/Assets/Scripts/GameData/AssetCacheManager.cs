@@ -409,22 +409,23 @@ public class AssetCacheManager : MonoBehaviour
     /// </summary>
     IEnumerator LoadAndCacheTextureFromAddressableData(string key, Action<IList<Sprite>, Dictionary<string, Sprite>> onLoaded)
     {
-        AsyncOperationHandle<IList<Sprite>> handle = Addressables.LoadAssetsAsync<Sprite>(key, null);
+        AsyncOperationHandle<IList<Texture2D>> handle = Addressables.LoadAssetsAsync<Texture2D>(key, null);
 
         yield return handle;
 
         if (handle.Status == AsyncOperationStatus.Succeeded)
         {
-            //불러온 데이터 저장
-            var list = handle.Result;
+            var list = new List<Sprite>();
             var dict = new Dictionary<string, Sprite>();
 
-            //Dictionary에 데이터 저장
-            foreach (var item in list)
+            foreach (var texture in handle.Result)
             {
-                if (!dict.ContainsKey(item.name))
+                if (texture != null)
                 {
-                    dict[item.name] = item;
+                    Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                    sprite.name = texture.name;
+                    list.Add(sprite);
+                    dict[texture.name] = sprite;
                 }
             }
 

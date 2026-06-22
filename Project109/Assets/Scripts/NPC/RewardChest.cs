@@ -130,6 +130,18 @@ public class RewardChest : InteractableObject
                     totalGold = 60;
                     baseMemorySharp = 2;
                     baseCardCount = 1;
+                    if (RunManager.instance.currentIncountNode.battleExtraRewardType == BattleExtraRewardType.Card)
+                    {
+                        rewardListUI.AddRewardItem(ItemRewardUIType.Card, "Rare_Card_Table", 1);
+                    }
+                    else if (RunManager.instance.currentIncountNode.battleExtraRewardType == BattleExtraRewardType.Relic)
+                    {
+                        rewardListUI.AddRewardItem(ItemRewardUIType.Relic, "Default_Relic_Table", 1);
+                    }
+                    else if (RunManager.instance.currentIncountNode.battleExtraRewardType == BattleExtraRewardType.Gold)
+                    {
+                        totalGold += UnityEngine.Random.Range(100, 151);
+                    }
                     break;
                 case IncountType.Elite:
                     totalGold = 80;

@@ -254,6 +254,23 @@ public class ExploreUI : UIPanelBase
             }
         }
 
+        // 일반 전투 노드에 추가 보상 무작위 배정 (1/3 확률씩)
+        for (int i = 0; i < ExploreMap.Count; i++)
+        {
+            for (int j = 0; j < ExploreMap[i].Count; j++)
+            {
+                if (ExploreMap[i][j].incountType == IncountType.Battle)
+                {
+                    int randomVal = Random.Range(0, 3);
+                    BattleExtraRewardType rewardType = BattleExtraRewardType.Card;
+                    if (randomVal == 1) rewardType = BattleExtraRewardType.Relic;
+                    else if (randomVal == 2) rewardType = BattleExtraRewardType.Gold;
+
+                    ExploreMap[i][j].SetIncountNode(IncountType.Battle, ExploreMap[i][j].extraIncountType, rewardType);
+                }
+            }
+        }
+
         //생성 시 필요한 만큼 노드 가리기
         //중간 지점의 휴식, 상점 2개의 노드만 있는 곳은 가리지 않기
         for (int i = RunManager.instance.player.playerStat.MapFloorCheckLength; i < ExploreMap.Count; i++)

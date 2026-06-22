@@ -22,11 +22,20 @@ public enum ExtraIncountType
     ShineWell   //빛나는 우물
 }
 
+public enum BattleExtraRewardType
+{
+    None,
+    Card,       //희귀등급 이상의 카드
+    Relic,      //일반 등급 이상의 유물
+    Gold        //보너스 재화
+}
+
 [RequireComponent(typeof(Image))]
 public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public IncountType incountType;
     public ExtraIncountType extraIncountType;
+    public BattleExtraRewardType battleExtraRewardType = BattleExtraRewardType.None;
     public List<GameObject> nextIncountNode;
     public ExploreUI exploreUI;
     public bool isNodeChanged;  //노드가 생성되고 노드 타입이 한번 이상 변경되었는지 여부
@@ -43,25 +52,13 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     public GameObject IncountNodeCurrentHighlightCircleObject;
     public GameObject IncountNodeExtraRewardObject;
 
-    //텍스처
-    [Header("NodeTexture")]
-    [SerializeField] private Sprite noneTexture;
-    [SerializeField] private Sprite battleTexture;
-    [SerializeField] private Sprite eliteTexture;
-    [SerializeField] private Sprite bossTexture;
-    [SerializeField] private Sprite restoreTexture;
-    [SerializeField] private Sprite storeTexture;
-    [SerializeField] private Sprite secretBoxTexture;
-    [SerializeField] private Sprite secretTexture;
 
-    [Header("ExtraNodeTexture")]
-    [SerializeField] private Sprite insightTexture;
-    [SerializeField] private Sprite shiningWellTexture;
 
-    public void SetIncountNode(IncountType newIncountType, ExtraIncountType newExtraIncountType)
+    public void SetIncountNode(IncountType newIncountType, ExtraIncountType newExtraIncountType, BattleExtraRewardType newExtraRewardType = BattleExtraRewardType.None)
     {
         incountType = newIncountType;
         extraIncountType = newExtraIncountType;
+        battleExtraRewardType = newExtraRewardType;
         SetNodeTexture();
         SetExtraNodeTexture();
     }
@@ -73,6 +70,7 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     {
         var enumValue = System.Enum.GetValues(enumType:typeof(IncountType));
         incountType = (IncountType)enumValue.GetValue(Random.Range(1, enumValue.Length));
+        battleExtraRewardType = BattleExtraRewardType.None;
         SetNodeTexture();
         SetExtraNodeTexture();
     }
@@ -83,55 +81,101 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     void SetNodeTexture()
     {
         Image image = GetComponent<Image>();
+        if (image == null) return;
+
+        if (AssetCacheManager.instance == null)
+        {
+            Debug.LogWarning("[IncountNode] AssetCacheManager.instance is null");
+            return;
+        }
+
+        string textureName = "IncountNodeTexture";
         switch (incountType)
         {
             case IncountType.None:
-                image.sprite = noneTexture;
+                textureName = "IncountNodeTexture";
                 break;
             case IncountType.Battle:
-                image.sprite = battleTexture;
+                switch (battleExtraRewardType)
+                {
+                    case BattleExtraRewardType.Card:
+                        textureName = "IncountNodeBattleCardTexture";
+                        break;
+                    case BattleExtraRewardType.Relic:
+                        textureName = "IncountNodeBattleRelicTexture";
+                        break;
+                    case BattleExtraRewardType.Gold:
+                        textureName = "IncountNodeBattleGoldTexture";
+                        break;
+                    default:
+                        textureName = "IncountNodeBattleTexture";
+                        break;
+                }
                 break;
             case IncountType.Elite:
-                image.sprite = eliteTexture;
+                textureName = "IncountNodeEliteEnemyTexture";
                 break;
             case IncountType.Boss:
-                image.sprite = bossTexture;
+                textureName = "IncountNodeBossTexture";
                 break;
             case IncountType.Restore:
-                image.sprite = restoreTexture;
+                textureName = "IncountNodeRestoreTexture";
                 break;
             case IncountType.Store:
-                image.sprite = storeTexture;
+                textureName = "IncountNodeStoreTexture";
                 break;
             case IncountType.SecretBox:
-                image.sprite = secretBoxTexture;
+                textureName = "IncountNodeSecretBoxTexture";
                 break;
             case IncountType.Secret:
-                image.sprite = secretTexture;
+                textureName = "IncountNodeSecretTexture";
                 break;
             default:
-                image.sprite = noneTexture;
+                textureName = "IncountNodeTexture";
                 break;
+        }
+
+        if (AssetCacheManager.instance.TryGetTexture(textureName, out Sprite sprite))
+        {
+            image.sprite = sprite;
+        }
+        else
+        {
+            Debug.LogWarning($"[IncountNode] Failed to load Addressable texture: {textureName}");
         }
     }
 
     void SetExtraNodeTexture()
     {
         Image image = IncountNodeExtraRewardObject.GetComponent<Image>();
+        if (image == null) return;
+
+        if (AssetCacheManager.instance == null) return;
+
+        string textureName = "IncountNodeTexture"; // default/none
         switch (extraIncountType)
         {
             case ExtraIncountType.None:
-                image.sprite = noneTexture;
+                textureName = "IncountNodeTexture";
                 break;
             case ExtraIncountType.Insight:
-                image.sprite = insightTexture;
+                textureName = "IncountNodeInsightTexture";
                 break;
             case ExtraIncountType.ShineWell:
-                image.sprite = shiningWellTexture;
+                textureName = "IncountNodeInsightTexture";
                 break;
             default:
-                image.sprite = noneTexture;
+                textureName = "IncountNodeTexture";
                 break;
+        }
+
+        if (AssetCacheManager.instance.TryGetTexture(textureName, out Sprite sprite))
+        {
+            image.sprite = sprite;
+        }
+        else
+        {
+            image.sprite = null;
         }
     }
 

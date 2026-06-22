@@ -1,8 +1,8 @@
-using UnityEngine;
+using System.IO;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
-using System.IO;
+using UnityEngine;
 
 public class AddressableAutoRegister : Editor
 {
@@ -10,11 +10,13 @@ public class AddressableAutoRegister : Editor
     private const string UI_GROUP = "UI_Prefabs";
     private const string NPC_GROUP = "NPC_Prefabs";
     private const string MAP_PREFAB_GROUP = "Map_Prefabs";
+    private const string TEXTURE_GROUP = "Textures";
 
     private const string UI_PATH = "Assets/Prefab/UI";
     private const string NPC_PATH = "Assets/Prefab/NPC";
     private const string NPC_MODEL_PATH = "Assets/Prefab/Model/NPC";
     private const string MAP_PATH = "Assets/Prefab/Map";
+    private const string TEXTURE_PATH = "Assets/Texture";
 
     [MenuItem("Tools/Addressables/모든 에셋 자동 등록")]
     public static void RegisterAll()
@@ -23,6 +25,7 @@ public class AddressableAutoRegister : Editor
         RegisterAllUIPrefabs();
         RegisterAllNPCPrefabs();
         RegisterAllMapPrefabs();
+        RegisterAllTextures();
     }
 
     [MenuItem("Tools/Addressables/맵 데이터 자동 등록 (MapDataSO)")]
@@ -190,5 +193,68 @@ public class AddressableAutoRegister : Editor
             AssetDatabase.SaveAssets();
             Debug.Log($"<color=green>총 {registeredCount}개의 UI 프리팹이 Addressables에 등록되었습니다!</color>");
         }
+    }
+
+    [MenuItem("Tools/Addressables/텍스처 자동 등록 (Texture)")]
+    public static void RegisterAllTextures()
+    {
+        RegisterTexturesFromFolder(TEXTURE_GROUP, TEXTURE_PATH, "Texture");
+    }
+
+    private static void RegisterTexturesFromFolder(string groupName, string folderPath, string labelName)
+    {
+        AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+        if (settings == null)
+        {
+            Debug.LogError("Addressable Settings를 찾을 수 없습니다. Addressables 창을 열어 초기화해주세요.");
+            return;
+        }
+
+        AddressableAssetGroup targetGroup = settings.FindGroup(groupName);
+        if (targetGroup == null)
+        {
+            targetGroup = settings.CreateGroup(groupName, false, false, false, settings.DefaultGroup.Schemas);
+        }
+
+        if (!Directory.Exists(folderPath))
+        {
+            Debug.LogWarning($"폴더를 찾을 수 없습니다: {folderPath}");
+            return;
+        }
+
+        string[] pngFiles = Directory.GetFiles(folderPath, "*.png", SearchOption.AllDirectories);
+        string[] jpgFiles = Directory.GetFiles(folderPath, "*.jpg", SearchOption.AllDirectories);
+
+        System.Collections.Generic.List<string> fileEntries = new System.Collections.Generic.List<string>();
+        fileEntries.AddRange(pngFiles);
+        fileEntries.AddRange(jpgFiles);
+
+        int registeredCount = 0;
+
+        foreach (string filePath in fileEntries)
+        {
+            string relativePath = filePath.Replace("\\", "/");
+            string guid = AssetDatabase.AssetPathToGUID(relativePath);
+
+            if (string.IsNullOrEmpty(guid)) continue;
+
+            string assetName = Path.GetFileNameWithoutExtension(relativePath);
+
+            AddressableAssetEntry entry = settings.CreateOrMoveEntry(guid, targetGroup);
+            if (entry != null)
+            {
+                entry.SetAddress(assetName);
+                if (!string.IsNullOrEmpty(labelName))
+                {
+                    entry.SetLabel(labelName, true);
+                }
+                registeredCount++;
+            }
+        }
+
+        settings.SetDirty(AddressableAssetSettings.ModificationEvent.EntryMoved, null, true, true);
+        AssetDatabase.SaveAssets();
+
+        Debug.Log($"<color=green>[Addressables] '{groupName}' 그룹에 {registeredCount}개의 텍스처(폴더: {folderPath}) 등록 완료!</color>");
     }
 }

@@ -190,6 +190,14 @@ public class BattleManager : IInitializable, IDisposable
             {
                 RunManager.instance.currentMap.currentMapState = MapState.None;
             }
+            
+            // 승리 시 플레이어 위치에 보상 상자 스폰
+            if (GameItemRewardManager.instance != null && RunManager.instance.player != null && RunManager.instance.player.character != null)
+            {
+                Vector3 spawnPos = RunManager.instance.player.character.transform.position;
+                GameItemRewardManager.instance.SpawnRewardBox(spawnPos);
+            }
+
             RunManager.instance.OnMapStateChanged(MapState.None);
         }
 

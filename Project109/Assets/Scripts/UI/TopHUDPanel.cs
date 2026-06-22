@@ -68,7 +68,7 @@ public class TopHUDPanel : UIPanelBase
 
     private void UpdateUIImage()
     {
-        if (AssetCacheManager.instance.TryGetTexture("Texture_Gold", out Sprite goldTexture))
+        if (AssetCacheManager.instance.TryGetTexture("Gold", out Sprite goldTexture))
         {
             currencyImage.sprite = goldTexture;
         }
@@ -77,7 +77,7 @@ public class TopHUDPanel : UIPanelBase
             Debug.LogWarning("Failed to load Texture_UI_Gold");
         }
 
-        if (AssetCacheManager.instance.TryGetTexture("Texture_MemoryShard", out Sprite shardTexture))
+        if (AssetCacheManager.instance.TryGetTexture("MemoryShard", out Sprite shardTexture))
         {
             specialResourceImage.sprite = shardTexture;
         }
@@ -86,7 +86,7 @@ public class TopHUDPanel : UIPanelBase
             Debug.LogWarning("Failed to load Texture_UI_MemoryShard");
         }
 
-        if (AssetCacheManager.instance.TryGetTexture("Texture_UI_MapButtonIcon", out Sprite mapButtonIconTexture))
+        if (AssetCacheManager.instance.TryGetTexture("MapButtonIcon", out Sprite mapButtonIconTexture))
         {
             mapButtonImage.sprite = mapButtonIconTexture;
         }
@@ -95,7 +95,7 @@ public class TopHUDPanel : UIPanelBase
             Debug.LogWarning("Failed to load Texture_UI_MapButtonIcon");
         }
 
-        if (AssetCacheManager.instance.TryGetTexture("Texture_UI_DeckButtonIcon", out Sprite deckButtonIconTexture))
+        if (AssetCacheManager.instance.TryGetTexture("DeckButtonIcon", out Sprite deckButtonIconTexture))
         {
             deckButtonImage.sprite = deckButtonIconTexture;
         }

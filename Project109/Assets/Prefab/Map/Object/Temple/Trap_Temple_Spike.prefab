@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 860178374365622398}
   - component: {fileID: 2109655296616762536}
   - component: {fileID: 7889139656811810217}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pillar (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 6135398921358721658}
   - component: {fileID: 5178377494104353966}
   - component: {fileID: 8623028067432325066}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pillar (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 4586187645712796572}
   - component: {fileID: 2155545979506842806}
   - component: {fileID: 4755142439299311762}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pillar (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -348,7 +348,7 @@ GameObject:
   - component: {fileID: 169516251823489316}
   - component: {fileID: 291243169601668663}
   - component: {fileID: 8080961110573033745}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -457,7 +457,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 970366206921942444}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Trap_Temple_Spike
   m_TagString: Untagged
   m_Icon: {fileID: 0}

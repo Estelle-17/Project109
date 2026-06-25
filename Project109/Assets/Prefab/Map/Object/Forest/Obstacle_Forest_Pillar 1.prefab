@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 169516251823489316}
   - component: {fileID: 291243169601668663}
   - component: {fileID: 8080961110573033745}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Pillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: c395399dcf9c24e4bb353e629043cafd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -121,7 +121,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 970366206921942444}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Obstacle_Forest_Pillar 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

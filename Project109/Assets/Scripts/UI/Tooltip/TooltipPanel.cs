@@ -13,6 +13,24 @@ public class TooltipPanel : MonoBehaviour
 
     private void Awake()
     {
+        if (_headerText == null)
+        {
+            Transform child = transform.Find("HeaderText");
+            if (child != null)
+            {
+                _headerText = child.GetComponent<TextMeshProUGUI>();
+            }
+        }
+
+        if (_bodyText == null)
+        {
+            Transform child = transform.Find("BodyText");
+            if (child != null)
+            {
+                _bodyText = child.GetComponent<TextMeshProUGUI>();
+            }
+        }
+
         if (_layoutElement == null)
         {
             _layoutElement = GetComponent<LayoutElement>();

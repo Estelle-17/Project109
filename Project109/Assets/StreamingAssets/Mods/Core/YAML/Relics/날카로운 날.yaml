@@ -3,5 +3,5 @@ classTypes:
   - "All"
 rarity: "Rare"
 upgradedRelicId: ""
-description: "적 체력에 피해를 입힐 시 출혈을 1 부여합니다."
+description: "적 체력에 피해를 입힐 시 [effect.Bleeding] 1을 부여합니다."
 flavorText: ""

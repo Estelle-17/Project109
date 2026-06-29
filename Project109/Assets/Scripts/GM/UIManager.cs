@@ -76,10 +76,9 @@ public class UIManager : MonoBehaviour
         // AssetCacheManager가 필요한 프리팹들을 캐시할 때까지 대기
         while (true)
         {
-            bool tooltipPanelReady = AssetCacheManager.instance.TryGetUI("TooltipPanel", out _);
             bool hudReady = AssetCacheManager.instance.TryGetUI("TopHUDPanel", out hudPrefab);
             bool deckReady = AssetCacheManager.instance.TryGetUI("CardDeckCanvas", out deckPrefab);
-            if (tooltipPanelReady && hudReady && deckReady)
+            if (hudReady && deckReady)
             {
                 break;
             }

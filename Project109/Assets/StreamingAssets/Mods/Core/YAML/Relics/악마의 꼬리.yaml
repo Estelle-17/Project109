@@ -3,5 +3,5 @@ classTypes:
   - "All"
 rarity: "Unique"
 upgradedRelicId: ""
-description: "내 턴이 시작될 때 마다 2칸 내의 적들에게 쇠약을 1 부여합니다."
+description: "내 턴이 시작될 때 마다 2칸 내의 적들에게 [effect.Weakness] 1을 부여합니다."
 flavorText: ""

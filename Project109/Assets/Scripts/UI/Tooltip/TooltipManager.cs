@@ -205,31 +205,27 @@ public class TooltipManager : MonoBehaviour
 
     private static void CreateInstance()
     {
-        if (AssetCacheManager.instance == null || UIManager.instance == null)
+        if (UIManager.instance == null)
         {
-            Debug.LogWarning("[TooltipManager] UIManager or AssetCacheManager is not initialized yet.");
+            Debug.LogWarning("[TooltipManager] UIManager is not initialized yet.");
             return;
         }
 
-        if (AssetCacheManager.instance.TryGetUI("RelicDescription", out GameObject prefab))
-        {
-            Transform parentTransform = UIManager.instance.popupUILayer != null ? UIManager.instance.popupUILayer.transform : UIManager.instance.transform;
-            GameObject inst = Instantiate(prefab, parentTransform, false);
-            inst.name = "RelicDescription";
+        // 1. 빈 RectTransform 게임 오브젝트를 런타임에 생성
+        GameObject inst = new GameObject("TooltipContainer", typeof(RectTransform));
+        
+        // 2. UIManager의 popupUILayer 자식으로 정렬 배치
+        Transform parentTransform = UIManager.instance.popupUILayer != null 
+            ? UIManager.instance.popupUILayer.transform 
+            : UIManager.instance.transform;
+        inst.transform.SetParent(parentTransform, false);
 
-            instance = inst.GetComponent<TooltipManager>();
-            if (instance == null)
-            {
-                instance = inst.AddComponent<TooltipManager>();
-            }
-            instance.InitializeComponents();
-            inst.SetActive(false);
-            Debug.Log("[TooltipManager] RelicDescription UI dynamically initialized and TooltipManager attached.");
-        }
-        else
-        {
-            Debug.LogError("[TooltipManager] Failed to find RelicDescription prefab in AssetCacheManager.");
-        }
+        // 3. TooltipManager 컴포넌트 추가 및 컴포넌트 초기화
+        instance = inst.AddComponent<TooltipManager>();
+        instance.InitializeComponents();
+        inst.SetActive(false);
+
+        Debug.Log("[TooltipManager] TooltipContainer dynamically created and TooltipManager initialized.");
     }
 
     public void ShowTooltip(string title, string content, RectTransform targetRect = null)

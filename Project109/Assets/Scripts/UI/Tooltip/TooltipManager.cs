@@ -46,7 +46,8 @@ public class TooltipManager : MonoBehaviour
     private VerticalLayoutGroup layoutGroup;
     private ContentSizeFitter sizeFitter;
 
-    private GameObject panelTemplate;
+    [Header("Prefabs")]
+    [SerializeField] private TooltipPanel panelTemplatePrefab;
     private List<TooltipPanel> activePanels = new List<TooltipPanel>();
     private List<TooltipPanel> panelPool = new List<TooltipPanel>();
 
@@ -184,27 +185,21 @@ public class TooltipManager : MonoBehaviour
         sizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
         sizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-        // 3. 기존 프리팹에 들어있던 텍스트 요소를 찾아서 템플릿(TooltipPanel)으로 개조
-        TextMeshProUGUI legacyText = GetComponentInChildren<TextMeshProUGUI>(true);
-        if (legacyText != null)
+        // 3. 캐시 매니저를 통해 독립적인 TooltipPanel 프리팹 로드
+        if (panelTemplatePrefab == null && AssetCacheManager.instance != null)
         {
-            panelTemplate = legacyText.gameObject;
-            
-            if (!panelTemplate.TryGetComponent<LayoutElement>(out _))
+            if (AssetCacheManager.instance.TryGetUI("TooltipPanel", out GameObject panelPrefab))
             {
-                panelTemplate.AddComponent<LayoutElement>();
+                panelTemplatePrefab = panelPrefab.GetComponent<TooltipPanel>();
+                if (panelTemplatePrefab == null)
+                {
+                    Debug.LogError("[TooltipManager] TooltipPanel component not found on 'TooltipPanel' prefab.");
+                }
             }
-
-            if (!panelTemplate.TryGetComponent<TooltipPanel>(out _))
+            else
             {
-                panelTemplate.AddComponent<TooltipPanel>();
+                Debug.LogError("[TooltipManager] Failed to find 'TooltipPanel' prefab in AssetCacheManager.");
             }
-
-            panelTemplate.SetActive(false);
-        }
-        else
-        {
-            Debug.LogError("[TooltipManager] Legacy text component not found in prefab children.");
         }
     }
 
@@ -405,7 +400,7 @@ public class TooltipManager : MonoBehaviour
 
     private TooltipPanel GetOrCreatePanel()
     {
-        if (panelTemplate == null) return null;
+        if (panelTemplatePrefab == null) return null;
 
         if (panelPool.Count > 0)
         {
@@ -414,8 +409,8 @@ public class TooltipManager : MonoBehaviour
             return panel;
         }
 
-        GameObject inst = Instantiate(panelTemplate, transform, false);
-        return inst.GetComponent<TooltipPanel>();
+        TooltipPanel inst = Instantiate(panelTemplatePrefab, transform, false);
+        return inst;
     }
 
     private void Update()

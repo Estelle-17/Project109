@@ -77,9 +77,10 @@ public class UIManager : MonoBehaviour
         while (true)
         {
             bool relicReady = AssetCacheManager.instance.TryGetUI("RelicDescription", out _);
+            bool tooltipPanelReady = AssetCacheManager.instance.TryGetUI("TooltipPanel", out _);
             bool hudReady = AssetCacheManager.instance.TryGetUI("TopHUDPanel", out hudPrefab);
             bool deckReady = AssetCacheManager.instance.TryGetUI("CardDeckCanvas", out deckPrefab);
-            if (relicReady && hudReady && deckReady)
+            if (relicReady && tooltipPanelReady && hudReady && deckReady)
             {
                 break;
             }

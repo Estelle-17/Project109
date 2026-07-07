@@ -41,20 +41,75 @@ public class ShopNPC : InteractableObject
         actionCards.Clear();
         relics.Clear();
 
-        for (int i = 0; i < cardCount; i++)  //랜덤한 카드 데이터 저장
+        if (GameItemRewardManager.instance == null) return;
+
+        // 1. 카드 중복 방지 저장
+        for (int i = 0; i < cardCount; i++)
         {
-            if (GameItemRewardManager.instance != null)
+            CardData card = null;
+            int attempts = 0;
+            const int maxAttempts = 50;
+
+            while (attempts < maxAttempts)
             {
-                var card = GameItemRewardManager.instance.GetRandomCardDataByDropTable("Shop_Card_Table");
-                if (card != null) actionCards.Add(card);
+                card = GameItemRewardManager.instance.GetRandomCardDataByDropTable("Shop_Card_Table");
+                if (card == null) break;
+
+                bool isDuplicate = false;
+                foreach (var activeCard in actionCards)
+                {
+                    if (activeCard.cardName == card.cardName)
+                    {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+
+                if (!isDuplicate)
+                {
+                    break;
+                }
+                attempts++;
+            }
+
+            if (card != null)
+            {
+                actionCards.Add(card);
             }
         }
-        for (int i = 0; i < relicCount; i++) //랜덤한 유물 데이터 저장
+
+        // 2. 유물 중복 방지 저장
+        for (int i = 0; i < relicCount; i++)
         {
-            if (GameItemRewardManager.instance != null)
+            RelicData relic = null;
+            int attempts = 0;
+            const int maxAttempts = 50;
+
+            while (attempts < maxAttempts)
             {
-                var relic = GameItemRewardManager.instance.GetRandomRelicDataByDropTable("Shop_Relic_Table");
-                if (relic != null) relics.Add(relic);
+                relic = GameItemRewardManager.instance.GetRandomRelicDataByDropTable("Shop_Relic_Table");
+                if (relic == null) break;
+
+                bool isDuplicate = false;
+                foreach (var activeRelic in relics)
+                {
+                    if (activeRelic.relicName == relic.relicName)
+                    {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+
+                if (!isDuplicate)
+                {
+                    break;
+                }
+                attempts++;
+            }
+
+            if (relic != null)
+            {
+                relics.Add(relic);
             }
         }
     }

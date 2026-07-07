@@ -200,6 +200,28 @@ public class Card : IDescribable
     }
 
     /// <summary>
+    /// 카드의 실시간 최종 수치(Effective Value)를 소수점 이하 불필요한 0을 제거하여 포맷팅된 문자열로 반환합니다.
+    /// 예: 2.0 -> "2", 2.5304 -> "2.5304"
+    /// </summary>
+    public string GetFormattedValue(string valueKey)
+    {
+        float val = GetEffectiveValue(valueKey);
+        double rounded = Math.Round((double)val, 5);
+        return rounded.ToString("0.#####");
+    }
+
+    /// <summary>
+    /// 카드의 기본 수치(Base Value)를 소수점 이하 불필요한 0을 제거하여 포맷팅된 문자열로 반환합니다.
+    /// 예: 2.0 -> "2", 2.5304 -> "2.5304"
+    /// </summary>
+    public string GetBaseFormattedValue(string valueKey)
+    {
+        float val = GetBaseValue(valueKey);
+        double rounded = Math.Round((double)val, 5);
+        return rounded.ToString("0.#####");
+    }
+
+    /// <summary>
     /// 카드 인스턴스 자체에 기록된 마스터리 업그레이드 횟수를 기반으로 최종 수치를 계산합니다.
     /// </summary>
     public float GetEffectiveValue(string valueKey)

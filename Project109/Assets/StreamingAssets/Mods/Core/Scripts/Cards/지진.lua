@@ -3,9 +3,9 @@ function card:OnInit(cardBase, owner)
     self.base = cardBase
 end
 function card:GetDescription(cardBase, template)
-    local baseDamage = cardBase:GetEffectiveValue("damage")
-    local staminaLoss = cardBase:GetEffectiveValue("staminaLoss")
-    return (template:gsub("{damage}", tostring(math.floor(baseDamage))):gsub("{staminaLoss}", tostring(math.floor(staminaLoss))))
+    local baseDamage = cardBase:GetFormattedValue("damage")
+    local staminaLoss = cardBase:GetFormattedValue("staminaLoss")
+    return (template:gsub("{damage}", tostring(baseDamage)):gsub("{staminaLoss}", tostring(staminaLoss)))
 end
 function card:Execute(cardInfo)
     local caster = cardInfo.caster
@@ -18,7 +18,7 @@ function card:Execute(cardInfo)
             local dmgInfo = EventStructs.DamageInfo(caster, target, baseDamage, EventStructs.DamageFlag.Normal)
             target:TakeDamage(dmgInfo)
             
-            -- 스태미너 감소 적용
+            -- ?�태미너 감소 ?�용
             local stamInfo = EventStructs.StaminaInfo(caster, target, staminaLoss, EventStructs.StaminaFlag.Normal)
             target:SpendStamina(stamInfo)
         end

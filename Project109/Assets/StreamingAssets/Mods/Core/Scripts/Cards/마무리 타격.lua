@@ -12,9 +12,9 @@ function card:OnAfterUseCard(cardInfo)
     end
 end
 function card:GetDescription(cardBase, template)
-    local baseDamage = cardBase:GetBaseValue("damage")
-    local bonus = cardBase:GetBaseValue("bonus")
-    return (template:gsub("{damage}", tostring(math.floor(baseDamage))):gsub("{bonus}", tostring(math.floor(bonus))))
+    local baseDamage = cardBase:GetBaseFormattedValue("damage")
+    local bonus = cardBase:GetBaseFormattedValue("bonus")
+    return (template:gsub("{damage}", tostring(baseDamage)):gsub("{bonus}", tostring(bonus)))
 end
 function card:Execute(cardInfo)
     local caster = cardInfo.caster

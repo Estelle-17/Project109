@@ -3,9 +3,9 @@ function card:OnInit(cardBase, owner)
     self.base = cardBase
 end
 function card:GetDescription(cardBase, template)
-    local baseDamage = cardBase:GetBaseValue("damage")
-    local hits = cardBase:GetBaseValue("hits")
-    return (template:gsub("{damage}", tostring(math.floor(baseDamage))):gsub("{hits}", tostring(math.floor(hits))))
+    local baseDamage = cardBase:GetBaseFormattedValue("damage")
+    local hits = cardBase:GetBaseFormattedValue("hits")
+    return (template:gsub("{damage}", tostring(baseDamage)):gsub("{hits}", tostring(hits)))
 end
 function card:Execute(cardInfo)
     local caster = cardInfo.caster

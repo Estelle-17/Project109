@@ -3,12 +3,12 @@ function card:OnInit(cardBase, owner)
     self.base = cardBase
 end
 function card:GetDescription(cardBase, template)
-    local baseDamage = cardBase:GetBaseValue("damage")
-    local vulnerable = cardBase:GetBaseValue("vulnerable")
-    local weak = cardBase:GetBaseValue("weak")
-    return (template:gsub("{damage}", tostring(math.floor(baseDamage)))
-                    :gsub("{vulnerable}", tostring(math.floor(vulnerable)))
-                    :gsub("{weak}", tostring(math.floor(weak))))
+    local baseDamage = cardBase:GetBaseFormattedValue("damage")
+    local vulnerable = cardBase:GetBaseFormattedValue("vulnerable")
+    local weak = cardBase:GetBaseFormattedValue("weak")
+    return (template:gsub("{damage}", tostring(baseDamage))
+                    :gsub("{vulnerable}", tostring(vulnerable))
+                    :gsub("{weak}", tostring(weak)))
 end
 function card:Execute(cardInfo)
     local caster = cardInfo.caster

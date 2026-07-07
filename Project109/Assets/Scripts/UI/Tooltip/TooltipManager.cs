@@ -168,7 +168,7 @@ public class TooltipManager : MonoBehaviour
         {
             layoutGroup = gameObject.AddComponent<VerticalLayoutGroup>();
         }
-        layoutGroup.childAlignment = TextAnchor.UpperLeft;
+        layoutGroup.childAlignment = TextAnchor.UpperRight;
         layoutGroup.childControlWidth = true;
         layoutGroup.childControlHeight = true;
         layoutGroup.childForceExpandWidth = true;
@@ -281,7 +281,7 @@ public class TooltipManager : MonoBehaviour
                             if (ModLoader.Instance.CardDatabase.TryGetValue(id, out CardData cardData))
                             {
                                 subTitle = cardData.cardName;
-                                subDescription = cardData.description ?? string.Empty;
+                                subDescription = cardData.GetDescription();
                             }
                         }
                         break;
@@ -367,6 +367,7 @@ public class TooltipManager : MonoBehaviour
             if (panel != null)
             {
                 panel.Setup(data.header, data.body);
+                panel.transform.SetAsLastSibling();
                 panel.gameObject.SetActive(true);
                 activePanels.Add(panel);
             }
@@ -419,123 +420,104 @@ public class TooltipManager : MonoBehaviour
 
     private void UpdatePosition()
     {
-        if (rectTransform == null) return;
+        if (rectTransform == null || parentCanvas == null) return;
 
-        // 1. 화면 스케일/해상도 기준 가져오기
-        float screenWidth = Screen.width;
-        float screenHeight = Screen.height;
+        RectTransform canvasRect = parentCanvas.GetComponent<RectTransform>();
+        if (canvasRect == null) return;
 
-        if (parentCanvas != null)
-        {
-            RectTransform canvasRect = parentCanvas.GetComponent<RectTransform>();
-            if (canvasRect != null)
-            {
-                screenWidth = canvasRect.rect.width;
-                screenHeight = canvasRect.rect.height;
-            }
-        }
+        // 1. 캔버스 로컬 좌표계 기준 화면 경계 획득
+        float minScreenX = canvasRect.rect.xMin;
+        float maxScreenX = canvasRect.rect.xMax;
+        float minScreenY = canvasRect.rect.yMin;
+        float maxScreenY = canvasRect.rect.yMax;
+        float screenWidth = canvasRect.rect.width;
+        float screenHeight = canvasRect.rect.height;
 
-        // 2. 전체 툴팁 뭉치의 사이즈
+        // 2. 전체 툴팁 뭉치의 스케일 보정 및 높이 획득
         float H = rectTransform.rect.height;
         float W = rectTransform.rect.width;
 
-        float targetCenterY = 0f;
-        float targetCenterX = 0f;
-        float targetWidth = 0f;
-
-        if (currentTargetRect != null)
+        float maxAvailableHeight = screenHeight - (padding * 2f);
+        if (H > maxAvailableHeight)
         {
-            // [UI 기준 고정 모드]
-            currentTargetRect.GetWorldCorners(cornersCache);
-            
-            // cornersCache: 0=좌하, 1=좌상, 2=우상, 3=우하
-            float minX = cornersCache[0].x;
-            float maxX = cornersCache[2].x;
-            float minY = cornersCache[0].y;
-            float maxY = cornersCache[1].y;
-
-            targetCenterX = (minX + maxX) / 2f;
-            targetCenterY = (minY + maxY) / 2f;
-            targetWidth = maxX - minX;
-        }
-        else
-        {
-            // [마우스 실시간 추적 모드]
-            Vector2 mousePos = Vector2.zero;
-            if (Mouse.current != null)
-            {
-                mousePos = Mouse.current.position.ReadValue();
-            }
-            else
-            {
-                mousePos = Input.mousePosition;
-            }
-            targetCenterX = mousePos.x;
-            targetCenterY = mousePos.y;
-            targetWidth = 0f;
-        }
-
-        // 3. X축 배치 결정 (오른쪽 vs 왼쪽)
-        float pivotX = 0f;
-        float finalX = 0f;
-
-        if (currentTargetRect != null)
-        {
-            // 카드/유물 UI의 오른쪽 배치 시도
-            float expectedRightX = targetCenterX + (targetWidth / 2f) + mouseOffset.x;
-            if (expectedRightX + W > screenWidth - padding)
-            {
-                // 오른쪽 공간이 부족하면 왼쪽 배치
-                pivotX = 1f;
-                finalX = targetCenterX - (targetWidth / 2f) - mouseOffset.x;
-            }
-            else
-            {
-                // 충분하면 오른쪽 배치
-                pivotX = 0f;
-                finalX = expectedRightX;
-            }
-        }
-        else
-        {
-            // 마우스 기준 배치
-            float expectedRightX = targetCenterX + mouseOffset.x;
-            if (expectedRightX + W > screenWidth - padding)
-            {
-                pivotX = 1f;
-                finalX = targetCenterX - mouseOffset.x;
-            }
-            else
-            {
-                pivotX = 0f;
-                finalX = expectedRightX;
-            }
-        }
-
-        // 4. Y축 배치 결정 및 Clamp (세로 이탈 방지)
-        float pivotY = 0.5f; // 기본적으로 대상 높이의 중간에 걸침
-        float clampMinY = H / 2f + padding;
-        float clampMaxY = screenHeight - (H / 2f) - padding;
-        
-        // 뭉치 높이가 화면 전체 높이를 초과할 경우를 위한 Fallback 예외처리
-        if (clampMinY > clampMaxY)
-        {
-            // 스케일을 축소하여 뭉치 크기를 줄임
-            transform.localScale = Vector3.one * 0.85f;
-            H *= 0.85f;
-            clampMinY = H / 2f + padding;
-            clampMaxY = screenHeight - (H / 2f) - padding;
+            float scaleFactor = maxAvailableHeight / H;
+            transform.localScale = Vector3.one * scaleFactor;
+            H = maxAvailableHeight;
         }
         else
         {
             transform.localScale = Vector3.one;
         }
 
-        float finalY = Mathf.Clamp(targetCenterY, clampMinY, clampMaxY);
+        // [마우스 실시간 추적] -> 캔버스 로컬 좌표로 변환
+        Vector2 mousePos = Vector2.zero;
+        if (Mouse.current != null)
+        {
+            mousePos = Mouse.current.position.ReadValue();
+        }
+        else
+        {
+            mousePos = Input.mousePosition;
+        }
 
-        // 5. 위치 적용
+        Camera eventCamera = parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : parentCanvas.worldCamera;
+        Vector2 canvasMousePos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, mousePos, eventCamera, out canvasMousePos);
+
+        float targetCenterX = canvasMousePos.x;
+        float targetCenterY = canvasMousePos.y;
+
+        // 3. X축 배치 결정 (오른쪽 vs 왼쪽 피벗 반전 정렬)
+        float pivotX = 0f;
+        float finalX = 0f;
+
+        // 마우스 기준 배치
+        float expectedRightX = targetCenterX + mouseOffset.x;
+        if (expectedRightX + W > maxScreenX - padding)
+        {
+            pivotX = 1f;
+            finalX = targetCenterX - mouseOffset.x;
+        }
+        else
+        {
+            pivotX = 0f;
+            finalX = expectedRightX;
+        }
+
+        // X축 최종 화면 밖 이탈 Clamping 방어 코드 (캔버스 로컬 바운더리 기준)
+        if (pivotX == 0f)
+        {
+            finalX = Mathf.Clamp(finalX, minScreenX + padding, maxScreenX - padding - W);
+        }
+        else
+        {
+            finalX = Mathf.Clamp(finalX, minScreenX + padding + W, maxScreenX - padding);
+        }
+
+        // 4. Y축 배치 결정 (상단 정렬 기본 적용 및 하단 이탈 시 피벗 반전 정렬)
+        float pivotY = 1f; // 기본: 상단 정렬
+        float finalY = targetCenterY;
+
+        // 아래로 뻗은 툴팁이 화면 하단을 벗어나면 하단 정렬로 반전
+        if (finalY - H < minScreenY + padding)
+        {
+            pivotY = 0f;
+            finalY = targetCenterY;
+        }
+
+        // Y축 최종 화면 밖 이탈 Clamping 방어 코드 (캔버스 로컬 바운더리 기준)
+        if (pivotY == 1f)
+        {
+            finalY = Mathf.Clamp(finalY, minScreenY + padding + H, maxScreenY - padding);
+        }
+        else
+        {
+            finalY = Mathf.Clamp(finalY, minScreenY + padding, maxScreenY - padding - H);
+        }
+
+        // 5. 위치 및 피벗 적용
         rectTransform.pivot = new Vector2(pivotX, pivotY);
-        rectTransform.position = new Vector3(finalX, finalY, 0f);
+        rectTransform.anchoredPosition = new Vector2(finalX, finalY);
     }
 
     private void OnDestroy()

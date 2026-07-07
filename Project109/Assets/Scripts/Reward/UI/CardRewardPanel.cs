@@ -20,6 +20,8 @@ public class CardRewardPanel : UIPanelBase
     {
         GameItemRewardManager.instance.ResetCardLists();
 
+        List<CardData> selectedCards = new List<CardData>();
+
         for (int count = 0; count < rewardCardCount; count++)
         {
             CardUI card = Instantiate(cardObjectPrefab, cardSpawnTransform).GetComponent<CardUI>();
@@ -27,12 +29,43 @@ public class CardRewardPanel : UIPanelBase
             if (card == null)
                 continue;
 
-            CardData cardData = GameItemRewardManager.instance.GetRandomCardDataByDropTable(dropTableID);
+            CardData cardData = null;
+            int attempts = 0;
+            const int maxAttempts = 50;
 
-            card.UpdateCardData(cardData);
-            card.bShowEffectAreaUI = true;
+            while (attempts < maxAttempts)
+            {
+                cardData = GameItemRewardManager.instance.GetRandomCardDataByDropTable(dropTableID);
+                if (cardData == null) break;
 
-            card.OnCardClick.AddListener(() => GetCard(cardData));
+                bool isDuplicate = false;
+                foreach (var selectedCard in selectedCards)
+                {
+                    if (selectedCard.cardName == cardData.cardName)
+                    {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+
+                if (!isDuplicate)
+                {
+                    break;
+                }
+                attempts++;
+            }
+
+            if (cardData != null)
+            {
+                selectedCards.Add(cardData);
+                card.UpdateCardData(cardData);
+                card.bShowEffectAreaUI = true;
+                card.OnCardClick.AddListener(() => GetCard(cardData));
+            }
+            else
+            {
+                Destroy(card.gameObject);
+            }
         }
     }
 

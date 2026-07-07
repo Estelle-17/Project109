@@ -8,7 +8,6 @@ public class TooltipPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _headerText;
     [SerializeField] private TextMeshProUGUI _bodyText;
     [SerializeField] private LayoutElement _layoutElement;
-    [SerializeField] private int _characterWrapLimit = 80;
     [SerializeField] private float _preferredWidthValue = 350f;
 
     private void Awake()
@@ -21,7 +20,10 @@ public class TooltipPanel : MonoBehaviour
                 _headerText = child.GetComponent<TextMeshProUGUI>();
             }
         }
-
+        if (_headerText != null)
+        {
+            _headerText.enableWordWrapping = true;
+        }
         if (_bodyText == null)
         {
             Transform child = transform.Find("BodyText");
@@ -30,7 +32,10 @@ public class TooltipPanel : MonoBehaviour
                 _bodyText = child.GetComponent<TextMeshProUGUI>();
             }
         }
-
+        if (_bodyText != null)
+        {
+            _bodyText.enableWordWrapping = true;
+        }
         if (_layoutElement == null)
         {
             _layoutElement = GetComponent<LayoutElement>();
@@ -56,7 +61,6 @@ public class TooltipPanel : MonoBehaviour
                 _headerText.text = header;
             }
         }
-
         // 2. 본문 세팅
         if (_bodyText != null)
         {
@@ -70,22 +74,11 @@ public class TooltipPanel : MonoBehaviour
                 _bodyText.text = body;
             }
         }
-
-        // 3. 줄바꿈 처리
+        // 3. 줄바꿈 처리 및 크기 고정
         if (_layoutElement != null)
         {
-            int headerLength = _headerText != null && _headerText.gameObject.activeSelf ? _headerText.text.Length : 0;
-            int bodyLength = _bodyText != null && _bodyText.gameObject.activeSelf ? _bodyText.text.Length : 0;
-            
-            if (headerLength > _characterWrapLimit || bodyLength > _characterWrapLimit)
-            {
-                _layoutElement.enabled = true;
-                _layoutElement.preferredWidth = _preferredWidthValue;
-            }
-            else
-            {
-                _layoutElement.enabled = false;
-            }
+            _layoutElement.enabled = true;
+            _layoutElement.preferredWidth = _preferredWidthValue;
         }
     }
 }

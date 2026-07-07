@@ -3,9 +3,9 @@ function card:OnInit(cardBase, owner)
     self.base = cardBase
 end
 function card:GetDescription(cardBase, template)
-    local baseDamage = cardBase:GetEffectiveValue("damage")
-    local bleedMultiplier = cardBase:GetEffectiveValue("bleedMultiplier")
-    return (template:gsub("{damage}", tostring(math.floor(baseDamage))):gsub("{bleedMultiplier}", tostring(bleedMultiplier)))
+    local baseDamage = cardBase:GetFormattedValue("damage")
+    local bleedMultiplier = cardBase:GetFormattedValue("bleedMultiplier")
+    return (template:gsub("{damage}", tostring(baseDamage)):gsub("{bleedMultiplier}", tostring(bleedMultiplier)))
 end
 local function getEffectStack(character, effectName)
     if character == nil or character.effectManager == nil then return 0 end

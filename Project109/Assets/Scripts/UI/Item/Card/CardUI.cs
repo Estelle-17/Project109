@@ -117,14 +117,17 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
 
     public void UpdateCardDescription()
     {
+        string rawDescription = string.Empty;
         if (cardInstance != null)
         {
-            cardDescription.SetText(cardInstance.GetDescription());
-            return;
+            rawDescription = cardInstance.GetDescription();
         }
-
-        // CardDescription SO 제거 — CardData.description 직접 사용
-        cardDescription.SetText(cardData.description ?? string.Empty);
+        else if (cardData != null)
+        {
+            rawDescription = cardData.GetDescription();
+        }
+        string formattedDescription = TooltipManager.ReplaceKeywordsForDisplay(rawDescription);
+        cardDescription.SetText(formattedDescription);
     }
 
     public CardData GetCardData()

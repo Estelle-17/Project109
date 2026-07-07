@@ -3,9 +3,9 @@ function card:OnInit(cardBase, owner)
     self.base = cardBase
 end
 function card:GetDescription(cardBase, template)
-    local baseDamage = cardBase:GetEffectiveValue("damage")
-    local strengthMult = cardBase:GetEffectiveValue("strengthMult")
-    return (template:gsub("{damage}", tostring(math.floor(baseDamage))):gsub("{strengthMult}", tostring(strengthMult)))
+    local baseDamage = cardBase:GetFormattedValue("damage")
+    local strengthMult = cardBase:GetFormattedValue("strengthMult")
+    return (template:gsub("{damage}", tostring(baseDamage)):gsub("{strengthMult}", tostring(strengthMult)))
 end
 local function getEffectStack(character, effectName)
     if character == nil or character.effectManager == nil then return 0 end

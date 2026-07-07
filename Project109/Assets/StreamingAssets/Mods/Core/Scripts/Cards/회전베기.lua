@@ -7,13 +7,13 @@ function card:OnTurnStart()
     self.spinningSlashCount = 0
 end
 function card:OnAfterUseCard(cardInfo)
-    if cardInfo.caster == self.base.owner and cardInfo.cardData.cardName == "회전베기" then
+    if cardInfo.caster == self.base.owner and cardInfo.cardData.cardName == "?�전베기" then
         self.spinningSlashCount = (self.spinningSlashCount or 0) + 1
     end
 end
 function card:GetDescription(cardBase, template)
-    local baseDamage = cardBase:GetEffectiveValue("damage")
-    return (template:gsub("{damage}", tostring(math.floor(baseDamage))))
+    local baseDamage = cardBase:GetFormattedValue("damage")
+    return (template:gsub("{damage}", tostring(baseDamage)))
 end
 function card:Execute(cardInfo)
     local caster = cardInfo.caster

@@ -3,8 +3,8 @@ function card:OnInit(cardBase, owner)
     self.base = cardBase
 end
 function card:GetDescription(cardBase, template)
-    local shield = cardBase:GetBaseValue("shield")
-    return (template:gsub("{shield}", tostring(math.floor(shield))))
+    local shield = cardBase:GetBaseFormattedValue("shield")
+    return (template:gsub("{shield}", tostring(shield)))
 end
 function card:Execute(cardInfo)
     local caster = cardInfo.caster

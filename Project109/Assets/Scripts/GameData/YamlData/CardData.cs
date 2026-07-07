@@ -1,3 +1,4 @@
+using System;
 using GameItem.Types;
 using System.Collections.Generic;
 using System.IO;
@@ -60,6 +61,35 @@ public class CardData : IModAssetResolver
 
     [YamlIgnore]
     public LuaTable luaPrototype { get; set; }
+
+    [YamlIgnore]
+    private Card _dummyInstance;
+
+    public string GetDescription()
+    {
+        if (string.IsNullOrEmpty(description)) return string.Empty;
+        if (_dummyInstance == null)
+        {
+            LuaTable dummyLua = null;
+            if (luaPrototype != null)
+            {
+                try
+                {
+                    var newInstanceFunc = LuaManager.Instance?.luaEnv.Global.Get<Func<LuaTable, LuaTable>>("NewInstance");
+                    if (newInstanceFunc != null)
+                    {
+                        dummyLua = newInstanceFunc(luaPrototype);
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"[CardData.GetDescription] '{cardName}' 임시 Lua 인스턴스 생성 실패:\n{e.Message}");
+                }
+            }
+            _dummyInstance = new Card(this, null, dummyLua, -1);
+        }
+        return _dummyInstance.GetDescription();
+    }
 
 
     public bool ResolveAndValidate(string modDirectory)

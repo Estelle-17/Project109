@@ -684,6 +684,21 @@ public class GameItemRewardManager : MonoBehaviour, IOnAddRelic, IOnRemoveRelic
                     continue;
                 }
 
+                // 플레이어가 소유한 유물 제외
+                if (RunManager.instance != null && RunManager.instance.player != null && RunManager.instance.player.relicManager != null)
+                {
+                    bool alreadyOwned = false;
+                    foreach (var ownedRelic in RunManager.instance.player.relicManager.GetRelics())
+                    {
+                        if (ownedRelic.Data != null && ownedRelic.Data.relicName == relic.relicName)
+                        {
+                            alreadyOwned = true;
+                            break;
+                        }
+                    }
+                    if (alreadyOwned) continue;
+                }
+
                 // 2. 직업 유물 필터
                 if (dropTable != null && dropTable.allowedClassTypes != null && dropTable.allowedClassTypes.Count > 0)
                 {

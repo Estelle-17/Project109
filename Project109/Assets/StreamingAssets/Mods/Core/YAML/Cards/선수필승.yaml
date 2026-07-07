@@ -11,7 +11,7 @@ maxMasteryPoint: 250
 isUpgradable: false
 isUpgraded: false
 upgradedCardName: ""
-description: "[cardtag.Vanguard] 발동 시 {extraHits}번 추가로 공격합니다.\n피해를 {damage} 줍니다."
+description: "[cardtag.Vanguard]\n피해를 {damage} 줍니다.\n선봉대 발동 시 {extraHits}번 추가로 공격합니다."
 baseValues:
   extraHits: 1
   damage: 8

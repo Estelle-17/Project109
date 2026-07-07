@@ -12,9 +12,9 @@ function card:OnAfterUseCard(cardInfo)
     end
 end
 function card:GetDescription(cardBase, template)
-    local baseDamage = cardBase:GetEffectiveValue("damage")
-    local extraHits = cardBase:GetEffectiveValue("extraHits")
-    return (template:gsub("{damage}", tostring(math.floor(baseDamage))):gsub("{extraHits}", tostring(math.floor(extraHits))))
+    local baseDamage = cardBase:GetFormattedValue("damage")
+    local extraHits = cardBase:GetFormattedValue("extraHits")
+    return (template:gsub("{damage}", tostring(baseDamage)):gsub("{extraHits}", tostring(extraHits)))
 end
 function card:Execute(cardInfo)
     local caster = cardInfo.caster
@@ -24,8 +24,7 @@ function card:Execute(cardInfo)
         local readyDamage = self.base:GetEffectiveValue("readyDamage")
         local comboLevel = self.base:GetMasteryLevel("Initiative_ComboAttack")
         
-        -- 선봉대: 턴마다 처음 사용될 때
-        local isFirst = (self.cardsPlayedThisTurn or 0) <= 0
+        -- ?�봉?�: ?�마??처음 ?�용????        local isFirst = (self.cardsPlayedThisTurn or 0) <= 0
         local finalDamage = baseDamage
         local finalHits = 1
         

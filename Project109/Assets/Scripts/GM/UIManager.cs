@@ -73,12 +73,14 @@ public class UIManager : MonoBehaviour
         }
         GameObject hudPrefab = null;
         GameObject deckPrefab = null;
+        GameObject checkPrefab = null;
         // AssetCacheManager가 필요한 프리팹들을 캐시할 때까지 대기
         while (true)
         {
             bool hudReady = AssetCacheManager.instance.TryGetUI("TopHUDPanel", out hudPrefab);
             bool deckReady = AssetCacheManager.instance.TryGetUI("CardDeckCanvas", out deckPrefab);
-            if (hudReady && deckReady)
+            bool checkReady = AssetCacheManager.instance.TryGetUI("CardCheckUI", out checkPrefab);
+            if (hudReady && deckReady && checkReady)
             {
                 break;
             }
@@ -116,6 +118,30 @@ public class UIManager : MonoBehaviour
                 cardDeckViewPanel.gameObject.SetActive(false);
             }
             Debug.Log("[UIManager] CardDeckCanvas UI dynamically initialized via Addressables.");
+        }
+        if (checkPrefab != null)
+        {
+            Transform parentTransform = normalUILayer != null ? normalUILayer.transform : transform;
+            GameObject inst = Instantiate(checkPrefab, parentTransform, false);
+            inst.name = "CardCheckUI";
+
+            RectTransform rect = inst.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                rect.anchorMin = Vector2.zero;
+                rect.anchorMax = Vector2.one;
+                rect.anchoredPosition = Vector2.zero;
+                rect.sizeDelta = Vector2.zero;
+                rect.localScale = Vector3.one;
+            }
+
+            cardCheckHandler = inst.GetComponent<CardDetailPanel>();
+
+            if (cardCheckHandler != null)
+            {
+                cardCheckHandler.gameObject.SetActive(false);
+            }
+            Debug.Log("[UIManager] CardCheckUI dynamically initialized via Addressables.");
         }
 
         // 어드레서블 초기 로딩이 완료되었으므로, 인게임 탐색에 필요한 지도를 즉각 스폰 및 초기화합니다.

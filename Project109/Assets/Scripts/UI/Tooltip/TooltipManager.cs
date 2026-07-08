@@ -88,7 +88,7 @@ public class TooltipManager : MonoBehaviour
                 {
                     if (ModLoader.Instance.EffectDatabase.TryGetValue(id, out EffectData effectData))
                     {
-                        return effectData.effectName;
+                        return effectData.displayName;
                     }
                 }
                 break;
@@ -261,7 +261,7 @@ public class TooltipManager : MonoBehaviour
                         {
                             if (ModLoader.Instance.EffectDatabase.TryGetValue(id, out EffectData effectData))
                             {
-                                subTitle = effectData.effectName;
+                                subTitle = effectData.displayName;
                                 subDescription = effectData.description ?? string.Empty;
 
                                 // 이펙트 템플릿의 {stacks} 등 플레이스홀더 치환

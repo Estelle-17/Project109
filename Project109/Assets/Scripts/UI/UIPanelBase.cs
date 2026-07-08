@@ -44,6 +44,7 @@ public class UIPanelBase : MonoBehaviour
 
         if(gameObject.activeSelf)
         {
+            transform.SetAsLastSibling();
             return;
         }
 

@@ -10,15 +10,22 @@ public class CardDetailPanel : UIPanelBase
     [SerializeField] private GameObject detailDescriptionUIPrefab;
     [SerializeField] private Transform detailDescriptionUITransform;
 
-    void Start()
+    private void Awake()
     {
-        
+        if (cardUI == null)
+        {
+            cardUI = GetComponentInChildren<CardUI>(true);
+        }
     }
 
 
     //클릭한 카드 데이터를 확인하고 화면 상에 보여줌 (CardData 오버로드)
     public void OnCardCheckUI(CardData newCardData)
     {
+        if (cardUI == null)
+        {
+            cardUI = GetComponentInChildren<CardUI>(true);
+        }
         if (cardUI == null)
             return;
 
@@ -46,6 +53,10 @@ public class CardDetailPanel : UIPanelBase
     //클릭한 카드 데이터를 확인하고 화면 상에 보여줌 (Card 오버로드)
     public void OnCardCheckUI(Card card)
     {
+        if (cardUI == null)
+        {
+            cardUI = GetComponentInChildren<CardUI>(true);
+        }
         if (card == null || cardUI == null)
             return;
 

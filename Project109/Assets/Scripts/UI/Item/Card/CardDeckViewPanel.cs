@@ -178,7 +178,30 @@ public class CardDeckViewPanel : UIPanelBase, IOnAddCard, IOnRemoveCard, IOnCard
     {
         if (card != null)
         {
-            UIManager.instance.cardCheckHandler.OnCardCheckUI(card);
+            if (UIManager.instance.cardCheckHandler == null)
+            {
+                CardDetailPanel[] panels = Resources.FindObjectsOfTypeAll<CardDetailPanel>();
+                if (panels != null && panels.Length > 0)
+                {
+                    UIManager.instance.cardCheckHandler = panels[0];
+                }
+                if (UIManager.instance.cardCheckHandler == null)
+                {
+                    GameObject uiObj = UIManager.instance.OpenUI("CardCheckUI", UILayerType.Normal, false);
+                    if (uiObj != null)
+                    {
+                        UIManager.instance.cardCheckHandler = uiObj.GetComponent<CardDetailPanel>();
+                    }
+                }
+            }
+            if (UIManager.instance.cardCheckHandler != null)
+            {
+                UIManager.instance.cardCheckHandler.OnCardCheckUI(card);
+            }
+            else
+            {
+                Debug.LogError("[CardDeckViewPanel] cardCheckHandler is null and could not be resolved.");
+            }
         }
     }
 }

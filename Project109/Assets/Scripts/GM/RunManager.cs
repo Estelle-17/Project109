@@ -278,6 +278,7 @@ public class RunManager : MonoBehaviour
             player.deck.Clear(); // 기존 덱 카드 초기화
 
             // 이제 세이브로부터 카드 생성 및 속성 복구
+            HashSet<string> restoredCardMasteries = new HashSet<string>();
             foreach (var cardEntry in data.playerDeckCards)
             {
                 if (ModLoader.Instance.CardDatabase.TryGetValue(cardEntry.cardName, out CardData cardData))
@@ -285,19 +286,54 @@ public class RunManager : MonoBehaviour
                     Card newCard = player.deck.AddCard(cardData);
                     if (newCard != null)
                     {
-                        // AddMastery(upgrade.masteryId)를 count 번만큼 호출하여 순차적으로 마스터리 복구
-                        if (cardEntry.masteryUpgrades != null)
+                        // 동일한 카드 이름에 대해서 최초 1회만 마스터리 업그레이드 데이터를 복구합니다 (공유 상태이므로).
+                        if (!restoredCardMasteries.Contains(cardEntry.cardName))
                         {
-                            foreach (var upgrade in cardEntry.masteryUpgrades)
+                            restoredCardMasteries.Add(cardEntry.cardName);
+                            // AddMastery(upgrade.masteryId)를 count 번만큼 호출하여 순차적으로 마스터리 복구
+                            if (cardEntry.masteryUpgrades != null)
                             {
-                                for (int i = 0; i < upgrade.count; i++)
+                                foreach (var upgrade in cardEntry.masteryUpgrades)
                                 {
-                                    newCard.AddMastery(upgrade.masteryId);
+                                    for (int i = 0; i < upgrade.count; i++)
+                                    {
+                                        newCard.AddMastery(upgrade.masteryId);
+                                    }
                                 }
                             }
+                            // AddMastery 수행 시 XP 차감 연산이 들어가므로, 최종 마스터리 XP를 세이브값으로 명확히 덮어씌워 줍니다.
+                            newCard.currentMasteryXP = cardEntry.currentMasteryXP;
                         }
-                        // AddMastery 수행 시 XP 차감 연산이 들어가므로, 최종 마스터리 XP를 세이브값으로 명확히 덮어씌워 줍니다.
-                        newCard.currentMasteryXP = cardEntry.currentMasteryXP;
+                        else
+                        {
+                            // 이미 다른 동명 카드에 의해 공유 마스터리가 세팅되었으므로,
+                            // 복제본의 수동 복원 작업(코스트 갱신 및 마스터리 태그 등록 등)만 적용합니다.
+                            if (newCard.masteryUpgrades != null && cardData.masteryTags != null)
+                            {
+                                foreach (var kvp in newCard.masteryUpgrades)
+                                {
+                                    string masteryId = kvp.Key;
+                                    int count = kvp.Value;
+                                    if (cardData.masteryTags.TryGetValue(masteryId, out var tags))
+                                    {
+                                        for (int i = 0; i < count; i++)
+                                        {
+                                            foreach (var tag in tags)
+                                            {
+                                                newCard.AddTag(tag);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            // 코스트 재계산
+                            float costMod = newCard.GetEffectiveValue("cost");
+                            if (costMod != 0)
+                            {
+                                newCard.currentCost = Mathf.Max(0, cardData.stamina + (int)costMod);
+                            }
+                        }
                     }
                 }
             }

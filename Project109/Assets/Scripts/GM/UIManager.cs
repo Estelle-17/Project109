@@ -467,11 +467,15 @@ public class UIManager : MonoBehaviour
             Debug.LogWarning("[UIManager] Cannot bind player because topHUDPanel is null.");
             return;
         }
-
         if (boundPlayer != null && boundPlayer.playerStat != null)
         {
             boundPlayer.playerStat.OnGoldChanged -= OnHUDGoldChanged;
             boundPlayer.playerStat.OnMemorySharpChanged -= OnHUDMemorySharpChanged;
+
+            if (topHUDPanel != null && topHUDPanel.PlayerRelicUI != null)
+            {
+                topHUDPanel.PlayerRelicUI.BindPlayer(null);
+            }
         }
 
         boundPlayer = player;
@@ -485,6 +489,11 @@ public class UIManager : MonoBehaviour
             boundPlayer.playerStat.OnMemorySharpChanged += OnHUDMemorySharpChanged;
 
             topHUDPanel.SetupHUD(OnMapButtonClicked, OnDeckButtonClicked);
+
+            if (topHUDPanel.PlayerRelicUI != null)
+            {
+                topHUDPanel.PlayerRelicUI.BindPlayer(boundPlayer);
+            }
 
             Debug.Log("[UIManager] Successfully bound player stats to TopHUDPanel.");
         }

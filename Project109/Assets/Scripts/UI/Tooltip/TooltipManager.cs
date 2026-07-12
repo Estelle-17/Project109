@@ -75,7 +75,7 @@ public class TooltipManager : MonoBehaviour
             }
 
             string colorHex = GetColorForType(type);
-            return $"<color={colorHex}>[{displayName}]</color>";
+            return $"<color={colorHex}>{displayName}</color>";
         });
     }
 

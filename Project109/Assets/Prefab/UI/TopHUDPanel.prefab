@@ -707,6 +707,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TopHUDPanel
   uiLayerType: 2
+  blockWorldInput: 1
+  playerRelicUI: {fileID: 4669037776946853756}
   goldText: {fileID: 4416108962408622038}
   specialResourceText: {fileID: 3113412721061254326}
   mapButton: {fileID: 4876209154344134058}
@@ -978,6 +980,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5186928691783428575}
   - component: {fileID: 6689961828944495340}
+  - component: {fileID: 4669037776946853756}
   m_Layer: 5
   m_Name: SpawnTransform
   m_TagString: Untagged
@@ -1030,6 +1033,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &4669037776946853756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7393766816927912313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f6d0655c51743942b371b84eed89ac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRelicUI
+  relicUIPrefab: {fileID: 0}
+  relicSpawnTransform: {fileID: 0}
 --- !u!1 &9121574887395650575
 GameObject:
   m_ObjectHideFlags: 0

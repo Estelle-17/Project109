@@ -23,6 +23,7 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     public Image cardImage;  //카드 데이터에 맞는 이미지
 
     public GameObject selectHighlightObject;    //선택을 알려주는 하이라이트 UI
+    [SerializeField] private GameObject masteryUpgradeAvailableUI;    // 마스터리 업그레이드 가능 알림 UI
 
     public EffectAreaCheckButton effectAreaCheckButton; //공격 범위 확인용 버튼
 
@@ -34,6 +35,10 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     void Start()
     {
         selectHighlightObject.SetActive(false);
+        if (masteryUpgradeAvailableUI != null)
+        {
+            masteryUpgradeAvailableUI.SetActive(false);
+        }
     }
 
     public void UpdateCardData(CardData newCardData)
@@ -57,6 +62,11 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         if (cardData.cardSprite != null)
         {
             cardImage.sprite = cardData.cardSprite;
+        }
+
+        if (masteryUpgradeAvailableUI != null)
+        {
+            masteryUpgradeAvailableUI.SetActive(false);
         }
     }
 
@@ -85,6 +95,14 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         if (cardData.cardSprite != null)
         {
             cardImage.sprite = cardData.cardSprite;
+        }
+
+        if (masteryUpgradeAvailableUI != null)
+        {
+            bool canUpgrade = cardInstance.hasMastery && 
+                              (cardInstance.currentMasteryXP >= cardInstance.maxMasteryXP) &&
+                              (cardInstance.GetRandomMasteryOption(1).Count > 0);
+            masteryUpgradeAvailableUI.SetActive(canUpgrade);
         }
     }
 

@@ -48,11 +48,6 @@ public class EffectAreaTile : MonoBehaviour
 
         gridAreaSearch = new GridAreaSearch();
 
-        //if (isAdditionalEffectAreaActive)
-        //    SetTileFromShapeGenerator("XShape", 2, TileType.AdditionalEffectTile);
-        //else
-        //    SetTileFromTargetDistance(2, 4, TileType.TargetTile);
-
     }
 
     public void SetTileColor(int x, int y, TileType type)

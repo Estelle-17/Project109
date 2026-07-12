@@ -1,4 +1,5 @@
 using GameItem.Types;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -20,12 +21,18 @@ public class MasteryChoiceItem : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public void SetChoice(Card newCard, string masteryId)
     {
         selectedCard = newCard;
-
         selectedMasteryPath = masteryId;
-        // masteryId를 이름으로 표시 (추후 로컬라이즈 키 또는 Lua에서 표시명 제공 가능)
-        nameText.SetText(masteryId);
-        // 설명은 현재 masteryId를 표시 (추후 CardData.masteryNames에서 표시명 조회)
-        descriptionText.SetText(masteryId);
+
+        string displayName = masteryId;
+        if (newCard != null && newCard.cardData != null)
+        {
+            if (newCard.cardData.masteryNames != null && newCard.cardData.masteryNames.TryGetValue(masteryId, out string nameValue))
+            {
+                displayName = nameValue;
+            }
+        }
+        nameText.SetText(displayName);
+        descriptionText.SetText(displayName);
     }
 
     public void StartMasteryUpgradeCard()
@@ -36,8 +43,43 @@ public class MasteryChoiceItem : MonoBehaviour, IPointerEnterHandler, IPointerEx
             RunManager.instance.player.deck.ApplyMastery(selectedCard, selectedMasteryPath);
         }
 
-        transform.root.gameObject.SetActive(false);
-        Destroy(transform.root.gameObject);
+        CardMasteryUpgradePanel parentPanel = GetComponentInParent<CardMasteryUpgradePanel>();
+        if (parentPanel != null)
+        {
+            parentPanel.UIDeactive();
+            Destroy(parentPanel.gameObject);
+        }
+        else
+        {
+            // 예외 처리: CardMasteryUpgradePanel을 찾지 못했다면 범용 UIPanelBase를 찾아 비활성화 및 파괴합니다.
+            UIPanelBase genericPanel = GetComponentInParent<UIPanelBase>();
+            if (genericPanel != null)
+            {
+                genericPanel.UIDeactive();
+                Destroy(genericPanel.gameObject);
+            }
+            else
+            {
+                // UIPanelBase도 없다면 Canvas 컴포넌트를 만나기 직전의 최상위 UI 패널 루트를 찾아 파괴합니다.
+                Transform rootUI = transform;
+                while (rootUI.parent != null && rootUI.parent.GetComponent<Canvas>() == null)
+                {
+                    rootUI = rootUI.parent;
+                }
+
+                if (rootUI != transform)
+                {
+                    rootUI.gameObject.SetActive(false);
+                    Destroy(rootUI.gameObject);
+                }
+                else
+                {
+                    // 최후의 폴백
+                    transform.parent.parent.gameObject.SetActive(false);
+                    Destroy(transform.parent.parent.gameObject);
+                }
+            }
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)

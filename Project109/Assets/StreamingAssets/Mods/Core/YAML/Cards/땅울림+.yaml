@@ -11,11 +11,11 @@ maxMasteryPoint: 0
 isUpgradable: false
 isUpgraded: true
 upgradedCardName: ""
-description: "피해를 {damage} 줍니다.\n[effect.Vulnerable] {Vulnerable}를 부여합니다.\n[effect.Weakness] {Weak}를 부여합니다."
+description: "피해를 {damage} 줍니다.\n[effect.Vulnerable]을 {vulnerable} 부여합니다.\n[effect.Weakness]를 {weak} 부여합니다."
 baseValues:
   damage: 6
-  Weak: 3
-  Vulnerable: 3
+  weak: 3
+  vulnerable: 3
 additionalEffectAreaList:
   - areaType: "CircleFill"
     distance: 3

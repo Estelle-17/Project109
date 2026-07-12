@@ -13,6 +13,24 @@ public class PlayerDeck
     private readonly Player owner;
     private readonly List<Card> cards = new();
     private int nextRuntimeID = 0;
+    private readonly Dictionary<string, CardMasteryState> sharedMasteryStates = new();
+
+    public CardMasteryState GetOrCreateSharedMasteryState(string cardName, CardData data)
+    {
+        if (!sharedMasteryStates.TryGetValue(cardName, out var state))
+        {
+            state = new CardMasteryState();
+            if (data != null && data.maxMasteryPoint > 0)
+            {
+                state.masteryLevel = 0;
+                state.maxMasteryXP = data.maxMasteryPoint;
+                state.currentMasteryXP = 0;
+                state.masteryXPIncreasePerLevel = data.maxMasteryPoint / 2.0f;
+            }
+            sharedMasteryStates[cardName] = state;
+        }
+        return state;
+    }
 
     public PlayerDeck(Player owner)
     {
@@ -29,6 +47,7 @@ public class PlayerDeck
         {
             RemoveCard(card);
         }
+        sharedMasteryStates.Clear();
     }
 
     /// <summary>
@@ -218,6 +237,12 @@ public class PlayerDeck
 
         int id = customRuntimeID ?? nextRuntimeID++;
         Card newCard = new Card(cardData, owner.character, luaInstance, id);
+
+        if (cardData != null && cardData.maxMasteryPoint > 0)
+        {
+            newCard.masteryState = GetOrCreateSharedMasteryState(cardData.cardName, cardData);
+        }
+
         return newCard;
     }
 }

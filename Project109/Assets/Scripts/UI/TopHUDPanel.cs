@@ -5,9 +5,31 @@ using UnityEngine.UI;
 
 public class TopHUDPanel : UIPanelBase
 {
+    [Header("Relic UI")]
+    [SerializeField] private PlayerRelicUI playerRelicUI;
+
+    public PlayerRelicUI PlayerRelicUI => playerRelicUI;
+
     private void Awake()
     {
         blockWorldInput = false;
+
+        if (playerRelicUI == null)
+        {
+            Transform spawnTransform = transform.Find("HUDPanel/Relic/SpawnTransform");
+            if (spawnTransform != null)
+            {
+                playerRelicUI = spawnTransform.gameObject.GetComponent<PlayerRelicUI>();
+                if (playerRelicUI == null)
+                {
+                    playerRelicUI = spawnTransform.gameObject.AddComponent<PlayerRelicUI>();
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[TopHUDPanel] Relic/SpawnTransform not found in hierarchy!");
+            }
+        }
     }
 
     [Header("Currency TMP Texts")]

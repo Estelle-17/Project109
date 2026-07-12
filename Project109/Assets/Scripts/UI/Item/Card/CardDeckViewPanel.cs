@@ -4,7 +4,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Script Execution Order를 통해 CardDeckManager를 이 클래스보다 먼저 실행되도록 변경됨
 /// </summary>
-public class CardDeckViewPanel : UIPanelBase, IOnAddCard, IOnRemoveCard, IOnCardUpgrade, IOnCardsRefreshed
+public class CardDeckViewPanel : UIPanelBase, IOnAddCard, IOnRemoveCard, IOnCardUpgrade, IOnCardsRefreshed, IOnCardMasteryUpgrade
 {
     public Transform contentTransform;
 
@@ -27,6 +27,7 @@ public class CardDeckViewPanel : UIPanelBase, IOnAddCard, IOnRemoveCard, IOnCard
             RunManager.instance.player.eventBus.Add<IOnRemoveCard>(this);
             RunManager.instance.player.eventBus.Add<IOnCardUpgrade>(this);
             RunManager.instance.player.eventBus.Add<IOnCardsRefreshed>(this);
+            RunManager.instance.player.eventBus.Add<IOnCardMasteryUpgrade>(this);
 
             gameObject.SetActive(false);
 
@@ -46,6 +47,7 @@ public class CardDeckViewPanel : UIPanelBase, IOnAddCard, IOnRemoveCard, IOnCard
             RunManager.instance.player.eventBus.Remove<IOnRemoveCard>(this);
             RunManager.instance.player.eventBus.Remove<IOnCardUpgrade>(this);
             RunManager.instance.player.eventBus.Remove<IOnCardsRefreshed>(this);
+            RunManager.instance.player.eventBus.Remove<IOnCardMasteryUpgrade>(this);
         }
 
         foreach(GameObject uiObject in activeCardUIs.Values)
@@ -78,6 +80,11 @@ public class CardDeckViewPanel : UIPanelBase, IOnAddCard, IOnRemoveCard, IOnCard
     }
 
     public void OnCardsRefreshed()
+    {
+        RefreshAllCardUIs();
+    }
+
+    public void OnCardMasteryUpgrade(Card card, string masteryId)
     {
         RefreshAllCardUIs();
     }
@@ -178,29 +185,47 @@ public class CardDeckViewPanel : UIPanelBase, IOnAddCard, IOnRemoveCard, IOnCard
     {
         if (card != null)
         {
-            if (UIManager.instance.cardCheckHandler == null)
+            bool canUpgrade = card.hasMastery && 
+                              (card.currentMasteryXP >= card.maxMasteryXP) &&
+                              (card.GetRandomMasteryOption(1).Count > 0);
+
+            if (canUpgrade)
             {
-                CardDetailPanel[] panels = Resources.FindObjectsOfTypeAll<CardDetailPanel>();
-                if (panels != null && panels.Length > 0)
+                if (CardMasteryManager.instance != null)
                 {
-                    UIManager.instance.cardCheckHandler = panels[0];
+                    CardMasteryManager.instance.ProcessMasteryUpgrade(card);
                 }
-                if (UIManager.instance.cardCheckHandler == null)
+                else
                 {
-                    GameObject uiObj = UIManager.instance.OpenUI("CardCheckUI", UILayerType.Normal, false);
-                    if (uiObj != null)
-                    {
-                        UIManager.instance.cardCheckHandler = uiObj.GetComponent<CardDetailPanel>();
-                    }
+                    Debug.LogError("[CardDeckViewPanel] CardMasteryManager instance is null!");
                 }
-            }
-            if (UIManager.instance.cardCheckHandler != null)
-            {
-                UIManager.instance.cardCheckHandler.OnCardCheckUI(card);
             }
             else
             {
-                Debug.LogError("[CardDeckViewPanel] cardCheckHandler is null and could not be resolved.");
+                if (UIManager.instance.cardCheckHandler == null)
+                {
+                    CardDetailPanel[] panels = Resources.FindObjectsOfTypeAll<CardDetailPanel>();
+                    if (panels != null && panels.Length > 0)
+                    {
+                        UIManager.instance.cardCheckHandler = panels[0];
+                    }
+                    if (UIManager.instance.cardCheckHandler == null)
+                    {
+                        GameObject uiObj = UIManager.instance.OpenUI("CardCheckUI", UILayerType.Normal, false);
+                        if (uiObj != null)
+                        {
+                            UIManager.instance.cardCheckHandler = uiObj.GetComponent<CardDetailPanel>();
+                        }
+                    }
+                }
+                if (UIManager.instance.cardCheckHandler != null)
+                {
+                    UIManager.instance.cardCheckHandler.OnCardCheckUI(card);
+                }
+                else
+                {
+                    Debug.LogError("[CardDeckViewPanel] cardCheckHandler is null and could not be resolved.");
+                }
             }
         }
     }

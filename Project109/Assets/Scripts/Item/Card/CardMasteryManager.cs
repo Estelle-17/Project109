@@ -60,6 +60,7 @@ public class CardMasteryManager : MonoBehaviour
         CardMasteryUpgradePanel uiHandler = uiObj.GetComponent<CardMasteryUpgradePanel>();
         if (uiHandler != null)
         {
+            uiObj.SetActive(false);
             uiHandler.UIActive();
             uiHandler.CreateMasteryChoices(card);
         }

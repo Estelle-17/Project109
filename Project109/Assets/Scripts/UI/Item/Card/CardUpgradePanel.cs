@@ -75,11 +75,27 @@ public class CardUpgradePanel : UIPanelBase
 
         if (RunManager.instance != null && RunManager.instance.player != null)
         {
+            HashSet<string> addedMasteryCardNames = new HashSet<string>();
             foreach (Card card in RunManager.instance.player.deck.GetCards())
             {
-                if (card.cardData != null && !card.cardData.isUpgraded && (card.cardData.isUpgradable || card.cardData.maxMasteryPoint > 0))
+                if (card.cardData != null && !card.cardData.isUpgraded)
                 {
-                    HandleCardAdded(card);
+                    bool isMasteryCard = card.cardData.maxMasteryPoint > 0;
+                    bool isUpgradable = card.cardData.isUpgradable;
+
+                    if (isMasteryCard || isUpgradable)
+                    {
+                        if (isMasteryCard)
+                        {
+                            if (addedMasteryCardNames.Contains(card.cardData.cardName))
+                            {
+                                continue;
+                            }
+                            addedMasteryCardNames.Add(card.cardData.cardName);
+                        }
+
+                        HandleCardAdded(card);
+                    }
                 }
             }
         }

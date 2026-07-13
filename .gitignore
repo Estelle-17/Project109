@@ -82,3 +82,7 @@ crashlytics-build.properties
 # EventBinderGenerator build folders
 EventBinderGenerator/bin/
 EventBinderGenerator/obj/
+
+# XLua Generated Code
+Project109/Assets/XLua/Gen/
+Project109/Assets/XLua/Gen.meta

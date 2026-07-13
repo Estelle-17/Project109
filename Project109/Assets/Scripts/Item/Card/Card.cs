@@ -404,10 +404,11 @@ public class Card : IDescribable
         currentMasteryXP += amount;
         UnityEngine.Debug.Log($"Added {amount} mastery points to card {cardData?.cardName}. Current: {currentMasteryXP}/{maxMasteryXP}");
 
-        if (currentMasteryXP >= maxMasteryXP)
-        {
-            TriggerMasteryUpgradeUI();
-        }
+        // 테스트를 위해 마스터리 업그레이드 UI 트리거를 일시적으로 비활성화합니다.
+        // if (currentMasteryXP >= maxMasteryXP)
+        // {
+        //     TriggerMasteryUpgradeUI();
+        // }
     }
 
     private void TriggerMasteryUpgradeUI()

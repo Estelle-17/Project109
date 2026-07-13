@@ -32,7 +32,7 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     public bool bIsCardHighlight;
     public bool bShowEffectAreaUI;
 
-    void Start()
+    void Awake()
     {
         selectHighlightObject.SetActive(false);
         if (masteryUpgradeAvailableUI != null)

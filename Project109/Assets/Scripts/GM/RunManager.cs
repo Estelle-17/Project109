@@ -153,7 +153,7 @@ public class RunManager : MonoBehaviour
         }
     }
 
-    void Start()
+    System.Collections.IEnumerator Start()
     {
         currentMapName = "Temple";
 
@@ -161,6 +161,12 @@ public class RunManager : MonoBehaviour
         playerBattleController = new PlayerBattleController(player);
         playerExploreController = new PlayerExploreController(player);
         _activePlayerController = playerExploreController; // 기본적으로 탐색 컨트롤러가 액티브
+
+        // 데이터 로드가 완료될 때까지 대기하여 카드가 정상 등록되게 함
+        while (AssetCacheManager.instance == null || !AssetCacheManager.instance.isLoadComplete)
+        {
+            yield return null;
+        }
 
         // 폴백 시작 장비 적용 (로비를 거치지 않고 바로 시작하는 씬 진입용)
         ApplyStarterKit(_selectedStarterKitId);

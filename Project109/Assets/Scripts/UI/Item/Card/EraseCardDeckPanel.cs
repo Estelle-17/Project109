@@ -149,4 +149,14 @@ public class EraseCardDeckPanel : UIPanelBase
             Debug.LogWarning($"{eraseCardCount}만큼 카드를 선택해야 합니다.");
         }
     }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        if (DialogueManager.Instance != null && DialogueManager.Instance.IsDialogueActive && DialogueManager.Instance.IsDialoguePaused)
+        {
+            DialogueManager.Instance.ResumeDialogue();
+        }
+    }
 }

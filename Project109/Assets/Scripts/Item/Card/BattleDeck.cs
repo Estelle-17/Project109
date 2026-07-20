@@ -10,6 +10,7 @@ using EventStructs;
 public class BattleDeck
 {
     private readonly Character owner;
+    public event Action OnHandChanged;
 
     // 전투 중 카드 더미
     public List<Card> drawPile { get; } = new();
@@ -44,6 +45,7 @@ public class BattleDeck
         hand.Clear();
         discardPile.Clear();
         exhaustPile.Clear();
+        OnHandChanged?.Invoke();
     }
 
     /// <summary>
@@ -72,6 +74,7 @@ public class BattleDeck
 
             hand.Add(card);
         }
+        OnHandChanged?.Invoke();
     }
 
     /// <summary>
@@ -122,6 +125,7 @@ public class BattleDeck
             discardPile.Add(card);
             hand.RemoveAt(i);
         }
+        OnHandChanged?.Invoke();
     }
 
     /// <summary>
@@ -129,7 +133,9 @@ public class BattleDeck
     /// </summary>
     public bool RemoveFromHand(Card card)
     {
-        return hand.Remove(card);
+        bool removed = hand.Remove(card);
+        OnHandChanged?.Invoke();
+        return removed;
     }
 
     /// <summary>
@@ -142,6 +148,7 @@ public class BattleDeck
             owner.eventBus.Invoke<IOnEraseCard>(c => c.OnEraseCard(info));
         }
         hand.Remove(card);
+        OnHandChanged?.Invoke();
     }
 
     /// <summary>
@@ -155,6 +162,7 @@ public class BattleDeck
         }
         discardPile.Add(card);
         hand.Remove(card);
+        OnHandChanged?.Invoke();
     }
 
     /// <summary>
@@ -168,5 +176,6 @@ public class BattleDeck
         }
         exhaustPile.Add(card);
         hand.Remove(card);
+        OnHandChanged?.Invoke();
     }
 }

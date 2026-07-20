@@ -46,6 +46,7 @@ public class UIManager : MonoBehaviour
     private Player boundPlayer;
     private ExploreUI exploreMapInstance;
     public CardDeckViewPanel cardDeckViewPanel;
+    public BattleHandPanel battleHandPanel;
 
 
     //카드 범위 확인 관련 변수
@@ -658,6 +659,18 @@ public class UIManager : MonoBehaviour
             Debug.LogWarning("[UIManager] ConfirmDialog prefab not found in cache. Executing confirm callback as fallback.");
             onConfirm?.Invoke();
         }
+    }
+
+    public BattleHandPanel GetOrSpawnBattleHand()
+    {
+        if (battleHandPanel != null) return battleHandPanel;
+
+        GameObject spawned = OpenUI("BattleHandPanel", UILayerType.Normal, true);
+        if (spawned != null)
+        {
+            battleHandPanel = spawned.GetComponent<BattleHandPanel>();
+        }
+        return battleHandPanel;
     }
     #endregion
 }

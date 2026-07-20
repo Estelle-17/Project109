@@ -32,6 +32,15 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     public bool bIsCardHighlight;
     public bool bShowEffectAreaUI;
 
+    [Header("Zoom Settings")]
+    public bool enableZoom = false;
+    public float zoomScale = 1.1f;
+    public float zoomYOffset = 90f;
+    private Vector3 originalScale = Vector3.one;
+    private Vector3 originalPosition;
+    private int originalSiblingIndex;
+    private bool isZoomed = false;
+
     void Awake()
     {
         selectHighlightObject.SetActive(false);
@@ -184,6 +193,20 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
             Debug.Log("Show Effect Area UI");
             UIManager.instance.UpdateEffectAreaUI(cardData);
         }
+
+        if (enableZoom)
+        {
+            if (!isZoomed)
+            {
+                isZoomed = true;
+                originalScale = transform.localScale;
+                originalPosition = transform.localPosition;
+                originalSiblingIndex = transform.GetSiblingIndex();
+            }
+            transform.localScale = Vector3.one * zoomScale;
+            transform.localPosition = originalPosition + new Vector3(0, zoomYOffset, 0);
+            transform.SetAsLastSibling();
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -194,6 +217,14 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         if (bShowEffectAreaUI)
         {
             UIManager.instance.ClearEffectAreaTiles();
+        }
+
+        if (enableZoom && isZoomed)
+        {
+            isZoomed = false;
+            transform.localScale = originalScale;
+            transform.localPosition = originalPosition;
+            transform.SetSiblingIndex(originalSiblingIndex);
         }
     }
 }

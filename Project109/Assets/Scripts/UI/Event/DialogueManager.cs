@@ -20,6 +20,7 @@ public delegate string GetDialogueChoiceDescription(DialogueManager dm);
 public class DialogueManager : MonoBehaviour
 {
     public static DialogueManager Instance { get; private set; }
+    public bool IsDialogueActive => activeDialogue != null;
 
     public GameObject dialogueUICanvasPrefab;
     private EventDescriptionScript dialogueUI; // 기존 UI 제어 클래스 재활용
@@ -210,6 +211,50 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    private bool isDialoguePaused = false;
+    public bool IsDialoguePaused => isDialoguePaused;
+    private string pendingNextNodeID = null;
+
+    public void PauseDialogue()
+    {
+        isDialoguePaused = true;
+        if (dialogueUI != null && dialogueUI.gameObject.activeSelf)
+        {
+            dialogueUI.gameObject.SetActive(false);
+        }
+    }
+
+    public void ResumeDialogue()
+    {
+        if (!isDialoguePaused) return;
+        isDialoguePaused = false;
+
+        if (dialogueUI != null)
+        {
+            dialogueUI.gameObject.SetActive(true);
+            dialogueUI.UIActive();
+        }
+
+        if (pendingNextNodeID != null)
+        {
+            string target = pendingNextNodeID;
+            pendingNextNodeID = null;
+            ExecuteNodeTransition(target);
+        }
+    }
+
+    private void ExecuteNodeTransition(string nodeID)
+    {
+        if (nodeID == "END_DIALOGUE")
+        {
+            EndDialogue();
+        }
+        else
+        {
+            GoToNode(nodeID);
+        }
+    }
+
     /// <summary>
     /// 플레이어가 특정 선택지 버튼을 눌렀을 때의 콜백입니다.
     /// </summary>
@@ -221,18 +266,27 @@ public class DialogueManager : MonoBehaviour
             execute?.Invoke(this);
         }
 
-        // Lua에서 이벤트를 즉시 종료하라고 트리거했거나, 다음 대사 노드가 강제 오버라이드 되었는지 판별
+        string targetNodeID = null;
         if (endDialogueTriggered)
         {
-            EndDialogue();
+            targetNodeID = "END_DIALOGUE";
         }
         else if (!string.IsNullOrEmpty(luaNextNodeOverride))
         {
-            GoToNode(luaNextNodeOverride);
+            targetNodeID = luaNextNodeOverride;
         }
         else
         {
-            GoToNode(choice.nextNodeID);
+            targetNodeID = choice.nextNodeID;
+        }
+
+        if (isDialoguePaused)
+        {
+            pendingNextNodeID = targetNodeID;
+        }
+        else
+        {
+            ExecuteNodeTransition(targetNodeID);
         }
     }
 
@@ -247,7 +301,7 @@ public class DialogueManager : MonoBehaviour
             dialogueUI.UIDeactive();
             dialogueUI.gameObject.SetActive(false);
         }
-
+        activeDialogue = null;
         if (luaEnv != null)
         {
             luaEnv.FullGc(); // XLua 가비지 컬렉션 수행
@@ -467,22 +521,66 @@ public class DialogueManager : MonoBehaviour
 
     public void OpenEraseCardUI(int count)
     {
-        Addressables.InstantiateAsync("EraseCardDeckCanvas").Completed += handle =>
+        PauseDialogue();
+
+        if (UIManager.instance != null)
         {
-            if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
+            GameObject eraseUI = UIManager.instance.OpenUI("EraseCardDeckCanvas", UILayerType.Normal, true);
+            if (eraseUI != null)
             {
-                var panel = handle.Result.GetComponent<EraseCardDeckPanel>();
+                var panel = eraseUI.GetComponent<EraseCardDeckPanel>();
                 if (panel != null)
                 {
                     panel.SetEraseCardCount(count);
                 }
             }
-        };
+            else
+            {
+                Addressables.InstantiateAsync("EraseCardDeckCanvas").Completed += handle =>
+                {
+                    if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
+                    {
+                        var panel = handle.Result.GetComponent<EraseCardDeckPanel>();
+                        if (panel != null)
+                        {
+                            panel.SetEraseCardCount(count);
+                        }
+                    }
+                };
+            }
+        }
+        else
+        {
+            Addressables.InstantiateAsync("EraseCardDeckCanvas").Completed += handle =>
+            {
+                if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
+                {
+                    var panel = handle.Result.GetComponent<EraseCardDeckPanel>();
+                    if (panel != null)
+                    {
+                        panel.SetEraseCardCount(count);
+                    }
+                }
+            };
+        }
     }
 
     public void OpenUpgradeCardUI()
     {
-        Addressables.InstantiateAsync("UpgradeCardDeckCanvas");
+        PauseDialogue();
+
+        if (UIManager.instance != null)
+        {
+            GameObject upgradeUI = UIManager.instance.OpenUI("UpgradeCardDeckCanvas", UILayerType.Normal, true);
+            if (upgradeUI == null)
+            {
+                Addressables.InstantiateAsync("UpgradeCardDeckCanvas");
+            }
+        }
+        else
+        {
+            Addressables.InstantiateAsync("UpgradeCardDeckCanvas");
+        }
     }
 
     // 6. 대화 흐름 분기 제어 API

@@ -23,6 +23,25 @@ public class PlayerBattleController : ICharacterController, System.IDisposable
             PlayerInputController.instance.OnTouchClickEvent -= HandleGlobalClick;
             PlayerInputController.instance.OnCancelEvent -= CancelCurrentState;
         }
+        if (battleDeck != null)
+        {
+            battleDeck.OnHandChanged -= UpdateHandUI;
+        }
+
+        if (UIManager.instance != null && UIManager.instance.battleHandPanel != null)
+        {
+            GameObject handObj = UIManager.instance.battleHandPanel.gameObject;
+            UIManager.instance.battleHandPanel = null;
+            UnityEngine.Object.Destroy(handObj);
+        }
+    }
+
+    private void UpdateHandUI()
+    {
+        if (UIManager.instance != null && UIManager.instance.battleHandPanel != null)
+        {
+            UIManager.instance.battleHandPanel.RefreshHand(battleDeck.hand);
+        }
     }
 
     #region ICharacterController
@@ -84,6 +103,17 @@ public class PlayerBattleController : ICharacterController, System.IDisposable
             clonedDeck.Add(card.Clone(controlledCharacter));
         }
         battleDeck.InitDeck(clonedDeck);
+
+        if (UIManager.instance != null)
+        {
+            var handUI = UIManager.instance.GetOrSpawnBattleHand();
+            if (handUI != null)
+            {
+                battleDeck.OnHandChanged -= UpdateHandUI;
+                battleDeck.OnHandChanged += UpdateHandUI;
+                handUI.RefreshHand(battleDeck.hand);
+            }
+        }
     }
 
     public void OnTurnStart()
@@ -95,7 +125,15 @@ public class PlayerBattleController : ICharacterController, System.IDisposable
         battleDeck.DrawCards(drawCount);
 
         // 3. UI 갱신
-        // TODO: 턴 시작 UI 처리
+        if (UIManager.instance != null)
+        {
+            var handUI = UIManager.instance.GetOrSpawnBattleHand();
+            if (handUI != null)
+            {
+                handUI.gameObject.SetActive(true);
+                handUI.RefreshHand(battleDeck.hand);
+            }
+        }
 
         // 4. 이동 활성화 (이동 상태는 필요할 때 켬)
 
@@ -120,7 +158,10 @@ public class PlayerBattleController : ICharacterController, System.IDisposable
         playerMove?.ClearCanMoveTiles();
 
         // 4. UI 정리
-        // TODO: 턴 종료 UI 처리
+        if (UIManager.instance != null && UIManager.instance.battleHandPanel != null)
+        {
+            UIManager.instance.battleHandPanel.RefreshHand(battleDeck.hand);
+        }
 
         // 5. 이벤트 구독 해제
         if (PlayerInputController.instance != null)

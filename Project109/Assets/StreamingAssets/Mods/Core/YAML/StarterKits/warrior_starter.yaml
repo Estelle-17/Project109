@@ -12,7 +12,11 @@ startCards:
   - "검격"
   - "검격"
   - "검격"
+  - "검격"
+  - "땅울림"
   - "방어"
   - "방어"
-startRelics: []
+  - "방어"
+  - "방어"
+startRelics: ["가죽 장갑", "재생성 철판"]
 startEffects: []

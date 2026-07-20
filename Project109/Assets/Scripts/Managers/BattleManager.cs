@@ -5,6 +5,7 @@ using UnityEngine;
 public enum BattleState
 {
     None,
+    Intro,
     Combat,
     TurnInProgress,
     BattleEnd,
@@ -60,13 +61,38 @@ public class BattleManager : IInitializable, IDisposable
         foreach (var combatant in enemyTeam)
             InitCombatant(combatant);
 
-        // BattleStart 이벤트 (플레이어 우선)
+        battleState = BattleState.Intro;
+
+        if (UIManager.instance != null)
+        {
+            GameObject noticeUI = UIManager.instance.OpenUI("UIBattleNotice", UILayerType.Popup, true);
+            if (noticeUI != null && noticeUI.TryGetComponent<UIBattleNotice>(out var battleNotice))
+            {
+                battleNotice.ShowNotice(BattleNoticeType.BattleStart, StartCombat);
+            }
+            else
+            {
+                StartCombat();
+            }
+        }
+        else
+        {
+            StartCombat();
+        }
+    }
+
+    public void StartCombat()
+    {
+        if (battleState != BattleState.Intro) return;
+
+        // BattleStart 이벤트 (플레이어 우선) - 실제 전투 개시 시점에 호출
         foreach (var combatant in playerTeam)
             combatant.controlledCharacter.eventBus.Invoke<IOnBattleStart>(a => a.OnBattleStart());
         foreach (var combatant in enemyTeam)
             combatant.controlledCharacter.eventBus.Invoke<IOnBattleStart>(a => a.OnBattleStart());
 
         battleState = BattleState.Combat;
+        Debug.Log("[BattleManager] Battle start intro finished. Combat began.");
     }
 
     /// <summary>
@@ -178,7 +204,7 @@ public class BattleManager : IInitializable, IDisposable
     public void WinBattle()
     {
         battleState = BattleState.BattleEnd;
-        
+
         if (ActionQueueManager.Instance != null)
         {
             ActionQueueManager.Instance.ClearQueue();
@@ -190,7 +216,7 @@ public class BattleManager : IInitializable, IDisposable
             {
                 RunManager.instance.currentMap.currentMapState = MapState.None;
             }
-            
+
             // 승리 시 플레이어 위치에 보상 상자 스폰
             if (GameItemRewardManager.instance != null && RunManager.instance.player != null && RunManager.instance.player.character != null)
             {
@@ -207,7 +233,7 @@ public class BattleManager : IInitializable, IDisposable
     public void LoseBattle()
     {
         battleState = BattleState.BattleEnd;
-        
+
         if (ActionQueueManager.Instance != null)
         {
             ActionQueueManager.Instance.ClearQueue();

@@ -142,4 +142,14 @@ public class CardUpgradePanel : UIPanelBase
             upgradeCardCheckHandler.OnCardCheckUI(card);
         }
     }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        if (DialogueManager.Instance != null && DialogueManager.Instance.IsDialogueActive && DialogueManager.Instance.IsDialoguePaused)
+        {
+            DialogueManager.Instance.ResumeDialogue();
+        }
+    }
 }

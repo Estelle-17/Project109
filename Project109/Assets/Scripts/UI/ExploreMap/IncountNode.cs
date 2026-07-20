@@ -197,6 +197,11 @@ public class IncountNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 
     public void LoadMapDataFromIncountNode()
     {
+        if (DialogueManager.Instance != null && DialogueManager.Instance.IsDialogueActive)
+        {
+            Debug.Log("[IncountNode] NPC 대화 중에는 맵 노드를 이동할 수 없습니다.");
+            return;
+        }
         if (RunManager.instance.currentIncountNode.nextIncountNode.Contains(this.gameObject))
         {
             RunManager.instance.MoveToNode(this);

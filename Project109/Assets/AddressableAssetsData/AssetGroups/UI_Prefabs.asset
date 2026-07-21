@@ -64,7 +64,7 @@ MonoBehaviour:
     - UI
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2710993ff82d4f047b68f319758af2e2
-    m_Address: CardCheckUI
+    m_Address: CardDetailUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - UI

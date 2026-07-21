@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8236030013243537001}
   - component: {fileID: 3445346243638349343}
   m_Layer: 0
-  m_Name: CardCheckUI
+  m_Name: CardDetailUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,7 +55,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiLayerType: 1
-  cardUI: {fileID: 0}
+  blockWorldInput: 1
+  cardUI: {fileID: 3306285242649377369}
   detailDescriptionUIPrefab: {fileID: 4635436370369700347, guid: 2a1fa658cb3bb634190ff8a59225e8d4, type: 3}
   detailDescriptionUITransform: {fileID: 4767910360009795293}
 --- !u!1 &322517391969737645
@@ -608,12 +609,16 @@ MonoBehaviour:
   useStamina: {fileID: 9172902331229968888}
   cardImage: {fileID: 4295294686809833965}
   selectHighlightObject: {fileID: 1628734935185485727}
+  masteryUpgradeAvailableUI: {fileID: 0}
   effectAreaCheckButton: {fileID: 6671982917015421376}
   OnCardClick:
     m_PersistentCalls:
       m_Calls: []
   bIsCardHighlight: 1
   bShowEffectAreaUI: 0
+  enableZoom: 0
+  zoomScale: 1.1
+  zoomYOffset: 90
 --- !u!114 &7384242906835342122
 MonoBehaviour:
   m_ObjectHideFlags: 0

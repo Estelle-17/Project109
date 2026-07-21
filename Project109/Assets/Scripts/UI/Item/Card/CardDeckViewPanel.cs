@@ -202,29 +202,29 @@ public class CardDeckViewPanel : UIPanelBase, IOnAddCard, IOnRemoveCard, IOnCard
             }
             else
             {
-                if (UIManager.instance.cardCheckHandler == null)
+                if (UIManager.instance.cardDetailHandler == null)
                 {
                     CardDetailPanel[] panels = Resources.FindObjectsOfTypeAll<CardDetailPanel>();
                     if (panels != null && panels.Length > 0)
                     {
-                        UIManager.instance.cardCheckHandler = panels[0];
+                        UIManager.instance.cardDetailHandler = panels[0];
                     }
-                    if (UIManager.instance.cardCheckHandler == null)
+                    if (UIManager.instance.cardDetailHandler == null)
                     {
-                        GameObject uiObj = UIManager.instance.OpenUI("CardCheckUI", UILayerType.Normal, false);
+                        GameObject uiObj = UIManager.instance.OpenUI("CardDetailUI", UILayerType.Normal, false);
                         if (uiObj != null)
                         {
-                            UIManager.instance.cardCheckHandler = uiObj.GetComponent<CardDetailPanel>();
+                            UIManager.instance.cardDetailHandler = uiObj.GetComponent<CardDetailPanel>();
                         }
                     }
                 }
-                if (UIManager.instance.cardCheckHandler != null)
+                if (UIManager.instance.cardDetailHandler != null)
                 {
-                    UIManager.instance.cardCheckHandler.OnCardCheckUI(card);
+                    UIManager.instance.cardDetailHandler.OnCardCheckUI(card);
                 }
                 else
                 {
-                    Debug.LogError("[CardDeckViewPanel] cardCheckHandler is null and could not be resolved.");
+                    Debug.LogError("[CardDeckViewPanel] cardDetailHandler is null and could not be resolved.");
                 }
             }
         }

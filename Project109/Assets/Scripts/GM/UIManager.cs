@@ -39,7 +39,7 @@ public class UIManager : MonoBehaviour
     //유물 관련 변수는 TooltipPanel에서 개별 관리하므로 제거되었습니다.
 
     //카드 상세 확인 관련 변수
-    public CardDetailPanel cardCheckHandler;
+    public CardDetailPanel cardDetailHandler;
 
     //상단 HUD 관련 변수
     public TopHUDPanel topHUDPanel;
@@ -80,7 +80,7 @@ public class UIManager : MonoBehaviour
         {
             bool hudReady = AssetCacheManager.instance.TryGetUI("TopHUDPanel", out hudPrefab);
             bool deckReady = AssetCacheManager.instance.TryGetUI("CardDeckCanvas", out deckPrefab);
-            bool checkReady = AssetCacheManager.instance.TryGetUI("CardCheckUI", out checkPrefab);
+            bool checkReady = AssetCacheManager.instance.TryGetUI("CardDetailUI", out checkPrefab);
             if (hudReady && deckReady && checkReady)
             {
                 break;
@@ -124,7 +124,7 @@ public class UIManager : MonoBehaviour
         {
             Transform parentTransform = normalUILayer != null ? normalUILayer.transform : transform;
             GameObject inst = Instantiate(checkPrefab, parentTransform, false);
-            inst.name = "CardCheckUI";
+            inst.name = "CardDetailUI";
 
             RectTransform rect = inst.GetComponent<RectTransform>();
             if (rect != null)
@@ -136,13 +136,13 @@ public class UIManager : MonoBehaviour
                 rect.localScale = Vector3.one;
             }
 
-            cardCheckHandler = inst.GetComponent<CardDetailPanel>();
+            cardDetailHandler = inst.GetComponent<CardDetailPanel>();
 
-            if (cardCheckHandler != null)
+            if (cardDetailHandler != null)
             {
-                cardCheckHandler.gameObject.SetActive(false);
+                cardDetailHandler.gameObject.SetActive(false);
             }
-            Debug.Log("[UIManager] CardCheckUI dynamically initialized via Addressables.");
+            Debug.Log("[UIManager] CardDetailUI dynamically initialized via Addressables.");
         }
 
         // 어드레서블 초기 로딩이 완료되었으므로, 인게임 탐색에 필요한 지도를 즉각 스폰 및 초기화합니다.

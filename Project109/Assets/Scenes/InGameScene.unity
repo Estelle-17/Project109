@@ -5960,13 +5960,14 @@ MonoBehaviour:
   normalUILayer: {fileID: 1791120030}
   topUILayer: {fileID: 1197279975}
   popupUILayer: {fileID: 955001881}
-  cardCheckHandler: {fileID: 0}
+  cardDetailHandler: {fileID: 0}
   topHUDPanel: {fileID: 0}
   cardDeckViewPanel: {fileID: 0}
   battleHandPanel: {fileID: 0}
   effectAreaManager: {fileID: 0}
   effectAreaTile: {fileID: 788475941}
   AdditionalEffectAreaTile: {fileID: 43106747}
+  characterStatusBarManager: {fileID: 0}
 --- !u!1 &947176725
 GameObject:
   m_ObjectHideFlags: 0
@@ -6760,7 +6761,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 100

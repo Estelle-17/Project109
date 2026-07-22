@@ -81,6 +81,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - UI
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3b37fa218b6a6ff4bb76c6a10baebe8c
+    m_Address: CharacterStatusBarUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UI
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3d2c6c8547eabb248ad6a601b4f15dc3
     m_Address: MasteryPointInfomationBox
     m_ReadOnly: 0
@@ -107,6 +113,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 510adb61b09f967488b306421c656785
     m_Address: TooltipPanel
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UI
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 56e319e4c4cb8714097c59293af8ae52
+    m_Address: CharacterEffectItemUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - UI

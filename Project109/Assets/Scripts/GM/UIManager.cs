@@ -54,6 +54,9 @@ public class UIManager : MonoBehaviour
     public EffectAreaTile effectAreaTile;
     public EffectAreaTile AdditionalEffectAreaTile;
 
+    //캐릭터 상태 바 관련 매니저
+    public CharacterStatusBarManager characterStatusBarManager;
+
     System.Collections.IEnumerator Start()
     {
         yield return StartCoroutine(InitializeAddressableUI());
@@ -221,6 +224,48 @@ public class UIManager : MonoBehaviour
             default: return null;
         }
     }
+
+    #region Character StatusBar Management
+
+    public CharacterStatusBarManager GetOrSpawnStatusBarManager()
+    {
+        if (characterStatusBarManager == null)
+        {
+            characterStatusBarManager = GetComponentInChildren<CharacterStatusBarManager>();
+            if (characterStatusBarManager == null)
+            {
+                GameObject go = new GameObject("CharacterStatusBarManager");
+                Transform parent = worldUILayer != null ? worldUILayer.transform : transform;
+                go.transform.SetParent(parent, false);
+                characterStatusBarManager = go.AddComponent<CharacterStatusBarManager>();
+            }
+        }
+        return characterStatusBarManager;
+    }
+
+    public CharacterStatusBarUI RegisterCharacterStatusBar(Character character)
+    {
+        var manager = GetOrSpawnStatusBarManager();
+        return manager != null ? manager.RegisterCharacter(character) : null;
+    }
+
+    public void UnregisterCharacterStatusBar(Character character)
+    {
+        if (characterStatusBarManager != null)
+        {
+            characterStatusBarManager.UnregisterCharacter(character);
+        }
+    }
+
+    public void ClearAllCharacterStatusBars()
+    {
+        if (characterStatusBarManager != null)
+        {
+            characterStatusBarManager.ClearAll();
+        }
+    }
+
+    #endregion
 
     public void PushActiveUIPanel(GameObject newObject)
     {

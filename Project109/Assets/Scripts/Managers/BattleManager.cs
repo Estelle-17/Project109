@@ -114,6 +114,14 @@ public class BattleManager : IInitializable, IDisposable
         combatant.controlledCharacter.currentTurn = 0;
         combatant.controlledCharacter.ResetStamina();
         combatant.controlledCharacter.OnCharacterDied += OnCharacterDied;
+        if (UIManager.instance != null)
+        {
+            UIManager.instance.RegisterCharacterStatusBar(combatant.controlledCharacter);
+        }
+        else if (CharacterStatusBarManager.Instance != null)
+        {
+            CharacterStatusBarManager.Instance.RegisterCharacter(combatant.controlledCharacter);
+        }
     }
 
     public void Update(float dt)
@@ -254,15 +262,39 @@ public class BattleManager : IInitializable, IDisposable
         {
             combatant.controlledCharacter.eventBus.Invoke<IOnBattleEnd>(a => a.OnBattleEnd());
             combatant.controlledCharacter.OnCharacterDied -= OnCharacterDied;
+            if (UIManager.instance != null)
+            {
+                UIManager.instance.UnregisterCharacterStatusBar(combatant.controlledCharacter);
+            }
+            else if (CharacterStatusBarManager.Instance != null)
+            {
+                CharacterStatusBarManager.Instance.UnregisterCharacter(combatant.controlledCharacter);
+            }
         }
         foreach (var combatant in enemyTeam)
         {
             combatant.controlledCharacter.eventBus.Invoke<IOnBattleEnd>(a => a.OnBattleEnd());
             combatant.controlledCharacter.OnCharacterDied -= OnCharacterDied;
+            if (UIManager.instance != null)
+            {
+                UIManager.instance.UnregisterCharacterStatusBar(combatant.controlledCharacter);
+            }
+            else if (CharacterStatusBarManager.Instance != null)
+            {
+                CharacterStatusBarManager.Instance.UnregisterCharacter(combatant.controlledCharacter);
+            }
         }
 
         playerTeam.Clear();
         enemyTeam.Clear();
+        if (UIManager.instance != null)
+        {
+            UIManager.instance.ClearAllCharacterStatusBars();
+        }
+        else if (CharacterStatusBarManager.Instance != null)
+        {
+            CharacterStatusBarManager.Instance.ClearAll();
+        }
     }
 
     /// <summary>

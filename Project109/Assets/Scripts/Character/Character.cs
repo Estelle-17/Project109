@@ -182,11 +182,35 @@ public class Character : MonoBehaviour
     }
 
     /// <summary>
-    /// 턴 종료 시 호출하여 스태미나 리셋 및 플래그 초기화
+    /// 턴 종료 시 호출하여 스태미나 이월(절반 감축) 처리
     /// </summary>
     public void ResetStamina()
     {
         curStamina = curStamina * 0.5f;
+    }
+
+    /// <summary>
+    /// 전투 개시 시 호출하여 스태미나를 0(또는 지정값)으로 명시적 초기화합니다.
+    /// </summary>
+    public void ResetStaminaForBattle(float initialStamina = 0f)
+    {
+        curStamina = initialStamina;
+    }
+
+    /// <summary>
+    /// 전투 개시 또는 종료 시 캐릭터의 방어막, 스태미나, 버프/디버프 등을 완전히 초기화합니다.
+    /// </summary>
+    public void ResetCharacterForBattle(bool clearPermanentEffects = true)
+    {
+        curStamina = 0f;
+        shield = 0f;
+        shieldDurationTurns = 0;
+        currentTurn = 0;
+
+        if (effectManager != null)
+        {
+            effectManager.ClearAllEffects(clearPermanentEffects);
+        }
     }
 
     /// <summary>

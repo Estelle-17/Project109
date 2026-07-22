@@ -426,6 +426,15 @@ public class RunManager : MonoBehaviour
             {
                 playerExploreController.Activate();
             }
+
+            if (UIManager.instance != null)
+            {
+                UIManager.instance.ClearAllCharacterStatusBars();
+            }
+            if (battleManager != null)
+            {
+                battleManager.ClearBattle();
+            }
         }
     }
 
@@ -447,6 +456,11 @@ public class RunManager : MonoBehaviour
     public void MoveToNode(IncountNode nextNode)
     {
         if (nextNode == null) return;
+
+        if (UIManager.instance != null)
+        {
+            UIManager.instance.ClearAllCharacterStatusBars();
+        }
 
         // 이전의 노드를 저장 후 다음 노드로 변경
         beforeIncountNode = currentIncountNode;

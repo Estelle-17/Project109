@@ -49,6 +49,26 @@ public class EffectManager
         }
     }
 
+    /// <summary>
+    /// 전투 종료 시 남아있는 버프/디버프 이펙트들을 모두 제거합니다.
+    /// </summary>
+    public void ClearAllEffects(bool clearPermanent = true)
+    {
+        for (int i = effects.Count - 1; i >= 0; i--)
+        {
+            Effect effect = effects[i];
+            if (effect != null)
+            {
+                if (!clearPermanent && effect.Data != null && effect.Data.isPermanent)
+                    continue;
+
+                effects.RemoveAt(i);
+                effect.OnRemoved();
+                OnEffectRemoved?.Invoke(effect);
+            }
+        }
+    }
+
     public void Tick(float deltaTime)
     {
         for (int i = effects.Count - 1; i >= 0; i--)

@@ -35,8 +35,10 @@ public class CharacterStatusBarManager : MonoBehaviour
     private void Start()
     {
         InitParentLayer();
-        // 씬 시작 시 이미 배치되거나 전투 준비된 캐릭터 자동 등록 시도
-        TryAutoRegisterExistingCharacters();
+        if (RunManager.instance != null && RunManager.instance.currentMap != null && RunManager.instance.currentMap.currentMapState == MapState.Battle)
+        {
+            TryAutoRegisterExistingCharacters();
+        }
     }
 
     /// <summary>
@@ -127,17 +129,35 @@ public class CharacterStatusBarManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 관리 중인 모든 StatusBar UI를 정리합니다.
+    /// 관리 중인 모든 StatusBar UI를 명시적으로 파괴하고 정리합니다. 다음 전투 시 새로 생성됩니다.
     /// </summary>
     public void ClearAll()
     {
         foreach (var kvp in activeStatusBars)
         {
-            if (kvp.Value != null)
+            if (kvp.Value != null && kvp.Value.gameObject != null)
             {
                 Destroy(kvp.Value.gameObject);
             }
         }
         activeStatusBars.Clear();
+
+        Transform parentTransform = statusBarParent;
+        if (parentTransform == null && UIManager.instance != null && UIManager.instance.worldUILayer != null)
+        {
+            parentTransform = UIManager.instance.worldUILayer.transform;
+        }
+
+        if (parentTransform != null)
+        {
+            for (int i = parentTransform.childCount - 1; i >= 0; i--)
+            {
+                Transform child = parentTransform.GetChild(i);
+                if (child != null && child.GetComponent<CharacterStatusBarUI>() != null)
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+        }
     }
 }

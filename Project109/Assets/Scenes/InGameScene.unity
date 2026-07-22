@@ -8541,7 +8541,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3493c0c13e6cbd24f8d32a29cf71b1ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character
-  faction: 2
+  faction: 0
   _characterStat:
     maxHealth: 0
     maxStamina: 0
@@ -8554,7 +8554,7 @@ MonoBehaviour:
   isDead: 0
   _curHealth: 0
   _curStamina: 0
-  shield: 0
+  _shield: 0
   shieldDurationTurns: 1
   currentTurn: 0
 --- !u!1001 &1289673870

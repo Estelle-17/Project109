@@ -111,8 +111,7 @@ public class BattleManager : IInitializable, IDisposable
 
     private void InitCombatant(ICharacterController combatant)
     {
-        combatant.controlledCharacter.currentTurn = 0;
-        combatant.controlledCharacter.ResetStamina();
+        combatant.controlledCharacter.ResetCharacterForBattle();
         combatant.controlledCharacter.OnCharacterDied += OnCharacterDied;
         if (UIManager.instance != null)
         {
@@ -261,6 +260,7 @@ public class BattleManager : IInitializable, IDisposable
         foreach (var combatant in playerTeam)
         {
             combatant.controlledCharacter.eventBus.Invoke<IOnBattleEnd>(a => a.OnBattleEnd());
+            combatant.controlledCharacter.ResetCharacterForBattle();
             combatant.controlledCharacter.OnCharacterDied -= OnCharacterDied;
             if (UIManager.instance != null)
             {
@@ -274,6 +274,7 @@ public class BattleManager : IInitializable, IDisposable
         foreach (var combatant in enemyTeam)
         {
             combatant.controlledCharacter.eventBus.Invoke<IOnBattleEnd>(a => a.OnBattleEnd());
+            combatant.controlledCharacter.ResetCharacterForBattle();
             combatant.controlledCharacter.OnCharacterDied -= OnCharacterDied;
             if (UIManager.instance != null)
             {
